@@ -273,7 +273,7 @@
   --brand: #c4592f;
   --brand-foreground: #fff8f1;
   --brand-soft: #f3dccd;
-  --accent-ink: #8c8075;
+  --accent-ink: var(--brand-ink);
   --tone-ink: #17110d;
   --shadow-color: 25 40% 15%;
 }

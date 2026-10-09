@@ -158,7 +158,7 @@ export function GalleryShowcase({
       id={id}
       className={cn(
         "pb-[clamp(4.5rem,9vw,7.5rem)] pt-[clamp(6rem,13vw,11.25rem)]",
-        "bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--accent-ink:#8f7f70] [--brand:#e98a5f] [--brand-ink:#e98a5f]",
+        "bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--accent-ink:#e98a5f] [--brand:#e98a5f] [--brand-ink:#e98a5f]",
       )}
     >
       <div className={cn(wrap, "motion-stagger text-center")}>
