@@ -164,9 +164,9 @@ export default function AppHealthPage() {
 
       <div className="flex flex-col gap-6 px-4 py-6 md:px-8">
         <section className="relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-xs md:p-8">
-          <img src="/demo/app-health/art.webp" alt="" className="-mx-6 -mt-6 mb-6 block h-32 w-[calc(100%+3rem)] max-w-none object-cover object-center md:absolute md:inset-y-0 md:right-0 md:m-0 md:h-full md:w-3/4 md:object-right md:opacity-90 md:[mask-image:linear-gradient(to_right,transparent_15%,black_65%)]" />
-          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
+          <img src="/demo/app-health/art.webp" alt="" className="-mx-6 -mt-6 mb-6 block h-40 w-[calc(100%+3rem)] max-w-none object-cover object-center md:absolute md:inset-y-0 md:right-0 md:m-0 md:h-full md:w-[58%] md:object-right md:opacity-95 md:[mask-image:linear-gradient(to_right,transparent,black_35%)]" />
+          <div className="relative flex max-w-xl flex-col gap-6">
+            <div>
               <p className="eyebrow mb-3">Today on acme.app</p>
               <p className="font-display text-[clamp(1.6rem,1.2rem+1.4vw,2.4rem)] leading-[1.1]">
                 Traffic is up 12%. Signups are healthy. <em>One webhook is failing.</em>

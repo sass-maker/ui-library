@@ -267,26 +267,6 @@ $ codevetter check \
       </div>
     </Section>
 
-    <section className="relative overflow-hidden bg-[rgb(251,245,231)] text-[oklch(0.2_0.01_60)] [--background:rgb(251,245,231)] [--foreground:oklch(0.2_0.01_60)] [--muted-foreground:oklch(0.45_0.02_60)] [--brand:oklch(0.6_0.15_58)] [color-scheme:light]">
-      <div className="container-page grid items-center gap-10 pb-0 pt-20 text-[oklch(0.2_0.01_60)] md:pt-28 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <p className="eyebrow mb-5">The principle</p>
-          <p className="font-display text-[clamp(2.5rem,1.6rem+3.6vw,4.5rem)]">
-            Review suggests. <em>Evidence decides.</em>
-          </p>
-          <p className="mt-6 max-w-md text-base leading-relaxed text-[oklch(0.42_0.02_60)]">
-            Check the record behind a verdict: the task, the exact change, what ran, and what is still unknown.
-          </p>
-        </div>
-        <img
-          src="/demo/codevetter/codevetter-evidence-workbench-v1.webp"
-          alt="Illustration of an evidence workbench: desks, a magnifier and cabinets connected by amber lines"
-          loading="lazy"
-          className="block w-full lg:col-span-7"
-        />
-      </div>
-    </section>
-
     <Section id="faq" rule>
       <div className="container-page">
         <Faq title={<>Understand <em>the boundary.</em></>} lede="Scope, evidence, and availability, answered plainly." items={faq} />
