@@ -2,18 +2,16 @@
 /**
  * Every content-driven product page. Add src/content/<slug>.json with a
  * "template" ("gallery" or "workbench") and "page" settings; no code needed.
+ * The build validates each file against @saas-maker/templates/schema.
  */
+import { getCollection } from "astro:content";
 import Base from "@saas-maker/templates/Base.astro";
-import { GalleryPage, type GalleryContent } from "@saas-maker/templates/gallery-page";
-import { WorkbenchPage, type WorkbenchContent } from "@saas-maker/templates/workbench-page";
-import type { PageSettings } from "@saas-maker/templates/page-settings";
+import { GalleryPage } from "@saas-maker/templates/gallery-page";
+import { WorkbenchPage } from "@saas-maker/templates/workbench-page";
 
-export function getStaticPaths() {
-  const files = import.meta.glob<{ default: { template: string; page: PageSettings } }>("../../content/*.json", { eager: true });
-  return Object.entries(files).map(([path, mod]) => ({
-    params: { slug: path.split("/").pop()!.replace(/\.json$/, "") },
-    props: { content: mod.default },
-  }));
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products.map((p) => ({ params: { slug: p.id }, props: { content: p.data } }));
 }
 
 const { content } = Astro.props;
@@ -21,6 +19,6 @@ const { page } = content;
 ---
 
 <Base title={page.title} description={page.description} theme={page.theme} mode={page.mode} tokens={page.tokens} icon={page.icon}>
-  {content.template === "gallery" && <GalleryPage content={content as unknown as GalleryContent} />}
-  {content.template === "workbench" && <WorkbenchPage content={content as unknown as WorkbenchContent} />}
+  {content.template === "gallery" && <GalleryPage content={content} />}
+  {content.template === "workbench" && <WorkbenchPage content={content} />}
 </Base>

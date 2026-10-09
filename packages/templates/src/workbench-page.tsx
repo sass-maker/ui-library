@@ -10,6 +10,7 @@ import { WindowFrame, Stage } from "@saas-maker/ui/blocks/frames";
 import { Faq, Cta } from "@saas-maker/ui/blocks/closing";
 import { StudioFooter } from "@saas-maker/ui/blocks/footer";
 import { rich } from "./rich";
+import type { WorkbenchContent, WorkbenchBlock } from "./schema";
 
 /**
  * A complete Workbench landing page from plain data: the dev-tool and
@@ -18,56 +19,9 @@ import { rich } from "./rich";
  * Icons are lucide names, e.g. "Download". *phrase* renders as the accent.
  */
 
-type Tone = "neutral" | "success" | "danger" | "warning" | "brand";
 type Link = { label: string; href: string; icon?: string };
-type Pill = { tone: Tone; label: string };
 
-export type WorkbenchBlock =
-  | { type: "steps"; items: { title: string; body: string; code?: string; pill?: Pill }[] }
-  | { type: "stats"; items: { value: string; label: string; note?: string }[] }
-  | { type: "features"; variant?: "ruled" | "cards" | "plain"; items: { icon?: string; title: string; body: string; meta?: string }[] }
-  | {
-      type: "spread";
-      items: {
-        kicker?: string;
-        title: string;
-        body: string;
-        diff?: { file: string; lines: { kind: "add" | "del" | "ctx"; text: string; note?: { pill?: Pill; text: string } }[] };
-        code?: { label?: string; code: string };
-      }[];
-    }
-  | { type: "faq"; title?: string; lede?: string; items: { q: string; a: string }[] }
-  | { type: "cta"; title: string; lede?: string; primary: Link; secondary?: Link; note?: string };
-
-export type WorkbenchContent = {
-  product: string;
-  url: string;
-  mark: string;
-  nav: Link[];
-  header: { primary: Link; secondary?: Link };
-  hero: {
-    eyebrow?: string;
-    title: string;
-    lede?: string;
-    primary: Link;
-    secondary?: Link;
-    note?: string;
-    window: { title: string; src: string; alt: string; width: number; height: number };
-    receipt?: { title: string; meta?: string; rows: { label: string; value: string; mono?: boolean; strong?: boolean; status?: Pill }[] };
-    caption?: string;
-    facts?: string[];
-    /** Brand brackets framing the stage (the CodeVetter mark's code scope). */
-    brackets?: boolean;
-  };
-  sections: {
-    id?: string;
-    surface?: "default" | "muted";
-    compact?: boolean;
-    header?: { eyebrow?: string; title: string; lede?: string; align?: "start" | "center" | "split" };
-    blocks: WorkbenchBlock[];
-  }[];
-  footer: { summary: string; groups: { title: string; links: Link[] }[]; legal?: string; feedbackKey?: string };
-};
+export type { WorkbenchContent, WorkbenchBlock };
 
 function Icon({ name }: { name?: string }) {
   const C = name ? icons[name as keyof typeof icons] : undefined;

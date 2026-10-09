@@ -12,6 +12,7 @@ import {
 } from "@saas-maker/ui/blocks/gallery";
 import { StudioFooter } from "@saas-maker/ui/blocks/footer";
 import { rich } from "./rich";
+import type { GalleryContent, GallerySection } from "./schema";
 
 /**
  * A complete Gallery landing page from plain data. Products supply a content
@@ -19,37 +20,10 @@ import { rich } from "./rich";
  * In any text field, *words* render as the theme's accent phrase.
  */
 
-type Link = { label: string; href: string };
-type Screen = { src: string; alt: string };
+type Screen = GalleryContent["hero"]["screen"];
 type Caption = { lead?: string; text?: string };
 
-export type GallerySection =
-  | { kind: "showcase"; id?: string; eyebrow?: string; title: string; lede?: string; screen: Screen; caption?: Caption; note?: string }
-  | { kind: "spread"; id?: string; eyebrow?: string; title: string; lede?: string; backdrop: string; screen: Screen; caption?: Caption }
-  | { kind: "cover"; id?: string; eyebrow?: string; title: string; lede?: string; image: string; screen?: Screen; credit?: string }
-  | {
-      kind: "statement";
-      id?: string;
-      eyebrow?: string;
-      title: string;
-      lede?: string;
-      rows?: { title: string; body: string; status?: string; on?: boolean }[];
-      aside?: { title: string; body: string }[];
-    };
-
-export type GalleryContent = {
-  product: string;
-  url: string;
-  mark: string;
-  /** Pixel size of the phone screenshots, for layout stability. */
-  screenSize?: { width: number; height: number };
-  nav: Link[];
-  headerAction: Link;
-  hero: { eyebrow?: string; title: string; lede?: string; primary: Link; secondary?: Link; note?: string; backdrop: string; screen: Screen };
-  sections: GallerySection[];
-  closing: { id?: string; title: string; primary: Link; note?: string; image: string; credit?: string };
-  footer: { summary: string; links: Link[]; legal?: string; feedbackKey?: string };
-};
+export type { GalleryContent, GallerySection };
 
 export function GalleryPage({ content: c }: { content: GalleryContent }) {
   const size = c.screenSize ?? { width: 603, height: 1311 };
