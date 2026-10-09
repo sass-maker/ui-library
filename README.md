@@ -21,9 +21,20 @@ pnpm add "$G&path:/packages/ui" "$G&path:/packages/motion" "$G&path:/packages/te
 
 No extra Astro config is needed; the stylesheet scans the packages for classes.
 
-Add `src/content/<slug>.json` (see `site/src/content/kith.json` and
-`codevetter.json`) and render it with `GalleryPage` or `WorkbenchPage` inside
-`Base.astro`. Write `*phrase*` for the accent phrase.
+Add `src/content/<slug>.json` and render it with `GalleryPage` or
+`WorkbenchPage` inside `Base.astro`. Write `*phrase*` for the accent phrase.
+Validate files with `productContent` from `@saas-maker/templates/schema`
+(the library site loads them as an Astro content collection, so a typo fails
+the build with the exact field).
+
+| Template | For | Sections | Examples |
+| --- | --- | --- | --- |
+| Gallery | consumer apps | device or photo-cover hero; `showcase`, `spread`, `cover`, `grid`, `statement`, `faq`; closing art | `kith.json`, `live.json` |
+| Workbench | dev tools, desktop apps | app window on a stage; `statement`, `spread` (cropped detail, code, diff), `faq`, `cta` (plus classic `steps`, `stats`, `features`) | `codevetter.json`, `reader.json` |
+
+Brand tokens: `--brand`, `--brand-foreground`, `--brand-soft`, and
+`--brand-ink` (brand as readable text; set it deeper for light brands).
+The previous hand-built layouts stay at `/demo/*-classic/`.
 
 ## Mac / iOS app
 
