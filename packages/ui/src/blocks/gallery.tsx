@@ -417,15 +417,15 @@ export function GalleryGrid({
           </div>
           {ledeText && <GalleryLede>{ledeText}</GalleryLede>}
         </div>
-        <ul className="motion-stagger mt-[clamp(3.5rem,7vw,5.5rem)] grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="motion-stagger mt-[clamp(3.5rem,7vw,5.5rem)] grid grid-cols-2 gap-x-4 gap-y-9 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-3">
           {items.map((it) => {
             const body = (
               <>
                 <div className="overflow-hidden rounded-[var(--radius)]">
                   <Picture image={it.image} className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
                 </div>
-                {it.label && <p className={cn(eyebrowCls, "mt-5 text-[0.8125rem]")}>{it.label}</p>}
-                <p className="mt-1.5 font-display text-[1.375rem] leading-tight tracking-[-0.02em]">{it.title}</p>
+                {it.label && <p className={cn(eyebrowCls, "mt-3 text-[0.75rem] sm:mt-5 sm:text-[0.8125rem]")}>{it.label}</p>}
+                <p className="mt-1 font-display text-[1.0625rem] leading-tight tracking-[-0.02em] sm:mt-1.5 sm:text-[1.375rem]">{it.title}</p>
               </>
             );
             return (
