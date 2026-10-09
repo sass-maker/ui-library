@@ -164,7 +164,7 @@ export default function AppHealthPage() {
 
       <div className="flex flex-col gap-6 px-4 py-6 md:px-8">
         <section className="relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-xs md:p-8">
-          <div aria-hidden className="mesh absolute inset-0 opacity-25" />
+          <img src="/demo/app-health/art.webp" alt="" className="absolute inset-y-0 right-0 h-full w-full object-cover object-right opacity-90 [mask-image:linear-gradient(to_right,transparent_20%,black_70%)] md:w-3/4" />
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <p className="eyebrow mb-3">Today on acme.app</p>

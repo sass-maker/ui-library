@@ -277,7 +277,6 @@ $ codevetter check \
       { title: "Resources", links: [{ label: "Evidence docs", href: "#evidence" }, { label: "FAQ", href: "#faq" }, { label: "Benchmark", href: "#evidence" }, { label: "vs CodeRabbit", href: "#" }] },
       { title: "Connect", links: [{ label: "About", href: "#" }, { label: "Privacy", href: "#" }, { label: "Terms", href: "#" }, { label: "GitHub", href: "https://github.com/Codevetter/codevetter" }] },
     ]}
-    art={{ src: "/demo/codevetter/codevetter-evidence-workbench-v1.webp", alt: "Illustration of an evidence workbench" }}
     feedbackHref="mailto:hello@codevetter.com"
     legal="© 2026 CodeVetter · ISC License"
   />

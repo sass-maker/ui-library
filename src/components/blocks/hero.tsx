@@ -100,9 +100,9 @@ export function Hero({
       )}
 
       {layout === "editorial" && (
-        <div className="container-page pb-16 pt-14 md:pb-24 md:pt-20">
+        <div className="container-page pb-16 pt-12 md:pb-24 md:pt-14">
           {eyebrowNode}
-          <h1 className="hero-in font-display max-w-[16ch] text-[clamp(3rem,1.4rem+6.6vw,7.25rem)] [--d:60ms]">{title}</h1>
+          <h1 className="hero-in font-display max-w-[18ch] text-[clamp(2.75rem,1.4rem+5.2vw,6rem)] [--d:60ms]">{title}</h1>
           {media ? (
             <div className="mt-10 grid gap-10 border-t border-border pt-8 md:grid-cols-12">
               <div className="md:col-span-6 lg:col-span-5">
@@ -113,7 +113,7 @@ export function Hero({
               <div className="hero-in md:col-span-6 lg:col-span-7 [--d:180ms]">{media}</div>
             </div>
           ) : (
-            <div className="mt-10 grid gap-8 border-t border-border pt-8 md:grid-cols-12 md:gap-10">
+            <div className="mt-8 grid gap-8 border-t border-border pt-7 md:grid-cols-12 md:gap-10">
               {lede && <p className="hero-in lede md:col-span-6 [--d:110ms]">{lede}</p>}
               <div className="md:col-span-5 md:col-start-8 [&>*:first-child]:mt-0">
                 {actionsNode}
@@ -121,7 +121,7 @@ export function Hero({
               </div>
             </div>
           )}
-          {footer && <div className="mt-12">{footer}</div>}
+          {footer && <div className="mt-10">{footer}</div>}
         </div>
       )}
     </section>

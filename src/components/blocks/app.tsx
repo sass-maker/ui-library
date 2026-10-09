@@ -75,7 +75,7 @@ export function AppShell({
         {userRow}
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/85 px-4 backdrop-blur md:hidden">
+        <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-md md:hidden">
           <div className="flex items-center gap-2.5">
             {brand.mark}
             <span className="text-sm font-semibold">{brand.name}</span>

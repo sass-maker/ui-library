@@ -52,7 +52,7 @@ export function SiteHeader({ brand, links = [], actions, variant = "bar", classN
   if (variant === "floating") {
     return (
       <header className={cn("sticky top-3 z-40 px-3", className)}>
-        <div className="mx-auto max-w-6xl rounded-2xl border border-border bg-background/75 px-4 shadow-sm backdrop-blur-xl supports-[backdrop-filter]:bg-background/65 sm:px-5">
+        <div className="mx-auto max-w-6xl rounded-2xl border border-border bg-background/92 px-4 shadow-sm backdrop-blur-md sm:px-5">
           {inner}
         </div>
       </header>
@@ -62,7 +62,7 @@ export function SiteHeader({ brand, links = [], actions, variant = "bar", classN
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b border-hairline bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70",
+        "sticky top-0 z-40 border-b border-hairline bg-background/95 backdrop-blur-md",
         className,
       )}
     >

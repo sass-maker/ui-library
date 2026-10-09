@@ -199,7 +199,7 @@ export function Stage({
             />
           )
         )}
-        <div className="px-4 pb-0 pt-8 sm:px-12 sm:pt-14 lg:px-16 lg:pt-16">
+        <div className="px-4 pb-0 pt-6 sm:px-10 sm:pt-10 lg:px-14 lg:pt-12">
           <div className="translate-y-px [&>figure]:rounded-b-none [&>figure]:border-b-0">{main}</div>
         </div>
       </div>
