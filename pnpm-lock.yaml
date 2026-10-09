@@ -29,12 +29,6 @@ importers:
 
   packages/templates:
     dependencies:
-      '@saas-maker/motion':
-        specifier: workspace:*
-        version: link:../motion
-      '@saas-maker/ui':
-        specifier: workspace:*
-        version: link:../ui
       astro:
         specifier: '>=7'
         version: 7.3.5(jiti@2.7.0)(yaml@2.9.1)
@@ -44,6 +38,13 @@ importers:
       react:
         specifier: '>=19'
         version: 19.3.0
+    devDependencies:
+      '@saas-maker/motion':
+        specifier: workspace:*
+        version: link:../motion
+      '@saas-maker/ui':
+        specifier: workspace:*
+        version: link:../ui
 
   packages/tokens: {}
 
