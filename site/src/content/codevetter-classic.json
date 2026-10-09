@@ -1,7 +1,7 @@
 {
   "template": "workbench",
   "page": {
-    "title": "CodeVetter — Execution-backed verification for coding agents",
+    "title": "CodeVetter (classic layout) — Execution-backed verification for coding agents",
     "description": "Bind the requested task to the exact change, run repository-owned checks, and keep a pass, fail, or unverified verdict with its evidence.",
     "theme": "ink",
     "icon": "/demo/codevetter/icon.svg",
@@ -72,29 +72,164 @@
       "width": 1440,
       "height": 900
     },
-    "caption": "Repository-tracked capture of the desktop workbench",
+    "receipt": {
+      "title": "Verification receipt",
+      "meta": "illustrative",
+      "rows": [
+        {
+          "label": "Check",
+          "value": "pnpm test auth/session",
+          "mono": true,
+          "status": {
+            "tone": "danger",
+            "label": "exit 1"
+          }
+        },
+        {
+          "label": "Check",
+          "value": "pnpm typecheck",
+          "mono": true,
+          "status": {
+            "tone": "success",
+            "label": "exit 0"
+          }
+        },
+        {
+          "label": "Verdict",
+          "value": "Not verified.",
+          "strong": true,
+          "status": {
+            "tone": "danger",
+            "label": "fail"
+          }
+        }
+      ]
+    },
+    "caption": "Repository-tracked capture of the desktop workbench · receipt fields are illustrative",
+    "facts": [
+      "Exact source identity",
+      "Executable checks",
+      "Explicit unknowns",
+      "No hosted verifier"
+    ],
     "brackets": true
   },
   "sections": [
     {
       "id": "how",
+      "header": {
+        "align": "split",
+        "eyebrow": "The contract",
+        "title": "The unit of trust is *the whole chain.*",
+        "lede": "A finding or a green command alone is not proof. CodeVetter keeps task identity, execution, evidence, and uncertainty connected, so another engineer, or another agent, can re-check the result."
+      },
       "blocks": [
         {
-          "type": "statement",
-          "eyebrow": "The contract",
-          "title": "The unit of trust is *the whole chain.*",
-          "lede": "A finding or a green command alone is not proof. CodeVetter keeps task identity, execution, evidence, and uncertainty connected, so another engineer, or another agent, can re-check the result.",
-          "points": [
+          "type": "steps",
+          "items": [
             {
-              "title": "Task and change, bound",
-              "body": "The requested outcome and the exact agent revision travel together, so the verifier cannot quietly grade an easier task."
+              "title": "Task",
+              "body": "Preserve the requested outcome and its acceptance boundary.",
+              "code": "task: reject expired sessions"
             },
             {
-              "title": "Checks decide",
-              "body": "Repository-owned tests, builds, browser flows and API checks set the verdict boundary. A model can suggest what to test; execution decides."
+              "title": "Change",
+              "body": "Bind the exact agent revision, not “latest”.",
+              "code": "main…a13c9f2"
             },
             {
-              "title": "Unknown stays unknown",
+              "title": "Execute",
+              "body": "Run the authoritative local checks the repository owns.",
+              "pill": {
+                "tone": "danger",
+                "label": "test: exit 1"
+              }
+            },
+            {
+              "title": "Evidence",
+              "body": "Retain commands, bounded output, artifacts, and limits.",
+              "pill": {
+                "tone": "brand",
+                "label": "retained"
+              }
+            },
+            {
+              "title": "Verdict",
+              "body": "Pass, fail, or unverified. Never a confidence score.",
+              "pill": {
+                "tone": "danger",
+                "label": "fail"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evidence",
+      "surface": "muted",
+      "header": {
+        "eyebrow": "Published evidence",
+        "title": "Proof that survives *the next question.*",
+        "lede": "The public corpus measures a narrow recognition task. It is not evidence of production-wide accuracy or adoption, and the page says so."
+      },
+      "blocks": [
+        {
+          "type": "stats",
+          "items": [
+            {
+              "value": "27",
+              "label": "Synthetic cases",
+              "note": "Inputs and scorer are inspectable."
+            },
+            {
+              "value": "29",
+              "label": "Labelled findings",
+              "note": "Bounded recognition evidence."
+            },
+            {
+              "value": "3",
+              "label": "Verdict states",
+              "note": "Pass · fail · unverified."
+            },
+            {
+              "value": "0",
+              "label": "Hosted verifiers",
+              "note": "Execution and state stay local."
+            }
+          ]
+        },
+        {
+          "type": "features",
+          "items": [
+            {
+              "icon": "FileCheckCorner",
+              "title": "Task identity first",
+              "body": "The requested behavior and acceptance boundary stay attached to the run, so the verifier cannot quietly grade an easier task."
+            },
+            {
+              "icon": "GitCommitHorizontal",
+              "title": "Exact change, not “latest”",
+              "body": "Base and head identities, repository state, and the agent-produced patch travel with the evidence."
+            },
+            {
+              "icon": "SquareTerminal",
+              "title": "Executable checks decide",
+              "body": "Repository-owned tests, builds, browser flows, API checks, and qualified workloads set the verdict boundary."
+            },
+            {
+              "icon": "Archive",
+              "title": "Evidence stays portable",
+              "body": "Commands, bounded output, artifacts, status, and provenance live in machine-readable verification records."
+            },
+            {
+              "icon": "ShieldAlert",
+              "title": "Failures stay classified",
+              "body": "Agent regressions stay separate from existing failures, environment problems, timeouts, and missing coverage."
+            },
+            {
+              "icon": "CircleQuestionMark",
+              "title": "Unknown is a real outcome",
               "body": "Missing or irrelevant evidence produces unverified, not a confidence score dressed up as success."
             }
           ]
@@ -110,17 +245,33 @@
               "kicker": "Failures stay attached",
               "title": "Point at the line *the verdict is about.*",
               "body": "A failing check is linked back to the exact change that caused it, with the command, the bounded output and the limitation, so a reviewer can confirm it in seconds instead of re-running everything.",
-              "detail": {
-                "src": "/demo/codevetter/workbench.png",
-                "alt": "CodeVetter review workbench: line 12 of portfolio.tsx, if (total >= 0), is flagged as the line the unverified finding is about",
-                "width": 1440,
-                "height": 900,
-                "crop": {
-                  "x": 250,
-                  "y": 282,
-                  "w": 640,
-                  "h": 330
-                }
+              "diff": {
+                "file": "src/auth/session.ts · illustrative example",
+                "lines": [
+                  {
+                    "kind": "ctx",
+                    "text": "export function isExpired(session: Session, now = Date.now()) {"
+                  },
+                  {
+                    "kind": "del",
+                    "text": "  return session.expiresAt < now;"
+                  },
+                  {
+                    "kind": "add",
+                    "text": "  return session.expiresAt <= now - REFRESH_GRACE_MS;",
+                    "note": {
+                      "pill": {
+                        "tone": "danger",
+                        "label": "pnpm test auth/session.test.ts · exit 1"
+                      },
+                      "text": "Expired sessions inside the grace window are still accepted, so the requested behavior is not verified."
+                    }
+                  },
+                  {
+                    "kind": "ctx",
+                    "text": "}"
+                  }
+                ]
               }
             },
             {
@@ -137,51 +288,36 @@
       ]
     },
     {
-      "id": "evidence",
-      "surface": "muted",
-      "blocks": [
-        {
-          "type": "statement",
-          "eyebrow": "Published evidence",
-          "title": "Proof that survives *the next question.*",
-          "lede": "The public corpus measures a narrow recognition task. It is not evidence of production-wide accuracy or adoption, and the page says so.",
-          "points": [
-            {
-              "title": "27 synthetic cases",
-              "body": "Inputs and scorer are inspectable."
-            },
-            {
-              "title": "29 labelled findings",
-              "body": "Bounded recognition evidence."
-            },
-            {
-              "title": "No hosted verifier",
-              "body": "Execution and state stay local."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "availability",
+      "surface": "muted",
+      "header": {
+        "align": "split",
+        "eyebrow": "Available today",
+        "title": "Models can suggest. *Execution decides.*",
+        "lede": "No placeholder plans, unsupported installers, or hosted-service promises. Optional model review goes straight to the provider you configure."
+      },
       "blocks": [
         {
-          "type": "statement",
-          "eyebrow": "Available today",
-          "title": "Models can suggest. *Execution decides.*",
-          "lede": "No placeholder plans, unsupported installers, or hosted-service promises. Optional model review goes straight to the provider you configure.",
-          "points": [
+          "type": "features",
+          "variant": "cards",
+          "items": [
             {
+              "icon": "LaptopMinimalCheck",
               "title": "macOS · Apple silicon",
-              "body": "The current GitHub release publishes an aarch64 DMG and updater archive. Other platforms are not published yet."
+              "body": "The current GitHub release publishes an aarch64 DMG and updater archive.",
+              "meta": "Other platforms: not yet"
             },
             {
+              "icon": "LockKeyhole",
               "title": "Local, no account",
-              "body": "Product state and verification evidence live on your machine. Model review uses the Anthropic, OpenAI or OpenRouter credentials you configure."
+              "body": "Product state and verification evidence live on your machine. Model review uses credentials you configure.",
+              "meta": "Anthropic · OpenAI · OpenRouter"
             },
             {
+              "icon": "Scale",
               "title": "Open source · ISC",
-              "body": "The repository, benchmark cases, scorer, docs, and release workflows are public on GitHub."
+              "body": "The repository, benchmark cases, scorer, docs, and release workflows are public on GitHub.",
+              "meta": "github.com/Codevetter"
             }
           ]
         }
@@ -189,7 +325,6 @@
     },
     {
       "id": "faq",
-      "surface": "muted",
       "blocks": [
         {
           "type": "faq",

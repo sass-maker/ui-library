@@ -41,7 +41,7 @@ export function Device({ image, className }: { image: Img; className?: string })
 }
 
 const lede = "font-text text-[clamp(1.1875rem,1rem+0.6vw,1.4375rem)] leading-[1.45] text-pretty text-muted-foreground";
-const eyebrowCls = "font-display text-[0.9375rem] font-semibold tracking-[-0.005em] text-brand";
+const eyebrowCls = "ui-case font-display text-[0.9375rem] font-semibold tracking-[-0.005em] text-brand";
 
 export function GalleryEyebrow({ children, className }: { children: React.ReactNode; className?: string }) {
   return <p className={cn(eyebrowCls, className)}>{children}</p>;
@@ -196,7 +196,8 @@ export function GallerySpread({
   eyebrow?: React.ReactNode;
   title: React.ReactNode;
   lede?: React.ReactNode;
-  backdrop: string;
+  /** Image behind the device; without one the plate is the theme's surface tone. */
+  backdrop?: string;
   device: Img;
   caption?: React.ReactNode;
 }) {
@@ -213,7 +214,11 @@ export function GallerySpread({
       </div>
       <figure>
         <div className="relative isolate overflow-hidden py-[clamp(5rem,10vw,8.75rem)]">
-          <div aria-hidden className="motion-parallax absolute inset-0 -z-10 bg-cover bg-center" style={{ backgroundImage: `url(${backdrop})` }} />
+          {backdrop ? (
+            <div aria-hidden className="motion-parallax absolute inset-0 -z-10 bg-cover bg-center" style={{ backgroundImage: `url(${backdrop})` }} />
+          ) : (
+            <div aria-hidden className="absolute inset-0 -z-10 bg-surface" />
+          )}
           <Device image={device} className="motion-reveal mx-auto w-[clamp(16.25rem,30vw,26.25rem)] shadow-[0_60px_120px_-30px_rgb(60_15_0/0.6)]" />
         </div>
         {caption && <figcaption className={cn(wrap, "mt-5")}>{caption}</figcaption>}

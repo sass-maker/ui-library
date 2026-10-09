@@ -41,7 +41,7 @@
   --display-tracking: -0.035em;
   --display-leading: 1.02;
   --accent-style: normal;
-  --eyebrow-transform: none;
+  --eyebrow-transform: var(--ui-case);
   --eyebrow-tracking: 0;
 
   --radius: 0.75rem;
@@ -128,8 +128,6 @@
   --display-tracking: -0.025em;
   --display-leading: 1.04;
   --accent-style: italic;
-  --eyebrow-transform: uppercase;
-  --eyebrow-tracking: 0.12em;
   --radius: 0.375rem;
   --background: oklch(0.975 0.008 85);
   --foreground: oklch(0.22 0.012 60);
@@ -157,8 +155,6 @@
   --display-tracking: -0.04em;
   --display-leading: 1;
   --accent-style: italic;
-  --eyebrow-transform: uppercase;
-  --eyebrow-tracking: 0.14em;
   --radius: 0.625rem;
   --background: oklch(0.13 0.006 265);
   --foreground: oklch(0.96 0.004 265);

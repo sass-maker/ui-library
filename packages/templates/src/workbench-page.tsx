@@ -59,6 +59,26 @@ function Brackets() {
   );
 }
 
+/** One focal region of a product screenshot, framed as a quiet window. */
+function Detail({ d }: { d: NonNullable<Extract<WorkbenchBlock, { type: "spread" }>["items"][number]["detail"]> }) {
+  const { x, y, w, h } = d.crop;
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xl">
+      <div
+        role="img"
+        aria-label={d.alt}
+        className="w-full bg-no-repeat"
+        style={{
+          aspectRatio: `${w} / ${h}`,
+          backgroundImage: `url(${d.src})`,
+          backgroundSize: `${(d.width / w) * 100}%`,
+          backgroundPosition: `${(x / Math.max(1, d.width - w)) * 100}% ${(y / Math.max(1, d.height - h)) * 100}%`,
+        }}
+      />
+    </div>
+  );
+}
+
 function Block({ block: b, className: base }: { block: WorkbenchBlock; className?: string }) {
   // Grids reveal item by item; single pieces reveal whole.
   const grid = b.type === "steps" || b.type === "stats" || b.type === "features";
@@ -87,7 +107,9 @@ function Block({ block: b, className: base }: { block: WorkbenchBlock; className
             kicker: it.kicker,
             title: rich(it.title),
             body: it.body,
-            media: it.diff ? (
+            media: it.detail ? (
+              <Detail d={it.detail} />
+            ) : it.diff ? (
               <DiffBlock
                 file={it.diff.file}
                 lines={it.diff.lines.map((l) => ({
@@ -105,6 +127,22 @@ function Block({ block: b, className: base }: { block: WorkbenchBlock; className
             ) : null,
           }))}
         />
+      );
+    case "statement":
+      return (
+        <div className={className}>
+          <SectionHeader align="split" eyebrow={b.eyebrow} title={rich(b.title)} lede={b.lede} />
+          {b.points && (
+            <dl className="motion-stagger mt-14 grid gap-x-12 gap-y-10 border-t border-border pt-10 md:grid-cols-3">
+              {b.points.map((pt) => (
+                <div key={pt.title}>
+                  <dt className="font-display text-lg">{pt.title}</dt>
+                  <dd className="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground text-pretty">{pt.body}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
       );
     case "faq":
       return <Faq className={className} title={b.title && rich(b.title)} lede={b.lede} items={b.items} />;

@@ -37,7 +37,7 @@ const footer = z
 
 const gallerySection = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("showcase"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), screen, caption: caption.optional(), note: z.string().optional() }).strict(),
-  z.object({ kind: z.literal("spread"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), backdrop: z.string(), screen, caption: caption.optional() }).strict(),
+  z.object({ kind: z.literal("spread"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), backdrop: z.string().optional(), screen, caption: caption.optional() }).strict(),
   z.object({ kind: z.literal("cover"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), image: z.string(), screen: screen.optional(), credit: z.string().optional() }).strict(),
   z
     .object({
@@ -104,7 +104,17 @@ const workbenchBlock = z.discriminatedUnion("type", [
               .optional(),
             code: z.object({ label: z.string().optional(), code: z.string() }).strict().optional(),
             /** A cropped detail of the product window: one focal point. */
-            detail: z.object({ src: z.string(), alt: z.string(), width: z.number(), height: z.number(), focus: z.string().optional() }).strict().optional(),
+            detail: z
+              .object({
+                src: z.string(),
+                alt: z.string(),
+                width: z.number(),
+                height: z.number(),
+                /** Region of the full image to show, in its pixels. */
+                crop: z.object({ x: z.number(), y: z.number(), w: z.number(), h: z.number() }).strict(),
+              })
+              .strict()
+              .optional(),
           })
           .strict(),
       ),
