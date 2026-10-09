@@ -132,14 +132,14 @@ import Testing
             }
         }
         .smTheme(palette)
-        try render(view, size: CGSize(width: 1280, height: 860), to: "\(dir)/dashboard-screen.png")
+        try Self.render(view, size: CGSize(width: 1280, height: 860), to: "\(dir)/dashboard-screen.png")
     }
 
     /// Renders through a real NSHostingView in an offscreen window so AppKit-backed
     /// views (NavigationSplitView, ScrollView) draw. Height 0 means "fit the content".
     /// cacheDisplay flips shadow offsets and leaves hairlines beside capsule
     /// strokes, so screens rendered this way avoid relying on either.
-    @MainActor private func render(_ view: some View, size: CGSize, to path: String) throws {
+    @MainActor static func render(_ view: some View, size: CGSize, to path: String) throws {
         _ = NSApplication.shared
         let host = NSHostingView(rootView: view)
         var frame = CGRect(origin: .zero, size: size)

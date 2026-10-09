@@ -103,8 +103,12 @@ voice for headings and buttons.
 Beyond the theme, the package assembles whole screens: `SMHero`, `SMShowcase`,
 `SMCover`, `SMStatementRows` and `SMDevice` (Gallery), and `SMAppShell`,
 `SMPage`, `SMStatCard`, `SMSparkline`, `SMAreaChart` and `SMUptimeStrip`
-(dashboards, Swift Charts). `SM_SNAPSHOT_DIR=/tmp/sm swift test` renders sample
-screens to PNG for review.
+(dashboards, Swift Charts). `SMStudioFooter` is the native StudioFooter:
+updates sign-up (`capture: .newsletter | .waitlist | .off`), a feedback sheet
+with an optional screenshot, Ask AI and the studio strip, posting to SaaS Maker
+with `projectKey:` or `catalogId:` (preview mode, sending nothing, without a
+key; feedback pages are `app://<bundle-id>/<screen>`). `SM_SNAPSHOT_DIR=/tmp/sm
+swift test` renders sample screens to PNG for review.
 
 ## Develop
 
