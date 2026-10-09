@@ -13,10 +13,13 @@ one theme.
 
 ## Web product (Astro)
 
-```jsonc
-// package.json — installed from the private repo, not npm
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.0&path:/packages/templates"
+```sh
+# installed from the private repo, not npm (templates needs ui + motion beside it)
+G="github:sass-maker/ui-library#v0.1.1"
+pnpm add "$G&path:/packages/ui" "$G&path:/packages/motion" "$G&path:/packages/templates"
 ```
+
+No extra Astro config is needed; the stylesheet scans the packages for classes.
 
 Add `src/content/<slug>.json` (see `site/src/content/kith.json` and
 `codevetter.json`) and render it with `GalleryPage` or `WorkbenchPage` inside
@@ -25,7 +28,7 @@ Add `src/content/<slug>.json` (see `site/src/content/kith.json` and
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.0")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.1")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```
