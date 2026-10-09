@@ -1,0 +1,32 @@
+{
+  "name": "@saas-maker/ui-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check && astro build"
+  },
+  "dependencies": {
+    "@astrojs/react": "7.0.0",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tailwindcss": "4.3.3",
+    "lucide-react": "1.48.0",
+    "radix-ui": "1.6.7",
+    "motion": "13.4.3",
+    "@saas-maker/ui": "workspace:*",
+    "@saas-maker/motion": "workspace:*",
+    "@saas-maker/templates": "workspace:*"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3"
+  }
+}

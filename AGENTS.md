@@ -1,16 +1,29 @@
-# Fleet UI library — agent instructions
+# SaaS Maker UI — agent instructions
 
-- This repo is Fleet's single web UI library: shadcn/ui primitives
-  (`src/components/ui`), theme presets and tokens (`src/styles/globals.css`),
-  and blocks (`src/components/blocks`). It replaces the `ios-landings` factory
-  once its sites are ported.
-- Products differ by tokens (`data-theme` preset plus `--brand` overrides),
-  imagery and block choice. Do not fork a block's styling per product; add a
-  variant or a token instead.
-- Blocks are server-rendered React with zero client JavaScript by default
-  (native `details`, the Popover API, GET forms). Add a hydrated island only
-  when behavior truly needs it.
-- Demo pages in `src/demos` use each product's real copy and imagery. Never
-  invent metrics, testimonials, counts or availability.
-- Pin exact dependency versions. Run `pnpm check` and `pnpm registry:build`
-  after changes. Never run `npx biome`; never `rm -rf` (use `/usr/bin/trash`).
+One design system for every Fleet product, web and Apple.
+
+- `packages/ui` (`@saas-maker/ui`): shadcn/ui components, theme presets and
+  tokens (`src/styles/globals.css`, the single source of truth), and blocks.
+- `packages/motion` (`@saas-maker/motion`): quiet scroll motion on the Motion
+  library, driven by `.motion-*` classes. No hydration.
+- `packages/templates` (`@saas-maker/templates`): Gallery (consumer) and
+  Workbench (dev tools) page templates, the base layout, and the content-file
+  format. A product page is a JSON content file, not code.
+- `packages/tokens`: `pnpm tokens:build` turns the web theme into
+  `tokens.json` and `swift/Sources/SaaSMakerUI/Tokens.generated.swift`. Run it
+  after any theme change and commit both outputs.
+- `swift/` + root `Package.swift`: `SaaSMakerUI` for Mac and iOS (palette,
+  type roles, components, motion). Apps add it by git URL.
+- `site/`: the library site and demos (Kith, CodeVetter, Live, Reader, App
+  Health). Keep every demo.
+
+Rules:
+- Not published to npm. Products install from the private GitHub repo.
+- Products differ by tokens, imagery, content and block choice. Do not fork a
+  block per product; add a variant or token.
+- Quiet design: one idea per section, one focal visual, accent used sparingly.
+- Demos use real product copy and imagery; never invent metrics, testimonials,
+  counts or availability.
+- Pin exact dependency versions. Run `pnpm check` (typecheck + site build) and
+  `swift build` after changes. Never run `npx biome`; never `rm -rf` or
+  `find -delete` (use `/usr/bin/trash`).

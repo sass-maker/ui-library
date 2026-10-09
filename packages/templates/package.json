@@ -1,0 +1,21 @@
+{
+  "name": "@saas-maker/templates",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Content-driven landing page templates (Gallery, Workbench) and the base layout.",
+  "exports": {
+    "./*.astro": "./src/*.astro",
+    "./*": "./src/*.tsx",
+    "./page-settings": "./src/page-settings.ts"
+  },
+  "dependencies": {
+    "@saas-maker/ui": "workspace:*",
+    "@saas-maker/motion": "workspace:*",
+    "lucide-react": "1.48.0"
+  },
+  "peerDependencies": {
+    "astro": ">=7",
+    "react": ">=19"
+  }
+}

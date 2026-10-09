@@ -1,0 +1,22 @@
+---
+import Base from "@saas-maker/templates/Base.astro";
+import Page from "@/demos/app-health";
+---
+
+<Base
+  title="App Health — acme.app overview"
+  description="Web analytics, product events, and app health."
+  theme="ink"
+  tokens={{
+    "--brand": "oklch(0.7 0.17 280)",
+    "--brand-foreground": "oklch(0.98 0.01 280)",
+    "--brand-soft": "oklch(0.7 0.17 280 / 0.16)",
+    "--background": "oklch(0.13 0.012 280)",
+    "--surface": "oklch(0.155 0.014 280)",
+    "--card": "oklch(0.165 0.014 280)",
+    "--sidebar": "oklch(0.145 0.013 280)",
+    "--chart-2": "oklch(0.78 0.14 200)",
+  }}
+>
+  <Page />
+</Base>

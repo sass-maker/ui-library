@@ -19,7 +19,7 @@
       ],
       "files": [
         {
-          "path": "src/styles/globals.css",
+          "path": "packages/ui/src/styles/globals.css",
           "type": "registry:file",
           "target": "src/styles/fleet-ui.css"
         }
@@ -39,7 +39,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/layout.tsx",
+          "path": "packages/ui/src/blocks/layout.tsx",
           "type": "registry:component"
         }
       ]
@@ -58,11 +58,11 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/site-header.tsx",
+          "path": "packages/ui/src/blocks/site-header.tsx",
           "type": "registry:component"
         },
         {
-          "path": "src/components/blocks/mobile-nav.tsx",
+          "path": "packages/ui/src/blocks/mobile-nav.tsx",
           "type": "registry:component"
         }
       ]
@@ -81,7 +81,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/hero.tsx",
+          "path": "packages/ui/src/blocks/hero.tsx",
           "type": "registry:component"
         }
       ]
@@ -100,7 +100,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/frames.tsx",
+          "path": "packages/ui/src/blocks/frames.tsx",
           "type": "registry:component"
         }
       ]
@@ -119,7 +119,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/gallery.tsx",
+          "path": "packages/ui/src/blocks/gallery.tsx",
           "type": "registry:component"
         }
       ]
@@ -138,7 +138,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/features.tsx",
+          "path": "packages/ui/src/blocks/features.tsx",
           "type": "registry:component"
         }
       ]
@@ -157,7 +157,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/proof.tsx",
+          "path": "packages/ui/src/blocks/proof.tsx",
           "type": "registry:component"
         }
       ]
@@ -177,7 +177,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/closing.tsx",
+          "path": "packages/ui/src/blocks/closing.tsx",
           "type": "registry:component"
         }
       ]
@@ -197,7 +197,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/footer.tsx",
+          "path": "packages/ui/src/blocks/footer.tsx",
           "type": "registry:component"
         }
       ]
@@ -216,7 +216,7 @@
       ],
       "files": [
         {
-          "path": "src/components/blocks/app.tsx",
+          "path": "packages/ui/src/blocks/app.tsx",
           "type": "registry:component"
         }
       ]

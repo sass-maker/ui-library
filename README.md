@@ -1,21 +1,41 @@
-# Fleet UI
+# SaaS Maker UI
 
-One UI library for every Fleet web surface: landings, product apps and
-internal tools. Built on shadcn/ui (Radix + Tailwind v4) with five theme
-presets (base, paper, ink, hearth, signal) and production blocks.
+Shared UI for Fleet products: web packages plus a Swift package, generated from
+one theme.
+
+| Package | What it is |
+| --- | --- |
+| `@saas-maker/ui` | shadcn/ui components, theme presets, page blocks |
+| `@saas-maker/motion` | scroll motion presets (Motion library) |
+| `@saas-maker/templates` | Gallery and Workbench landing templates, base layout |
+| `@saas-maker/tokens` | theme tokens as JSON (generated) |
+| `SaaSMakerUI` (Swift) | palette, type, components and motion for Mac/iOS |
+
+## Web product (Astro)
+
+```jsonc
+// package.json — installed from the private repo, not npm
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.0&path:/packages/templates"
+```
+
+Add `src/content/<slug>.json` (see `site/src/content/kith.json` and
+`codevetter.json`) and render it with `GalleryPage` or `WorkbenchPage` inside
+`Base.astro`. Write `*phrase*` for the accent phrase.
+
+## Mac / iOS app
+
+```swift
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.0")
+// ...
+ContentView().smTheme(.gallery.brand(Color("Brand")))
+```
+
+## Develop
 
 ```sh
 pnpm install
-pnpm dev              # docs + demos at http://localhost:4321
-pnpm build            # static site + shadcn registry in dist/r
+pnpm dev            # library site with demos
+pnpm check          # typecheck packages + build site
+pnpm tokens:build   # regenerate tokens.json and the Swift tokens
+swift build && swift test
 ```
-
-Install into a product with the shadcn CLI:
-
-```sh
-pnpm dlx shadcn@latest add <ui-library-url>/r/theme.json
-pnpm dlx shadcn@latest add <ui-library-url>/r/hero.json
-```
-
-Demos (`/demo/*`) rebuild real Fleet products with their real copy and
-imagery so the library can be scored against the live sites.
