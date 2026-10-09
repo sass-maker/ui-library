@@ -206,6 +206,7 @@ export default function AppHealthPage() {
               ]}
               labels={hours}
               height={250}
+              texture="dither"
             />
           </Panel>
           <Panel title="Live sessions" action={<span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground"><span className="size-1.5 animate-pulse rounded-full bg-brand" />12 now</span>}>

@@ -53,6 +53,27 @@ const faq = [
   },
 ];
 
+/** Brand art from the CodeVetter mark: amber code-scope brackets framing the product. */
+function Brackets() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-10 bottom-10 hidden lg:block">
+      <svg viewBox="0 0 120 600" className="absolute -left-4 top-0 h-full w-auto xl:-left-16" fill="none">
+        <path d="M100 20 L20 300 L100 580" stroke="url(#cvb)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
+        <defs>
+          <linearGradient id="cvb" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stopColor="var(--brand)" stopOpacity="0" />
+            <stop offset="0.45" stopColor="var(--brand)" stopOpacity="0.55" />
+            <stop offset="1" stopColor="var(--brand)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <svg viewBox="0 0 120 600" className="absolute -right-4 top-0 h-full w-auto xl:-right-16" fill="none">
+        <path d="M20 20 L100 300 L20 580" stroke="url(#cvb)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+  );
+}
+
 export default function CodeVetterPage() {
   return (
     <>
@@ -87,6 +108,8 @@ export default function CodeVetterPage() {
       }
       note="Apple silicon · open source (ISC) · no CodeVetter account"
       media={
+        <div className="relative">
+        <Brackets />
         <Stage
           className="mx-auto max-w-6xl text-left"
           backdrop="mesh"
@@ -110,6 +133,7 @@ export default function CodeVetterPage() {
           }
           caption="Repository-tracked capture of the desktop workbench · receipt fields are illustrative"
         />
+        </div>
       }
       footer={
         <FactRow
@@ -242,6 +266,26 @@ $ codevetter check \
         />
       </div>
     </Section>
+
+    <section className="relative overflow-hidden bg-[rgb(251,245,231)] text-[oklch(0.2_0.01_60)] [--background:rgb(251,245,231)] [--foreground:oklch(0.2_0.01_60)] [--muted-foreground:oklch(0.45_0.02_60)] [--brand:oklch(0.6_0.15_58)] [color-scheme:light]">
+      <div className="container-page grid items-center gap-10 pb-0 pt-20 text-[oklch(0.2_0.01_60)] md:pt-28 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <p className="eyebrow mb-5">The principle</p>
+          <p className="font-display text-[clamp(2.5rem,1.6rem+3.6vw,4.5rem)]">
+            Review suggests. <em>Evidence decides.</em>
+          </p>
+          <p className="mt-6 max-w-md text-base leading-relaxed text-[oklch(0.42_0.02_60)]">
+            Check the record behind a verdict: the task, the exact change, what ran, and what is still unknown.
+          </p>
+        </div>
+        <img
+          src="/demo/codevetter/codevetter-evidence-workbench-v1.webp"
+          alt="Illustration of an evidence workbench: desks, a magnifier and cabinets connected by amber lines"
+          loading="lazy"
+          className="block w-full lg:col-span-7"
+        />
+      </div>
+    </section>
 
     <Section id="faq" rule>
       <div className="container-page">

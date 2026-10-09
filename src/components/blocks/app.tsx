@@ -220,11 +220,14 @@ export function AreaChart({
   series,
   labels,
   height = 220,
+  texture = "gradient",
   className,
 }: {
   series: { name: string; values: number[]; color?: string }[];
   labels: string[];
   height?: number;
+  /** gradient: soft fade. dither: pixel-dot fill for pixel-art brands. */
+  texture?: "gradient" | "dither";
   className?: string;
 }) {
   const w = 800;
@@ -255,8 +258,22 @@ export function AreaChart({
                     <stop offset="0%" stopColor={colorOf(s, si)} stopOpacity={0.24} />
                     <stop offset="100%" stopColor={colorOf(s, si)} stopOpacity={0} />
                   </linearGradient>
+                  <pattern id={`dither-${si}`} width="6" height="6" patternUnits="userSpaceOnUse">
+                    <rect width="2.4" height="2.4" fill={colorOf(s, si)} />
+                  </pattern>
+                  <linearGradient id={`fade-${si}`} x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="white" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="white" stopOpacity={0.05} />
+                  </linearGradient>
+                  <mask id={`mask-${si}`}>
+                    <rect width={w} height={h} fill={`url(#fade-${si})`} />
+                  </mask>
                 </defs>
-                <path d={`${line} L${w},${h} L0,${h} Z`} fill={`url(#area-${si})`} />
+                {texture === "dither" ? (
+                  <path d={`${line} L${w},${h} L0,${h} Z`} fill={`url(#dither-${si})`} mask={`url(#mask-${si})`} />
+                ) : (
+                  <path d={`${line} L${w},${h} L0,${h} Z`} fill={`url(#area-${si})`} />
+                )}
                 <path d={line} fill="none" stroke={colorOf(s, si)} strokeWidth={2} vectorEffect="non-scaling-stroke" />
               </g>
             );
