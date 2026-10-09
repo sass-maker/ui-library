@@ -168,7 +168,9 @@ export function StudioFooter({
           </div>
           <p
             aria-hidden
-            className="ui-case mt-[4.5rem] select-none overflow-hidden text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em] text-foreground/90"
+            className="ui-case mt-[4.5rem] select-none overflow-hidden whitespace-nowrap text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em] text-foreground/90"
+            // Long names shrink to stay on one line; short ones keep the full scale.
+            style={product.length > 8 ? { fontSize: `min(${(125 / product.length).toFixed(2)}vw, 20rem)` } : undefined}
           >
             {product}
           </p>

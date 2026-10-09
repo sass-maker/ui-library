@@ -1,50 +1,94 @@
 import * as React from "react";
-import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
-import { Button } from "@saas-maker/ui/components/button";
 import { SiteHeader } from "@saas-maker/ui/blocks/site-header";
-import { Hero } from "@saas-maker/ui/blocks/hero";
-import { Section, SectionHeader } from "@saas-maker/ui/blocks/layout";
-import { FeatureGrid } from "@saas-maker/ui/blocks/features";
+import {
+  GalleryButton,
+  Device,
+  GalleryCaption,
+  GalleryEyebrow,
+  GalleryLede,
+  GalleryNote,
+  GalleryPair,
+  GalleryTitle,
+} from "@saas-maker/ui/blocks/gallery";
 import { CodeBlock } from "@saas-maker/ui/blocks/proof";
+import { StudioFooter } from "@saas-maker/ui/blocks/footer";
 
-const themes = [
-  { id: "base", name: "Base", use: "Internal tools, dashboards, neutral products", sample: <>Ship the <em>calm</em> version.</> },
-  { id: "paper", name: "Paper", use: "Reading, research, writing, editorial", sample: <>Turn notes into <em>knowledge.</em></> },
-  { id: "ink", name: "Ink", use: "Developer tools, AI infra, Mac utilities", sample: <>Verify the <em>exact change.</em></> },
-  { id: "hearth", name: "Hearth", use: "Personal iPhone and life apps", sample: <>Stay close to <em>your people.</em></> },
-  { id: "signal", name: "Signal", use: "Playful consumer and community", sample: <>Make it <em>happen.</em></> },
-];
+/** The library's own home page, built from the Gallery blocks it ships. */
 
-const demos = [
-  { href: "/demo/codevetter/", name: "CodeVetter", theme: "Ink", note: "Receipt hero, steps, stats, CLI, FAQ" },
-  { href: "/demo/kith/", name: "Kith", theme: "Hearth", note: "Phone stage, artwork scene, privacy ledger" },
-  { href: "/demo/reader/", name: "Reader", theme: "Paper", note: "Editorial hero, HTML product surface, ruled grid" },
-  { href: "/demo/live/", name: "Live", theme: "Signal", note: "Cover hero, color bands, catalog cards" },
-  { href: "/demo/app-health/", name: "App Health", theme: "Base", note: "App shell, stat cards, charts, tables" },
-];
+const wrap = "mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]";
+const pad = "py-[clamp(6rem,13vw,11.25rem)]";
 
-function ThemeCard({ id, name, use, sample }: (typeof themes)[number]) {
+const mark = (
+  <span aria-hidden className="grid size-[1.625rem] place-items-center rounded-[0.45rem] bg-brand font-display text-[0.75rem] font-extrabold tracking-[-0.04em] text-brand-foreground">
+    ui
+  </span>
+);
+
+const kithExcerpt = `{
+  "template": "gallery",
+  "page": { "theme": "gallery" },
+  "product": "Kith",
+  "hero": {
+    "title": "Remember the people you want to stay close to.",
+    "backdrop": "/demo/kith/book-stage.webp",
+    "screen": { "src": "/demo/kith/constellation.webp" }
+  },
+  "sections": [
+    {
+      "kind": "showcase",
+      "title": "See closeness the way *you chose it.*"
+    }
+  ]
+}`;
+
+const webInstall = `# from the private repo, not npm
+G="github:sass-maker/ui-library#v0.1.1"
+pnpm add "$G&path:/packages/ui" \\
+  "$G&path:/packages/motion" \\
+  "$G&path:/packages/templates"`;
+
+const swiftInstall = `.package(
+  url: "https://github.com/sass-maker/ui-library",
+  from: "0.1.1"
+)`;
+
+function DemoLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <div data-theme={id} className="flex flex-col overflow-hidden rounded-xl border border-border bg-background text-foreground shadow-sm">
-      <div className="flex-1 p-6">
-        <p className="eyebrow">{name}</p>
-        <p className="font-display mt-4 text-[2rem]">{sample}</p>
-        <div className="mt-6 flex gap-2">
-          <Button size="sm">Primary</Button>
-          <Button size="sm" variant="outline">
-            Secondary
-          </Button>
-        </div>
-      </div>
-      <div className="flex items-center justify-between gap-3 border-t border-hairline bg-surface px-6 py-3">
-        <span className="text-xs text-muted-foreground">{use}</span>
-        <span className="flex gap-1" aria-hidden>
-          {["bg-background", "bg-surface", "bg-primary", "bg-brand"].map((c) => (
-            <span key={c} className={`size-3.5 rounded-full ring-1 ring-black/10 ${c}`} />
-          ))}
-        </span>
-      </div>
-    </div>
+    <a href={href} className="ui-case font-display text-[1.0625rem] font-semibold tracking-[-0.01em] text-brand-ink hover:underline hover:underline-offset-4">
+      {children} <span aria-hidden>›</span>
+    </a>
+  );
+}
+
+function Family({
+  plate,
+  eyebrow,
+  title,
+  body,
+  links,
+}: {
+  plate: React.ReactNode;
+  eyebrow: string;
+  title: string;
+  body: string;
+  links: { label: string; href: string }[];
+}) {
+  return (
+    <article>
+      <a href={links[0].href} className="group block overflow-hidden rounded-[var(--radius)]" aria-label={`${title}: open the ${links[0].label} demo`}>
+        <div className="relative aspect-[4/5] overflow-hidden transition-transform duration-700 ease-out group-hover:scale-[1.015] sm:aspect-[5/6]">{plate}</div>
+      </a>
+      <GalleryEyebrow className="mt-7">{eyebrow}</GalleryEyebrow>
+      <h3 className="mt-2 font-display text-[clamp(2rem,1.5rem+2vw,3rem)]">{title}</h3>
+      <p className="mt-3 max-w-[30em] font-text text-[1.1875rem] leading-[1.45] text-muted-foreground">{body}</p>
+      <p className="mt-5 flex flex-wrap gap-x-7 gap-y-2">
+        {links.map((l) => (
+          <DemoLink key={l.href} href={l.href}>
+            {l.label}
+          </DemoLink>
+        ))}
+      </p>
+    </article>
   );
 }
 
@@ -52,125 +96,230 @@ export default function IndexPage() {
   return (
     <>
       <SiteHeader
-        brand={{
-          name: "Fleet UI",
-          mark: <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary font-mono text-[0.6875rem] font-semibold text-primary-foreground">ui</span>,
-        }}
+        brand={{ name: "SaaS Maker UI", mark }}
         links={[
-          { label: "Themes", href: "#themes" },
-          { label: "Blocks", href: "#blocks" },
-          { label: "Demos", href: "#demos" },
+          { label: "Families", href: "#families" },
+          { label: "Content", href: "#content" },
+          { label: "Apple", href: "#apple" },
           { label: "Install", href: "#install" },
         ]}
         actions={
-          <Button size="sm" asChild>
-            <a href="#demos">See demos</a>
-          </Button>
+          <a href="#install" className="ui-case rounded-full bg-primary px-3.5 py-[0.45rem] text-[0.8125rem] font-semibold text-primary-foreground">
+            Install
+          </a>
         }
       />
-      <main id="main">
-        <Hero
-          layout="centered"
-          backdrop="grid"
-          eyebrow="One library for every Fleet surface"
-          title={
-            <>
-              Solid basics, <em>distinct products.</em>
-            </>
-          }
-          lede="shadcn/ui components, five theme presets and production blocks for landings, internal tools and footers. Products differ by tokens, imagery and the blocks they choose, never by forking components."
-          actions={
-            <>
-              <Button size="xl" asChild>
-                <a href="#demos">
-                  Browse the demos <ArrowRightIcon />
-                </a>
-              </Button>
-              <Button size="xl" variant="outline" asChild>
-                <a href="#install">Install a block</a>
-              </Button>
-            </>
-          }
-        />
 
-        <Section id="themes" rule>
-          <div className="container-page">
-            <SectionHeader
-              align="split"
-              eyebrow="Theme presets"
-              title={
-                <>
-                  Five starting points. <em>Your brand on top.</em>
-                </>
-              }
-              lede="Each preset sets type, surfaces, radius and accent behavior. A product then overrides --brand and supplies its own imagery."
-            />
-            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {themes.map((t) => (
-                <ThemeCard key={t.id} {...t} />
-              ))}
+      <main id="main">
+        {/* Hero: one system, two screens. */}
+        <section className="overflow-hidden pt-[clamp(3.5rem,7vw,6.5rem)] text-center">
+          <div className={wrap}>
+            <GalleryEyebrow className="hero-in mb-5">SaaS Maker UI</GalleryEyebrow>
+            <GalleryTitle as="h1" size="xl" className="hero-in mx-auto max-w-[11em] [--d:60ms]">
+              One design system for <em>every Fleet product.</em>
+            </GalleryTitle>
+            <GalleryLede className="hero-in mx-auto mt-7 [--d:120ms]">
+              Components, page templates and quiet motion for the web, and a Swift package for Mac and iPhone. Products bring the words and pictures; the craft is shared.
+            </GalleryLede>
+            <div className="hero-in mt-8 flex flex-wrap items-center justify-center gap-3.5 [--d:180ms]">
+              <GalleryButton href="#families">See the demos</GalleryButton>
+              <GalleryButton href="#install" variant="link">
+                Install ›
+              </GalleryButton>
             </div>
           </div>
-        </Section>
-
-        <Section id="blocks" surface="muted" rule>
-          <div className="container-page">
-            <SectionHeader eyebrow="Blocks" title={<>Everything a product page <em>actually uses.</em></>} />
-            <FeatureGrid
-              className="mt-14"
-              items={[
-                { kicker: "Navigation", title: "SiteHeader", body: "Bar or floating header with a zero-JS phone menu built on the Popover API." },
-                { kicker: "Openers", title: "Hero", body: "Split, centered, editorial and full-bleed cover layouts with accent phrases and honest notes." },
-                { kicker: "Media", title: "Frames", body: "Window, browser and iPhone frames, matted photos, artwork panels and catalog cards." },
-                { kicker: "Story", title: "Features, Spread, Steps, Stats", body: "Ruled or card grids, alternating media rows, numbered process and big numbers." },
-                { kicker: "Proof", title: "Ledger, CodeBlock, Quote", body: "Receipts of evidence, wrapping terminal blocks and attributed maker notes." },
-                { kicker: "Closing", title: "Faq, Cta, Band", body: "Native details FAQ, closing panels and full-bleed color-block sections." },
-                { kicker: "Footer", title: "StudioFooter", body: "The Fleet contract: routes, Ask AI handoff, newsletter, wordmark, art and studio line." },
-                { kicker: "Apps", title: "AppShell, PageHeader", body: "Sidebar shell with phone drawer, page header with actions and tabs." },
-                { kicker: "Data", title: "StatCard, AreaChart, Table", body: "Sparklines, server-rendered charts with readable axes, and shadcn tables." },
-              ]}
-            />
+          <GalleryPair
+            className="hero-in mt-[clamp(3.5rem,6vw,5rem)] [--d:260ms]"
+            backdrop="/demo/kith/book-stage.webp"
+            window={{
+              src: "/demo/codevetter/workbench.png",
+              alt: "CodeVetter's desktop review workbench with a finding beside the changed code",
+              width: 1440,
+              height: 900,
+              priority: true,
+              title: "CodeVetter",
+            }}
+            device={{
+              src: "/demo/kith/constellation.webp",
+              alt: "Kith on iPhone: a warm constellation of people sized by chosen closeness",
+              width: 603,
+              height: 1311,
+              priority: true,
+            }}
+          />
+          <div className={wrap}>
+            <GalleryCaption lead="CodeVetter on the Mac, Kith on the iPhone." className="mx-auto mt-5 text-left md:text-center">
+              Two products, one library.
+            </GalleryCaption>
           </div>
-        </Section>
+        </section>
 
-        <Section id="demos" rule>
-          <div className="container-page">
-            <SectionHeader eyebrow="Demos" title={<>Real products, <em>rebuilt on the library.</em></>} lede="Each demo uses the product's real copy and imagery, so it can be scored against the live site." />
-            <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {demos.map((d) => (
-                <li key={d.href}>
-                  <a href={d.href} className="group flex h-full flex-col gap-2 rounded-xl border border-border bg-card p-6 shadow-xs transition-shadow hover:shadow-md">
-                    <span className="eyebrow">{d.theme}</span>
-                    <span className="flex items-center justify-between text-lg font-semibold">
-                      {d.name} <ArrowUpRightIcon className="size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                    </span>
-                    <span className="text-sm text-muted-foreground">{d.note}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+        {/* The two page families. */}
+        <section id="families" className={pad}>
+          <div className={wrap}>
+            <div className="motion-stagger text-center">
+              <GalleryEyebrow>Two page families</GalleryEyebrow>
+              <GalleryTitle className="mt-5">
+                Pick the family. <em>Bring the content.</em>
+              </GalleryTitle>
+              <GalleryLede className="mx-auto mt-6">
+                Every landing page is one of two templates. Products differ by tokens, imagery and copy, never by a forked component.
+              </GalleryLede>
+            </div>
+            <div className="motion-stagger mt-[clamp(3.5rem,7vw,5.5rem)] grid gap-x-[clamp(1.5rem,3vw,2.5rem)] gap-y-16 md:grid-cols-2">
+              <Family
+                eyebrow="For consumer products"
+                title="Gallery"
+                body="Image-led and quiet: a monumental headline, then real screens and artwork at full scale, one idea per section."
+                links={[
+                  { label: "Kith", href: "/demo/kith/" },
+                  { label: "Live", href: "/demo/live/" },
+                ]}
+                plate={
+                  <>
+                    <img src="/demo/kith/memory-table-v2.webp" alt="" loading="lazy" decoding="async" className="absolute inset-0 size-full object-cover" />
+                    <Device
+                      image={{ src: "/demo/kith/person.webp", alt: "Kith person page for Maya Rao, from the Kith demo", width: 603, height: 1311 }}
+                      className="absolute left-1/2 top-[13%] w-[48%] -translate-x-1/2"
+                    />
+                  </>
+                }
+              />
+              <Family
+                eyebrow="For developer tools"
+                title="Workbench"
+                body="The real app window on a stage, then the proof: steps, evidence and the exact commands, on a dark or paper theme."
+                links={[
+                  { label: "CodeVetter", href: "/demo/codevetter/" },
+                  { label: "Reader", href: "/demo/reader/" },
+                ]}
+                plate={
+                  <>
+                    <div className="absolute inset-0 bg-tone-ink" />
+                    <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_30%_30%,#3a2a1f_0%,transparent_70%)]" />
+                    <img
+                      src="/demo/reader/reading-surface.png"
+                      alt="Reader's reading surface: a saved article with a highlighted passage and notes, from the Reader demo"
+                      width={1792}
+                      height={780}
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute left-[12%] top-[22%] w-[150%] max-w-none rounded-[0.75rem] shadow-[0_0_0_1px_rgb(255_255_255/0.08),0_50px_90px_-30px_rgb(0_0_0/0.7)]"
+                    />
+                  </>
+                }
+              />
+            </div>
+            <GalleryCaption lead="Internal tools and dashboards" className="mx-auto mt-[clamp(4rem,8vw,6rem)] text-center">
+              use the app shell, charts and tables instead. <a href="/demo/app-health/" className="font-display font-semibold text-brand-ink hover:underline hover:underline-offset-4">See App Health ›</a>
+            </GalleryCaption>
           </div>
-        </Section>
+        </section>
 
-        <Section id="install" surface="muted" rule>
-          <div className="container-page grid gap-10 lg:grid-cols-2">
-            <SectionHeader
-              eyebrow="Install"
-              title={<>Copy the source, <em>not a dependency.</em></>}
-              lede="Blocks install through the shadcn CLI from this library's registry. The code lands in your repo, so nothing breaks when the library moves on."
-            />
-            <CodeBlock
-              label="terminal"
-              code={`# tokens and presets first
-pnpm dlx shadcn@latest add <ui-library>/r/theme.json
-
-# then the blocks you need
-pnpm dlx shadcn@latest add <ui-library>/r/hero.json
-pnpm dlx shadcn@latest add <ui-library>/r/studio-footer.json`}
-            />
+        {/* A product is one content file. */}
+        <section id="content" className={`${pad} bg-surface`}>
+          <div className={`${wrap} grid items-center gap-[clamp(3rem,7vw,7rem)] md:grid-cols-[0.9fr_1.1fr]`}>
+            <div className="motion-stagger">
+              <GalleryEyebrow>Content, not code</GalleryEyebrow>
+              <GalleryTitle size="md" className="mt-4">
+                A product is <em>one content file.</em>
+              </GalleryTitle>
+              <GalleryLede className="mt-6">
+                Copy, image paths and links live in one JSON file. The template does the layout, and the build checks the file before it ships. Wrap a phrase in asterisks to make it the accent.
+              </GalleryLede>
+              <div className="mt-7">
+                <DemoLink href="/demo/kith/">See this file as a page</DemoLink>
+              </div>
+            </div>
+            <CodeBlock className="motion-reveal min-w-0 rounded-[calc(var(--radius)*0.8)] border-0 shadow-[0_50px_100px_-40px_rgb(40_20_10/0.5)]" label="src/content/kith.json (excerpt)" code={kithExcerpt} />
           </div>
-        </Section>
+        </section>
+
+        {/* Web and Apple share one theme. */}
+        <section
+          id="apple"
+          className={`${pad} bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--accent-ink:#8f7f70] [--brand-ink:#e98a5f]`}
+        >
+          <div className={`${wrap} motion-stagger text-center`}>
+            <GalleryEyebrow>Web and Apple</GalleryEyebrow>
+            <GalleryTitle className="mt-5">
+              The same voice <em>on Mac and iPhone.</em>
+            </GalleryTitle>
+            <GalleryLede className="mx-auto mt-6">
+              SaaSMakerUI, the Swift package, carries the same palette and the same fonts, generated from the web theme, and keeps the lowercase voice for headings and buttons.
+            </GalleryLede>
+          </div>
+          {/* Column flow: both specimens share row one (baseline-aligned), both captions row two. */}
+          <div className={`${wrap} motion-stagger mt-[clamp(4rem,8vw,6.5rem)] grid items-baseline gap-x-14 text-center sm:grid-flow-col sm:grid-cols-2 sm:grid-rows-[auto_auto]`}>
+            <p aria-hidden className="font-display text-[clamp(7rem,4rem+12vw,14rem)] leading-none">
+              Aa
+            </p>
+            <GalleryCaption lead="Figtree" className="mx-auto mb-14 mt-6 sm:mb-0">
+              for headings, buttons and navigation.
+            </GalleryCaption>
+            <p aria-hidden className="font-text text-[clamp(7rem,4rem+12vw,14rem)] leading-none tracking-[-0.03em]">
+              Aa
+            </p>
+            <GalleryCaption lead="Newsreader" className="mx-auto mt-6">
+              for ledes and captions.
+            </GalleryCaption>
+          </div>
+        </section>
+
+        {/* Install. */}
+        <section id="install" className={pad}>
+          <div className={wrap}>
+            <div className="motion-stagger text-center">
+              <GalleryEyebrow>Install</GalleryEyebrow>
+              <GalleryTitle className="mt-5">
+                From GitHub, <em>not npm.</em>
+              </GalleryTitle>
+              <GalleryLede className="mx-auto mt-6">
+                SaaS Maker UI is not published to npm. Products add it from the private GitHub repo at a tagged release.
+              </GalleryLede>
+            </div>
+            <div className="motion-stagger mt-[clamp(3.5rem,7vw,5.5rem)] grid gap-x-8 gap-y-12 md:grid-cols-2">
+              <div className="min-w-0">
+                <h3 className="font-display text-[1.375rem]">Web, with pnpm</h3>
+                <p className="mt-1.5 font-text text-[1.0625rem] text-muted-foreground">ui, motion and templates, side by side.</p>
+                <CodeBlock className="mt-5 rounded-[calc(var(--radius)*0.8)] border-0" label="terminal" code={webInstall} />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-display text-[1.375rem]">Mac and iPhone, with Swift</h3>
+                <p className="mt-1.5 font-text text-[1.0625rem] text-muted-foreground">Add the package by its git URL.</p>
+                <CodeBlock className="mt-5 rounded-[calc(var(--radius)*0.8)] border-0" label="Package.swift" code={swiftInstall} />
+              </div>
+            </div>
+            <GalleryNote className="mt-[clamp(4rem,8vw,6rem)] text-center text-[0.9375rem]">
+              The classic layouts are still here:{" "}
+              <a href="/demo/codevetter-classic/" className="font-semibold text-foreground hover:underline hover:underline-offset-4">CodeVetter</a>,{" "}
+              <a href="/demo/live-classic/" className="font-semibold text-foreground hover:underline hover:underline-offset-4">Live</a> and{" "}
+              <a href="/demo/reader-classic/" className="font-semibold text-foreground hover:underline hover:underline-offset-4">Reader</a>.
+            </GalleryNote>
+          </div>
+        </section>
       </main>
+
+      <StudioFooter
+        variant="gallery"
+        product="SaaS Maker UI"
+        mark={mark}
+        url="https://github.com/sass-maker/ui-library"
+        summary="One design system for Fleet products: web components, page templates and motion, and a Swift package for Mac and iPhone."
+        groups={[
+          {
+            title: "Links",
+            links: [
+              { label: "Kith", href: "/demo/kith/" },
+              { label: "Live", href: "/demo/live/" },
+              { label: "CodeVetter", href: "/demo/codevetter/" },
+              { label: "Reader", href: "/demo/reader/" },
+              { label: "App Health", href: "/demo/app-health/" },
+              { label: "Install", href: "#install" },
+            ],
+          },
+        ]}
+      />
     </>
   );
 }
