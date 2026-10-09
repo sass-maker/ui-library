@@ -3,6 +3,16 @@ import Base from "@/layouts/Base.astro";
 import Page from "@/demos/app-health";
 ---
 
-<Base title="App Health — acme.app overview" description="Web analytics, product events, and app health." theme="base" icon="">
+<Base
+  title="App Health — acme.app overview"
+  description="Web analytics, product events, and app health."
+  theme="ink"
+  tokens={{
+    "--brand": "oklch(0.78 0.16 158)",
+    "--brand-foreground": "oklch(0.16 0.03 158)",
+    "--brand-soft": "oklch(0.78 0.16 158 / 0.14)",
+    "--chart-2": "oklch(0.72 0.13 250)",
+  }}
+>
   <Page />
 </Base>

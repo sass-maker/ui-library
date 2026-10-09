@@ -205,7 +205,7 @@ export function StatCard({
           </span>
         )}
       </div>
-      <p className="text-[1.75rem] font-semibold tabular-nums tracking-[-0.03em]">{value}</p>
+      <p className="font-display text-[2rem] tabular-nums">{value}</p>
       {trend && <Sparkline values={trend} />}
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
@@ -290,5 +290,85 @@ export function EmptyState({ icon, title, body, action }: { icon?: React.ReactNo
       <p className="max-w-sm text-sm text-muted-foreground">{body}</p>
       {action && <div className="mt-2">{action}</div>}
     </div>
+  );
+}
+
+/**
+ * Status-page uptime strip: one bar per day, colored by health. Server-rendered.
+ */
+export function UptimeStrip({
+  days,
+  label,
+  summary,
+}: {
+  /** One entry per day, oldest first. */
+  days: ("up" | "degraded" | "down")[];
+  label: string;
+  summary?: string;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-baseline justify-between gap-3 text-sm">
+        <span className="font-mono text-[0.8125rem]">{label}</span>
+        {summary && <span className="font-mono text-xs tabular-nums text-muted-foreground">{summary}</span>}
+      </div>
+      <div className="flex h-7 gap-[2px]" role="img" aria-label={`${label}: ${summary ?? ""}`}>
+        {days.map((d, i) => (
+          <span
+            key={i}
+            className={cn(
+              "flex-1 rounded-[2px]",
+              d === "up" && "bg-success/80",
+              d === "degraded" && "bg-warning",
+              d === "down" && "bg-destructive",
+              // keep 30 bars on phones
+              i < days.length - 30 && "hidden sm:block",
+            )}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Dotted world map with live points. Coordinates are percentages of the plate. */
+export function DotMap({ points, className }: { points: { x: number; y: number; size?: number; label?: string }[]; className?: string }) {
+  // A coarse land mask, row by row (40 columns × 18 rows); '#' is land.
+  const rows = [
+    "........................................",
+    "......###.##........######...........##.",
+    "....##########.....#########.#######.##.",
+    "..#############...####.###############..",
+    "...###########....##############.#####..",
+    "....#########......##############.###...",
+    ".....#######.......#########.#####......",
+    "......#####........##########..###......",
+    ".......###..........########...##.......",
+    "........###..........######.....#.......",
+    "........#####........#####......##......",
+    ".........######......####........#.##...",
+    "..........#####.......###.........####..",
+    "..........####........##.........######.",
+    "...........##.........#...........####..",
+    "...........#.......................##...",
+    "........................................",
+    "........................................",
+  ];
+  return (
+    <figure className={cn("relative", className)}>
+      <svg viewBox="0 0 400 180" className="w-full" aria-hidden>
+        {rows.flatMap((r, y) =>
+          [...r].map((c, x) =>
+            c === "#" ? <circle key={`${x}-${y}`} cx={x * 10 + 5} cy={y * 10 + 5} r={1.8} className="fill-muted-foreground/35" /> : null,
+          ),
+        )}
+        {points.map((p, i) => (
+          <g key={i}>
+            <circle cx={p.x * 4} cy={p.y * 1.8} r={(p.size ?? 1) * 9} className="fill-brand/15" />
+            <circle cx={p.x * 4} cy={p.y * 1.8} r={(p.size ?? 1) * 3.2} className="fill-brand" />
+          </g>
+        ))}
+      </svg>
+    </figure>
   );
 }

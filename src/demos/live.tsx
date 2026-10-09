@@ -51,6 +51,51 @@ function LifeInWeeks() {
   );
 }
 
+const bingo = [
+  "Watch a sunrise from a summit", "Cook a dish from your grandparents' kitchen", "Learn ten words in a new language", "Swim in the sea in winter",
+  "Go to a show alone", "Write a letter by hand", "Sleep under the stars", "Host a dinner for strangers",
+  "Finish a 10k", "Visit a city on a whim", "Plant something and keep it alive", "Ask an elder for their story",
+  "Take a class you'd normally skip", "Spend a day offline", "Build something with your hands", "Say yes to the next invitation",
+];
+const done = new Set([0, 5, 10, 15, 3, 7]);
+
+/** Live's Bingo board: a 4×4 card of side quests with a completed diagonal. */
+function BingoBoard() {
+  return (
+    <figure className="rounded-[1.75rem] bg-card p-4 shadow-xl ring-1 ring-black/5 sm:p-6">
+      <div className="mb-4 flex items-baseline justify-between gap-3 px-1">
+        <figcaption className="font-display text-[1.75rem]">Summer side quests</figcaption>
+        <span className="font-mono text-[0.6875rem] text-muted-foreground">Illustrative board</span>
+      </div>
+      <ol className="grid grid-cols-4 gap-1.5 sm:gap-2">
+        {bingo.map((t, i) => {
+          const isDone = done.has(i);
+          const diag = i % 5 === 0;
+          return (
+            <li
+              key={t}
+              className={
+                "relative flex aspect-square items-end rounded-xl p-2 text-[0.625rem] leading-tight sm:p-3 sm:text-[0.8125rem] " +
+                (isDone ? (diag ? "bg-brand text-brand-foreground" : "bg-tone-1 text-foreground") : "bg-surface text-muted-foreground")
+              }
+            >
+              {isDone && (
+                <span aria-hidden className="absolute right-1.5 top-1.5 inline-flex size-4 items-center justify-center rounded-full bg-foreground text-[0.5625rem] text-background sm:right-2.5 sm:top-2.5 sm:size-5 sm:text-[0.6875rem]">
+                  ✓
+                </span>
+              )}
+              <span className={isDone ? "font-medium" : undefined}>{t}</span>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="mt-4 px-1 text-sm text-muted-foreground">
+        Four in a row on the diagonal. <span className="text-foreground">That's a bingo.</span>
+      </p>
+    </figure>
+  );
+}
+
 export default function LivePage() {
   return (
     <>
@@ -141,6 +186,20 @@ export default function LivePage() {
                 { title: "Remember your week", body: "Log a habit when you do it. Write one private journal entry about the week before.", detail: <span className="eyebrow">Private by default</span> },
               ]}
             />
+            <div className="mt-24 grid items-center gap-12 lg:grid-cols-12">
+              <div className="lg:col-span-5">
+                <p className="eyebrow mb-4">Bingo boards</p>
+                <h3 className="font-display text-[clamp(2rem,1.4rem+2.4vw,3.25rem)]">
+                  Turn a season into <em>a game you can win.</em>
+                </h3>
+                <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
+                  Pick sixteen things from the catalog or your own list, then mark them off as the weeks go by. No streaks, no points: just a card that fills up with things you actually did.
+                </p>
+              </div>
+              <div className="lg:col-span-7">
+                <BingoBoard />
+              </div>
+            </div>
           </div>
         </Section>
 
@@ -186,8 +245,8 @@ export default function LivePage() {
         <Section size="compact">
           <div className="container-page">
             <div className="relative isolate overflow-hidden rounded-[2rem]">
-              <img src={img("dawn-valley-1920.webp")} alt="" loading="lazy" className="absolute inset-0 -z-10 size-full object-cover" />
-              <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-black/70 via-black/35 to-transparent" />
+              <img src={img("dawn-valley-1920.webp")} alt="" loading="lazy" className="absolute inset-0 -z-10 size-full object-cover object-[20%_80%] sm:object-center" />
+              <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/55 to-black/30 sm:bg-gradient-to-r sm:from-black/75 sm:via-black/40 sm:to-transparent" />
               <div className="max-w-2xl px-6 py-16 text-white sm:px-12 md:py-24 [--muted-foreground:rgb(255_255_255/0.8)] [--accent-ink:var(--brand)]">
                 <p className="eyebrow mb-5 text-white/80">Start with one real possibility</p>
                 <h2 className="font-display text-[clamp(2.25rem,1.5rem+3vw,4rem)]">
@@ -214,6 +273,7 @@ export default function LivePage() {
           { title: "Studio", links: [{ label: "Significant Hobbies", href: "https://significanthobbies.com" }] },
         ]}
         art={{ src: img("live.webp"), alt: "Illustrated landscape of paths and adventures" }}
+        artMode="scene"
         feedbackHref="#"
         legal="© 2026 Significant Hobbies"
       />

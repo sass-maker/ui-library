@@ -32,6 +32,7 @@ export function StudioFooter({
   newsletterAction,
   feedbackHref,
   legal,
+  artMode = "panel",
   className,
 }: {
   product: string;
@@ -42,6 +43,8 @@ export function StudioFooter({
   newsletterAction?: string;
   feedbackHref?: string;
   legal?: React.ReactNode;
+  /** panel: framed art under the wordmark. scene: full-bleed closing art the page fades into. */
+  artMode?: "panel" | "scene";
   className?: string;
 }) {
   const question = `What does ${product} (${url}) do, and who is it best for? Keep it concise.`;
@@ -140,7 +143,7 @@ export function StudioFooter({
           {product}
         </p>
       </div>
-      {art && (
+      {art && artMode === "panel" && (
         <div className="container-page mt-6">
           <img
             src={art.src}
@@ -150,6 +153,15 @@ export function StudioFooter({
             className="block aspect-[5/2] w-full object-cover [mask-image:radial-gradient(ellipse_75%_85%_at_50%_55%,black_55%,transparent_100%)] sm:aspect-[3/1]"
           />
         </div>
+      )}
+      {art && artMode === "scene" && (
+        <img
+          src={art.src}
+          alt={art.alt}
+          loading="lazy"
+          decoding="async"
+          className="-mt-[6vw] block h-[clamp(12rem,32vw,28rem)] w-full object-cover [mask-image:linear-gradient(to_bottom,transparent,black_38%)]"
+        />
       )}
 
       <div className="container-page flex flex-col gap-4 py-8 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">

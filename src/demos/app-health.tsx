@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AppShell, PageHeader, StatCard, AreaChart } from "@/components/blocks/app";
+import { AppShell, PageHeader, StatCard, AreaChart, UptimeStrip, DotMap } from "@/components/blocks/app";
 import { StatusPill } from "@/components/blocks/proof";
 
 const hours = ["00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "Now"];
@@ -53,6 +53,19 @@ const endpoints = [
   { route: "POST /api/signup", p95: "180 ms", up: "99.9%", tone: "success" as const, label: "healthy" },
   { route: "POST /api/checkout", p95: "1.4 s", up: "98.7%", tone: "warning" as const, label: "slow" },
   { route: "POST /webhooks/stripe", p95: "—", up: "96.2%", tone: "danger" as const, label: "failing" },
+];
+
+type Day = "up" | "degraded" | "down";
+const uptime = (bad: Record<number, Day>): Day[] => Array.from({ length: 90 }, (_, i) => bad[i] ?? "up");
+const endpointsUptime = [
+  { route: "GET /api/health", days: uptime({}), summary: "100% · p95 42 ms" },
+  { route: "POST /api/signup", days: uptime({ 61: "degraded" }), summary: "99.9% · p95 180 ms" },
+  { route: "POST /api/checkout", days: uptime({ 23: "degraded", 70: "degraded", 88: "degraded" }), summary: "98.7% · p95 1.4 s" },
+  { route: "POST /webhooks/stripe", days: uptime({ 40: "down", 87: "degraded", 89: "down" }), summary: "96.2% · failing now" },
+];
+const sessions = [
+  { x: 22, y: 33, size: 1.4 }, { x: 26, y: 38 }, { x: 18, y: 30 }, { x: 48, y: 25, size: 1.2 }, { x: 51, y: 22 },
+  { x: 53, y: 30 }, { x: 71, y: 43, size: 1.3 }, { x: 80, y: 33 }, { x: 86, y: 70 }, { x: 31, y: 72 }, { x: 57, y: 60 }, { x: 77, y: 52 },
 ];
 
 function Panel({ title, action, children, className = "" }: { title: string; action?: React.ReactNode; children: React.ReactNode; className?: string }) {
@@ -114,7 +127,11 @@ export default function AppHealthPage() {
       user={{ name: "Sarthak Agrawal", detail: "acme.app · owner" }}
     >
       <PageHeader
-        title="acme.app"
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            acme.app <StatusPill tone="success">collecting</StatusPill>
+          </span>
+        }
         description="Illustrative data · last 24 hours"
         actions={
           <>
@@ -122,6 +139,9 @@ export default function AppHealthPage() {
               <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Search events" className="h-8 w-52 pl-8" />
             </div>
+            <Button variant="outline" size="icon-sm" className="sm:hidden" aria-label="Search events">
+              <SearchIcon />
+            </Button>
             <Button variant="outline" size="sm">
               <ListFilterIcon /> Last 24h
             </Button>
@@ -164,9 +184,12 @@ export default function AppHealthPage() {
                 { name: "Named events", values: events },
               ]}
               labels={hours}
+              height={330}
             />
           </Panel>
-          <Panel title="Referral sources">
+          <Panel title="Live sessions" action={<span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground"><span className="size-1.5 animate-pulse rounded-full bg-brand" />12 now</span>}>
+            <DotMap points={sessions} />
+            <p className="mb-3 mt-5 text-xs text-muted-foreground">Referral sources</p>
             <BarList items={sources} />
             <div className="mt-6 border-t border-hairline pt-5">
               <p className="mb-3 text-xs text-muted-foreground">Devices</p>
@@ -213,19 +236,12 @@ export default function AppHealthPage() {
               </TableBody>
             </Table>
           </Panel>
-          <Panel title="Endpoint health" action={<Badge variant="outline">1 alert</Badge>}>
-            <ul className="divide-y divide-hairline">
-              {endpoints.map((e) => (
-                <li key={e.route} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 first:pt-0 last:pb-0">
-                  <span className="font-mono text-[0.8125rem]">{e.route}</span>
-                  <span className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <span className="tabular-nums">p95 {e.p95}</span>
-                    <span className="tabular-nums">{e.up}</span>
-                    <StatusPill tone={e.tone}>{e.label}</StatusPill>
-                  </span>
-                </li>
+          <Panel title="Endpoint health · 90 days" action={<StatusPill tone="danger">1 failing</StatusPill>}>
+            <div className="flex flex-col gap-5">
+              {endpointsUptime.map((e) => (
+                <UptimeStrip key={e.route} label={e.route} days={e.days} summary={e.summary} />
               ))}
-            </ul>
+            </div>
           </Panel>
         </div>
 

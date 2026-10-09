@@ -103,14 +103,24 @@ export function Hero({
         <div className="container-page pb-16 pt-14 md:pb-24 md:pt-20">
           {eyebrowNode}
           <h1 className="hero-in font-display max-w-[16ch] text-[clamp(3rem,1.4rem+6.6vw,7.25rem)] [--d:60ms]">{title}</h1>
-          <div className="mt-10 grid gap-10 border-t border-border pt-8 md:grid-cols-12">
-            <div className="md:col-span-6 lg:col-span-5">
-              {lede && <p className="hero-in lede [--d:110ms]">{lede}</p>}
-              {actionsNode}
-              {noteNode}
+          {media ? (
+            <div className="mt-10 grid gap-10 border-t border-border pt-8 md:grid-cols-12">
+              <div className="md:col-span-6 lg:col-span-5">
+                {lede && <p className="hero-in lede [--d:110ms]">{lede}</p>}
+                {actionsNode}
+                {noteNode}
+              </div>
+              <div className="hero-in md:col-span-6 lg:col-span-7 [--d:180ms]">{media}</div>
             </div>
-            {media && <div className="hero-in md:col-span-6 lg:col-span-7 [--d:180ms]">{media}</div>}
-          </div>
+          ) : (
+            <div className="mt-10 grid gap-8 border-t border-border pt-8 md:grid-cols-12 md:gap-10">
+              {lede && <p className="hero-in lede md:col-span-6 [--d:110ms]">{lede}</p>}
+              <div className="md:col-span-5 md:col-start-8 [&>*:first-child]:mt-0">
+                {actionsNode}
+                {noteNode}
+              </div>
+            </div>
+          )}
           {footer && <div className="mt-12">{footer}</div>}
         </div>
       )}

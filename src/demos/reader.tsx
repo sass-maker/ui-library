@@ -6,7 +6,7 @@ import { Hero } from "@/components/blocks/hero";
 import { Section, SectionHeader, FactRow } from "@/components/blocks/layout";
 import { FeatureGrid, Steps } from "@/components/blocks/features";
 import { Ledger, Quote } from "@/components/blocks/proof";
-import { WindowFrame } from "@/components/blocks/frames";
+import { WindowFrame, Stage } from "@/components/blocks/frames";
 import { Faq, Cta } from "@/components/blocks/closing";
 import { StudioFooter } from "@/components/blocks/footer";
 
@@ -110,7 +110,13 @@ export default function ReaderPage() {
             </>
           }
           note={<FactRow items={["Browser-local start", "Google sign-in for the library", "No checkout"]} className="text-[0.8125rem]" />}
-          media={<ReadingSurface />}
+          footer={
+            <Stage
+              backdrop={{ image: { src: "/demo/reader/reader-precise-original-v1.webp", alt: "", priority: true } }}
+              main={<div className="mx-auto max-w-4xl"><ReadingSurface /></div>}
+              caption="Illustrative interface · example text, not a customer document"
+            />
+          }
         />
 
         <Section id="loop" rule>
@@ -203,15 +209,15 @@ export default function ReaderPage() {
               }
               lede="Reader is a mature personal-use product in maintenance-first support. New work is limited to problems that block the capture-to-reading loop."
             />
-            <FeatureGrid
+            <Ledger
               className="mt-14"
-              columns={2}
-              variant="ruled"
-              items={[
-                { kicker: "Without an account", title: "Start in this browser.", body: "Use the device-local path to capture and read without creating a Reader account." },
-                { kicker: "With Google sign-in", title: "Open the account library.", body: "Saved material is isolated per user; PDFs are stored behind an ownership-enforcing proxy." },
-                { kicker: "Companion tooling", title: "The extension is source-built.", body: "The MV3 companion exists for local unpacked installs. A browser-store release is deferred." },
-                { kicker: "Commercial state", title: "No public plan or checkout.", body: "Nothing establishes a permanent free promise or a paid offer, so this page invents neither." },
+              title="Current state"
+              meta="maintenance-first"
+              rows={[
+                { label: "No account", value: "Capture and read in this browser without a Reader account.", status: { tone: "success", label: "available" } },
+                { label: "Google sign-in", value: "Account library, isolated per user; PDFs behind an ownership-checking proxy.", status: { tone: "success", label: "available" } },
+                { label: "Extension", value: "Source-built MV3 companion for local unpacked installs.", status: { tone: "neutral", label: "source only" } },
+                { label: "Commerce", value: "No public plan or checkout, and no promise either way.", status: { tone: "neutral", label: "none" } },
               ]}
             />
           </div>

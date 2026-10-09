@@ -221,6 +221,10 @@
   --brand-foreground: oklch(0.18 0.01 60);
   /* Light brand: accent phrases use ink on light surfaces. */
   --accent-ink: oklch(0.5 0.16 45);
+  --surface: oklch(0.965 0.018 80);
+  --card: oklch(0.995 0.004 90);
+  --hairline: oklch(0.92 0.012 80);
+  --muted-foreground: oklch(0.47 0.02 60);
   --tone-1: oklch(0.955 0.025 80);
   --tone-2: oklch(0.94 0.035 75);
   --tone-3: oklch(0.93 0.03 140);
@@ -367,13 +371,21 @@
     padding-inline: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
   }
   .section {
-    padding-block: clamp(4rem, 2.6rem + 4.6vw, 7rem);
+    padding-block: clamp(3.75rem, 2.5rem + 4vw, 6.25rem);
   }
   .grid-paper {
     background-image:
       linear-gradient(to right, var(--hairline) 1px, transparent 1px),
       linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
     background-size: 40px 40px;
+  }
+  /* Generated brand light for stages without artwork. */
+  .mesh {
+    background:
+      radial-gradient(60% 70% at 15% 20%, color-mix(in oklch, var(--brand) 55%, transparent), transparent 70%),
+      radial-gradient(50% 60% at 85% 30%, color-mix(in oklch, var(--chart-2) 45%, transparent), transparent 70%),
+      radial-gradient(70% 70% at 60% 100%, color-mix(in oklch, var(--brand) 35%, var(--background)), transparent 75%),
+      var(--surface);
   }
   .grain {
     position: relative;

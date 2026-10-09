@@ -162,3 +162,60 @@ export function MediaCard({
     </Comp>
   );
 }
+
+/**
+ * A stage: product UI composed over art. The backdrop is product artwork or
+ * generated brand light; `main` sits centered and `overlay` overlaps a corner.
+ * This is the hero pattern behind Cursor and Stripe pages.
+ */
+export function Stage({
+  backdrop,
+  main,
+  overlay,
+  overlayPosition = "bottom-left",
+  caption,
+  className,
+}: {
+  backdrop: { image?: ImgProps } | "mesh";
+  main: React.ReactNode;
+  overlay?: React.ReactNode;
+  overlayPosition?: "bottom-left" | "bottom-right" | "top-right";
+  caption?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <figure className={cn("relative", className)}>
+      <div className="relative isolate overflow-hidden rounded-2xl ring-1 ring-black/5">
+        {backdrop === "mesh" ? (
+          <div aria-hidden className="mesh grain absolute inset-0 -z-10" />
+        ) : (
+          backdrop.image && (
+            <img
+              src={backdrop.image.src}
+              alt=""
+              loading={backdrop.image.priority ? "eager" : "lazy"}
+              decoding="async"
+              className="absolute inset-0 -z-10 size-full object-cover"
+            />
+          )
+        )}
+        <div className="px-4 pb-0 pt-8 sm:px-12 sm:pt-14 lg:px-16 lg:pt-16">
+          <div className="translate-y-px [&>figure]:rounded-b-none [&>figure]:border-b-0">{main}</div>
+        </div>
+      </div>
+      {overlay && (
+        <div
+          className={cn(
+            "relative z-10 mx-4 -mt-10 sm:absolute sm:mx-0 sm:mt-0 sm:w-[min(24rem,46%)]",
+            overlayPosition === "bottom-left" && "sm:-bottom-8 sm:-left-6",
+            overlayPosition === "bottom-right" && "sm:-bottom-8 sm:-right-6",
+            overlayPosition === "top-right" && "sm:-right-6 sm:top-10",
+          )}
+        >
+          {overlay}
+        </div>
+      )}
+      {caption && <figcaption className="mt-4 text-center font-mono text-xs text-muted-foreground sm:mt-12">{caption}</figcaption>}
+    </figure>
+  );
+}

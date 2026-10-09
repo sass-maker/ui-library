@@ -5,7 +5,7 @@ import { Hero } from "@/components/blocks/hero";
 import { Section, SectionHeader, FactRow } from "@/components/blocks/layout";
 import { FeatureGrid, FeatureSpread, Steps, Stats } from "@/components/blocks/features";
 import { Ledger, CodeBlock, StatusPill, DiffBlock } from "@/components/blocks/proof";
-import { WindowFrame } from "@/components/blocks/frames";
+import { WindowFrame, Stage } from "@/components/blocks/frames";
 import { Faq, Cta } from "@/components/blocks/closing";
 import { StudioFooter } from "@/components/blocks/footer";
 import {
@@ -74,7 +74,8 @@ export default function CodeVetterPage() {
 
   <main id="main">
     <Hero
-      backdrop="glow"
+      layout="centered"
+      backdrop="grid"
       eyebrow="Execution-backed verification · local-first"
       title={<>AI writes code fast. It leaves it <em>unverified.</em></>}
       lede="CodeVetter binds the requested task to the exact change, runs your repository's own checks, and keeps a pass, fail, or unverified verdict with the evidence and limits behind it."
@@ -86,26 +87,34 @@ export default function CodeVetterPage() {
       }
       note="Apple silicon · open source (ISC) · no CodeVetter account"
       media={
-        <div className="relative">
-          <div aria-hidden className="absolute -inset-6 -z-10 rounded-3xl bg-brand/10 blur-2xl"></div>
-          <Ledger
-            title="Verification receipt"
-            meta="illustrative fields"
-            rows={[
-              { label: "Task", value: "Reject expired sessions without breaking valid refreshes." },
-              { label: "Change", value: <span className="font-mono text-[0.8125rem]">main…agent/session-expiry · a13c9f2</span> },
-              { label: "Check", value: <span className="font-mono text-[0.8125rem]">pnpm test auth/session.test.ts</span>, status: { tone: "danger", label: "exit 1" } },
-              { label: "Check", value: <span className="font-mono text-[0.8125rem]">pnpm typecheck</span>, status: { tone: "success", label: "exit 0" } },
-              { label: "Verdict", value: <strong className="font-semibold">The requested behavior is not verified.</strong>, status: { tone: "danger", label: "fail" } },
-              { label: "Limitation", value: "The browser refresh journey was not executed, so it stays unverified.", status: { tone: "warning", label: "unknown" } },
-            ]}
-            footer={<a href="#evidence" className="inline-flex items-center gap-1 text-foreground hover:text-brand">Inspect published benchmark evidence <ArrowRightIcon className="size-3" /></a>}
-          />
-        </div>
+        <Stage
+          className="mx-auto max-w-6xl text-left"
+          backdrop="mesh"
+          main={
+            <WindowFrame
+              title="CodeVetter — review"
+              image={{ src: "/demo/codevetter/workbench.png", alt: "CodeVetter desktop review workbench showing a local review result, finding list, evidence status, and code inspection panel", width: 1440, height: 900, priority: true }}
+            />
+          }
+          overlayPosition="bottom-left"
+          overlay={
+            <Ledger
+              title="Verification receipt"
+              meta="illustrative"
+              rows={[
+                { label: "Task", value: "Reject expired sessions without breaking valid refreshes." },
+                { label: "Check", value: <span className="font-mono text-[0.8125rem]">pnpm test auth/session</span>, status: { tone: "danger", label: "exit 1" } },
+                { label: "Check", value: <span className="font-mono text-[0.8125rem]">pnpm typecheck</span>, status: { tone: "success", label: "exit 0" } },
+                { label: "Verdict", value: <strong className="font-semibold">Not verified.</strong>, status: { tone: "danger", label: "fail" } },
+              ]}
+            />
+          }
+          caption="Repository-tracked capture of the desktop workbench · receipt fields are illustrative"
+        />
       }
       footer={
         <FactRow
-          className="mt-4 font-mono text-xs"
+          className="justify-center font-mono text-xs"
           items={["Exact source identity", "Executable checks", "Explicit unknowns", "No hosted verifier"]}
         />
       }
@@ -164,22 +173,7 @@ export default function CodeVetterPage() {
 
     <Section rule>
       <div className="container-page">
-        <SectionHeader
-          align="center"
-          eyebrow="Desktop workbench"
-          title={<>Every finding next to <em>the evidence.</em></>}
-          lede="The macOS app is the visual workbench: review result, finding list, evidence status, and the code under inspection in one window."
-        />
-        <div className="relative mt-14">
-          <div aria-hidden className="absolute inset-x-10 -top-6 bottom-10 -z-10 rounded-[2rem] bg-brand/15 blur-3xl" />
-          <WindowFrame
-            title="CodeVetter — review"
-            image={{ src: "/demo/codevetter/workbench.png", alt: "CodeVetter desktop review workbench showing a local review result, finding list, evidence status, and code inspection panel", width: 1440, height: 900 }}
-          />
-          <p className="mt-4 text-center font-mono text-xs text-muted-foreground">Repository-tracked capture · local app · fixture-backed review</p>
-        </div>
         <FeatureSpread
-          className="mt-24 md:mt-32"
           items={[
             {
               kicker: "Failures stay attached",
@@ -284,6 +278,7 @@ $ codevetter check \
       { title: "Connect", links: [{ label: "About", href: "#" }, { label: "Privacy", href: "#" }, { label: "Terms", href: "#" }, { label: "GitHub", href: "https://github.com/Codevetter/codevetter" }] },
     ]}
     art={{ src: "/demo/codevetter/codevetter-evidence-workbench-v1.webp", alt: "Illustration of an evidence workbench" }}
+    artMode="scene"
     feedbackHref="mailto:hello@codevetter.com"
     legal="© 2026 CodeVetter · ISC License"
   />
