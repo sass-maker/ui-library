@@ -87,9 +87,9 @@ function LinkButton({ link, variant, size }: { link: Link; variant?: "outline" |
 
 function Brackets() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-10 bottom-10 hidden lg:block">
+    <div aria-hidden className="motion-draw pointer-events-none absolute inset-x-0 -top-10 bottom-10 hidden lg:block">
       <svg viewBox="0 0 120 600" className="absolute -left-4 top-0 h-full w-auto xl:-left-16" fill="none">
-        <path d="M100 20 L20 300 L100 580" stroke="url(#wb-brackets)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
+        <path pathLength={1} d="M100 20 L20 300 L100 580" stroke="url(#wb-brackets)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
         <defs>
           <linearGradient id="wb-brackets" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0" stopColor="var(--brand)" stopOpacity="0" />
@@ -99,13 +99,16 @@ function Brackets() {
         </defs>
       </svg>
       <svg viewBox="0 0 120 600" className="absolute -right-4 top-0 h-full w-auto xl:-right-16" fill="none">
-        <path d="M20 20 L100 300 L20 580" stroke="url(#wb-brackets)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
+        <path pathLength={1} d="M20 20 L100 300 L20 580" stroke="url(#wb-brackets)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
   );
 }
 
-function Block({ block: b, className }: { block: WorkbenchBlock; className?: string }) {
+function Block({ block: b, className: base }: { block: WorkbenchBlock; className?: string }) {
+  // Grids reveal item by item; single pieces reveal whole.
+  const grid = b.type === "steps" || b.type === "stats" || b.type === "features";
+  const className = [base, grid ? "motion-stagger" : "motion-reveal"].filter(Boolean).join(" ");
   switch (b.type) {
     case "steps":
       return (
@@ -203,7 +206,7 @@ export function WorkbenchPage({ content: c }: { content: WorkbenchContent }) {
             <div className="relative">
               {h.brackets && <Brackets />}
               <Stage
-                className="mx-auto max-w-6xl text-left"
+                className="motion-tilt mx-auto max-w-6xl text-left"
                 backdrop="mesh"
                 main={<WindowFrame title={h.window.title} image={{ ...h.window, priority: true }} />}
                 overlayPosition="bottom-right"
@@ -230,7 +233,7 @@ export function WorkbenchPage({ content: c }: { content: WorkbenchContent }) {
         {c.sections.map((s, i) => (
           <Section key={i} id={s.id} surface={s.surface} rule={!s.compact} size={s.compact ? "compact" : undefined}>
             <div className="container-page">
-              {s.header && <SectionHeader align={s.header.align} eyebrow={s.header.eyebrow} title={rich(s.header.title)} lede={s.header.lede} />}
+              {s.header && <SectionHeader className="motion-reveal" align={s.header.align} eyebrow={s.header.eyebrow} title={rich(s.header.title)} lede={s.header.lede} />}
               {s.blocks.map((b, j) => (
                 <Block key={j} block={b} className={!s.header && j === 0 ? undefined : j === 0 ? "mt-14" : "mt-20"} />
               ))}

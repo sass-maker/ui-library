@@ -452,6 +452,11 @@
   animation-delay: var(--d, 0ms);
 }
 
+/* ── Motion ─────────────────────────────────────────────────────────────
+   Scroll motion lives in src/lib/motion.ts (the Motion library), driven by
+   .motion-* classes. Until it runs, and with reduced motion, pages render
+   at rest. */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

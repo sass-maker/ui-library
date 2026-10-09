@@ -34,6 +34,10 @@ const style = Object.entries(tokens)
       >Skip to content</a
     >
     <slot />
+    <script>
+      import { initMotion } from "@/lib/motion";
+      initMotion();
+    </script>
     <script is:inline>
       // Close any open popover (mobile menu) after in-page navigation.
       addEventListener("hashchange", () => document.querySelectorAll(":popover-open").forEach((p) => p.hidePopover()));

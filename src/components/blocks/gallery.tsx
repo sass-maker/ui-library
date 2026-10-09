@@ -115,21 +115,21 @@ export function GalleryHero({
   return (
     <section className="overflow-hidden pt-[clamp(3rem,5vw,4.5rem)] text-center">
       <div className={wrap}>
-        {eyebrow && <GalleryEyebrow className="mb-5">{eyebrow}</GalleryEyebrow>}
-        <GalleryTitle as="h1" size="xl">
+        {eyebrow && <GalleryEyebrow className="hero-in mb-5">{eyebrow}</GalleryEyebrow>}
+        <GalleryTitle as="h1" size="xl" className="hero-in [--d:60ms]">
           {title}
         </GalleryTitle>
-        {ledeText && <GalleryLede className="mx-auto mt-7">{ledeText}</GalleryLede>}
-        {actions && <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">{actions}</div>}
-        {note && <GalleryNote className="mt-4">{note}</GalleryNote>}
+        {ledeText && <GalleryLede className="hero-in mx-auto mt-7 [--d:120ms]">{ledeText}</GalleryLede>}
+        {actions && <div className="hero-in mt-8 flex flex-wrap items-center justify-center gap-3.5 [--d:180ms]">{actions}</div>}
+        {note && <GalleryNote className="hero-in mt-4 [--d:220ms]">{note}</GalleryNote>}
       </div>
       <div className="relative mt-[clamp(3rem,5vw,4rem)] h-[clamp(32rem,60vw,52.5rem)] overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 top-[clamp(8.75rem,14vw,12.5rem)] bg-cover bg-[center_30%]"
-          style={{ backgroundImage: `url(${backdrop})` }}
-        />
-        <Device image={{ ...device, priority: true }} className="relative mx-auto w-[clamp(15.5rem,27vw,24.5rem)]" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 top-[clamp(8.75rem,14vw,12.5rem)] overflow-hidden">
+          <div className="motion-parallax size-full bg-cover bg-[center_30%]" style={{ backgroundImage: `url(${backdrop})` }} />
+        </div>
+        <div className="hero-in relative [--d:260ms]">
+          <Device image={{ ...device, priority: true }} className="mx-auto w-[clamp(15.5rem,27vw,24.5rem)]" />
+        </div>
       </div>
     </section>
   );
@@ -161,7 +161,7 @@ export function GalleryShowcase({
         "bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--accent-ink:#8f7f70] [--brand:#e98a5f]",
       )}
     >
-      <div className={cn(wrap, "text-center")}>
+      <div className={cn(wrap, "motion-stagger text-center")}>
         {eyebrow && <GalleryEyebrow>{eyebrow}</GalleryEyebrow>}
         <GalleryTitle className="mt-5">{title}</GalleryTitle>
         {ledeText && <GalleryLede className="mx-auto mt-6">{ledeText}</GalleryLede>}
@@ -170,7 +170,7 @@ export function GalleryShowcase({
         <div className="relative mt-[clamp(4rem,8vw,7rem)] h-[clamp(37.5rem,58vw,52.5rem)] overflow-hidden bg-[radial-gradient(120%_90%_at_50%_40%,#3a2a1f_0%,#17110d_70%)]">
           <Device
             image={device}
-            className="absolute left-1/2 top-[-5.5rem] w-[clamp(21rem,40vw,37.5rem)] -translate-x-1/2 shadow-[0_80px_160px_-40px_rgb(0_0_0/0.7)] md:top-[-12%]"
+            className="motion-zoom absolute left-1/2 top-[-5.5rem] w-[clamp(21rem,40vw,37.5rem)] origin-top -translate-x-1/2 shadow-[0_80px_160px_-40px_rgb(0_0_0/0.7)] md:top-[-12%]"
           />
         </div>
         {(caption || note) && (
@@ -202,7 +202,7 @@ export function GallerySpread({
 }) {
   return (
     <section className={pad}>
-      <div className={cn(wrap, "mb-[clamp(3.5rem,7vw,6rem)] grid items-end gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2")}>
+      <div className={cn(wrap, "motion-stagger mb-[clamp(3.5rem,7vw,6rem)] grid items-end gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2")}>
         <div>
           {eyebrow && <GalleryEyebrow>{eyebrow}</GalleryEyebrow>}
           <GalleryTitle size="md" className="mt-4">
@@ -212,8 +212,9 @@ export function GallerySpread({
         {ledeText && <GalleryLede>{ledeText}</GalleryLede>}
       </div>
       <figure>
-        <div className="bg-cover bg-center py-[clamp(5rem,10vw,8.75rem)]" style={{ backgroundImage: `url(${backdrop})` }}>
-          <Device image={device} className="mx-auto w-[clamp(16.25rem,30vw,26.25rem)] shadow-[0_60px_120px_-30px_rgb(60_15_0/0.6)]" />
+        <div className="relative isolate overflow-hidden py-[clamp(5rem,10vw,8.75rem)]">
+          <div aria-hidden className="motion-parallax absolute inset-0 -z-10 bg-cover bg-center" style={{ backgroundImage: `url(${backdrop})` }} />
+          <Device image={device} className="motion-reveal mx-auto w-[clamp(16.25rem,30vw,26.25rem)] shadow-[0_60px_120px_-30px_rgb(60_15_0/0.6)]" />
         </div>
         {caption && <figcaption className={cn(wrap, "mt-5")}>{caption}</figcaption>}
       </figure>
@@ -240,21 +241,23 @@ export function GalleryCover({
   return (
     <>
       <section
-        className="relative bg-cover bg-[40%_center] text-white [--foreground:#fff] [--muted-foreground:rgb(255_255_255/0.86)] [--brand:#ffd9c2] md:min-h-[clamp(40rem,62vw,56rem)]"
-        style={{ backgroundImage: `url(${image})` }}
+        className="relative isolate text-white [--foreground:#fff] [--muted-foreground:rgb(255_255_255/0.86)] [--brand:#ffd9c2] md:min-h-[clamp(40rem,62vw,56rem)]"
       >
+        <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="motion-parallax size-full bg-cover bg-[40%_center]" style={{ backgroundImage: `url(${image})` }} />
+        </div>
         <div
           aria-hidden
           className="absolute inset-0 bg-[linear-gradient(90deg,rgb(20_12_6/0.62)_0%,rgb(20_12_6/0.25)_45%,transparent_70%),linear-gradient(0deg,rgb(20_12_6/0.55),transparent_45%)]"
         />
         <div className={cn(wrap, "relative grid items-end gap-10 pb-[clamp(3.5rem,7vw,6rem)] pt-28 md:min-h-[inherit] md:grid-cols-[1.25fr_0.75fr] md:pt-0")}>
-          <div>
+          <div className="motion-stagger">
             {eyebrow && <GalleryEyebrow>{eyebrow}</GalleryEyebrow>}
             <GalleryTitle className="mt-4">{title}</GalleryTitle>
             {ledeText && <GalleryLede className="mt-6">{ledeText}</GalleryLede>}
           </div>
           {device && (
-            <Device image={device} className="mx-auto w-[13.75rem] md:mx-0 md:w-[clamp(13.75rem,22vw,20rem)] md:translate-y-[clamp(7rem,12vw,11.25rem)] md:justify-self-end" />
+            <Device image={device} className="motion-reveal mx-auto w-[13.75rem] md:mx-0 md:w-[clamp(13.75rem,22vw,20rem)] md:translate-y-[clamp(7rem,12vw,11.25rem)] md:justify-self-end" />
           )}
         </div>
         {credit && <span className="absolute bottom-3 right-[clamp(1.25rem,4vw,3.5rem)] font-display text-xs text-white/80">{credit}</span>}
@@ -285,13 +288,13 @@ export function GalleryStatement({
   return (
     <section id={id} className={cn(pad, className)}>
       <div className={wrap}>
-        <div className="text-center">
+        <div className="motion-stagger text-center">
           {eyebrow && <GalleryEyebrow>{eyebrow}</GalleryEyebrow>}
           <GalleryTitle className="mt-5">{title}</GalleryTitle>
           {ledeText && <GalleryLede className="mx-auto mt-6">{ledeText}</GalleryLede>}
         </div>
         {rows && (
-          <dl className="mt-[clamp(3.5rem,7vw,5.5rem)] border-t border-border">
+          <dl className="motion-stagger mt-[clamp(3.5rem,7vw,5.5rem)] border-t border-border">
             {rows.map((r) => (
               <div key={r.title} className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-border py-6 md:grid-cols-[12.5rem_1fr_7.5rem] md:gap-6">
                 <dt className="font-display text-[1.375rem] font-semibold tracking-[-0.025em]">{r.title}</dt>
@@ -306,7 +309,7 @@ export function GalleryStatement({
           </dl>
         )}
         {aside && (
-          <div className="mt-[clamp(4.5rem,9vw,7.5rem)] grid gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2">
+          <div className="motion-stagger mt-[clamp(4.5rem,9vw,7.5rem)] grid gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2">
             {aside.map((a) => (
               <div key={a.title}>
                 <h3 className="mb-2.5 font-display text-[0.9375rem] font-semibold">{a.title}</h3>
@@ -339,14 +342,14 @@ export function GalleryClosing({
   return (
     <section
       id={id}
-      className="relative flex min-h-[clamp(38.75rem,64vw,57.5rem)] items-start bg-cover bg-[12%_60%] md:bg-[center_60%]"
-      style={{ backgroundImage: `url(${image})` }}
+      className="relative isolate flex min-h-[clamp(38.75rem,64vw,57.5rem)] items-start overflow-hidden"
     >
+      <div aria-hidden className="motion-drift absolute inset-0 -z-10 bg-cover bg-[12%_60%] md:bg-[center_60%]" style={{ backgroundImage: `url(${image})` }} />
       <div
         aria-hidden
         className="absolute inset-0 bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_srgb,var(--background)_70%,transparent)_30%,transparent_60%)]"
       />
-      <div className={cn(wrap, "relative pt-[clamp(5rem,10vw,8.75rem)] text-center")}>
+      <div className={cn(wrap, "motion-stagger relative pt-[clamp(5rem,10vw,8.75rem)] text-center")}>
         <GalleryTitle>{title}</GalleryTitle>
         {actions && <div className="mt-8 flex flex-wrap justify-center gap-3.5">{actions}</div>}
         {note && <GalleryNote className="mt-4">{note}</GalleryNote>}
