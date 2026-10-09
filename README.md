@@ -38,6 +38,12 @@ Geist, Geist Mono, Instrument Serif, Fraunces; SIL OFL, licenses in
 `swift/Sources/SaaSMakerUI/Fonts/Licenses`) and follows the theme's lowercase
 voice for headings and buttons.
 
+Beyond the theme, the package assembles whole screens: `SMHero`, `SMShowcase`,
+`SMCover`, `SMStatementRows` and `SMDevice` (Gallery), and `SMAppShell`,
+`SMPage`, `SMStatCard`, `SMSparkline`, `SMAreaChart` and `SMUptimeStrip`
+(dashboards, Swift Charts). `SM_SNAPSHOT_DIR=/tmp/sm swift test` renders sample
+screens to PNG for review.
+
 ## Develop
 
 ```sh
