@@ -125,6 +125,8 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
         groups={[{ title: "Links", links: c.footer.links }]}
         legal={c.footer.legal}
         feedbackKey={c.footer.feedbackKey}
+        subscribeKey={c.footer.subscribeKey}
+        catalogId={c.footer.catalogId}
         art={c.footer.art}
       />
     </>

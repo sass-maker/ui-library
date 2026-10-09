@@ -42,41 +42,140 @@ const style = Object.entries(tokens)
       // Close any open popover (mobile menu) after in-page navigation.
       addEventListener("hashchange", () => document.querySelectorAll(":popover-open").forEach((p) => p.hidePopover()));
 
-      // Footer feedback: post to SaaS Maker with the product's publishable key.
-      addEventListener("submit", async (e) => {
-        const form = e.target;
-        if (!(form instanceof HTMLFormElement) || !form.hasAttribute("data-feedback")) return;
-        e.preventDefault();
-        const status = form.querySelector("[data-feedback-status]");
+      // Footer forms post to SaaS Maker with a publishable key. Without one they run in preview mode.
+      const api = "https://api.sassmaker.com";
+      const dialog = () => document.querySelector("[data-feedback-dialog]");
+      let anchor = null;
+
+      // Point at something: pick an element on the page, then reopen the form.
+      function showAnchor() {
+        const row = dialog()?.querySelector("[data-feedback-anchor]");
+        if (!row) return;
+        row.classList.toggle("hidden", !anchor);
+        row.classList.toggle("flex", !!anchor);
+        row.firstElementChild.textContent = anchor ? "Pointing at: " + (anchor.text || "<" + anchor.tag + ">") : "";
+      }
+      function selectorFor(el) {
+        const parts = [];
+        for (let n = el; n && n.nodeType === 1 && parts.length < 5; n = n.parentElement) {
+          if (n.id) { parts.unshift("#" + CSS.escape(n.id)); break; }
+          const i = [...n.parentElement?.children ?? []].filter((c) => c.tagName === n.tagName).indexOf(n);
+          parts.unshift(n.tagName.toLowerCase() + (i > 0 ? ":nth-of-type(" + (i + 1) + ")" : ""));
+        }
+        return parts.join(" > ");
+      }
+      function pick() {
+        const d = dialog();
+        d.close();
+        const box = Object.assign(document.createElement("div"), { ariaHidden: "true" });
+        box.style.cssText = "position:fixed;pointer-events:none;z-index:2147483647;border:2px solid var(--brand);border-radius:6px;background:color-mix(in oklch,var(--brand) 12%,transparent);transition:all .08s";
+        const tip = Object.assign(document.createElement("div"), { textContent: "Click the part you mean. Esc to cancel." });
+        tip.style.cssText = "position:fixed;left:50%;bottom:24px;translate:-50% 0;z-index:2147483647;padding:10px 16px;border-radius:999px;background:#1d1611;color:#fff;font:500 14px system-ui";
+        document.body.append(box, tip);
+        const move = (e) => {
+          const r = e.target.getBoundingClientRect();
+          Object.assign(box.style, { left: r.left - 2 + "px", top: r.top - 2 + "px", width: r.width + 4 + "px", height: r.height + 4 + "px" });
+        };
+        const done = (el) => {
+          removeEventListener("mousemove", move, true);
+          removeEventListener("click", click, true);
+          removeEventListener("keydown", key, true);
+          box.remove();
+          tip.remove();
+          if (el) anchor = { selector: selectorFor(el), tag: el.tagName.toLowerCase(), text: (el.innerText || el.alt || "").trim().slice(0, 140), source: "click", url: location.href };
+          showAnchor();
+          d.showModal();
+        };
+        const click = (e) => { e.preventDefault(); e.stopPropagation(); done(e.target); };
+        const key = (e) => { if (e.key === "Escape") { e.preventDefault(); done(null); } };
+        addEventListener("mousemove", move, true);
+        addEventListener("click", click, true);
+        addEventListener("keydown", key, true);
+      }
+
+      addEventListener("click", (e) => {
+        const t = e.target.closest?.("[data-feedback-open],[data-feedback-close],[data-feedback-point],[data-feedback-unpoint]");
+        if (!t) return;
+        if (t.hasAttribute("data-feedback-open")) dialog()?.showModal();
+        if (t.hasAttribute("data-feedback-close")) dialog()?.close();
+        if (t.hasAttribute("data-feedback-point")) pick();
+        if (t.hasAttribute("data-feedback-unpoint")) { anchor = null; showAnchor(); }
+      });
+      addEventListener("change", (e) => {
+        if (e.target.name !== "screenshot" || !e.target.closest("[data-feedback]")) return;
+        const label = e.target.closest("label").querySelector("[data-feedback-file-label]");
+        label.textContent = e.target.files[0]?.name || "Add a screenshot";
+      });
+      // Clicking the backdrop closes the dialog.
+      addEventListener("click", (e) => { if (e.target.matches?.("[data-feedback-dialog]")) e.target.close(); });
+
+      async function send(form, statusSel, request, ok) {
+        const status = form.querySelector(statusSel);
         const button = form.querySelector("button[type=submit]");
-        const key = form.dataset.feedback;
-        const data = new FormData(form);
-        const message = String(data.get("message") || "").trim();
-        const email = String(data.get("email") || "").trim();
         const say = (text) => (status.textContent = text);
-        if (!key) return say("Preview only: this demo footer has no project key, so nothing was sent.");
         button.disabled = true;
         say("Sending…");
         try {
-          const res = await fetch("https://api.sassmaker.com/v1/feedback", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-Project-Key": key },
-            body: JSON.stringify({
-              type: data.get("type") || "feedback",
-              title: message.split("\n")[0].slice(0, 80),
-              description: message,
-              ...(email && { submitter_email: email }),
-              page: { url: location.href, title: document.title },
-              source: "studio-footer",
-            }),
-          });
+          const res = await request();
+          if (res === null) {
+            say("Preview only: this demo has no project key, so nothing was sent.");
+            return false;
+          }
           if (!res.ok) throw new Error(String(res.status));
           form.reset();
-          say("Thanks, it reached the person who builds " + form.dataset.product + ".");
+          say(ok);
+          return true;
         } catch {
           say("That did not send. Please try again in a moment.");
         } finally {
           button.disabled = false;
+        }
+      }
+
+      addEventListener("submit", async (e) => {
+        const form = e.target;
+        if (!(form instanceof HTMLFormElement)) return;
+
+        if (form.hasAttribute("data-feedback")) {
+          e.preventDefault();
+          const data = new FormData(form);
+          const email = String(data.get("email") || "").trim();
+          const shot = data.get("screenshot");
+          const sent = await send(form, "[data-feedback-status]", () => {
+            if (!form.dataset.feedback) return null;
+            const body = new FormData();
+            body.set("feedback", JSON.stringify({
+              type: data.get("type") || "feedback",
+              title: String(data.get("title") || "").trim(),
+              description: String(data.get("message") || "").trim(),
+              ...(email && { submitter_email: email }),
+              page: { url: location.href, title: document.title },
+              ...(anchor && { anchor }),
+              source: "studio-footer",
+            }));
+            if (shot && shot.size) body.set("screenshot", shot);
+            return fetch(api + "/v1/feedback", { method: "POST", credentials: "omit", headers: { "X-Project-Key": form.dataset.feedback }, body });
+          }, "Thanks, it reached the person who builds " + form.dataset.product + ".");
+          if (sent) { anchor = null; showAnchor(); form.querySelector("[data-feedback-file-label]").textContent = "Add a screenshot"; }
+        }
+
+        if (form.hasAttribute("data-subscribe")) {
+          e.preventDefault();
+          const email = String(new FormData(form).get("email") || "").trim();
+          await send(form, "[data-subscribe-status]", async () => {
+            let key = form.dataset.key;
+            if (!key && form.dataset.catalog) {
+              const cfg = await fetch(api + "/v1/capture-config/" + encodeURIComponent(form.dataset.catalog), { credentials: "omit" });
+              if (cfg.ok) key = (await cfg.json()).api_key;
+            }
+            if (!key) return null;
+            return fetch(api + "/v1/subscriptions", {
+              method: "POST",
+              credentials: "omit",
+              headers: { "Content-Type": "application/json", "X-Project-Key": key },
+              body: JSON.stringify({ email, kind: "newsletter", source: "footer", consent: true }),
+            });
+          }, "You're on the list.");
         }
       });
     </script>

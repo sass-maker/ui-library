@@ -30,6 +30,10 @@ const footer = z
     legal: z.string().optional(),
     /** SaaS Maker publishable project key for the feedback card. */
     feedbackKey: z.string().optional(),
+    /** Publishable key for the updates sign-up; defaults to feedbackKey. */
+    subscribeKey: z.string().optional(),
+    /** Fleet catalog id; resolves the sign-up key when no key is given. */
+    catalogId: z.string().optional(),
   })
   .strict();
 
