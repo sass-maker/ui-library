@@ -1,5 +1,5 @@
 ---
-import "./styles.css";
+import "@saas-maker/ui/theme.css";
 
 /** Open Graph and Twitter card; text falls back to the page title and description. */
 interface Og {
@@ -67,7 +67,7 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
-<html lang="en" data-theme={theme} data-mode={mode} style={style || undefined}>
+<html lang="en" data-theme={theme} data-mode={mode} data-motion={motion ? undefined : "off"} style={style || undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -112,8 +112,9 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
     {
       motion && (
         <script>
-          import { initMotion } from "@saas-maker/motion";
-          initMotion();
+          if (document.documentElement.dataset.motion !== "off" && document.querySelector(".motion-reveal,.motion-stagger,.motion-zoom,.motion-tilt,.motion-parallax,.motion-drift,.motion-draw,.motion-type")) {
+            import("@saas-maker/motion").then((m) => m.initMotion());
+          }
         </script>
       )
     }

@@ -1,12 +1,12 @@
 // Generates the shared design tokens from the web theme (the single source):
-//   packages/ui/src/styles/globals.css  ->  packages/tokens/tokens.json
+//   packages/ui/src/styles/theme.css  ->  packages/tokens/tokens.json
 //                                        ->  swift/Sources/SaaSMakerUI/Tokens.generated.swift
 // Run: pnpm tokens:build. Never edit the outputs by hand.
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
-const css = readFileSync(`${root}packages/ui/src/styles/globals.css`, "utf8");
+const css = readFileSync(`${root}packages/ui/src/styles/theme.css`, "utf8");
 
 const COLORS = [
   "background", "foreground", "surface", "card", "primary", "primary-foreground", "secondary", "muted",

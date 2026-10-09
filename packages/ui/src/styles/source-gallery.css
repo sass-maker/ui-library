@@ -1,0 +1,4 @@
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* Sources are relative to this UI package, including under isolated pnpm installs. */
+@source "../blocks/{gallery,site-header,mobile-nav,closing,footer,assistant-logos}.tsx";

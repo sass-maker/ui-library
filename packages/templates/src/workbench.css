@@ -1,0 +1,4 @@
+@import "@saas-maker/ui/theme.css";
+@import "@saas-maker/ui/source-workbench.css";
+
+@source "./{Base.astro,workbench-page.tsx,rich.tsx,status.tsx}";

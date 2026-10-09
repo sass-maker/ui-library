@@ -19,7 +19,7 @@
       ],
       "files": [
         {
-          "path": "packages/ui/src/styles/globals.css",
+          "path": "packages/ui/src/styles/theme.css",
           "type": "registry:file",
           "target": "src/styles/fleet-ui.css"
         }

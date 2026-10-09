@@ -34,12 +34,10 @@ const consentCopy: Record<CaptureKind, string> = {
   newsletter: "I agree to receive newsletter emails about this product. I can unsubscribe at any time.",
   waitlist: "I agree to receive early-access and availability emails about this product. I can unsubscribe at any time.",
 };
-const privacyUrl = "https://sassmaker.com/privacy";
-const privacyLink = (
-  <a href={privacyUrl} className="underline underline-offset-2 hover:text-foreground">
-    Privacy
-  </a>
-);
+const defaultPrivacyUrl = "https://sassmaker.com/privacy";
+function PrivacyLink({ url }: { url: string }) {
+  return <a href={url} className="underline underline-offset-2 hover:text-foreground">Privacy</a>;
+}
 
 const field =
   "w-full rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25";
@@ -90,7 +88,7 @@ export function withRef(href: string, ref?: string) {
 }
 
 /** Product updates sign-up: the most visible action in the footer. */
-function Subscribe({ product, kind, projectKey, catalogId }: { product: string; kind: CaptureKind; projectKey?: string; catalogId?: string }) {
+function Subscribe({ product, kind, projectKey, catalogId, privacyUrl }: { product: string; kind: CaptureKind; projectKey?: string; catalogId?: string; privacyUrl: string }) {
   return (
     <form
       data-subscribe=""
@@ -134,7 +132,7 @@ function Subscribe({ product, kind, projectKey, catalogId }: { product: string; 
         <label className="mt-3 flex items-start gap-2.5 text-xs leading-relaxed text-muted-foreground">
           <input type="checkbox" name="consent" required className="mt-0.5 size-4 shrink-0 accent-[var(--brand)]" />
           <span>
-            {consentCopy[kind]} {privacyLink}
+            {consentCopy[kind]} <PrivacyLink url={privacyUrl} />
           </span>
         </label>
         <p data-subscribe-status role="status" aria-live="polite" className="mt-2 text-sm text-foreground empty:hidden" />
@@ -177,7 +175,7 @@ function AskAi({ product, url }: { product: string; url: string }) {
 }
 
 /** A button that opens the full feedback form: type, details, a pointed-at element, a screenshot and email. */
-function Feedback({ product, feedbackKey, catalogId }: { product: string; feedbackKey?: string; catalogId?: string }) {
+function Feedback({ product, feedbackKey, catalogId, privacyUrl }: { product: string; feedbackKey?: string; catalogId?: string; privacyUrl: string }) {
   return (
     <>
       <button type="button" data-feedback-open="" className={quietButton}>
@@ -254,7 +252,7 @@ function Feedback({ product, feedbackKey, catalogId }: { product: string; feedba
           <label className="mt-5 flex items-start gap-2.5 text-xs leading-relaxed text-muted-foreground">
             <input type="checkbox" name="consent" required className="mt-0.5 size-4 shrink-0 accent-[var(--brand)]" />
             <span>
-              I agree to send this feedback and the page details to SaaS Maker. {privacyLink}
+              I agree to send this feedback and the page details to SaaS Maker. <PrivacyLink url={privacyUrl} />
             </span>
           </label>
 
@@ -316,6 +314,7 @@ export function StudioFooter({
   capture = "newsletter",
   studio,
   legal,
+  privacyUrl = defaultPrivacyUrl,
   artMode = "panel",
   wordmark = "poster",
   variant = "studio",
@@ -342,6 +341,8 @@ export function StudioFooter({
    */
   studio?: StudioLink[];
   legal?: React.ReactNode;
+  /** Privacy link in subscribe and feedback consent; defaults to SaaS Maker. */
+  privacyUrl?: string;
   /** panel: framed art under the wordmark. scene: full-bleed closing art the page fades into. */
   artMode?: "panel" | "scene";
   /**
@@ -356,8 +357,8 @@ export function StudioFooter({
   mark?: React.ReactNode;
   className?: string;
 }) {
-  const subscribe = capture && <Subscribe product={product} kind={capture} projectKey={subscribeKey ?? feedbackKey} catalogId={catalogId} />;
-  const feedback = <Feedback product={product} feedbackKey={feedbackKey} catalogId={catalogId} />;
+  const subscribe = capture && <Subscribe product={product} kind={capture} projectKey={subscribeKey ?? feedbackKey} catalogId={catalogId} privacyUrl={privacyUrl} />;
+  const feedback = <Feedback product={product} feedbackKey={feedbackKey} catalogId={catalogId} privacyUrl={privacyUrl} />;
   const wrap = variant === "gallery" ? "mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]" : "container-page";
   const wordmarkCls =
     "ui-case select-none overflow-hidden whitespace-nowrap text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em]";

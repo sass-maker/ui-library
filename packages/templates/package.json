@@ -9,7 +9,10 @@
     "./*.astro": "./src/*.astro",
     "./schema": "./src/schema.ts",
     "./page": "./src/page.ts",
-    "./*": "./src/*.tsx"
+    "./*": "./src/*.tsx",
+    "./gallery.css": "./src/gallery.css",
+    "./workbench.css": "./src/workbench.css",
+    "./console.css": "./src/console.css"
   },
   "dependencies": {
     "lucide-react": "1.48.0"

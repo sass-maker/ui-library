@@ -252,6 +252,7 @@ export function GalleryShowcase({
 
 /** Headline left, lede right, then a device on a full-bleed textured plate. */
 export function GallerySpread({
+  id,
   eyebrow,
   title,
   lede: ledeText,
@@ -259,6 +260,7 @@ export function GallerySpread({
   device,
   caption,
 }: {
+  id?: string;
   eyebrow?: React.ReactNode;
   title: React.ReactNode;
   lede?: React.ReactNode;
@@ -268,7 +270,7 @@ export function GallerySpread({
   caption?: React.ReactNode;
 }) {
   return (
-    <section className={pad}>
+    <section id={id} className={pad}>
       <div className={cn(wrap, "motion-stagger mb-[clamp(3.5rem,7vw,6rem)] grid items-end gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2")}>
         <div>
           {eyebrow && <GalleryEyebrow>{eyebrow}</GalleryEyebrow>}
@@ -295,6 +297,7 @@ export function GallerySpread({
 
 /** Full-bleed photograph with the story bottom-left and a device stepping out of the frame. */
 export function GalleryCover({
+  id,
   as = "h2",
   eyebrow,
   title,
@@ -305,6 +308,7 @@ export function GalleryCover({
   device,
   credit,
 }: {
+  id?: string;
   /** "h1" when the cover is the page hero. */
   as?: "h1" | "h2";
   eyebrow?: React.ReactNode;
@@ -319,6 +323,7 @@ export function GalleryCover({
   return (
     <>
       <section
+        id={id}
         className="relative isolate text-white [--foreground:#fff] [--muted-foreground:rgb(255_255_255/0.88)] [--brand-ink:#ffd9c2] [--accent-ink:#ffd9c2] md:min-h-[clamp(40rem,62vw,56rem)]"
       >
         <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">

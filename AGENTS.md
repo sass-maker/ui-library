@@ -3,7 +3,7 @@
 One design system for every Fleet product, web and Apple.
 
 - `packages/ui` (`@saas-maker/ui`): shadcn/ui components, theme presets and
-  tokens (`src/styles/globals.css`, the single source of truth), and blocks.
+  tokens (`src/styles/theme.css`, the single source of truth), and blocks.
 - `packages/motion` (`@saas-maker/motion`): quiet scroll motion on the Motion
   library, driven by `.motion-*` classes. No hydration.
 - `packages/templates` (`@saas-maker/templates`): Gallery (consumer) and

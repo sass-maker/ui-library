@@ -80,6 +80,8 @@ const footer = z
   .object({
     summary: z.string(),
     legal: z.string().optional(),
+    /** Privacy link in the subscribe and feedback consent text. */
+    privacyUrl: z.string().optional(),
     /** SaaS Maker publishable project key for the feedback card. */
     feedbackKey: z.string().optional(),
     /** Publishable key for the updates sign-up; defaults to feedbackKey. */

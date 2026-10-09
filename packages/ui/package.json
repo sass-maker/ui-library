@@ -12,7 +12,11 @@
     "./blocks/*": "./src/blocks/*.tsx",
     "./utils": "./src/lib/utils.ts",
     "./lib/*": "./src/lib/*.ts",
-    "./styles.css": "./src/styles/globals.css"
+    "./styles.css": "./src/styles/globals.css",
+    "./theme.css": "./src/styles/theme.css",
+    "./source-gallery.css": "./src/styles/source-gallery.css",
+    "./source-workbench.css": "./src/styles/source-workbench.css",
+    "./source-console.css": "./src/styles/source-console.css"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "5.3.0",

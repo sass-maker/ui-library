@@ -37,19 +37,26 @@ Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
 (with or without `--save-exact`), so the next fresh install gets the wrong
 package. To upgrade, change the tag in all three lines and run `pnpm install`.
 
-Styles: `Base.astro` already imports `@saas-maker/templates/styles.css`, the
-theme plus every class the ui and templates packages use. With your own
-layout, import that one file instead (from a layout, or `@import` it at the
-top of your app stylesheet):
+Styles: `Base.astro` imports only `@saas-maker/ui/theme.css` (tokens, fonts
+and base styles). `GalleryPage`, `WorkbenchPage` and `ConsolePage` each import
+their own scoped CSS automatically. Base + GalleryPage includes Gallery's
+sources, without scanning unrelated UI blocks or templates. With your own
+layout or hand-built template, choose an entry explicitly:
 
 ```css
-@import "@saas-maker/templates/styles.css";
+@import "@saas-maker/templates/gallery.css"; /* or workbench.css, console.css */
 ```
 
-Your app's own files are scanned automatically. Apps that use only
-`@saas-maker/ui` import `@saas-maker/ui/styles.css`. Each package's
-`@source` is relative to its own stylesheet, so this works under pnpm's
-`node_modules/.pnpm` layout with no extra `@source` lines.
+For hand-built pages using the full library, the backward-compatible all path
+is `@saas-maker/templates/styles.css`; UI-only pages can use
+`@saas-maker/ui/styles.css` for all UI sources, or `@saas-maker/ui/theme.css`
+plus Tailwind's utilities layer and their own narrow `@source` entries. The
+scoped and full entry files already include that utilities layer. Your app's own files are scanned
+automatically. Each package's sources are relative to its own stylesheet,
+so this works with pnpm's isolated layout.
+
+Leave Astro's `build.inlineStylesheets` at its default (`"auto"`) so substantial
+CSS stays in an external, cacheable file; do not force `"always"`.
 
 Add `src/content/<slug>.json` and render it with `GalleryPage` or
 `WorkbenchPage` inside `Base.astro`. Write `*phrase*` for the accent phrase.
@@ -114,6 +121,10 @@ keeps its existing tags:
 ```
 
 ### Your own header or footer
+
+Set `footer.privacyUrl` to override the subscribe and feedback privacy link
+(default `https://sassmaker.com/privacy`). `StudioFooter` and Swift
+`SMStudioFooter` also accept `privacyUrl` directly.
 
 Both templates render `SiteHeader` and `StudioFooter` by default. To keep a
 product's own nav or footer without forking the template:

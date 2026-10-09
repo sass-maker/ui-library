@@ -1,0 +1,6 @@
+@import "@saas-maker/ui/theme.css";
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@source "../../../packages/templates/src/Base.astro";
+@source "../../../packages/ui/src/blocks/{app,proof}.tsx";
+@source "../../../packages/ui/src/components/{button,badge,input,table}.tsx";

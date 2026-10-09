@@ -1,3 +1,4 @@
+import "./workbench.css";
 import * as React from "react";
 import { icons } from "lucide-react";
 import { Button } from "@saas-maker/ui/components/button";
@@ -269,6 +270,7 @@ export function WorkbenchPage({ content, header, footer, assetBase }: WorkbenchP
               summary={c.footer.summary}
               groups={c.footer.groups}
               legal={c.footer.legal}
+              privacyUrl={c.footer.privacyUrl}
               feedbackKey={c.footer.feedbackKey}
               subscribeKey={c.footer.subscribeKey}
               catalogId={c.footer.catalogId}

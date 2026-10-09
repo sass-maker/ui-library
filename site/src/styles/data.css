@@ -1,0 +1,4 @@
+@import "@saas-maker/templates/console.css";
+
+@source "../../../packages/ui/src/blocks/{filter-bar,record-detail,export-menu,quote-list}.tsx";
+@source "../../../packages/ui/src/components/{data-table,button,checkbox,dropdown-menu,pagination,skeleton,input,popover,slider,command,dialog,sheet}.tsx";

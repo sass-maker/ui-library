@@ -9,5 +9,6 @@
   },
   "dependencies": {
     "motion": "13.4.3"
-  }
+  },
+  "sideEffects": false
 }

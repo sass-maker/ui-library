@@ -1,3 +1,4 @@
+import "./gallery.css";
 import * as React from "react";
 import { SiteHeader } from "@saas-maker/ui/blocks/site-header";
 import {
@@ -122,9 +123,9 @@ export function GalleryPage({ content, header, footer, assetBase }: GalleryPageP
             case "showcase":
               return <GalleryShowcase key={i} {...common} id={s.id} device={device(s.screen)} caption={caption(s.caption)} note={s.note} />;
             case "spread":
-              return <GallerySpread key={i} {...common} backdrop={s.backdrop} device={device(s.screen)} caption={caption(s.caption)} />;
+              return <GallerySpread key={i} {...common} id={s.id} backdrop={s.backdrop} device={device(s.screen)} caption={caption(s.caption)} />;
             case "cover":
-              return <GalleryCover key={i} {...common} image={s.image} device={s.screen && device(s.screen)} credit={s.credit} />;
+              return <GalleryCover key={i} {...common} id={s.id} image={s.image} device={s.screen && device(s.screen)} credit={s.credit} />;
             case "statement":
               return <GalleryStatement key={i} {...common} className={afterDevice} id={s.id} rows={s.rows} aside={s.aside} />;
           }
@@ -151,6 +152,7 @@ export function GalleryPage({ content, header, footer, assetBase }: GalleryPageP
               summary={c.footer.summary}
               groups={[{ title: "Links", links: c.footer.links }]}
               legal={c.footer.legal}
+              privacyUrl={c.footer.privacyUrl}
               feedbackKey={c.footer.feedbackKey}
               subscribeKey={c.footer.subscribeKey}
               catalogId={c.footer.catalogId}
