@@ -445,3 +445,48 @@ export function GalleryGrid({
     </section>
   );
 }
+
+/**
+ * A Mac window and an iPhone on one plate, for products (or families) that
+ * ship both. The phone overlaps the window's lower corner; the backdrop starts
+ * below the window's top edge so the pair stands on a stage.
+ */
+export function GalleryPair({
+  backdrop,
+  window: win,
+  device,
+  className,
+}: {
+  /** Image behind the pair; without one the plate is the theme's surface tone. */
+  backdrop?: string;
+  /** A desktop capture, shown under a quiet dark title bar. */
+  window: Img & { title?: string };
+  device: Img;
+  className?: string;
+}) {
+  return (
+    <div className={cn("relative isolate overflow-hidden pb-[clamp(3.5rem,8vw,7rem)]", className)}>
+      <div aria-hidden className="absolute inset-x-0 bottom-0 top-[clamp(6rem,16vw,15rem)] -z-10 overflow-hidden">
+        {backdrop ? (
+          <div className="motion-parallax size-full bg-cover bg-center" style={{ backgroundImage: `url(${backdrop})` }} />
+        ) : (
+          <div className="size-full bg-surface" />
+        )}
+      </div>
+      <div className={wrap}>
+        <div className="relative mx-auto max-w-[66rem] pb-[30%] md:pb-[9%]">
+          <figure className="w-full overflow-hidden rounded-[clamp(0.5rem,1vw,0.875rem)] bg-[#141210] shadow-[0_0_0_1px_rgb(255_255_255/0.06),0_60px_120px_-40px_rgb(40_15_0/0.65),0_30px_60px_-30px_rgb(40_15_0/0.4)] md:w-[84%]">
+            <div className="flex h-[clamp(1.375rem,2.6vw,2.25rem)] items-center gap-[clamp(0.25rem,0.5vw,0.4rem)] border-b border-white/[0.06] px-[clamp(0.5rem,1.1vw,0.875rem)]">
+              {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
+                <span key={c} aria-hidden className="size-[clamp(0.375rem,0.75vw,0.625rem)] rounded-full" style={{ background: c }} />
+              ))}
+              {win.title && <span className="mx-auto pr-10 font-display text-[clamp(0.5625rem,0.9vw,0.75rem)] text-white/45">{win.title}</span>}
+            </div>
+            <Picture image={win} className="block h-auto w-full" />
+          </figure>
+          <Device image={device} className="absolute bottom-0 right-[-2%] w-[34%] md:right-0 md:w-[23%]" />
+        </div>
+      </div>
+    </div>
+  );
+}
