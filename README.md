@@ -15,7 +15,7 @@ one theme.
 
 ```sh
 # installed from the private repo, not npm (templates needs ui + motion beside it)
-G="github:sass-maker/ui-library#v0.1.2"
+G="github:sass-maker/ui-library#v0.1.3"
 pnpm add "$G&path:/packages/ui" "$G&path:/packages/motion" "$G&path:/packages/templates"
 ```
 
@@ -39,7 +39,7 @@ The previous hand-built layouts stay at `/demo/*-classic/`.
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.2")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.3")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```

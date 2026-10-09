@@ -135,7 +135,7 @@ export function GalleryHero({
   );
 }
 
-/** Deep section: centered headline, then one screen at the size of a room. */
+/** Deep section: centered headline, then the whole phone on a dark stage. */
 export function GalleryShowcase({
   id,
   eyebrow,
@@ -167,14 +167,14 @@ export function GalleryShowcase({
         {ledeText && <GalleryLede className="mx-auto mt-6">{ledeText}</GalleryLede>}
       </div>
       <figure>
-        <div className="relative mt-[clamp(4rem,8vw,7rem)] h-[clamp(37.5rem,58vw,52.5rem)] overflow-hidden bg-[radial-gradient(120%_90%_at_50%_40%,#3a2a1f_0%,#17110d_70%)]">
+        <div className="mt-[clamp(3.5rem,7vw,6rem)] bg-[radial-gradient(50%_60%_at_50%_45%,#3a2a1f_0%,transparent_100%)] py-[clamp(1rem,3vw,2.5rem)]">
           <Device
             image={device}
-            className="motion-zoom absolute left-1/2 top-[-5.5rem] w-[clamp(21rem,40vw,37.5rem)] origin-top -translate-x-1/2 shadow-[0_80px_160px_-40px_rgb(0_0_0/0.7)] md:top-[-12%]"
+            className="motion-zoom mx-auto w-[clamp(16.5rem,26vw,22.5rem)] shadow-[0_60px_120px_-30px_rgb(0_0_0/0.75)]"
           />
         </div>
         {(caption || note) && (
-          <figcaption className="mx-auto mt-5 flex max-w-[82.5rem] flex-col gap-1.5 px-[clamp(1.25rem,4vw,3.5rem)] md:flex-row md:items-baseline md:justify-between md:gap-6">
+          <figcaption className="mx-auto mt-[clamp(2.5rem,5vw,4rem)] flex max-w-[82.5rem] flex-col gap-1.5 px-[clamp(1.25rem,4vw,3.5rem)] md:flex-row md:items-baseline md:justify-between md:gap-6">
             {caption}
             {note && <GalleryNote className="whitespace-nowrap">{note}</GalleryNote>}
           </figcaption>
