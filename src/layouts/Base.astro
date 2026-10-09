@@ -37,6 +37,44 @@ const style = Object.entries(tokens)
     <script is:inline>
       // Close any open popover (mobile menu) after in-page navigation.
       addEventListener("hashchange", () => document.querySelectorAll(":popover-open").forEach((p) => p.hidePopover()));
+
+      // Footer feedback: post to SaaS Maker with the product's publishable key.
+      addEventListener("submit", async (e) => {
+        const form = e.target;
+        if (!(form instanceof HTMLFormElement) || !form.hasAttribute("data-feedback")) return;
+        e.preventDefault();
+        const status = form.querySelector("[data-feedback-status]");
+        const button = form.querySelector("button[type=submit]");
+        const key = form.dataset.feedback;
+        const data = new FormData(form);
+        const message = String(data.get("message") || "").trim();
+        const email = String(data.get("email") || "").trim();
+        const say = (text) => (status.textContent = text);
+        if (!key) return say("Preview only: this demo footer has no project key, so nothing was sent.");
+        button.disabled = true;
+        say("Sending…");
+        try {
+          const res = await fetch("https://api.sassmaker.com/v1/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Project-Key": key },
+            body: JSON.stringify({
+              type: data.get("type") || "feedback",
+              title: message.split("\n")[0].slice(0, 80),
+              description: message,
+              ...(email && { submitter_email: email }),
+              page: { url: location.href, title: document.title },
+              source: "studio-footer",
+            }),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          form.reset();
+          say("Thanks, it reached the person who builds " + form.dataset.product + ".");
+        } catch {
+          say("That did not send. Please try again in a moment.");
+        } finally {
+          button.disabled = false;
+        }
+      });
     </script>
   </body>
 </html>

@@ -250,7 +250,6 @@ export default function KithPage() {
           { title: "Connect", links: [{ label: "Support", href: "#" }, { label: "Source code", href: "#" }] },
         ]}
         art={{ src: img("memory-table-v2.webp"), alt: "Illustrative still life of a notebook and photographs on a table" }}
-        feedbackHref="#"
         legal="© 2026 Sarthak Agrawal"
       />
     </>

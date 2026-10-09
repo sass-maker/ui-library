@@ -275,7 +275,6 @@ export default function LivePage() {
         ]}
         art={{ src: img("live.webp"), alt: "Illustrated landscape of paths and adventures" }}
         artMode="scene"
-        feedbackHref="#"
         legal="© 2026 Significant Hobbies"
       />
     </>

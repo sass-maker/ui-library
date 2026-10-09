@@ -281,7 +281,6 @@ export default function ReaderPage() {
           { title: "Company", links: [{ label: "About", href: "#" }, { label: "Privacy", href: "#" }] },
         ]}
         art={{ src: "/demo/reader/reader-precise-original-v1.webp", alt: "Illustration of a reading room" }}
-        feedbackHref="#"
         legal="© 2026 Significant Hobbies"
       />
     </>
