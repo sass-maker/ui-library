@@ -22,6 +22,18 @@ final class FakeTransport: SMHTTPTransport, @unchecked Sendable {
     }
 }
 
+/// Always fails, like a device with no network.
+struct FailingTransport: SMHTTPTransport {
+    func send(_ request: URLRequest) async throws -> (Data, URLResponse) { throw URLError(.notConnectedToInternet) }
+}
+
+/// A thread-safe call counter for fake responses.
+final class Counter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var n = 0
+    func next() -> Int { lock.withLock { n += 1; return n } }
+}
+
 private func json(_ data: Data?) throws -> [String: Any] {
     let data = try #require(data)
     return try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
@@ -186,6 +198,60 @@ private func json(_ data: Data?) throws -> [String: Any] {
         #expect(requests[2].value(forHTTPHeaderField: "X-Project-Key") == "pk_resolved")
         let text = String(decoding: try #require(requests[2].httpBody), as: UTF8.self)
         #expect(text.contains(#""url":"app:\/\/com.example.kith\/settings""#) || text.contains(#""url":"app://com.example.kith/settings""#))
+    }
+
+    @Test func failedKeyLookupIsAnErrorAndIsRetried() async throws {
+        let lookups = Counter()
+        let fake = FakeTransport { r in
+            guard r.url?.path == "/v1/capture-config/kith" else { return (201, Data()) }
+            return lookups.next() == 1 ? (503, Data()) : (200, Data(#"{"api_key":"pk_resolved"}"#.utf8))
+        }
+        let client = SMFooterClient(catalogId: "kith", transport: fake)
+        await #expect(throws: SMFooterError.unreachable) {
+            try await client.subscribe(email: "a@b.co", kind: .newsletter, consent: true)
+        }
+        // The failure is not cached: the next send looks the key up again and goes through.
+        #expect(try await client.subscribe(email: "a@b.co", kind: .newsletter, consent: true) == .sent)
+        #expect(try await client.subscribe(email: "a@b.co", kind: .newsletter, consent: true) == .sent)
+        #expect(fake.requests.map { $0.url!.path } == ["/v1/capture-config/kith", "/v1/capture-config/kith", "/v1/subscriptions", "/v1/subscriptions"])
+    }
+
+    @Test func networkErrorDuringLookupIsUnreachable() async throws {
+        let client = SMFooterClient(catalogId: "kith", transport: FailingTransport())
+        await #expect(throws: SMFooterError.unreachable) {
+            try await client.sendFeedback(SMFeedbackDraft(title: "Hi", description: "abcd"), screen: "about", title: "X", consent: true)
+        }
+        let bad = SMFooterClient(catalogId: "kith", transport: FakeTransport { _ in (200, Data("not json".utf8)) })
+        await #expect(throws: SMFooterError.unreachable) {
+            try await bad.subscribe(email: "a@b.co", kind: .newsletter, consent: true)
+        }
+    }
+
+    @Test func unknownCatalogIdIsNotCached() async throws {
+        let fake = FakeTransport { _ in (404, Data()) }
+        let client = SMFooterClient(catalogId: "kith", transport: fake)
+        #expect(try await client.subscribe(email: "a@b.co", kind: .newsletter, consent: true) == .preview)
+        #expect(try await client.subscribe(email: "a@b.co", kind: .newsletter, consent: true) == .preview)
+        #expect(fake.requests.count == 2)
+    }
+
+    @Test func failureCopyNamesTheCause() {
+        #expect(SMFooterCopy.failure(SMFooterError.unreachable) == "Couldn't reach SaaS Maker, so nothing was sent. Please try again in a moment.")
+        #expect(SMFooterCopy.failure(SMFooterError.http(500)) == SMFooterCopy.failed)
+        #expect(SMFooterCopy.failure(URLError(.notConnectedToInternet)) == SMFooterCopy.failed)
+    }
+
+    @Test func returnKeyCannotSubscribeWithoutConsentOrEmail() {
+        #expect(!SMSubscribeCard.canSubscribe(email: "a@b.co", consent: false, state: .idle))
+        #expect(!SMSubscribeCard.canSubscribe(email: "nope", consent: true, state: .idle))
+        #expect(!SMSubscribeCard.canSubscribe(email: "a@b.co", consent: true, state: .sending))
+        #expect(SMSubscribeCard.canSubscribe(email: " a@b.co ", consent: true, state: .idle))
+    }
+
+    @Test func onlyResultsAreAnnounced() {
+        #expect(SMSendState.idle.announcement == nil)
+        #expect(SMSendState.sending.announcement == nil)
+        #expect(SMSendState.done(SMFooterCopy.subscribed).announcement == SMFooterCopy.subscribed)
     }
 
     @Test func serverErrorsThrow() async {

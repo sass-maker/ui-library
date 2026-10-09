@@ -84,8 +84,11 @@ function hostOf(url: string | undefined) {
 
 // Fixed locale and UTC so server and browser render the same text (no
 // hydration mismatch); times say "UTC" so they are never misread as local.
+/** A datetime without a zone ("2026-01-01T00:30") reads as UTC, as on the server. */
+const NO_ZONE = /T\d\d:\d\d(:\d\d(\.\d+)?)?$/;
+
 function formatWhen(iso: string, withTime = false) {
-  const d = new Date(iso);
+  const d = new Date(NO_ZONE.test(iso) ? `${iso}Z` : iso);
   if (Number.isNaN(d.getTime())) return iso;
   const day = d.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
   if (!withTime || /^\d{4}-\d{2}-\d{2}$/.test(iso)) return day;
@@ -182,8 +185,20 @@ export function RecordDetail({
 }) {
   const desktop = useMediaQuery(desktopQuery);
   const headingRef = React.useRef<HTMLHeadingElement>(null);
+  // Where focus was before the panel took it (usually the row that opened it).
+  const returnTo = React.useRef<HTMLElement | null>(null);
   React.useEffect(() => {
-    if (open && desktop) headingRef.current?.focus({ preventScroll: true });
+    if (!desktop) return;
+    if (open) {
+      const from = document.activeElement;
+      if (from instanceof HTMLElement && from !== document.body && !from.closest("[data-record-detail]")) returnTo.current = from;
+      headingRef.current?.focus({ preventScroll: true });
+    } else if (returnTo.current) {
+      // The panel unmounted with focus inside it, so focus fell to <body>: put it back.
+      const target = returnTo.current;
+      returnTo.current = null;
+      if (target.isConnected && (document.activeElement === document.body || !document.activeElement)) target.focus({ preventScroll: true });
+    }
   }, [open, desktop, title]);
 
   const body = (
@@ -197,6 +212,7 @@ export function RecordDetail({
     if (!open) return null;
     return (
       <aside
+        data-record-detail
         aria-label="Record detail"
         className={cn("sticky top-4 flex max-h-[calc(100dvh-6rem)] w-[22rem] shrink-0 flex-col overflow-y-auto rounded-lg border border-border bg-card", className)}
         onKeyDown={(e) => e.key === "Escape" && onOpenChange(false)}

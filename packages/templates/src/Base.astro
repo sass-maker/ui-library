@@ -118,6 +118,8 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
       )
     }
     {footerScript && <script is:inline>
+      // One function scope, so no name here collides with a product's own head or slot scripts.
+      (() => {
       // Close any open popover (mobile menu) after in-page navigation.
       addEventListener("hashchange", () => document.querySelectorAll(":popover-open").forEach((p) => p.hidePopover()));
 
@@ -125,16 +127,26 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
       const api = "https://api.sassmaker.com";
       // A page address without query or fragment, which can carry private tokens.
       const pageUrl = () => location.origin + location.pathname;
-      // The publishable project key: given directly, or resolved once from the catalog id.
+      // The publishable project key: given directly, or resolved from the catalog id.
+      // Only a found key is cached; a miss or a failed lookup is retried on the next send.
+      // null means preview mode (no key, or the catalog id has no project); a failed
+      // lookup throws Unreachable so the form says SaaS Maker could not be reached.
+      class Unreachable extends Error {}
       const keys = {};
-      async function projectKey(form) {
-        if (form.dataset.key) return form.dataset.key;
+      function projectKey(form) {
+        if (form.dataset.key) return Promise.resolve(form.dataset.key);
         const id = form.dataset.catalog;
-        if (!id) return null;
+        if (!id) return Promise.resolve(null);
         keys[id] ??= fetch(api + "/v1/capture-config/" + encodeURIComponent(id), { credentials: "omit" })
-          .then((r) => (r.ok ? r.json() : null))
-          .then((c) => c?.api_key ?? null)
-          .catch(() => null);
+          .then((r) => {
+            if (r.status === 404) return null;
+            if (!r.ok) throw new Unreachable(String(r.status));
+            return r.json().then((c) => c?.api_key || null);
+          })
+          .then(
+            (key) => { if (!key) delete keys[id]; return key; },
+            (err) => { delete keys[id]; throw err instanceof Unreachable ? err : new Unreachable(String(err)); },
+          );
         return keys[id];
       }
       const dialog = () => document.querySelector("[data-feedback-dialog]");
@@ -148,14 +160,20 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
         row.classList.toggle("flex", !!anchor);
         row.firstElementChild.textContent = anchor ? "Pointing at: " + (anchor.text || "<" + anchor.tag + ">") : "";
       }
-      function selectorFor(el) {
+      // A selector that matches only el: climb to a unique id or to <body>, with
+      // :nth-of-type wherever a parent has more than one child of the same tag.
+      function selectorFor(el, useIds = true) {
         const parts = [];
-        for (let n = el; n && n.nodeType === 1 && parts.length < 5; n = n.parentElement) {
-          if (n.id) { parts.unshift("#" + CSS.escape(n.id)); break; }
-          const i = [...n.parentElement?.children ?? []].filter((c) => c.tagName === n.tagName).indexOf(n);
-          parts.unshift(n.tagName.toLowerCase() + (i > 0 ? ":nth-of-type(" + (i + 1) + ")" : ""));
+        let n = el;
+        for (; n && n.nodeType === 1 && n !== document.body && n !== document.documentElement; n = n.parentElement) {
+          if (useIds && n.id && document.querySelectorAll("#" + CSS.escape(n.id)).length === 1) break;
+          const same = [...n.parentElement?.children ?? []].filter((c) => c.tagName === n.tagName);
+          parts.unshift(CSS.escape(n.localName) + (same.length > 1 ? ":nth-of-type(" + (same.indexOf(n) + 1) + ")" : ""));
         }
-        return parts.join(" > ");
+        parts.unshift(useIds && n?.id && n !== document.body ? "#" + CSS.escape(n.id) : "body");
+        const sel = parts.join(" > ");
+        const hits = document.querySelectorAll(sel);
+        return (hits.length === 1 && hits[0] === el) || !useIds ? sel : selectorFor(el, false);
       }
       function pick() {
         const d = dialog();
@@ -218,8 +236,10 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
           form.reset();
           say(ok);
           return true;
-        } catch {
-          say("That did not send. Please try again in a moment.");
+        } catch (err) {
+          say(err instanceof Unreachable
+            ? "Couldn't reach SaaS Maker, so nothing was sent. Please try again in a moment."
+            : "That did not send. Please try again in a moment.");
         } finally {
           button.disabled = false;
         }
@@ -268,6 +288,7 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
           }, "You're on the list.");
         }
       });
+      })();
     </script>}
   </body>
 </html>

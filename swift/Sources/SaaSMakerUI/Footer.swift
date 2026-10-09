@@ -150,6 +150,11 @@ enum SMSendState: Equatable {
         case .done(let text): text
         }
     }
+
+    /// What VoiceOver announces: the result of a send, not the in-between "Sending…".
+    var announcement: String? {
+        if case .done(let text) = self { text } else { nil }
+    }
 }
 
 /// A rounded input surface matching the web field.
@@ -213,16 +218,21 @@ struct SMConsentCheck: View {
     }
 }
 
+/// The send status. VoiceOver hears each result (sent, preview, failed) as it lands.
 private struct SMStatusLine: View {
     @Environment(\.smPalette) private var p
     let state: SMSendState
     var body: some View {
-        if let message = state.message {
-            Text(message)
-                .font(.custom(p.sansFont, size: 13))
-                .foregroundStyle(p.foreground)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.updatesFrequently)
+        Group {
+            if let message = state.message {
+                Text(message)
+                    .font(.custom(p.sansFont, size: 13))
+                    .foregroundStyle(p.foreground)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .onChange(of: state) { _, new in
+            if let text = new.announcement { AccessibilityNotification.Announcement(text).post() }
         }
     }
 }
@@ -279,12 +289,21 @@ struct SMSubscribeCard: View {
     private var button: some View {
         Button("Subscribe", action: submit)
             .buttonStyle(.smSolid)
-            .disabled(!consent || !SMFooterClient.isEmail(email.trimmingCharacters(in: .whitespaces)) || state == .sending)
+            .disabled(!canSubscribe)
             .opacity(consent && SMFooterClient.isEmail(email.trimmingCharacters(in: .whitespaces)) ? 1 : 0.6)
     }
 
+    private var canSubscribe: Bool { Self.canSubscribe(email: email, consent: consent, state: state) }
+
+    /// Consent given, a valid email, and nothing already in flight.
+    static func canSubscribe(email: String, consent: Bool, state: SMSendState) -> Bool {
+        consent && SMFooterClient.isEmail(email.trimmingCharacters(in: .whitespaces)) && state != .sending
+    }
+
     private func submit() {
-        guard state != .sending else { return }
+        // Return in the field must not bypass the disabled button: no consent or
+        // no valid email means there is nothing to send, so do nothing.
+        guard canSubscribe else { return }
         state = .sending
         Task {
             do {
@@ -297,7 +316,7 @@ struct SMSubscribeCard: View {
                     state = .done(SMFooterCopy.subscribed)
                 }
             } catch {
-                state = .done(SMFooterCopy.failed)
+                state = .done(SMFooterCopy.failure(error))
             }
         }
     }
@@ -634,7 +653,7 @@ struct SMFeedbackForm: View {
                     state = .done(SMFooterCopy.feedbackSent(product))
                 }
             } catch {
-                state = .done(SMFooterCopy.failed)
+                state = .done(SMFooterCopy.failure(error))
             }
         }
     }

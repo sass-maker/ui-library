@@ -76,6 +76,8 @@ public enum SMFooterError: Error, Equatable {
     case consentRequired
     case invalidInput
     case http(Int)
+    /// The catalog id is set, but its key lookup failed (network, server error, bad reply).
+    case unreachable
 }
 
 /// The outcome of a send: delivered, or preview mode (no key, nothing sent).
@@ -89,6 +91,12 @@ public enum SMFooterCopy {
     public static let sending = "Sending…"
     public static let preview = "Preview only: this demo has no project key, so nothing was sent."
     public static let failed = "That did not send. Please try again in a moment."
+    public static let unreachable = "Couldn't reach SaaS Maker, so nothing was sent. Please try again in a moment."
+
+    /// The status line for a failed send.
+    public static func failure(_ error: Error) -> String {
+        (error as? SMFooterError) == .unreachable ? unreachable : failed
+    }
     public static let subscribed = "You're on the list."
     public static func feedbackSent(_ product: String) -> String { "Thanks, it reached the person who builds \(product)." }
     public static let feedbackConsent = "I agree to send this feedback and the page details to SaaS Maker."
@@ -98,7 +106,8 @@ public enum SMFooterCopy {
 // MARK: - Client
 
 /// Sends footer sign-ups and feedback to SaaS Maker. Resolves the publishable
-/// key once from the catalog id when none is given, and caches it.
+/// key from the catalog id when none is given and caches it once found; a
+/// failed lookup is not cached, so the next send tries again.
 public actor SMFooterClient {
     public static let api = URL(string: "https://api.sassmaker.com")!
     public static let privacyURL = URL(string: "https://sassmaker.com/privacy")!
@@ -109,7 +118,8 @@ public actor SMFooterClient {
     /// Identifies the app in feedback page urls (`app://<id>/<screen>`).
     public let appIdentifier: String
     public let clientVersion: String
-    private var resolved: Task<String?, Never>?
+    /// The in-flight or successful key lookup. Cleared when a lookup fails or finds no key.
+    private var resolved: Task<String?, Error>?
 
     public init(
         projectKey: String? = nil,
@@ -139,23 +149,44 @@ public actor SMFooterClient {
         }
     }
 
-    /// True when sends can reach SaaS Maker (a key is given or resolvable).
-    public func projectKeyForSend() async -> String? {
+    /// The key to send with: the given key, or one resolved from the catalog id.
+    /// `nil` means preview mode (no key, no catalog id, or the catalog id has no
+    /// project). Throws `.unreachable` when the lookup itself fails.
+    public func projectKeyForSend() async throws -> String? {
         if let projectKey { return projectKey }
         guard let catalogId else { return nil }
-        if let resolved { return await resolved.value }
-        let transport = transport
-        let task = Task<String?, Never> {
-            guard let request = Self.captureConfigRequest(catalogId: catalogId),
-                  let (data, response) = try? await transport.send(request),
-                  (response as? HTTPURLResponse).map({ (200..<300).contains($0.statusCode) }) ?? false,
-                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  let key = json["api_key"] as? String, !key.isEmpty
-            else { return nil }
-            return key
+        let task: Task<String?, Error>
+        if let resolved {
+            task = resolved
+        } else {
+            task = Task { [transport] in try await Self.lookUpKey(catalogId: catalogId, transport: transport) }
+            resolved = task
         }
-        resolved = task
-        return await task.value
+        do {
+            let key = try await task.value
+            if key == nil { forget(task) }
+            return key
+        } catch {
+            forget(task)
+            throw SMFooterError.unreachable
+        }
+    }
+
+    /// Drops a lookup that failed or found no key, unless a newer one replaced it.
+    private func forget(_ task: Task<String?, Error>) {
+        if resolved == task { resolved = nil }
+    }
+
+    /// `nil` for an unknown catalog id (404) or a reply without a key; throws otherwise.
+    private static func lookUpKey(catalogId: String, transport: any SMHTTPTransport) async throws -> String? {
+        guard let request = captureConfigRequest(catalogId: catalogId) else { return nil }
+        let (data, response) = try await transport.send(request)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        if status == 404 { return nil }
+        guard (200..<300).contains(status) else { throw SMFooterError.http(status) }
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { throw SMFooterError.unreachable }
+        guard let key = json["api_key"] as? String, !key.isEmpty else { return nil }
+        return key
     }
 
     /// Updates sign-up. Throws `.consentRequired` without consent; `.preview` when there is no key.
@@ -163,7 +194,7 @@ public actor SMFooterClient {
         guard consent else { throw SMFooterError.consentRequired }
         let email = email.trimmingCharacters(in: .whitespacesAndNewlines)
         guard kind != .off, Self.isEmail(email) else { throw SMFooterError.invalidInput }
-        guard let key = await projectKeyForSend() else { return .preview }
+        guard let key = try await projectKeyForSend() else { return .preview }
         try await check(transport.send(Self.subscriptionRequest(key: key, email: email, kind: kind)))
         return .sent
     }
@@ -172,7 +203,7 @@ public actor SMFooterClient {
     public func sendFeedback(_ draft: SMFeedbackDraft, screen: String, title: String, consent: Bool) async throws -> SMFooterResult {
         guard consent else { throw SMFooterError.consentRequired }
         guard draft.isComplete else { throw SMFooterError.invalidInput }
-        guard let key = await projectKeyForSend() else { return .preview }
+        guard let key = try await projectKeyForSend() else { return .preview }
         let page = Self.pageURL(app: appIdentifier, screen: screen)
         let request = try Self.feedbackRequest(key: key, draft: draft, pageURL: page, pageTitle: title, clientVersion: clientVersion)
         try await check(transport.send(request))

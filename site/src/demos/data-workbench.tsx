@@ -153,7 +153,9 @@ function ComparePanel({ places, onRemove, onClose }: { places: Place[]; onRemove
   );
 }
 
-const parsePicks = (s: string | null) => (s ? s.split(",").filter(Boolean).slice(0, MAX_COMPARE) : []);
+/** Picks from the URL: de-duplicated, known places only (once loaded), at most MAX_COMPARE. */
+const parsePicks = (s: string | null, known?: Map<string, unknown>) =>
+  s ? [...new Set(s.split(",").filter((x) => x && (!known || known.has(x))))].slice(0, MAX_COMPARE) : [];
 const parseSort = (s: string | null): DataSort => (s ? [{ id: s.replace(/^-/, ""), desc: s.startsWith("-") }] : [{ id: "overall", desc: true }]);
 
 export default function PlacesWorkbench() {
@@ -204,6 +206,19 @@ export default function PlacesWorkbench() {
   const bySlug = React.useMemo(() => new Map(places.map((p) => [p.slug, p])), [places]);
   const open = openSlug ? bySlug.get(openSlug) : undefined;
   const picked = picks.map((s) => bySlug.get(s)).filter((p): p is Place => !!p);
+  // Once the snapshot loads, drop unknown or repeated picks from the URL so they
+  // never use up compare slots.
+  React.useEffect(() => {
+    if (!snapshot) return;
+    const raw = readParam("pick");
+    const clean = parsePicks(raw, bySlug);
+    setPicksState(clean);
+    if ((raw ?? "") !== clean.join(",")) setParam("pick", clean.length ? clean.join(",") : null);
+    if (clean.length < 2 && readParam("compare")) {
+      setComparing(false);
+      setParam("compare", null);
+    }
+  }, [snapshot, bySlug]);
 
   const openPlace = (slug: string | null) => {
     setOpenSlug(slug);

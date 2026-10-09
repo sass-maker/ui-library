@@ -8,6 +8,7 @@
     "dev": "pnpm --filter @saas-maker/ui-site dev",
     "build": "pnpm --filter @saas-maker/ui-site build && pnpm registry:build",
     "check": "pnpm typecheck && pnpm --filter @saas-maker/ui-site check",
+    "check:browser": "node site/scripts/browser-check.mjs",
     "registry:build": "shadcn build --output site/dist/r",
     "typecheck": "tsc -p tsconfig.json",
     "tokens:build": "node packages/tokens/build.mjs"

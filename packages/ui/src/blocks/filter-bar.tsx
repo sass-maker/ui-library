@@ -138,8 +138,10 @@ export function FacetFilter({
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 p-0">
-        <Command>
-          {options.length > 8 && <CommandInput placeholder={searchPlaceholder ?? `Find ${label}…`} className="h-9" />}
+        {/* The input is always there: it holds focus when the popover opens, so arrow keys,
+            Enter and Space work, and it names the listbox for screen readers. */}
+        <Command label={label}>
+          <CommandInput placeholder={searchPlaceholder ?? `Find ${label}…`} className="h-9" />
           <CommandList className="max-h-72">
             <CommandEmpty>No match.</CommandEmpty>
             <CommandGroup>

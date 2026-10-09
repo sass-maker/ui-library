@@ -6,6 +6,16 @@ import { cn } from "../lib/utils";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../components/command";
 import { Kbd } from "../components/kbd";
 
+/** Only http(s) and same-site paths: a result href from an API never runs as `javascript:`. */
+export function safeHref(href: string): string | null {
+  try {
+    const url = new URL(href, location.href);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 export type SearchResult = {
   id: string;
   title: string;
@@ -148,7 +158,10 @@ export function SearchPalette({
   const choose = (r: SearchResult, sourceId: string) => {
     setOpen(false);
     if (onSelect) onSelect(r, sourceId);
-    else if (r.href) location.assign(r.href);
+    else if (r.href) {
+      const url = safeHref(r.href);
+      if (url) location.assign(url);
+    }
   };
 
   return (
@@ -158,7 +171,7 @@ export function SearchPalette({
       title="Search"
       description={placeholder}
       showCloseButton={false}
-      commandProps={{ shouldFilter: false, loop: true }}
+      commandProps={{ shouldFilter: false, loop: true, label: "Search" }}
     >
       <CommandInput placeholder={placeholder} value={query} onValueChange={setQuery} />
       <CommandList>

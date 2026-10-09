@@ -12,9 +12,10 @@ import { Skeleton } from "../components/skeleton";
  * `verified` is true and a name is given; otherwise the row says
  * "unverified speaker" and the name is never rendered, even if present.
  *
- * With `onOpen`, each row is a button (Enter or Space opens it, ArrowUp and
- * ArrowDown move between rows); links inside a row stay separate tab stops
- * and never open the row.
+ * With `onOpen`, each row's quote is a real button (Enter or Space opens it,
+ * ArrowUp and ArrowDown move between rows) that also covers the row for
+ * pointer clicks. The speaker, source and timestamp links sit beside the
+ * button, never inside it, so each stays its own link and tab stop.
  */
 
 export type QuoteSpeaker = {
@@ -47,9 +48,7 @@ function Link({ href, className, children }: { href: string; className?: string;
     <a
       href={href}
       {...(external(href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={cn("underline-offset-4 hover:underline", className)}
-      onClick={(e) => e.stopPropagation()}
-      onKeyDown={(e) => e.stopPropagation()}
+      className={cn("relative z-10 underline-offset-4 hover:underline", className)}
     >
       {children}
     </a>
@@ -66,8 +65,11 @@ export function formatTimestamp(seconds: number | null | undefined): string | nu
   return h ? `${h}:${String(m).padStart(2, "0")}:${ss}` : `${m}:${ss}`;
 }
 
+/** A datetime without a zone ("2026-01-01T00:30") reads as UTC, as on the server. */
+const NO_ZONE = /T\d\d:\d\d(:\d\d(\.\d+)?)?$/;
+
 function formatDay(iso: string) {
-  const d = new Date(iso);
+  const d = new Date(NO_ZONE.test(iso) ? `${iso}Z` : iso);
   if (Number.isNaN(d.getTime())) return iso;
   // Fixed locale and UTC: server and browser render the same text.
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
@@ -142,37 +144,37 @@ export function QuoteRow({
   /** Move focus to the previous (-1) or next (1) row. */
   onArrow?: (dir: -1 | 1) => void;
 }) {
-  const body = (
-    <>
-      <p className="max-w-[75ch] text-[0.9375rem] leading-relaxed text-pretty text-foreground">{item.quote}</p>
-      <Meta item={item} />
-    </>
-  );
+  const meta = <Meta item={item} />;
+  const quoteClass = "block max-w-[75ch] text-[0.9375rem] leading-relaxed text-pretty text-foreground";
   return (
-    <li data-selected={selected || undefined} className="border-b border-hairline last:border-b-0 data-[selected]:bg-brand-soft/50">
+    <li
+      data-selected={selected || undefined}
+      className={cn(
+        "border-b border-hairline px-4 py-3 last:border-b-0 data-[selected]:bg-brand-soft/50",
+        onOpen && "relative transition-colors hover:bg-accent/60 has-[[data-quote-row]:focus-visible]:bg-accent has-[[data-quote-row]:focus-visible]:shadow-[inset_2px_0_0_var(--ring)]",
+      )}
+    >
       {onOpen ? (
-        // A row that holds links cannot be a <button>.
-        <div
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
           data-quote-row
           aria-current={selected || undefined}
           onClick={onOpen}
           onKeyDown={(e) => {
-            if (e.target !== e.currentTarget) return;
-            if (e.key === "Enter" || e.key === " ") onOpen();
-            else if (e.key === "ArrowDown") onArrow?.(1);
+            if (e.key === "ArrowDown") onArrow?.(1);
             else if (e.key === "ArrowUp") onArrow?.(-1);
             else return;
             e.preventDefault();
           }}
-          className="cursor-pointer px-4 py-3 outline-none transition-colors hover:bg-accent/60 focus-visible:bg-accent focus-visible:shadow-[inset_2px_0_0_var(--ring)]"
+          // The ::after layer makes the whole row clickable; the meta links sit above it.
+          className={cn(quoteClass, "cursor-pointer text-left outline-none after:absolute after:inset-0 after:content-['']")}
         >
-          {body}
-        </div>
+          {item.quote}
+        </button>
       ) : (
-        <div className="px-4 py-3">{body}</div>
+        <p className={quoteClass}>{item.quote}</p>
       )}
+      {meta}
     </li>
   );
 }

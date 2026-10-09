@@ -321,9 +321,12 @@ function DataTable<T extends RowData>({
                         className="align-middle"
                       />
                     ) : (
-                      <span className="tabular-nums" aria-label={`${picked.size} of ${selection.max} selected`}>
-                        {picked.size}/{selection.max}
-                      </span>
+                      <>
+                        <span className="tabular-nums" aria-hidden>
+                          {picked.size}/{selection.max}
+                        </span>
+                        <span className="sr-only">{`${picked.size} of ${selection.max} selected`}</span>
+                      </>
                     )}
                   </th>
                 )}

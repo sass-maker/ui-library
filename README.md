@@ -221,7 +221,8 @@ Beyond the theme, the package assembles whole screens: `SMHero`, `SMShowcase`,
 updates sign-up (`capture: .newsletter | .waitlist | .off`), a feedback sheet
 with an optional screenshot, Ask AI and the studio strip, posting to SaaS Maker
 with `projectKey:` or `catalogId:` (preview mode, sending nothing, without a
-key; feedback pages are `app://<bundle-id>/<screen>`). `SM_SNAPSHOT_DIR=/tmp/sm
+key; a failed catalog lookup says SaaS Maker could not be reached and retries on
+the next send; feedback pages are `app://<bundle-id>/<screen>`). `SM_SNAPSHOT_DIR=/tmp/sm
 swift test` renders sample screens to PNG for review.
 
 ## Develop
@@ -230,6 +231,7 @@ swift test` renders sample screens to PNG for review.
 pnpm install
 pnpm dev            # library site with demos
 pnpm check          # typecheck packages + build site
+pnpm check:browser  # keyboard, focus and footer checks in Chrome (needs the site preview running)
 pnpm tokens:build   # regenerate tokens.json and the Swift tokens
 swift build && swift test
 ```
