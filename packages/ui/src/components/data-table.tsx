@@ -17,6 +17,7 @@ import {
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, Columns3Icon } from "lucide-react"
 import { cn } from "../lib/utils"
 import { Button } from "./button"
+import { Checkbox } from "./checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -39,6 +40,9 @@ import { Skeleton } from "./skeleton"
  * - `status` drives loading (skeleton rows) and error states; `empty` is
  *   shown when there are no rows.
  * - Client mode sorts and pages `data`; set `manual` for server-paged data.
+ * - `selection` adds a checkbox column with controlled state (ids), an
+ *   optional cap (`max`, e.g. 3 for a compare view) and `onLimit` when a
+ *   viewer tries to pass it. Checkboxes never open the row.
  */
 
 export type DataValue = string | number | boolean | null | undefined
@@ -73,6 +77,18 @@ export type DataTableView<T> = {
   columns: DataColumn<T>[]
 }
 
+export type DataSelection<T> = {
+  /** Selected row ids, in the order they were picked. */
+  selected: string[]
+  onChange: (ids: string[]) => void
+  /** Most rows that can be selected. Without it the header checkbox selects the page. */
+  max?: number
+  /** Called instead of selecting when `max` is reached. */
+  onLimit?: (row: T) => void
+  /** Accessible name of a row's checkbox, e.g. the place name. Defaults to the row id. */
+  rowLabel?: (row: T) => string
+}
+
 type DataTableProps<T> = {
   data: T[]
   columns: DataColumn<T>[]
@@ -82,6 +98,8 @@ type DataTableProps<T> = {
   onRowClick?: (row: T) => void
   /** Highlights the row whose detail is open. */
   selectedId?: string | null
+  /** Checkbox column for picking rows (compare, bulk actions). */
+  selection?: DataSelection<T>
   status?: "ready" | "loading" | "error"
   error?: React.ReactNode
   onRetry?: () => void
@@ -130,6 +148,7 @@ function DataTable<T extends RowData>({
   label,
   onRowClick,
   selectedId,
+  selection,
   status = "ready",
   error,
   onRetry,
@@ -220,8 +239,24 @@ function DataTable<T extends RowData>({
     e.preventDefault()
   }
 
+  const picked = React.useMemo(() => new Set(selection?.selected ?? []), [selection?.selected])
+  const atLimit = selection?.max != null && picked.size >= selection.max
+  const togglePick = (row: T, id: string) => {
+    if (!selection) return
+    if (picked.has(id)) return selection.onChange(selection.selected.filter((s) => s !== id))
+    if (atLimit) return selection.onLimit?.(row)
+    selection.onChange([...selection.selected, id])
+  }
+  const pageIds = pageRows.map((r) => r.id)
+  const pagePicked = pageIds.filter((id) => picked.has(id)).length
+  const togglePage = () => {
+    if (!selection) return
+    if (pagePicked === pageIds.length) selection.onChange(selection.selected.filter((id) => !pageIds.includes(id)))
+    else selection.onChange([...selection.selected, ...pageIds.filter((id) => !picked.has(id))])
+  }
+
   const hideable = table.getAllLeafColumns().filter((c) => c.getCanHide())
-  const colCount = Math.max(1, visibleColumns.length)
+  const colCount = Math.max(1, visibleColumns.length) + (selection ? 1 : 0)
   const scrollRef = React.useRef<HTMLDivElement>(null)
   React.useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0 })
@@ -270,10 +305,28 @@ function DataTable<T extends RowData>({
           <caption className="sr-only">
             {label}
             {onRowClick ? ". Use arrow keys to move between rows and Enter to open one." : ""}
+            {selection ? ` Tab from a row to its checkbox to select it${selection.max != null ? `, up to ${selection.max}` : ""}.` : ""}
           </caption>
           <thead>
             {table.getHeaderGroups().map((group) => (
               <tr key={group.id}>
+                {selection && (
+                  <th scope="col" className="sticky top-0 z-10 h-10 w-10 border-b border-border bg-card pl-4 pr-1 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground">
+                    {selection.max == null ? (
+                      <Checkbox
+                        aria-label="Select all rows on this page"
+                        checked={pagePicked === 0 ? false : pagePicked === pageIds.length ? true : "indeterminate"}
+                        onCheckedChange={togglePage}
+                        disabled={status !== "ready" || pageIds.length === 0}
+                        className="align-middle"
+                      />
+                    ) : (
+                      <span className="tabular-nums" aria-label={`${picked.size} of ${selection.max} selected`}>
+                        {picked.size}/{selection.max}
+                      </span>
+                    )}
+                  </th>
+                )}
                 {group.headers.map((header) => {
                   const col = byId.get(header.column.id)
                   const dir = header.column.getIsSorted()
@@ -323,7 +376,7 @@ function DataTable<T extends RowData>({
                 <tr key={i}>
                   {Array.from({ length: colCount }, (_, j) => (
                     <td key={j} className="border-b border-hairline px-3 py-3 first:pl-4 last:pr-4">
-                      <Skeleton className={cn("h-3.5", j === 0 ? "w-32" : "w-14")} />
+                      <Skeleton className={cn("h-3.5", selection && j === 0 ? "w-4" : j === (selection ? 1 : 0) ? "w-32" : "w-14")} />
                     </td>
                   ))}
                 </tr>
@@ -350,11 +403,14 @@ function DataTable<T extends RowData>({
             {status === "ready" &&
               pageRows.map((row, i) => {
                 const selected = selectedId != null && row.id === selectedId
+                const isPicked = picked.has(row.id)
+                const blocked = !isPicked && atLimit
                 return (
                   <tr
                     key={row.id}
                     data-row
                     data-state={selected ? "selected" : undefined}
+                    data-picked={isPicked || undefined}
                     aria-current={selected || undefined}
                     tabIndex={onRowClick ? (i === focusIndex ? 0 : -1) : undefined}
                     onClick={onRowClick ? () => (setFocusIndex(i), onRowClick(row.original)) : undefined}
@@ -363,10 +419,28 @@ function DataTable<T extends RowData>({
                     className={cn(
                       "group/row outline-none",
                       onRowClick && "cursor-pointer",
-                      "[&>td]:transition-colors hover:[&>td]:bg-accent/60 focus-visible:[&>td]:bg-accent data-[state=selected]:[&>td]:bg-brand-soft/60",
+                      "[&>td]:transition-colors hover:[&>td]:bg-accent/60 focus-visible:[&>td]:bg-accent data-[picked]:[&>td]:bg-brand-soft/30 data-[state=selected]:[&>td]:bg-brand-soft/60",
                       "focus-visible:[&>td:first-child]:shadow-[inset_2px_0_0_var(--ring)]"
                     )}
                   >
+                    {selection && (
+                      // Clicks here pick the row; they never open it.
+                      <td
+                        className="w-10 border-b border-hairline py-2.5 pl-4 pr-1 align-middle"
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => e.stopPropagation()}
+                      >
+                        <Checkbox
+                          checked={isPicked}
+                          onCheckedChange={() => togglePick(row.original, row.id)}
+                          aria-label={`Select ${selection.rowLabel?.(row.original) ?? row.id}`}
+                          aria-disabled={blocked || undefined}
+                          title={blocked ? `Up to ${selection.max} rows` : undefined}
+                          tabIndex={onRowClick ? (i === focusIndex ? 0 : -1) : undefined}
+                          className={cn("align-middle", blocked && "opacity-40")}
+                        />
+                      </td>
+                    )}
                     {visibleColumns.map((col) => (
                       <td
                         key={col.id}

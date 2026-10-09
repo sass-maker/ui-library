@@ -88,6 +88,72 @@ function setParam(k: string, v: string | null) {
   const qs = p.toString();
   history.replaceState(history.state, "", location.pathname + (qs ? `?${qs}` : "") + location.hash);
 }
+const MAX_COMPARE = 3;
+const compareRows: { label: string; value: (p: Place) => string | null }[] = [
+  { label: "country", value: (p) => p.country },
+  { label: "cost for a nomad", value: (p) => (p.costNomad == null ? null : `${usd(p.costNomad)} / mo`) },
+  { label: "1br rent, centre", value: (p) => (p.rent == null ? null : `${usd(p.rent)} / mo`) },
+  { label: "coworking", value: (p) => (p.coworking == null ? null : `${usd(p.coworking)} / mo`) },
+  { label: "internet", value: (p) => (p.internet == null ? null : `${p.internet} Mbps`) },
+  { label: "overall", value: (p) => score(p.overall) },
+  { label: "safety", value: (p) => score(p.safety) },
+  { label: "walkability", value: (p) => score(p.walkability) },
+  { label: "english spoken", value: (p) => score(p.english) },
+  { label: "healthcare", value: (p) => score(p.healthcare) },
+  { label: "remote work visa", value: (p) => visaLabel(p.remoteVisa) },
+];
+
+/** Picked places side by side; the first column stays put while the rest scroll. */
+function ComparePanel({ places, onRemove, onClose }: { places: Place[]; onRemove: (slug: string) => void; onClose: () => void }) {
+  return (
+    <section aria-labelledby="compare-title" className="mb-6 flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 id="compare-title" className="font-display text-xl">
+          compare {places.length} places
+        </h2>
+        <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={onClose}>
+          close compare
+        </Button>
+      </div>
+      <div className="overflow-x-auto rounded-lg border border-border bg-card">
+        <table className="w-full border-separate border-spacing-0 text-sm">
+          <caption className="sr-only">Picked places across {compareRows.length} measures</caption>
+          <thead>
+            <tr>
+              <th scope="col" className="ui-case sticky left-0 z-10 min-w-[9rem] border-b border-border bg-card px-4 py-3 text-left text-xs font-medium text-muted-foreground">
+                measure
+              </th>
+              {places.map((p) => (
+                <th key={p.slug} scope="col" className="min-w-[9rem] border-b border-border px-4 py-3 text-right align-bottom font-medium text-foreground">
+                  <span className="block">{p.name}</span>
+                  <button type="button" onClick={() => onRemove(p.slug)} className="ui-case text-xs font-normal text-muted-foreground underline-offset-4 hover:underline" aria-label={`Remove ${p.name} from compare`}>
+                    remove
+                  </button>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {compareRows.map((r) => (
+              <tr key={r.label}>
+                <th scope="row" className="sticky left-0 z-10 border-b border-hairline bg-card px-4 py-2.5 text-left font-normal text-muted-foreground">
+                  {r.label}
+                </th>
+                {places.map((p) => (
+                  <td key={p.slug} className="border-b border-hairline px-4 py-2.5 text-right tabular-nums text-foreground">
+                    {r.value(p) ?? <span className="text-muted-foreground/60">—</span>}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+const parsePicks = (s: string | null) => (s ? s.split(",").filter(Boolean).slice(0, MAX_COMPARE) : []);
 const parseSort = (s: string | null): DataSort => (s ? [{ id: s.replace(/^-/, ""), desc: s.startsWith("-") }] : [{ id: "overall", desc: true }]);
 
 export default function PlacesWorkbench() {
@@ -109,10 +175,26 @@ export default function PlacesWorkbench() {
   const [filters, setFilters] = useUrlFilters(defs);
   const [sort, setSort] = React.useState<DataSort>(() => parseSort(null));
   const [openSlug, setOpenSlug] = React.useState<string | null>(null);
+  const [picks, setPicksState] = React.useState<string[]>([]);
+  const [comparing, setComparing] = React.useState(false);
+  const [notice, setNotice] = React.useState<string | null>(null);
   React.useEffect(() => {
     setSort(parseSort(readParam("sort")));
     setOpenSlug(readParam("place"));
+    setPicksState(parsePicks(readParam("pick")));
+    setComparing(readParam("compare") === "1");
   }, []);
+  const setPicks = (next: string[]) => {
+    setPicksState(next);
+    setNotice(null);
+    setParam("pick", next.length ? next.join(",") : null);
+    if (next.length < 2) showCompare(false);
+  };
+  const showCompare = (on: boolean) => {
+    setComparing(on);
+    setNotice(null);
+    setParam("compare", on ? "1" : null);
+  };
 
   const rows = React.useMemo(() => filterRows(places, defs, filters, { search: searchText }), [places, filters]);
   const bounds = React.useMemo(
@@ -121,6 +203,7 @@ export default function PlacesWorkbench() {
   );
   const bySlug = React.useMemo(() => new Map(places.map((p) => [p.slug, p])), [places]);
   const open = openSlug ? bySlug.get(openSlug) : undefined;
+  const picked = picks.map((s) => bySlug.get(s)).filter((p): p is Place => !!p);
 
   const openPlace = (slug: string | null) => {
     setOpenSlug(slug);
@@ -191,6 +274,10 @@ export default function PlacesWorkbench() {
         <ActiveFilters defs={defs} state={filters} onChange={setFilters} />
       </div>
 
+      {comparing && picked.length >= 2 && (
+        <ComparePanel places={picked} onRemove={(slug) => setPicks(picks.filter((s) => s !== slug))} onClose={() => showCompare(false)} />
+      )}
+
       <RecordLayout>
         <DataTable
           className="flex-1"
@@ -203,6 +290,13 @@ export default function PlacesWorkbench() {
           onRetry={load}
           onRowClick={(p) => openPlace(p.slug)}
           selectedId={openSlug}
+          selection={{
+            selected: picks,
+            onChange: setPicks,
+            max: MAX_COMPARE,
+            onLimit: () => setNotice(`Compare up to ${MAX_COMPARE} places. Remove one to add another.`),
+            rowLabel: (p) => p.name,
+          }}
           sort={sort}
           onSortChange={(s) => {
             setSort(s);
@@ -226,6 +320,19 @@ export default function PlacesWorkbench() {
                 ) : (
                   "loading places…"
                 )}
+              </p>
+              {picks.length > 0 && (
+                <span className="flex items-center gap-1">
+                  <Button size="sm" variant={comparing ? "secondary" : "default"} disabled={picks.length < 2} onClick={() => showCompare(!comparing)}>
+                    {picks.length < 2 ? "pick one more to compare" : comparing ? "hide compare" : `compare ${picks.length}`}
+                  </Button>
+                  <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={() => setPicks([])}>
+                    clear
+                  </Button>
+                </span>
+              )}
+              <p role="status" className="text-sm text-muted-foreground empty:hidden">
+                {notice}
               </p>
               {snapshot && (
                 <ExportMenu
@@ -275,6 +382,8 @@ export default function PlacesWorkbench() {
                 info={{
                   source: meta.source,
                   url: open.url,
+                  via: "Nomad Atlas saved snapshot",
+                  viaUrl: meta.viaUrl,
                   collectedAt: meta.collectedAt,
                   revision: "nomad atlas · 517cbeb",
                   note: "Saved snapshot via Nomad Atlas. Costs and scores are the source's estimates, not live data.",

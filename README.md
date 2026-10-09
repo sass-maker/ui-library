@@ -13,13 +13,43 @@ one theme.
 
 ## Web product (Astro)
 
+Install from the private repo, not npm. Write the specs into `package.json`
+and run `pnpm install`; templates needs ui and motion beside it.
+
 ```sh
-# installed from the private repo, not npm (templates needs ui + motion beside it)
 G="github:sass-maker/ui-library#v0.1.7"
-pnpm add "$G&path:/packages/ui" "$G&path:/packages/motion" "$G&path:/packages/templates"
+pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
+  "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
+  "dependencies.@saas-maker/templates=$G&path:/packages/templates"
+pnpm install
 ```
 
-No extra Astro config is needed; the stylesheet scans the packages for classes.
+`package.json` should then read:
+
+```json
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.7&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.7&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.7&path:/packages/ui"
+```
+
+Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
+`git+https://github.com/sass-maker/ui-library.git`, dropping `#tag&path:`
+(with or without `--save-exact`), so the next fresh install gets the wrong
+package. To upgrade, change the tag in all three lines and run `pnpm install`.
+
+Styles: `Base.astro` already imports `@saas-maker/templates/styles.css`, the
+theme plus every class the ui and templates packages use. With your own
+layout, import that one file instead (from a layout, or `@import` it at the
+top of your app stylesheet):
+
+```css
+@import "@saas-maker/templates/styles.css";
+```
+
+Your app's own files are scanned automatically. Apps that use only
+`@saas-maker/ui` import `@saas-maker/ui/styles.css`. Each package's
+`@source` is relative to its own stylesheet, so this works under pnpm's
+`node_modules/.pnpm` layout with no extra `@source` lines.
 
 Add `src/content/<slug>.json` and render it with `GalleryPage` or
 `WorkbenchPage` inside `Base.astro`. Write `*phrase*` for the accent phrase.
@@ -44,15 +74,18 @@ content area); put the interactive view in it as a React island.
 
 | Piece | Import |
 | --- | --- |
-| `DataTable` (sort, pages, column toggle, sticky header, row keyboard nav, loading/empty/error; TanStack Table v9) | `components/data-table` |
+| `DataTable` (sort, pages, column toggle, sticky header, row keyboard nav, loading/empty/error, row selection with `selection={{ selected, onChange, max }}` for compare flows; TanStack Table v9) | `components/data-table` |
 | `FilterBar`, `FacetFilter` (multi-select with counts), `RangeFilter`, `DateRangeFilter`, `ActiveFilters`, `useUrlFilters` | `blocks/filter-bar` |
 | `readFilters` / `writeFilters` (query string), `filterRows`, `facetCounts` | `lib/filters` |
 | `SearchPalette` (⌘K, grouped sources) and `SearchTrigger` | `blocks/search-palette` |
-| `RecordDetail` (side panel, sheet on phones), `KeyValueList`, `Provenance` | `blocks/record-detail` |
+| `RecordDetail` (side panel, sheet on phones), `KeyValueList` (labels keep their width, values wrap; `align="start"` for prose), `Provenance` (from, via + endpoint, collected, read at, snapshot) | `blocks/record-detail` |
+| `QuoteList` (verbatim quotes or claims: speaker, never named unless verified; source, date, timestamp link, type; keyboard rows), `QuoteRow`, `formatTimestamp` | `blocks/quote-list` |
 | `ExportMenu` (CSV/JSON of the current view), `toCSV` / `toJSON` | `blocks/export-menu`, `lib/export` |
 | `Breadcrumbs`, `Pagination`, `Popover`, `Command`, `Slider` | `components/*` |
 
-Demo: `/demo/data/` (Nomad Atlas places snapshot, Nomads.com data).
+Demo: `/demo/data/` (Nomad Atlas places snapshot, Nomads.com data; pick up
+to three rows to compare) and `/demo/data/claims/` (a verbatim sample of
+High Signal Podcasts claims from its public API, read 9 Oct 2026).
 
 ## Mac / iOS app
 

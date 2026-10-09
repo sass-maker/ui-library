@@ -1,0 +1,42 @@
+---
+/**
+ * Claims collection in the data workbench demo: a small verbatim sample of
+ * published claims from High Signal Podcasts' public API, shown with the
+ * QuoteList block. Speakers are named only where the source verified them.
+ */
+import Base from "@saas-maker/templates/Base.astro";
+import { ConsolePage } from "@saas-maker/templates/console-page";
+import ClaimsWorkbench from "@/demos/claims-workbench";
+import claims from "@/data/podcast-claims.json";
+import meta from "@/data/nomad-places.meta.json";
+---
+
+<Base title="Claims — data workbench" description="Published podcast claims from High Signal Podcasts, in the SaaS Maker UI console template." theme="base">
+  <ConsolePage
+    brand={{ name: "workbench", href: "/demo/data/" }}
+    breadcrumbs={[{ label: "workbench", href: "/demo/data/" }, { label: "claims" }]}
+    nav={[
+      {
+        title: "collections",
+        items: [
+          { label: "places", href: "/demo/data/", count: meta.count },
+          { label: "claims", href: "/demo/data/claims/", count: claims.claims.length, active: true },
+        ],
+      },
+      {
+        title: "sources",
+        items: [
+          { label: "nomad atlas", href: meta.viaUrl, external: true },
+          { label: "nomads.com", href: meta.sourceUrl, external: true },
+          { label: "high signal podcasts", href: claims.sourceUrl, external: true },
+        ],
+      },
+    ]}
+    title="claims"
+    description={`${claims.claims.length} published claims with the verbatim quote, the speaker where verified, the episode and, for captioned episodes, the timestamp.`}
+    search={false}
+    sidebarFooter="Data: High Signal Podcasts public API, a small sample read on 9 Oct 2026."
+  >
+    <ClaimsWorkbench client:load />
+  </ConsolePage>
+</Base>

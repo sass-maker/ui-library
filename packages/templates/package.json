@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Content-driven landing page templates (Gallery, Workbench) and the base layout.",
   "exports": {
+    "./styles.css": "./src/styles.css",
     "./*.astro": "./src/*.astro",
     "./schema": "./src/schema.ts",
     "./*": "./src/*.tsx"
@@ -22,5 +23,8 @@
     "@saas-maker/ui": "workspace:*",
     "@saas-maker/motion": "workspace:*",
     "astro": "7.3.5"
-  }
+  },
+  "sideEffects": [
+    "*.css"
+  ]
 }

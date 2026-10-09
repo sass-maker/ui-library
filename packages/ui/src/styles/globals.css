@@ -10,10 +10,10 @@
 @import "@fontsource-variable/fraunces/soft.css";
 @import "@fontsource-variable/fraunces/soft-italic.css";
 
-/* Scan this package and its sibling templates package for classes (same
-   relative layout in this repo and under node_modules/@saas-maker). */
+/* Scan this package for classes. The path is relative to this file, so it
+   holds under pnpm's isolated layout. Templates scan themselves from
+   `@saas-maker/templates/styles.css`. */
 @source "..";
-@source "../../../templates/src";
 
 @custom-variant dark (&:is([data-mode="dark"] *, [data-mode="dark"]));
 

@@ -21,16 +21,31 @@ export function useMediaQuery(query: string) {
 
 export type KeyValueItem = { label: string; value: React.ReactNode; hint?: string };
 
-/** Two-column label/value list. Missing values show a quiet dash. */
-export function KeyValueList({ items, className }: { items: KeyValueItem[]; className?: string }) {
+/**
+ * Two-column label/value list. Missing values show a quiet dash.
+ *
+ * The label column fits the longest label, between 6rem and 45% of the
+ * width, so long values never squeeze labels away; labels and values wrap.
+ * `align="start"` left-aligns values (prose, links); the default right-aligns
+ * them (numbers).
+ */
+export function KeyValueList({
+  items,
+  className,
+  align = "end",
+}: {
+  items: KeyValueItem[];
+  className?: string;
+  align?: "start" | "end";
+}) {
   return (
-    <dl className={cn("grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 text-sm", className)}>
+    <dl className={cn("grid grid-cols-[fit-content(45%)_minmax(0,1fr)] gap-x-4 text-sm", className)}>
       {items.map((it) => (
         <div key={it.label} className="col-span-2 grid grid-cols-subgrid items-baseline border-b border-hairline py-2 last:border-0">
-          <dt className="min-w-0 truncate text-muted-foreground" title={it.hint}>
+          <dt className="min-w-[min(6rem,100%)] break-words text-muted-foreground" title={it.hint}>
             {it.label}
           </dt>
-          <dd className="text-right tabular-nums text-foreground">
+          <dd className={cn("min-w-0 tabular-nums text-pretty text-foreground [overflow-wrap:anywhere]", align === "end" ? "text-right" : "text-left")}>
             {it.value == null || it.value === "" ? <span className="text-muted-foreground/60">—</span> : it.value}
           </dd>
         </div>
@@ -44,49 +59,88 @@ export type ProvenanceInfo = {
   source: string;
   /** The record's page at the source. */
   url?: string;
-  /** ISO date or datetime the record was collected. */
+  /** ISO date or datetime the record was collected (saved snapshots). */
   collectedAt?: string;
+  /** How the data reached this app, e.g. "public API" or "Nomad Atlas snapshot". */
+  via?: string;
+  /** The endpoint or proxy behind `via`; shown as its host. */
+  viaUrl?: string;
+  /** ISO datetime this view read the data (live fetches). */
+  readAt?: string;
   /** Snapshot, revision or dataset id. */
   revision?: string;
   /** One line on how the data was gathered or its limits. */
   note?: string;
 };
 
-function formatWhen(iso: string) {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(iso);
-  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", ...(dateOnly ? { timeZone: "UTC" } : {}) });
+function hostOf(url: string | undefined) {
+  if (!url) return undefined;
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
 }
 
-/** Where a record came from and when. Always shown; data without it is not trustworthy. */
+// Fixed locale and UTC so server and browser render the same text (no
+// hydration mismatch); times say "UTC" so they are never misread as local.
+function formatWhen(iso: string, withTime = false) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  const day = d.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+  if (!withTime || /^\d{4}-\d{2}-\d{2}$/.test(iso)) return day;
+  return `${day}, ${d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC`;
+}
+
+function SourceLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center gap-1 underline-offset-4 hover:underline">
+      <span className="truncate">{children}</span>
+      <ArrowUpRightIcon className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+    </a>
+  );
+}
+
+/**
+ * Where a record came from and when. Always shown; data without it is not
+ * trustworthy. Rows: from (source), via (API or proxy), collected (snapshot
+ * date), read (live fetch time), snapshot (revision); each only when given.
+ */
 export function Provenance({ info, className }: { info: ProvenanceInfo; className?: string }) {
-  let host: string | undefined;
-  try {
-    host = info.url ? new URL(info.url).host : undefined;
-  } catch {
-    host = undefined;
-  }
+  const viaHost = hostOf(info.viaUrl);
   return (
     <section aria-label="Provenance" className={cn("rounded-lg bg-surface p-4 text-sm", className)}>
       <h3 className="ui-case text-xs font-medium text-muted-foreground">source</h3>
       <dl className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5">
         <dt className="text-muted-foreground">from</dt>
-        <dd className="min-w-0">
-          {info.url ? (
-            <a href={info.url} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center gap-1 underline-offset-4 hover:underline">
-              <span className="truncate">{host ?? info.source}</span>
-              <ArrowUpRightIcon className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
-            </a>
-          ) : (
-            info.source
-          )}
-        </dd>
+        <dd className="min-w-0">{info.url ? <SourceLink href={info.url}>{hostOf(info.url) ?? info.source}</SourceLink> : info.source}</dd>
+        {(info.via || viaHost) && (
+          <>
+            <dt className="text-muted-foreground">via</dt>
+            <dd className="min-w-0 break-words">
+              {info.via}
+              {info.via && viaHost && <span aria-hidden> · </span>}
+              {viaHost && (
+                <span className="font-mono text-xs" title={info.viaUrl}>
+                  {viaHost}
+                </span>
+              )}
+            </dd>
+          </>
+        )}
         {info.collectedAt && (
           <>
             <dt className="text-muted-foreground">collected</dt>
             <dd>
               <time dateTime={info.collectedAt}>{formatWhen(info.collectedAt)}</time>
+            </dd>
+          </>
+        )}
+        {info.readAt && (
+          <>
+            <dt className="text-muted-foreground">read</dt>
+            <dd>
+              <time dateTime={info.readAt}>{formatWhen(info.readAt, true)}</time>
             </dd>
           </>
         )}

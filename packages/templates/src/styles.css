@@ -1,0 +1,11 @@
+/*
+ * SaaS Maker UI theme plus the templates' own class sources.
+ *
+ * Import this one file (Base.astro already does). It works under pnpm's
+ * isolated layout because each `@source` is relative to the file that holds
+ * it: `@saas-maker/ui/styles.css` scans the ui package, and the line below
+ * scans this package, wherever pnpm puts them. Your app's own files are
+ * scanned automatically from the Vite root.
+ */
+@import "@saas-maker/ui/styles.css";
+@source "./";
