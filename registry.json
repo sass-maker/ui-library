@@ -220,6 +220,322 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "data-table",
+      "description": "DataTable with sorting, selection, column visibility and pagination.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+        "@tanstack/react-table"
+      ],
+      "registryDependencies": [
+        "utils",
+        "button",
+        "checkbox",
+        "dropdown-menu",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/data-table.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "packages/ui/src/components/pagination.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "pagination",
+      "description": "Pagination with page buttons or links and a pageWindow helper.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/pagination.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "breadcrumb",
+      "description": "Breadcrumb components and a Breadcrumbs shorthand for navigation trails.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/breadcrumb.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "popover",
+      "description": "Popover, PopoverTrigger, PopoverContent and PopoverAnchor.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "title": "command",
+      "description": "Command components and CommandDialog for searchable lists.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+        "cmdk"
+      ],
+      "registryDependencies": [
+        "utils",
+        "dialog"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/command.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "slider",
+      "description": "Slider with a track, range and thumbs for each value.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "filter-bar",
+      "type": "registry:block",
+      "title": "filter-bar",
+      "description": "Filter controls, active filter chips and a useUrlFilters hook.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "button",
+        "input",
+        "popover",
+        "slider",
+        "command"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/filter-bar.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "packages/ui/src/lib/filters.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "search-palette",
+      "type": "registry:block",
+      "title": "search-palette",
+      "description": "SearchPalette, SearchTrigger and openSearchPalette for searching across collections.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "command",
+        "kbd"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/search-palette.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "record-detail",
+      "type": "registry:block",
+      "title": "record-detail",
+      "description": "RecordDetail, RecordLayout, KeyValueList, Provenance and a useMediaQuery hook.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "button",
+        "sheet"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/record-detail.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "export-menu",
+      "type": "registry:block",
+      "title": "export-menu",
+      "description": "ExportMenu for downloading the supplied rows as CSV or JSON.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/export-menu.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "packages/ui/src/lib/export.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "quote-list",
+      "type": "registry:block",
+      "title": "quote-list",
+      "description": "QuoteList, QuoteRow, speaker and timestamp components, and a formatTimestamp helper.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/quote-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "assistant-logos",
+      "type": "registry:block",
+      "title": "assistant-logos",
+      "description": "AssistantLogo renders monochrome marks for Claude, ChatGPT, Perplexity and Grok.",
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/assistant-logos.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "filters",
+      "type": "registry:lib",
+      "title": "filters",
+      "description": "Filter state types and helpers for URL serialization, row filtering, facet counts, range bounds and active filters.",
+      "files": [
+        {
+          "path": "packages/ui/src/lib/filters.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "export",
+      "type": "registry:lib",
+      "title": "export",
+      "description": "toCSV, toJSON and downloadText helpers for browser exports.",
+      "files": [
+        {
+          "path": "packages/ui/src/lib/export.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "console-page",
+      "type": "registry:block",
+      "title": "console-page",
+      "description": "ConsolePage template with collection navigation, breadcrumbs, a search trigger and a content area.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "command",
+        "kbd"
+      ],
+      "files": [
+        {
+          "path": "packages/templates/src/console-page.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "packages/ui/src/components/breadcrumb.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "packages/ui/src/blocks/search-palette.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
