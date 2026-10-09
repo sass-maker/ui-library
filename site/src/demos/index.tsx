@@ -42,14 +42,14 @@ const kithExcerpt = `{
 }`;
 
 const webInstall = `# from the private repo, not npm
-G="github:sass-maker/ui-library#v0.1.1"
+G="github:sass-maker/ui-library#v0.1.2"
 pnpm add "$G&path:/packages/ui" \\
   "$G&path:/packages/motion" \\
   "$G&path:/packages/templates"`;
 
 const swiftInstall = `.package(
   url: "https://github.com/sass-maker/ui-library",
-  from: "0.1.1"
+  from: "0.1.2"
 )`;
 
 function DemoLink({ href, children }: { href: string; children: React.ReactNode }) {
