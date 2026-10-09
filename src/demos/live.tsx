@@ -159,6 +159,7 @@ export default function LivePage() {
                 <MediaCard
                   key={c.file}
                   href="#"
+                  grade="warm"
                   label={c.label}
                   title={c.title}
                   image={{ src: img(c.file), alt: `${c.label} category illustration`, width: 800, height: 600 }}
@@ -203,7 +204,7 @@ export default function LivePage() {
           </div>
         </Section>
 
-        <Band tone="ink">
+        <Band tone={2}>
           <div className="container-page grid items-start gap-12 lg:grid-cols-12">
             <div className="lg:col-span-5 lg:pt-10">
               <SectionHeader

@@ -133,9 +133,12 @@ export function MediaCard({
   title,
   href,
   meta,
+  grade,
   className,
 }: {
   image: ImgProps;
+  /** Apply one warm color grade so mixed photography reads as one set. */
+  grade?: "warm";
   label?: string;
   title: React.ReactNode;
   href?: string;
@@ -152,7 +155,7 @@ export function MediaCard({
       )}
     >
       <div className="overflow-hidden">
-        <Img {...image} className="aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+        <Img {...image} className={cn("aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-[1.03]", grade === "warm" && "[filter:sepia(0.22)_saturate(0.9)_contrast(1.04)_brightness(1.02)]")} />
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
         {label && <span className="eyebrow">{label}</span>}
@@ -206,9 +209,9 @@ export function Stage({
       {overlay && (
         <div
           className={cn(
-            "relative z-10 mx-4 -mt-10 sm:absolute sm:mx-0 sm:mt-0 sm:w-[min(24rem,46%)]",
-            overlayPosition === "bottom-left" && "sm:-bottom-8 sm:-left-6",
-            overlayPosition === "bottom-right" && "sm:-bottom-8 sm:-right-6",
+            "relative z-10 mx-4 -mt-10 sm:absolute sm:mx-0 sm:mt-0 sm:w-[min(20rem,38%)]",
+            overlayPosition === "bottom-left" && "sm:-bottom-10 sm:-left-8",
+            overlayPosition === "bottom-right" && "sm:-bottom-10 sm:-right-8",
             overlayPosition === "top-right" && "sm:-right-6 sm:top-10",
           )}
         >
@@ -220,8 +223,8 @@ export function Stage({
           className={cn(
             "mt-4 font-mono text-xs text-muted-foreground sm:mt-5",
             !overlay && "text-center",
-            overlay && overlayPosition === "bottom-left" && "sm:pl-[calc(min(24rem,46%)+1rem)] sm:text-right",
-            overlay && overlayPosition !== "bottom-left" && "sm:pr-[calc(min(24rem,46%)+1rem)]",
+            overlay && overlayPosition === "bottom-left" && "sm:pl-[calc(min(20rem,38%)+1rem)] sm:text-right",
+            overlay && overlayPosition !== "bottom-left" && "sm:pr-[calc(min(20rem,38%)+1rem)]",
           )}
         >
           {caption}

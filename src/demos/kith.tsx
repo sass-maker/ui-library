@@ -249,7 +249,7 @@ export default function KithPage() {
           { title: "Resources", links: [{ label: "Privacy", href: "#privacy" }, { label: "Terms", href: "#" }, { label: "Accessibility", href: "#" }] },
           { title: "Connect", links: [{ label: "Support", href: "#" }, { label: "Source code", href: "#" }] },
         ]}
-        art={{ src: img("book-stage.webp"), alt: "Illustrative artwork of a coral cloth-bound book" }}
+        art={{ src: img("memory-table-v2.webp"), alt: "Illustrative still life of a notebook and photographs on a table" }}
         feedbackHref="#"
         legal="© 2026 Sarthak Agrawal"
       />

@@ -96,13 +96,12 @@ export default function CodeVetterPage() {
               image={{ src: "/demo/codevetter/workbench.png", alt: "CodeVetter desktop review workbench showing a local review result, finding list, evidence status, and code inspection panel", width: 1440, height: 900, priority: true }}
             />
           }
-          overlayPosition="bottom-left"
+          overlayPosition="bottom-right"
           overlay={
             <Ledger
               title="Verification receipt"
               meta="illustrative"
               rows={[
-                { label: "Task", value: "Reject expired sessions without breaking valid refreshes." },
                 { label: "Check", value: <span className="font-mono text-[0.8125rem]">pnpm test auth/session</span>, status: { tone: "danger", label: "exit 1" } },
                 { label: "Check", value: <span className="font-mono text-[0.8125rem]">pnpm typecheck</span>, status: { tone: "success", label: "exit 0" } },
                 { label: "Verdict", value: <strong className="font-semibold">Not verified.</strong>, status: { tone: "danger", label: "fail" } },

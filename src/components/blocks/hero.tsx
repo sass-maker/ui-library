@@ -71,7 +71,7 @@ export function Hero({
       )}
 
       {layout === "centered" && (
-        <div className="container-page flex flex-col items-center pb-16 pt-16 text-center md:pb-24 md:pt-24">
+        <div className="container-page flex flex-col items-center pb-12 pt-16 text-center md:pb-16 md:pt-24">
           {eyebrowNode}
           <h1 className="hero-in font-display max-w-5xl text-[clamp(2.75rem,1.5rem+5vw,5.75rem)] [--d:60ms]">{title}</h1>
           {lede && <p className="hero-in lede mx-auto mt-7 [--d:110ms]">{lede}</p>}
