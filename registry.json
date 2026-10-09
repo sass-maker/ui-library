@@ -1,0 +1,205 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "fleet-ui",
+  "homepage": "https://github.com/",
+  "items": [
+    {
+      "name": "theme",
+      "type": "registry:file",
+      "title": "Fleet UI theme",
+      "description": "Tokens, five presets (base, paper, ink, hearth, signal), fonts and base styles.",
+      "dependencies": [
+        "tw-animate-css",
+        "@fontsource-variable/geist",
+        "@fontsource-variable/geist-mono",
+        "@fontsource-variable/newsreader",
+        "@fontsource/instrument-serif",
+        "@fontsource-variable/fraunces"
+      ],
+      "files": [
+        {
+          "path": "src/styles/globals.css",
+          "type": "registry:file",
+          "target": "src/styles/fleet-ui.css"
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "type": "registry:block",
+      "title": "layout",
+      "description": "Container, Section, SectionHeader and FactRow.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/layout.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "site-header",
+      "type": "registry:block",
+      "title": "site-header",
+      "description": "Sticky bar or floating header with a zero-JS phone menu.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/site-header.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/blocks/mobile-nav.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "hero",
+      "type": "registry:block",
+      "title": "hero",
+      "description": "Split, centered, editorial and cover hero layouts.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/hero.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "frames",
+      "type": "registry:block",
+      "title": "frames",
+      "description": "Window, browser and iPhone frames, photos, artwork and media cards.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/frames.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "features",
+      "type": "registry:block",
+      "title": "features",
+      "description": "FeatureGrid, FeatureSpread, Steps, Stats and FitCompare.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/features.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "proof",
+      "type": "registry:block",
+      "title": "proof",
+      "description": "Ledger receipts, StatusPill, CodeBlock and Quote.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/proof.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "closing",
+      "type": "registry:block",
+      "title": "closing",
+      "description": "Native-details FAQ, closing CTA and color-block Band.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/closing.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "studio-footer",
+      "type": "registry:block",
+      "title": "footer",
+      "description": "The Fleet studio footer contract.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/footer.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "app",
+      "type": "registry:block",
+      "title": "app",
+      "description": "AppShell, PageHeader, StatCard, Sparkline, AreaChart and EmptyState.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/app.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}
