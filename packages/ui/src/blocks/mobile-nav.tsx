@@ -39,7 +39,7 @@ export function MobileNav({ brand, links, actions }: { brand: string; links: Nav
           <ul className="flex flex-col">
             {links.map((l) => (
               <li key={l.href} className="border-b border-hairline">
-                <a href={l.href} className="font-display flex py-4 text-[1.75rem]">
+                <a href={l.href} className="font-display ui-case flex py-4 text-[1.75rem]">
                   {l.label}
                 </a>
               </li>

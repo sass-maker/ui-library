@@ -33,7 +33,7 @@ export function SiteHeader({ brand, links = [], actions, variant = "bar", classN
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                  className="ui-case rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 >
                   {l.label}
                 </a>

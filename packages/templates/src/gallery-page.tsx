@@ -63,7 +63,7 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
         brand={{ name: c.product, mark }}
         links={c.nav}
         actions={
-          <a href={c.headerAction.href} className="rounded-full bg-primary px-3.5 py-[0.45rem] text-[0.8125rem] font-semibold text-primary-foreground">
+          <a href={c.headerAction.href} className="ui-case rounded-full bg-primary px-3.5 py-[0.45rem] text-[0.8125rem] font-semibold text-primary-foreground">
             {c.headerAction.label}
           </a>
         }

@@ -168,7 +168,7 @@ export function StudioFooter({
           </div>
           <p
             aria-hidden
-            className="mt-[4.5rem] select-none overflow-hidden text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em] text-foreground/90"
+            className="ui-case mt-[4.5rem] select-none overflow-hidden text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em] text-foreground/90"
           >
             {product}
           </p>
@@ -250,7 +250,7 @@ export function StudioFooter({
       <div className="container-page">
         <p
           aria-hidden
-          className="font-display select-none overflow-hidden whitespace-nowrap text-[clamp(3rem,14vw,13rem)] leading-[0.86] text-foreground [letter-spacing:-0.05em]"
+          className="ui-case font-display select-none overflow-hidden whitespace-nowrap text-[clamp(3rem,14vw,13rem)] leading-[0.86] text-foreground [letter-spacing:-0.05em]"
         >
           {product}
         </p>

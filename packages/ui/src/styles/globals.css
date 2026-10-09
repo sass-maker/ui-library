@@ -6,7 +6,7 @@
 @import "@fontsource-variable/newsreader/opsz-italic.css";
 @import "@fontsource/instrument-serif/400.css";
 @import "@fontsource/instrument-serif/400-italic.css";
-@import "@fontsource-variable/instrument-sans";
+@import "@fontsource-variable/figtree";
 @import "@fontsource-variable/fraunces/soft.css";
 @import "@fontsource-variable/fraunces/soft-italic.css";
 
@@ -28,11 +28,16 @@
 :root {
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", monospace;
-  --font-display: var(--font-sans);
+  /* Smooth bold display face shared by every sans preset. */
+  --font-display: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
   --font-accent: var(--font-display);
+  /* Fleet voice: headings, buttons and nav in lowercase. Body text keeps
+     normal case. Presets may set either to none. */
+  --display-case: lowercase;
+  --ui-case: lowercase;
   /* Long-form text (ledes, captions). Gallery sets it to a serif. */
   --font-text: var(--font-sans);
-  --display-weight: 600;
+  --display-weight: 750;
   --display-tracking: -0.035em;
   --display-leading: 1.02;
   --accent-style: normal;
@@ -148,7 +153,7 @@
 /* Ink: precise dark technical. Developer tools, AI infra, Mac utilities. */
 [data-theme="ink"] {
   --font-accent: "Instrument Serif", Georgia, serif;
-  --display-weight: 560;
+  --display-weight: 750;
   --display-tracking: -0.04em;
   --display-leading: 1;
   --accent-style: italic;
@@ -244,11 +249,11 @@
 /* Gallery: monumental sans, serif text, image-led and quiet. Consumer apps.
    One idea per section; screens and art carry the page. */
 [data-theme="gallery"] {
-  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-sans);
   --font-accent: var(--font-display);
   --font-text: "Newsreader Variable", "Iowan Old Style", Georgia, serif;
-  --display-weight: 700;
+  --display-weight: 800;
   --display-tracking: -0.038em;
   --display-leading: 0.98;
   --accent-style: normal;
@@ -373,6 +378,13 @@
     line-height: var(--display-leading);
     font-optical-sizing: auto;
     text-wrap: balance;
+  }
+  :where(h1, h2, h3, h4).font-display,
+  .ui-case {
+    text-transform: var(--ui-case);
+  }
+  :where(h1, h2, h3, h4).font-display {
+    text-transform: var(--display-case);
   }
   /* Accent phrase inside a display heading: <em> or .accent */
   .font-display em,

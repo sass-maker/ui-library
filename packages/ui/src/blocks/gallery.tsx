@@ -365,7 +365,7 @@ export function GalleryButton({ href, variant = "primary", children }: { href: s
     <a
       href={href}
       className={cn(
-        "inline-flex h-[3.25rem] items-center gap-[0.45em] rounded-full font-display text-[1.0625rem] font-semibold tracking-[-0.01em] transition-colors",
+        "ui-case inline-flex h-[3.25rem] items-center gap-[0.45em] rounded-full font-display text-[1.0625rem] font-semibold tracking-[-0.01em] transition-colors",
         variant === "primary" && "bg-brand px-[1.625rem] text-brand-foreground hover:bg-[color-mix(in_oklch,var(--brand)_88%,black)]",
         variant === "link" && "px-2 text-brand hover:underline hover:underline-offset-4",
       )}
