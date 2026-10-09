@@ -1,0 +1,126 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "Motion — Your body is the controller",
+    "description": "A held body-controlled game prototype for iPhone.",
+    "theme": "gallery",
+    "mode": "dark",
+    "icon": "/demo/motion/mark.webp",
+    "tokens": {
+      "--brand": "#2dd4bf",
+      "--brand-foreground": "#05070d",
+      "--brand-soft": "rgb(45 212 191 / 0.14)",
+      "--brand-ink": "#5eead4",
+      "--background": "#05070d",
+      "--foreground": "#e8eef7",
+      "--surface": "#0c111a",
+      "--card": "#0c111a",
+      "--popover": "#0c111a",
+      "--primary": "#e8eef7",
+      "--primary-foreground": "#05070d",
+      "--secondary": "#111827",
+      "--muted": "#111827",
+      "--accent": "#111827",
+      "--muted-foreground": "#8b97a8",
+      "--border": "rgb(255 255 255 / 0.1)",
+      "--hairline": "rgb(255 255 255 / 0.08)",
+      "--input": "rgb(255 255 255 / 0.14)",
+      "--tone-ink": "#05070d",
+      "--shadow-color": "0 0% 0%"
+    }
+  },
+  "product": "Motion",
+  "url": "https://motion.significanthobbies.com",
+  "mark": "/demo/motion/mark.webp",
+  "screenSize": { "width": 1320, "height": 2868 },
+  "nav": [
+    { "label": "How it plays", "href": "#how" },
+    { "label": "Privacy", "href": "#privacy" },
+    { "label": "Questions", "href": "#faq" }
+  ],
+  "headerAction": { "label": "Prototype status", "href": "#status" },
+  "hero": {
+    "eyebrow": "A held body-controlled game prototype",
+    "title": "Move.\n*Play.*",
+    "lede": "A held iPhone prototype reads movement on-device and turns it into game input. Camera frames stay on the phone.",
+    "primary": { "label": "See prototype status", "href": "#status" },
+    "secondary": { "label": "See the working build ›", "href": "#how" },
+    "note": "Held internal prototype. No public TestFlight invite or App Store listing.",
+    "backdrop": "/demo/motion/motion-scene-v1.webp",
+    "screen": {
+      "src": "/demo/motion/motion-maker-clean.webp",
+      "alt": "Motion Maker running in the internal iPhone build"
+    }
+  },
+  "sections": [
+    {
+      "kind": "showcase",
+      "id": "how",
+      "eyebrow": "One mechanic",
+      "title": "The body is *the controller.*",
+      "lede": "The iPhone reads pose locally and drives the game. A keyboard debug path exists for the web renderer, not as the product.",
+      "screen": {
+        "src": "/demo/motion/motion-maker-clean.webp",
+        "alt": "Motion Maker enlarged: a score, three hearts, swords and obstacles above an orange ball the player steers by moving"
+      },
+      "caption": {
+        "lead": "A working build.",
+        "text": "The phone tracks the body and renders the game. Only that rendered screen is mirrored to a TV."
+      },
+      "note": "Motion · iPhone · internal build"
+    },
+    {
+      "kind": "statement",
+      "id": "privacy",
+      "eyebrow": "On the phone",
+      "title": "Camera frames *stay on the phone.*",
+      "lede": "Vision extracts pose on-device. Screen mirroring sends the rendered game to a TV; Motion does not upload the camera stream.",
+      "rows": [
+        { "title": "iPhone", "body": "Reads pose on-device and renders the game.", "status": "Always", "on": true },
+        { "title": "TV", "body": "Only the rendered game, through the system's own screen mirroring.", "status": "Optional" },
+        { "title": "Motion servers", "body": "No Motion account and no uploaded camera stream.", "status": "None" }
+      ],
+      "aside": [
+        { "title": "Motion may fit if", "body": "you want active, social play on a larger screen without buying a dedicated motion-console system, and you understand that the control loop is unfinished." },
+        { "title": "It is not", "body": "a public beta, a shipped App Store game, a wearable sensor kit, or a cloud camera service." }
+      ]
+    },
+    {
+      "kind": "faq",
+      "id": "faq",
+      "title": "Before you *move.*",
+      "items": [
+        { "q": "Does video go to a server?", "a": "No. Tracking runs on the iPhone. Mirroring uses the system screen, not our servers." },
+        { "q": "Is it on the App Store?", "a": "Not yet. This site will not show Apple’s App Store badge until a live apps.apple.com page exists." },
+        { "q": "Do I need extra hardware?", "a": "An iPhone. A TV is optional if you already know how to mirror a screen." }
+      ]
+    }
+  ],
+  "closing": {
+    "id": "status",
+    "title": "Move.\n*Keep the camera.*",
+    "primary": { "label": "See prototype status", "href": "#" },
+    "note": "The internal build runs on an iPhone, but physical control feel and fun remain unproven. Work is on hold until one control loop can be tested properly on a real device.",
+    "image": "/demo/motion/motion.webp",
+    "credit": "Illustrative artwork"
+  },
+  "footer": {
+    "summary": "A held iPhone-hosted game prototype: on-device pose tracking turns movement into play, without uploading camera frames.",
+    "catalogId": "motion",
+    "links": [
+      { "label": "Overview", "href": "#" },
+      { "label": "Prototype status", "href": "#status" },
+      { "label": "Changelog", "href": "#" },
+      { "label": "Privacy", "href": "#privacy" },
+      { "label": "Terms", "href": "#" },
+      { "label": "Accessibility", "href": "#" },
+      { "label": "Support", "href": "#" }
+    ],
+    "legal": "A held internal game prototype, not a public beta or console. © 2026 Sarthak Agrawal.",
+    "art": {
+      "src": "/demo/motion/motion-scene-v1.webp",
+      "alt": "",
+      "position": "100% 50%"
+    }
+  }
+}

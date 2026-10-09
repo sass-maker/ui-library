@@ -1,0 +1,193 @@
+{
+  "template": "workbench",
+  "page": {
+    "title": "StorageDaddy — Make room. Keep building.",
+    "description": "A Mac storage analyzer for developers. Find the caches, builds and AI files taking up space, inspect what matters, then review every cleanup before anything moves to Trash.",
+    "theme": "ink",
+    "icon": "/demo/storagedaddy/icon.png",
+    "tokens": {
+      "--brand": "#74d4a6",
+      "--brand-foreground": "#07150e",
+      "--brand-soft": "rgb(116 212 166 / 0.14)",
+      "--brand-ink": "#8ce0b8",
+      "--background": "#000000",
+      "--foreground": "#f2f7f4",
+      "--surface": "#09120e",
+      "--card": "#09120e",
+      "--popover": "#101d16",
+      "--muted": "#101d16",
+      "--secondary": "#101d16",
+      "--accent": "#101d16",
+      "--muted-foreground": "#afc1b7"
+    }
+  },
+  "product": "StorageDaddy",
+  "url": "https://storage.daddyrad.com",
+  "mark": "/demo/storagedaddy/icon.png",
+  "nav": [
+    { "label": "How it works", "href": "#how" },
+    { "label": "Privacy", "href": "#privacy" },
+    { "label": "Release status", "href": "#release" },
+    { "label": "FAQ", "href": "#faq" }
+  ],
+  "header": {
+    "secondary": { "label": "Release status", "href": "#release" },
+    "primary": { "label": "Download for Mac", "href": "https://storage.daddyrad.com/download", "icon": "Download" }
+  },
+  "hero": {
+    "eyebrow": "Your disk, explained",
+    "title": "Make room.\n*Keep building.*",
+    "lede": "A Mac storage analyzer for developers. Find the caches, builds and AI files taking up space, inspect what matters, then review every cleanup before anything moves to Trash.",
+    "primary": { "label": "Download for Mac", "href": "https://storage.daddyrad.com/download", "icon": "Download" },
+    "secondary": { "label": "See how it works", "href": "#how" },
+    "note": "Public early-access beta · free to download · macOS 14+ · Apple silicon",
+    "window": {
+      "title": "StorageDaddy",
+      "src": "/demo/storagedaddy/storage-explorer.png",
+      "alt": "StorageDaddy storage explorer showing a sample folder tree and storage treemap",
+      "width": 1405,
+      "height": 768,
+      "chrome": "none"
+    },
+    "backdrop": "/demo/storagedaddy/storagedaddy-scene-v1.webp",
+    "caption": "A real app capture of a sample folder. Scan results describe the selected area, not necessarily the entire volume."
+  },
+  "sections": [
+    {
+      "id": "how",
+      "header": {
+        "eyebrow": "Inspect, then decide",
+        "title": "From full disk to *a clear decision.*",
+        "lede": "Follow the folder tree, inspect developer storage, and keep every cleanup behind a separate review."
+      },
+      "blocks": [
+        {
+          "type": "spread",
+          "items": [
+            {
+              "kicker": "Explore",
+              "title": "Follow *the space.*",
+              "body": "Browse live scan results, folder graphs and the inspector. Developer Insights highlights caches, build outputs, packages, node_modules, .git and AI storage. Save snapshots to compare later scans.",
+              "detail": {
+                "src": "/demo/storagedaddy/storage-explorer.png",
+                "alt": "StorageDaddy treemap of a sample folder: Projects, Builds, Caches, AI Sessions, Packages and Documents sized by space on disk",
+                "width": 1405,
+                "height": 768,
+                "crop": { "x": 160, "y": 210, "w": 1232, "h": 340 }
+              }
+            },
+            {
+              "kicker": "Understand",
+              "title": "See your *AI footprint.*",
+              "body": "Inspect recognized local Claude and Codex histories, skills and project context. Context-load estimates are not measurements of an agent’s entire runtime context. Selected session exports are reading archives, not resumable backups.",
+              "detail": {
+                "src": "/demo/storagedaddy/ai-context.png",
+                "alt": "Illustration of two small characters wheeling a folder full of documents and code files",
+                "width": 700,
+                "height": 466,
+                "crop": { "x": 0, "y": 0, "w": 700, "h": 466 }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rule",
+      "surface": "muted",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "The cleanup rule",
+          "title": "A scan *deletes nothing.*",
+          "lede": "Builds, caches, installed packages and agent histories accumulate quietly. StorageDaddy brings their sizes and locations into one native workspace.",
+          "points": [
+            { "title": "Inspect first", "body": "Browse scan results, folder graphs and the inspector before choosing anything." },
+            { "title": "Review candidates", "body": "Add candidates, then review the list with local evidence and readable paths." },
+            { "title": "Confirm separately", "body": "Moving to Trash is its own explicit confirmation. StorageDaddy does not automatically empty Trash." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "privacy",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "Your files stay on your Mac",
+          "title": "Local scans. *Explicit cleanup.*",
+          "lede": "Scanning, previews and archive validation run locally. The native app has no file uploads or app telemetry. Sparkle checks for updates over HTTPS; installation remains your choice."
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "surface": "muted",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "Release status",
+          "title": "For the Mac *you build on.*",
+          "lede": "The public beta is signed and notarized for Apple silicon Macs on macOS 14 or later. There is no trial expiry, account or checkout.",
+          "points": [
+            { "title": "Made for", "body": "Developers who want to understand disk usage and review specific cleanup candidates, with local evidence and readable paths." },
+            { "title": "Not for", "body": "Automatic deletion, guaranteed reclaimed-space totals, an Intel build, or a replacement for a backup." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faq",
+      "blocks": [
+        {
+          "type": "faq",
+          "title": "Before you *make room.*",
+          "items": [
+            { "q": "Does scanning delete anything?", "a": "No. Add candidates, review the list, then explicitly confirm moving them to Trash. StorageDaddy does not automatically empty Trash." },
+            { "q": "Why can totals differ from macOS Storage?", "a": "Allocated and logical sizes differ. Shared APFS blocks, snapshots, protected files and scan scope also affect totals. Allocated bytes are not a guarantee of space reclaimed." },
+            { "q": "Do I need Full Disk Access?", "a": "It is optional and enables broader coverage. Protected or unreadable locations may still be skipped. A folder scan is a useful starting point." },
+            { "q": "What does early access cost?", "a": "The current beta is free. Everyone who downloads during early access gets future versions free forever. There is no account, checkout, subscription or trial expiry today." }
+          ]
+        }
+      ]
+    },
+    {
+      "compact": true,
+      "blocks": [
+        {
+          "type": "cta",
+          "title": "Find the space.\n*Make the call.*",
+          "lede": "Inspect first. Review candidates. Confirm separately.",
+          "primary": { "label": "Download for Mac", "href": "https://storage.daddyrad.com/download", "icon": "Download" },
+          "secondary": { "label": "Release status", "href": "#release" },
+          "note": "macOS 14+ · Apple silicon · no account or checkout"
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "summary": "An open-source native Mac storage analyzer with developer insights, local AI storage inspection, snapshots and reviewed cleanup.",
+    "catalogId": "storagedaddy",
+    "groups": [
+      {
+        "title": "Product",
+        "links": [
+          { "label": "Download for Mac", "href": "https://storage.daddyrad.com/download" },
+          { "label": "Release status", "href": "#release" },
+          { "label": "FAQ", "href": "#faq" }
+        ]
+      },
+      {
+        "title": "Resources",
+        "links": [
+          { "label": "Source code", "href": "https://github.com/Significant-Hobbies/storagedaddy" },
+          { "label": "Report an issue", "href": "https://github.com/Significant-Hobbies/storagedaddy/issues/new" },
+          { "label": "Privacy", "href": "#privacy" },
+          { "label": "Terms", "href": "#" },
+          { "label": "Accessibility", "href": "#" }
+        ]
+      }
+    ],
+    "legal": "An independent Mac app from Significant Hobbies. Published source is MIT-licensed; third-party components retain their own terms."
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "template": "workbench",
+  "page": {
+    "title": "PerformanceDaddy — See what is slowing your Mac",
+    "description": "Inspect Mac background apps, processes, listening ports and RAM. PerformanceDaddy records slowdown evidence and reviews targets before stopping work.",
+    "theme": "ink",
+    "icon": "/demo/performancedaddy/icon.png",
+    "tokens": {
+      "--brand": "#74d4a6",
+      "--brand-foreground": "#07150e",
+      "--brand-soft": "rgb(116 212 166 / 0.14)",
+      "--brand-ink": "#8ce0b8",
+      "--background": "#000000",
+      "--foreground": "#f2f7f4",
+      "--surface": "#09120e",
+      "--card": "#09120e",
+      "--popover": "#101d16",
+      "--muted": "#101d16",
+      "--secondary": "#101d16",
+      "--accent": "#101d16",
+      "--muted-foreground": "#afc1b7"
+    }
+  },
+  "product": "PerformanceDaddy",
+  "url": "https://performance.daddyrad.com",
+  "mark": "/demo/performancedaddy/icon.png",
+  "nav": [
+    { "label": "How it works", "href": "#how" },
+    { "label": "Privacy", "href": "#privacy" },
+    { "label": "Release status", "href": "#release" },
+    { "label": "FAQ", "href": "#faq" }
+  ],
+  "header": {
+    "secondary": { "label": "Release status", "href": "#release" },
+    "primary": { "label": "Download for Mac", "href": "https://performance.daddyrad.com/download", "icon": "Download" }
+  },
+  "hero": {
+    "eyebrow": "Processes. Ports. Evidence.",
+    "title": "A slow Mac.\n*A clearer picture.*",
+    "lede": "See what is running behind the scenes on your Mac. Inspect background apps and helpers, find the process holding a port, watch RAM and local coding agents, and record evidence while a slowdown is happening.",
+    "primary": { "label": "Download for Mac", "href": "https://performance.daddyrad.com/download", "icon": "Download" },
+    "secondary": { "label": "See how it works", "href": "#how" },
+    "note": "Public early-access beta · free to download · macOS 14+",
+    "window": {
+      "title": "PerformanceDaddy — Ports",
+      "src": "/demo/performancedaddy/ports.png",
+      "alt": "PerformanceDaddy Ports view searching port 5000 and identifying ControlCenter as its owner",
+      "width": 1225,
+      "height": 768,
+      "chrome": "none"
+    },
+    "backdrop": "/demo/performancedaddy/performancedaddy-scene-v2.webp",
+    "caption": "A real local capture: search a port, see its owner and resident RAM. Socket visibility depends on macOS permissions."
+  },
+  "sections": [
+    {
+      "id": "how",
+      "header": {
+        "eyebrow": "A daily Mac workbench",
+        "title": "Find it. Inspect it. *Decide.*",
+        "lede": "Move from the symptom you can see to the process and resource evidence behind it. Stopping a process always starts with a review."
+      },
+      "blocks": [
+        {
+          "type": "spread",
+          "items": [
+            {
+              "kicker": "Ports & processes",
+              "title": "Find who *owns the port.*",
+              "body": "Search listeners by port number or process. Sort CPU and RAM, inspect process duration and recognized local agent families, then review exact targets before a normal or force stop. No remote port scanning or cloud agent sessions.",
+              "detail": {
+                "src": "/demo/performancedaddy/ports.png",
+                "alt": "Port search for 5000 returning ControlCenter as the owning process, with its resident RAM",
+                "width": 1225,
+                "height": 768,
+                "crop": { "x": 165, "y": 100, "w": 1050, "h": 180 }
+              }
+            },
+            {
+              "kicker": "Diagnosis",
+              "title": "Record *the slow moment.*",
+              "body": "Capture CPU work, memory headroom, active swap-out, thermal state and disk capacity for 15 seconds or two minutes. Every run gets an evidence assessment and a next check, including when the measured signals cannot explain the delay.",
+              "detail": {
+                "src": "/demo/performancedaddy/diagnose.png",
+                "alt": "Diagnostic recording setup with a 15-second or two-minute length and the measured domains: CPU, memory and swap, thermal state, disk headroom",
+                "width": 1225,
+                "height": 768,
+                "crop": { "x": 420, "y": 240, "w": 540, "h": 340 }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evidence",
+      "surface": "muted",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "Start with what you can measure",
+          "title": "A busy process is a clue. *It is not the whole story.*",
+          "lede": "A port can be occupied while CPU is quiet. Allocated swap does not prove active paging. PerformanceDaddy puts the observations, their limits and the next check together."
+        }
+      ]
+    },
+    {
+      "id": "privacy",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "Local investigation",
+          "title": "Your work is *not the payload.*",
+          "lede": "Process inspection does not collect command arguments, environment variables or agent conversations. Configuration inventory reads bounded file metadata, not contents. A separate terminal experiment runs your startup scripts only after explicit consent."
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "surface": "muted",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "Release status",
+          "title": "For a Mac full of *moving parts.*",
+          "lede": "The public beta is a signed and notarized universal build for macOS 14 or later, free during early access. A diagnostic report distinguishes measured signals from a confirmed cause; it cannot explain every slowdown.",
+          "points": [
+            { "title": "Made for", "body": "Developers running local servers and coding agents who want visible ports, understandable processes, RAM evidence and deliberate stop controls." },
+            { "title": "Not for", "body": "Automatic optimization, cloud-session monitoring, remote network scanning, fan control or a promise to identify every root cause." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faq",
+      "blocks": [
+        {
+          "type": "faq",
+          "title": "Before you *stop anything.*",
+          "items": [
+            { "q": "Can I download it now?", "a": "Yes. The beta is a free, signed and notarized universal Mac build, distributed directly — no account, checkout, trial expiry, App Store or TestFlight." },
+            { "q": "Can it kill a process?", "a": "Yes, after review. Normal and force stops are separate choices, guarded by process identity and user restrictions. Stopping a process can interrupt work or lose unsaved data." },
+            { "q": "What about apps running in the background?", "a": "Inspect visible background processes and app helpers alongside foreground workloads. Compare their CPU and resident RAM, see how long a process has been running, and inspect available identity and startup metadata before deciding what to stop. Background does not mean unnecessary: macOS and your apps rely on many of these helpers." },
+            { "q": "Why did something come back after I stopped it?", "a": "An app, login item or service manager may launch another process. PerformanceDaddy shows matching launch-configuration clues and watches for matching executables after stops requested through the app. A match is not proof of an automatic restart or its cause. This history stays in memory for up to 24 hours and clears when you quit; the app does not disable startup items for you." },
+            { "q": "Which agents does it recognize?", "a": "Local metadata recognition covers Codex, Claude, Devin, Hermes, Aider, Gemini CLI, OpenCode and Cursor CLI. It cannot identify every wrapped launch or tell whether a conversation is active." },
+            { "q": "Does every report prove the root cause?", "a": "No. Reports separate observed signals, thresholds not met and missing evidence. CPU activity is not proof of why a task was slow. Network latency, blocked threads, GPU activity and disk latency are not measured by the standard recording." },
+            { "q": "Can it read fan speed or temperature?", "a": "The app reports macOS thermal state and available power evidence. Raw fan RPM, temperature and fan controls are not implemented." }
+          ]
+        }
+      ]
+    },
+    {
+      "compact": true,
+      "blocks": [
+        {
+          "type": "cta",
+          "title": "Understand the load.\n*Choose the next move.*",
+          "lede": "Nothing stops until you review it. Observe by default; make consequential actions explicit.",
+          "primary": { "label": "Download for Mac", "href": "https://performance.daddyrad.com/download", "icon": "Download" },
+          "secondary": { "label": "Release status", "href": "#release" },
+          "note": "macOS 14+ · universal build · no account or checkout"
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "summary": "A local Mac performance investigator for background apps, helpers and developer workloads, with process and port inspection, RAM and thermal evidence, startup clues, reviewed stops and bounded diagnostic recordings.",
+    "catalogId": "performancedaddy",
+    "groups": [
+      {
+        "title": "Product",
+        "links": [
+          { "label": "Download for Mac", "href": "https://performance.daddyrad.com/download" },
+          { "label": "Release status", "href": "#release" },
+          { "label": "FAQ", "href": "#faq" }
+        ]
+      },
+      {
+        "title": "Resources",
+        "links": [
+          { "label": "Source code", "href": "https://github.com/Significant-Hobbies/performancedaddy" },
+          { "label": "Report an issue", "href": "https://github.com/Significant-Hobbies/performancedaddy/issues/new" },
+          { "label": "Privacy", "href": "#privacy" },
+          { "label": "Terms", "href": "#" },
+          { "label": "Accessibility", "href": "#" }
+        ]
+      }
+    ],
+    "legal": "An independent Mac app from Significant Hobbies. Free during early access."
+  }
+}

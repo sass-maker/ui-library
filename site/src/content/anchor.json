@@ -1,0 +1,164 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "Anchor — Plan the day. Learn what moved it.",
+    "description": "A private day planner and focus timer for Mac, iPhone and Apple Watch.",
+    "theme": "gallery",
+    "tokens": {
+      "--brand": "#e1ad4a",
+      "--brand-ink": "#8a6114",
+      "--brand-foreground": "#111111",
+      "--brand-soft": "#f6e7c6"
+    },
+    "icon": "/demo/anchor/anchor-mark-v29.png"
+  },
+  "product": "Anchor",
+  "url": "https://anchor.significanthobbies.com",
+  "mark": "/demo/anchor/anchor-mark-v29.png",
+  "screenSize": {
+    "width": 402,
+    "height": 874
+  },
+  "nav": [
+    {
+      "label": "How it works",
+      "href": "#how"
+    },
+    {
+      "label": "Privacy",
+      "href": "#privacy"
+    },
+    {
+      "label": "Questions",
+      "href": "#questions"
+    }
+  ],
+  "headerAction": {
+    "label": "Download for Mac",
+    "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"
+  },
+  "hero": {
+    "eyebrow": "Plan. Focus. Adapt.",
+    "title": "Plan the day.\n*Learn what moved it.*",
+    "lede": "A private day planner and focus timer for people moving between Mac, iPhone and Apple Watch who want to learn why the day they lived differed from the plan.",
+    "primary": {
+      "label": "Download notarized Mac beta",
+      "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"
+    },
+    "secondary": {
+      "label": "See iPhone and Watch beta status ›",
+      "href": "https://anchor.significanthobbies.com/testflight/"
+    },
+    "note": "Invite-only TestFlight and notarized Mac beta. Requires macOS 26 or later.",
+    "backdrop": "/demo/anchor/anchor-scene-v2.webp",
+    "screen": {
+      "src": "/demo/anchor/today.webp",
+      "alt": "Anchor Today on iPhone: draw the day, build your usual week, and give the day one anchor"
+    }
+  },
+  "sections": [
+    {
+      "kind": "statement",
+      "id": "how",
+      "eyebrow": "One daily loop",
+      "title": "The gap is *the useful part.*",
+      "lede": "Anchor schedules the day, protects the current block, captures what changed, and gives that evidence back when you plan tomorrow.",
+      "rows": [
+        {
+          "title": "Plan",
+          "body": "Today shows the day as a chronological rail, keeps gaps visible, and distinguishes a one-off adjustment from a change to the usual week."
+        },
+        {
+          "title": "Focus",
+          "body": "Anchor offers the current or next scheduled block, keeps time from the wall clock, and makes interruption capture immediate."
+        },
+        {
+          "title": "Capture",
+          "body": "Coming back captures the interruption. “Nothing, just a break” stays one key away."
+        },
+        {
+          "title": "History",
+          "body": "Deliberate changes, internal pulls, external interruptions, human needs, estimation errors, and unknown gaps stay distinct."
+        }
+      ]
+    },
+    {
+      "kind": "statement",
+      "id": "privacy",
+      "eyebrow": "Private by construction",
+      "title": "Your notes are not *product telemetry.*",
+      "lede": "Full Anchor data stays local or in your private iCloud database. Optional Hub sync sends only finished-session summaries and never distraction notes, plans, or behavior selections.",
+      "aside": [
+        {
+          "title": "Anchor fits if",
+          "body": "you want one place to schedule the day, focus on the present block, and learn why the plan changed."
+        },
+        {
+          "title": "It is not",
+          "body": "a website blocker, a social productivity feed, or a moral score for how closely you followed a plan."
+        }
+      ]
+    },
+    {
+      "kind": "faq",
+      "id": "questions",
+      "title": "Questions, *answered.*",
+      "items": [
+        {
+          "q": "Do I need an account?",
+          "a": "No. Anchor is fully usable without one. A Significant Hobbies Hub account is optional and only adds finished-session summary visibility."
+        },
+        {
+          "q": "Is it on the App Store?",
+          "a": "Not yet. This site will not show Apple’s App Store badge until a live apps.apple.com page exists."
+        },
+        {
+          "q": "Can I download the Mac app?",
+          "a": "Yes. The Mac beta is Developer ID signed, hardened, notarized by Apple, and requires macOS 26 or later."
+        },
+        {
+          "q": "Which devices?",
+          "a": "Mac, iPhone, and Apple Watch."
+        }
+      ]
+    }
+  ],
+  "closing": {
+    "id": "beta",
+    "title": "Protect the present.\n*Adapt tomorrow.*",
+    "primary": {
+      "label": "Download notarized Mac beta",
+      "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"
+    },
+    "note": "Invite-only TestFlight and notarized Mac beta. Not listed on the App Store yet.",
+    "image": "/demo/anchor/anchor-scene-v2.webp",
+    "credit": "Illustrative artwork"
+  },
+  "footer": {
+    "summary": "A private day planner and focus timer, not a blocker.",
+    "legal": "© 2026 Sarthak Agrawal",
+    "catalogId": "anchor",
+    "links": [
+      {
+        "label": "Beta status",
+        "href": "https://anchor.significanthobbies.com/testflight/"
+      },
+      {
+        "label": "Privacy",
+        "href": "https://anchor.significanthobbies.com/privacy/"
+      },
+      {
+        "label": "Terms",
+        "href": "https://anchor.significanthobbies.com/terms/"
+      },
+      {
+        "label": "Accessibility",
+        "href": "https://anchor.significanthobbies.com/accessibility/"
+      },
+      {
+        "label": "Support",
+        "href": "https://anchor.significanthobbies.com/support/"
+      }
+    ]
+  }
+}

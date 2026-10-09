@@ -1,0 +1,156 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "ContextDaddy — See what your agents can see",
+    "description": "A Mac app for reviewing coding-agent skills, project context, usage history and verified OpenTelemetry signals, with previewed local changes you explicitly apply.",
+    "theme": "gallery",
+    "tokens": {
+      "--brand": "#74d4a6",
+      "--brand-ink": "#1f7a52",
+      "--brand-foreground": "#07150e",
+      "--brand-soft": "#d9f4e7"
+    },
+    "icon": "/demo/contextdaddy/icon.webp"
+  },
+  "product": "ContextDaddy",
+  "url": "https://context.daddyrad.com",
+  "mark": "/demo/contextdaddy/icon.webp",
+  "nav": [
+    {
+      "label": "How it works",
+      "href": "#how"
+    },
+    {
+      "label": "Privacy",
+      "href": "#privacy"
+    },
+    {
+      "label": "Questions",
+      "href": "#questions"
+    }
+  ],
+  "headerAction": {
+    "label": "Download for Mac",
+    "href": "https://context.daddyrad.com/download"
+  },
+  "hero": {
+    "eyebrow": "Skills. Context. Usage.",
+    "title": "Your agents' context.\n*Made visible.*",
+    "lede": "ContextDaddy shows what the coding agents on your Mac can discover, invoke and consume. Review skill access, project context, local usage history and verified OpenTelemetry signals.",
+    "primary": {
+      "label": "Download for Mac",
+      "href": "https://context.daddyrad.com/download"
+    },
+    "secondary": {
+      "label": "Release details ›",
+      "href": "https://context.daddyrad.com/release/"
+    },
+    "note": "Public early-access beta · free to download · macOS 14+ · Apple silicon",
+    "image": "/demo/contextdaddy/contextdaddy-scene-v1.webp"
+  },
+  "sections": [
+    {
+      "kind": "statement",
+      "id": "how",
+      "eyebrow": "Discovery is not invocation",
+      "title": "Separate exposure *from use.*",
+      "lede": "ContextDaddy distinguishes what an agent could see from what it actually consumed. Installed cache evidence never masquerades as active runtime exposure, and context-size estimates stay visibly approximate.",
+      "rows": [
+        {
+          "title": "Usage",
+          "body": "Reads local agent-log history and provider allowance through installed CLIs."
+        },
+        {
+          "title": "Skills",
+          "body": "Explains per-runtime discovery and invocation policy."
+        },
+        {
+          "title": "Projects",
+          "body": "Shows discovered context files."
+        },
+        {
+          "title": "OpenTelemetry",
+          "body": "Shows only verified signals from a compatible local collector."
+        }
+      ]
+    },
+    {
+      "kind": "statement",
+      "id": "privacy",
+      "eyebrow": "Bounded by design",
+      "title": "Reads metadata. *Leaves prompts alone.*",
+      "lede": "ContextDaddy reads bounded local metadata and configuration structure. It does not copy prompt bodies, tool arguments or credential values into its dashboards. Supported local skill and context-file changes require a preview and your explicit apply action.",
+      "aside": [
+        {
+          "title": "For",
+          "body": "people who run Codex, Claude, Cursor, Devin or Grok on a Mac and want to review skill access, context exposure and consumption, then explicitly preview supported local file changes."
+        },
+        {
+          "title": "Not for",
+          "body": "live prompt inspection, automatic installation or activation, plugin-cache edits, cloud telemetry collection, or reconstructing usage that was never recorded."
+        }
+      ]
+    },
+    {
+      "kind": "faq",
+      "id": "questions",
+      "title": "Questions, *answered.*",
+      "items": [
+        {
+          "q": "Can I download ContextDaddy?",
+          "a": "Yes. The beta is a free, signed and notarized Apple-silicon Mac build, distributed directly — no account, checkout, App Store or TestFlight listing. Updates are manual downloads for now."
+        },
+        {
+          "q": "Does it change my agent setup?",
+          "a": "Discovery stays read-only. For supported local skill and context-file changes, ContextDaddy shows a preview and waits for your explicit apply action; it does not install skills automatically, edit managed plugin sources or activate skills in an agent runtime."
+        },
+        {
+          "q": "What does the usage view measure?",
+          "a": "Local agent-log history via the bundled ccusage helper, provider allowance through installed provider CLIs when you ask, and OpenTelemetry signals from a compatible local collector. Missing sources are shown as unavailable, not zero activity."
+        },
+        {
+          "q": "Does anything leave my Mac?",
+          "a": "Provider allowance checks use installed CLIs and OpenTelemetry reads a loopback collector. The app has no account, sync or telemetry upload of its own."
+        }
+      ]
+    }
+  ],
+  "closing": {
+    "id": "download",
+    "title": "Audit the access.\n*Trust the boundary.*",
+    "primary": {
+      "label": "Download for Mac",
+      "href": "https://context.daddyrad.com/download"
+    },
+    "note": "Free during early access. Signed and notarized for Apple silicon on macOS 14 or later.",
+    "image": "/demo/contextdaddy/contextdaddy-scene-v1.webp",
+    "credit": "Illustrative artwork"
+  },
+  "footer": {
+    "summary": "A native Mac app for reviewing skills and context files available to coding agents, local usage history, provider allowances and verified OpenTelemetry signals, with explicit preview and apply for supported local changes.",
+    "legal": "An independent Mac app from Significant Hobbies.",
+    "catalogId": "contextdaddy",
+    "links": [
+      {
+        "label": "Release status",
+        "href": "https://context.daddyrad.com/release/"
+      },
+      {
+        "label": "Privacy",
+        "href": "https://context.daddyrad.com/privacy/"
+      },
+      {
+        "label": "Terms",
+        "href": "https://context.daddyrad.com/terms/"
+      },
+      {
+        "label": "Accessibility",
+        "href": "https://context.daddyrad.com/accessibility/"
+      },
+      {
+        "label": "Support",
+        "href": "https://context.daddyrad.com/support/"
+      }
+    ]
+  }
+}

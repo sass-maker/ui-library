@@ -1,0 +1,173 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "Indulge — Enjoy on purpose, now in Anchor",
+    "description": "Indulge was merged into Anchor, the maintained local-first day planner, focus timer, and schedule-review app.",
+    "theme": "gallery",
+    "tokens": {
+      "--brand": "#db293b",
+      "--brand-ink": "#ad182c",
+      "--brand-foreground": "#fffaf5",
+      "--brand-soft": "#f4d9dd"
+    },
+    "icon": "/demo/indulge/indulge-mark-128.jpg"
+  },
+  "product": "Indulge",
+  "url": "https://indulge.significanthobbies.com",
+  "mark": "/demo/indulge/indulge-mark-128.jpg",
+  "screenSize": {
+    "width": 660,
+    "height": 1434
+  },
+  "nav": [
+    {
+      "label": "What moved",
+      "href": "#how"
+    },
+    {
+      "label": "History",
+      "href": "#history"
+    },
+    {
+      "label": "Questions",
+      "href": "#questions"
+    }
+  ],
+  "headerAction": {
+    "label": "Continue with Anchor",
+    "href": "https://anchor.significanthobbies.com"
+  },
+  "hero": {
+    "eyebrow": "A retired predecessor",
+    "title": "Indulge became\n*part of Anchor.*",
+    "lede": "The useful idea survives: keep intentional pleasure, notice automatic time, and make room for what matters inside the schedule you actually follow.",
+    "primary": {
+      "label": "Continue with Anchor",
+      "href": "https://anchor.significanthobbies.com"
+    },
+    "secondary": {
+      "label": "Explore the product history ›",
+      "href": "#history"
+    },
+    "note": "Merged into Anchor on 24 August 2026.",
+    "backdrop": "/demo/indulge/indulge-scene-v2.webp",
+    "screen": {
+      "src": "/demo/indulge/onboarding.jpg",
+      "alt": "The original Indulge onboarding, retained as product-history artwork"
+    }
+  },
+  "sections": [
+    {
+      "kind": "statement",
+      "id": "how",
+      "eyebrow": "What moved forward",
+      "title": "The gentle behavior loop *found its right home.*",
+      "lede": "Anchor combines Indulge’s intentional-versus-automatic framing with the schedule, timer, interruptions, and end-of-day evidence that make the reflection actionable."
+    },
+    {
+      "kind": "spread",
+      "id": "history",
+      "eyebrow": "Understand",
+      "title": "Tie it to *a real day.*",
+      "lede": "Anchor compares planned and observed time and records whether a gap came from you, the outside world, a deliberate change, a human need, or remains unknown.",
+      "screen": {
+        "src": "/demo/indulge/life.jpg",
+        "alt": "Former Indulge Life screen, retained as product history"
+      },
+      "caption": {
+        "lead": "Historical capture.",
+        "text": "The former Indulge Life room."
+      }
+    },
+    {
+      "kind": "spread",
+      "eyebrow": "Choose",
+      "title": "Protect *a better alternative.*",
+      "lede": "Selected life directions can shape a small evidence-linked suggestion without a score or forced rewrite.",
+      "screen": {
+        "src": "/demo/indulge/trade.jpg",
+        "alt": "Former Indulge Trade screen, retained as product history"
+      },
+      "caption": {
+        "lead": "Historical capture.",
+        "text": "The former Indulge Trade screen."
+      }
+    },
+    {
+      "kind": "statement",
+      "id": "privacy",
+      "eyebrow": "Compatibility preserved",
+      "title": "Retirement did not *erase data.*",
+      "lede": "The historical bundle identifier, SwiftData and private CloudKit identities, App Store/TestFlight record, and Hub habits records remain intact.",
+      "aside": [
+        {
+          "title": "Anchor fits if",
+          "body": "you want planning, focus, interruption capture, and behavior reflection in one place."
+        },
+        {
+          "title": "It is not",
+          "body": "medical care, addiction treatment, Screen Time enforcement, or an adherence score."
+        }
+      ]
+    },
+    {
+      "kind": "faq",
+      "id": "questions",
+      "title": "Questions, *answered.*",
+      "items": [
+        {
+          "q": "Is Indulge still being developed?",
+          "a": "No. It was superseded by Anchor on 24 August 2026 and has no active roadmap."
+        },
+        {
+          "q": "Did the onboarding move too?",
+          "a": "Yes. Anchor contains the original hero, all 24 pattern illustrations, all eight life-direction illustrations, and the non-moralizing selection language."
+        },
+        {
+          "q": "What was intentionally left behind?",
+          "a": "The separate Life, Trade, and History shell; long identity interview; scene-room system; future-life card; privacy-lock flow; and duplicate focus journal remain historical research."
+        },
+        {
+          "q": "Was historical data deleted?",
+          "a": "No. Existing Apple storage identities and Hub habits records remain compatibility resources."
+        }
+      ]
+    }
+  ],
+  "closing": {
+    "title": "Plan the day.\n*Learn what moved it.*",
+    "primary": {
+      "label": "Continue with Anchor",
+      "href": "https://anchor.significanthobbies.com"
+    },
+    "note": "Indulge has no separate roadmap or new build.",
+    "image": "/demo/indulge/indulge-scene-v2.webp",
+    "credit": "Illustrative artwork"
+  },
+  "footer": {
+    "summary": "Indulge was merged into Anchor on 24 August 2026. Compatibility resources remain preserved.",
+    "catalogId": "anchor",
+    "links": [
+      {
+        "label": "Anchor",
+        "href": "https://anchor.significanthobbies.com"
+      },
+      {
+        "label": "Privacy",
+        "href": "https://indulge.significanthobbies.com/privacy/"
+      },
+      {
+        "label": "Terms",
+        "href": "https://indulge.significanthobbies.com/terms/"
+      },
+      {
+        "label": "Accessibility",
+        "href": "https://indulge.significanthobbies.com/accessibility/"
+      },
+      {
+        "label": "Support",
+        "href": "https://indulge.significanthobbies.com/support/"
+      }
+    ]
+  }
+}
