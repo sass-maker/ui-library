@@ -1,8 +1,9 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Page from "@/demos/kith";
+import { GalleryPage, type GalleryContent } from "@/templates/gallery-page";
+import content from "@/content/kith.json";
 ---
 
 <Base title="Kith — Remember the people you want to stay close to" description="A private relationship-memory app for iPhone." theme="gallery" icon="/demo/kith/mark.webp">
-  <Page />
+  <GalleryPage content={content as GalleryContent} />
 </Base>
