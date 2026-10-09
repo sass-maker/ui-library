@@ -1,6 +1,7 @@
 import * as React from "react";
 import { ArrowUpRightIcon, MessageSquareIcon, SendIcon, SparklesIcon } from "lucide-react";
 import { cn } from "../lib/utils";
+import { AssistantLogo } from "./assistant-logos";
 
 type LinkGroup = { title: string; links: { label: string; href: string }[] };
 
@@ -20,7 +21,7 @@ const feedbackTypes = [
 const field =
   "w-full rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25";
 const chip =
-  "inline-flex h-8 items-center gap-1 rounded-full border border-border bg-background px-3 text-xs font-medium text-foreground transition-colors hover:border-foreground/30 hover:bg-accent";
+  "inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-xs font-medium text-foreground transition-colors hover:border-foreground/30 hover:bg-accent";
 
 const studio = [
   { label: "CodeVetter", href: "https://codevetter.com" },
@@ -54,14 +55,14 @@ export function StudioFooter({
   url: string;
   summary: React.ReactNode;
   groups: LinkGroup[];
-  art?: { src: string; alt: string };
+  art?: { src: string; alt: string; position?: string };
   newsletterAction?: string;
   /** SaaS Maker publishable project key. Without it the form runs in preview mode and sends nothing. */
   feedbackKey?: string;
   legal?: React.ReactNode;
   /** panel: framed art under the wordmark. scene: full-bleed closing art the page fades into. */
   artMode?: "panel" | "scene";
-  /** studio: full footer with link groups and art. gallery: the quiet single-row footer for Gallery pages. */
+  /** studio: full footer with link groups and art. gallery: the quiet footer for Gallery pages; art sits under the wordmark. */
   variant?: "studio" | "gallery";
   /** Small product mark shown beside the name in the gallery variant. */
   mark?: React.ReactNode;
@@ -71,7 +72,7 @@ export function StudioFooter({
   const askAi = (
   <form method="get" target="_blank" className="flex flex-col rounded-xl border border-border bg-card p-5 shadow-xs">
     <div className="flex items-center gap-2.5">
-      <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand">
+      <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand-ink">
         <SparklesIcon className="size-3.5" />
       </span>
       <label htmlFor="ask-ai" className="text-sm font-medium text-foreground">
@@ -89,6 +90,7 @@ export function StudioFooter({
     <div className="mt-3 flex flex-wrap gap-2">
       {assistants.map((a) => (
         <button key={a.name} type="submit" formAction={a.action} className={chip}>
+          <AssistantLogo name={a.name} className="size-3.5" />
           {a.name}
           <ArrowUpRightIcon aria-hidden className="size-3 text-muted-foreground" />
         </button>
@@ -105,7 +107,7 @@ export function StudioFooter({
     className="group/fb rounded-xl border border-border bg-card p-5 shadow-xs"
   >
     <div className="flex items-center gap-2.5">
-      <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand">
+      <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand-ink">
         <MessageSquareIcon className="size-3.5" />
       </span>
       <h2 className="text-sm font-medium text-foreground">Send feedback</h2>
@@ -114,7 +116,7 @@ export function StudioFooter({
     <fieldset className="mt-3 flex flex-wrap gap-2">
       <legend className="sr-only">Feedback type</legend>
       {feedbackTypes.map((t, i) => (
-        <label key={t.value} className={chip + " cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:checked]:text-brand has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/25"}>
+        <label key={t.value} className={chip + " cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:checked]:text-brand-ink has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/25"}>
           <input type="radio" name="type" value={t.value} defaultChecked={i === 0} className="sr-only" />
           {t.label}
         </label>
@@ -153,7 +155,7 @@ export function StudioFooter({
 
   if (variant === "gallery") {
     return (
-      <footer className={cn("bg-surface pb-10 pt-[clamp(4.5rem,8vw,7rem)]", className)}>
+      <footer className={cn("overflow-hidden bg-surface pb-10 pt-[clamp(4.5rem,8vw,7rem)]", className)}>
         <div className="mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]">
           <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr_1fr] lg:gap-7">
             <div className="mb-6 lg:mb-0">
@@ -174,7 +176,19 @@ export function StudioFooter({
           >
             {product}
           </p>
-          <div className="mt-16 flex flex-wrap items-center justify-between gap-x-7 gap-y-3 border-t border-border pt-6 font-display text-[0.8125rem] text-muted-foreground">
+        </div>
+        {art && (
+          <img
+            src={art.src}
+            alt={art.alt}
+            loading="lazy"
+            decoding="async"
+            style={art.position ? { objectPosition: art.position } : undefined}
+            className="mt-[clamp(1.5rem,4vw,3rem)] block h-[clamp(12rem,30vw,26rem)] w-full object-cover [mask-image:linear-gradient(to_bottom,transparent,black_35%)]"
+          />
+        )}
+        <div className="mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]">
+          <div className={cn("flex flex-wrap items-center justify-between gap-x-7 gap-y-3 pt-6 font-display text-[0.8125rem] text-muted-foreground", art ? "mt-8" : "mt-16 border-t border-border")}>
             <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2.5">
               {groups.flatMap((g) => g.links).map((l) => (
                 <a key={l.href + l.label} href={l.href} className="transition-colors hover:text-foreground">

@@ -30,11 +30,11 @@ export function Device({ image, className }: { image: Img; className?: string })
   return (
     <div
       className={cn(
-        "relative rounded-[13.5%/6.2%] bg-[#0d0a08] p-[3%] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06),0_50px_100px_-30px_rgb(40_20_10/0.45),0_30px_60px_-40px_rgb(40_20_10/0.5)]",
+        "relative flow-root rounded-[13.5%/6.2%] bg-[#0d0a08] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06),0_50px_100px_-30px_rgb(40_20_10/0.45),0_30px_60px_-40px_rgb(40_20_10/0.5)]",
         className,
       )}
     >
-      <Picture image={image} className="block h-auto w-full rounded-[11.5%/5.3%]" />
+      <Picture image={image} className="m-[3%] block h-auto w-[94%] rounded-[11.5%/5.3%]" />
       <span aria-hidden className="absolute left-1/2 top-[3.3%] h-[2.5%] w-[27%] -translate-x-1/2 rounded-full bg-[#0d0a08]" />
     </div>
   );

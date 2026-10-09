@@ -202,6 +202,10 @@
         "href": "https://significanthobbies.com"
       }
     ],
-    "legal": "© 2026 Significant Hobbies"
+    "legal": "© 2026 Significant Hobbies",
+    "art": {
+      "src": "/demo/live/live.webp",
+      "alt": "Illustrated landscape of paths and adventures"
+    }
   }
 }

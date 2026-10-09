@@ -84,7 +84,13 @@ export const galleryContent = z
       .refine((h) => (h.backdrop && h.screen) || h.image, { message: "hero needs backdrop + screen, or image" }),
     sections: z.array(gallerySection),
     closing: z.object({ id: z.string().optional(), title: z.string(), primary: link, note: z.string().optional(), image: z.string(), credit: z.string().optional() }).strict(),
-    footer: footer.extend({ links: z.array(link) }).strict(),
+    footer: footer
+      .extend({
+        links: z.array(link),
+        /** Wide artwork under the wordmark; position is a CSS object-position. */
+        art: z.object({ src: z.string(), alt: z.string(), position: z.string().optional() }).strict().optional(),
+      })
+      .strict(),
   })
   .strict();
 

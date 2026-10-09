@@ -177,6 +177,11 @@
         "href": "#"
       }
     ],
-    "legal": "© 2026 Sarthak Agrawal"
+    "legal": "© 2026 Sarthak Agrawal",
+    "art": {
+      "src": "/demo/kith/book-stage.webp",
+      "alt": "",
+      "position": "100% 45%"
+    }
   }
 }
