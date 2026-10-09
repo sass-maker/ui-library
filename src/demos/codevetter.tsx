@@ -278,7 +278,6 @@ $ codevetter check \
       { title: "Connect", links: [{ label: "About", href: "#" }, { label: "Privacy", href: "#" }, { label: "Terms", href: "#" }, { label: "GitHub", href: "https://github.com/Codevetter/codevetter" }] },
     ]}
     art={{ src: "/demo/codevetter/codevetter-evidence-workbench-v1.webp", alt: "Illustration of an evidence workbench" }}
-    artMode="scene"
     feedbackHref="mailto:hello@codevetter.com"
     legal="© 2026 CodeVetter · ISC License"
   />

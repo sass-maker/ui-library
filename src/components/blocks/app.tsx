@@ -116,7 +116,7 @@ export function PageHeader({
     <header className="border-b border-border">
       <div className="flex flex-col gap-4 px-4 pb-5 pt-7 sm:flex-row sm:items-end sm:justify-between md:px-8">
         <div className="min-w-0">
-          <h1 className="text-[1.375rem] font-semibold tracking-[-0.02em]">{title}</h1>
+          <h1 className="font-display text-[1.75rem]">{title}</h1>
           {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

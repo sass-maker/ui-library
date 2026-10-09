@@ -82,12 +82,16 @@ function Panel({ title, action, children, className = "" }: { title: string; act
 
 function BarList({ items }: { items: { name: string; share: number }[] }) {
   return (
-    <ul className="flex flex-col gap-2.5">
+    <ul className="flex flex-col gap-3.5">
       {items.map((s) => (
-        <li key={s.name} className="relative flex items-center justify-between overflow-hidden rounded-md px-2.5 py-1.5 text-sm">
-          <span aria-hidden className="absolute inset-y-0 left-0 rounded-md bg-brand-soft" style={{ width: `${s.share}%` }} />
-          <span className="relative truncate">{s.name}</span>
-          <span className="relative font-mono text-xs tabular-nums text-muted-foreground">{s.share}%</span>
+        <li key={s.name} className="flex flex-col gap-1.5 text-sm">
+          <span className="flex items-baseline justify-between gap-3">
+            <span className="truncate">{s.name}</span>
+            <span className="font-mono text-xs tabular-nums text-muted-foreground">{s.share}%</span>
+          </span>
+          <span className="h-1.5 overflow-hidden rounded-full bg-muted">
+            <span className="block h-full rounded-full bg-brand" style={{ width: `${s.share}%` }} />
+          </span>
         </li>
       ))}
     </ul>
@@ -159,6 +163,23 @@ export default function AppHealthPage() {
       />
 
       <div className="flex flex-col gap-6 px-4 py-6 md:px-8">
+        <section className="relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-xs md:p-8">
+          <div aria-hidden className="mesh absolute inset-0 opacity-25" />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="eyebrow mb-3">Today on acme.app</p>
+              <p className="font-display text-[clamp(1.6rem,1.2rem+1.4vw,2.4rem)] leading-[1.1]">
+                Traffic is up 12%. Signups are healthy. <em>One webhook is failing.</em>
+              </p>
+              <p className="mt-3 text-sm text-muted-foreground">POST /webhooks/stripe has returned errors since 14:20; 9 deliveries failed. Checkout is slow but succeeding.</p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button variant="outline" size="sm">Open logs</Button>
+              <Button size="sm" variant="brand">Investigate webhook</Button>
+            </div>
+          </div>
+        </section>
+
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard label="Page views" value="1,313" delta={{ value: "12%", direction: "up" }} trend={views} />
           <StatCard label="Named events" value="263" delta={{ value: "8%", direction: "up" }} trend={events} />
@@ -184,14 +205,12 @@ export default function AppHealthPage() {
                 { name: "Named events", values: events },
               ]}
               labels={hours}
-              height={330}
+              height={250}
             />
           </Panel>
           <Panel title="Live sessions" action={<span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground"><span className="size-1.5 animate-pulse rounded-full bg-brand" />12 now</span>}>
             <DotMap points={sessions} />
-            <p className="mb-3 mt-5 text-xs text-muted-foreground">Referral sources</p>
-            <BarList items={sources} />
-            <div className="mt-6 border-t border-hairline pt-5">
+            <div className="mt-5 border-t border-hairline pt-4">
               <p className="mb-3 text-xs text-muted-foreground">Devices</p>
               <div className="flex h-2 overflow-hidden rounded-full">
                 <span className="bg-chart-1" style={{ width: "58%" }} />
@@ -208,6 +227,13 @@ export default function AppHealthPage() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-2">
+          <Panel title="Endpoint health · 90 days" action={<StatusPill tone="danger">1 failing</StatusPill>}>
+            <div className="flex flex-col gap-5">
+              {endpointsUptime.map((e) => (
+                <UptimeStrip key={e.route} label={e.route} days={e.days} summary={e.summary} />
+              ))}
+            </div>
+          </Panel>
           <Panel title="Top events" action={<Button variant="ghost" size="sm">View all</Button>}>
             <Table>
               <TableHeader>
@@ -236,28 +262,26 @@ export default function AppHealthPage() {
               </TableBody>
             </Table>
           </Panel>
-          <Panel title="Endpoint health · 90 days" action={<StatusPill tone="danger">1 failing</StatusPill>}>
-            <div className="flex flex-col gap-5">
-              {endpointsUptime.map((e) => (
-                <UptimeStrip key={e.route} label={e.route} days={e.days} summary={e.summary} />
-              ))}
-            </div>
-          </Panel>
         </div>
 
-        <Panel title="Top pages">
-          <ul className="flex flex-col gap-1">
-            {pages.map((p) => (
-              <li key={p.path} className="grid grid-cols-[1fr_auto_3rem] items-center gap-4 rounded-md px-2 py-2 text-sm hover:bg-accent">
-                <span className="truncate font-mono text-[0.8125rem]">{p.path}</span>
-                <span className="h-1.5 w-24 overflow-hidden rounded-full bg-muted sm:w-48">
-                  <span className="block h-full rounded-full bg-brand" style={{ width: `${p.share * 2}%` }} />
-                </span>
-                <span className="text-right tabular-nums text-muted-foreground">{p.views}</span>
-              </li>
-            ))}
-          </ul>
-        </Panel>
+        <div className="grid gap-6 xl:grid-cols-3">
+          <Panel title="Top pages" className="xl:col-span-2">
+            <ul className="flex flex-col gap-1">
+              {pages.map((p) => (
+                <li key={p.path} className="grid grid-cols-[minmax(6rem,10rem)_1fr_3rem] items-center gap-4 rounded-md px-2 py-2 text-sm hover:bg-accent">
+                  <span className="truncate font-mono text-[0.8125rem]">{p.path}</span>
+                  <span className="h-1.5 overflow-hidden rounded-full bg-muted">
+                    <span className="block h-full rounded-full bg-brand" style={{ width: `${p.share * 2}%` }} />
+                  </span>
+                  <span className="text-right tabular-nums text-muted-foreground">{p.views}</span>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+          <Panel title="Referral sources">
+            <BarList items={sources} />
+          </Panel>
+        </div>
       </div>
     </AppShell>
   );

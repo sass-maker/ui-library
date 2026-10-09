@@ -99,7 +99,7 @@ export function StudioFooter({
             </div>
           </form>
 
-          <div className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-end">
+          <div className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-start">
             <form action={newsletterAction ?? "#"} method="post" className="flex flex-col gap-2">
               <label htmlFor="newsletter" className="text-sm font-medium text-foreground">
                 {product} updates
@@ -126,7 +126,7 @@ export function StudioFooter({
             {feedbackHref && (
               <a
                 href={feedbackHref}
-                className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent sm:mt-7"
               >
                 Send feedback
               </a>

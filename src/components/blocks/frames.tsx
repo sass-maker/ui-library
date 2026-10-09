@@ -215,7 +215,18 @@ export function Stage({
           {overlay}
         </div>
       )}
-      {caption && <figcaption className="mt-4 text-center font-mono text-xs text-muted-foreground sm:mt-12">{caption}</figcaption>}
+      {caption && (
+        <figcaption
+          className={cn(
+            "mt-4 font-mono text-xs text-muted-foreground sm:mt-5",
+            !overlay && "text-center",
+            overlay && overlayPosition === "bottom-left" && "sm:pl-[calc(min(24rem,46%)+1rem)] sm:text-right",
+            overlay && overlayPosition !== "bottom-left" && "sm:pr-[calc(min(24rem,46%)+1rem)]",
+          )}
+        >
+          {caption}
+        </figcaption>
+      )}
     </figure>
   );
 }
