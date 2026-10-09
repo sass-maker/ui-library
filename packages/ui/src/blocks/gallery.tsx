@@ -41,7 +41,7 @@ export function Device({ image, className }: { image: Img; className?: string })
 }
 
 const lede = "font-text text-[clamp(1.1875rem,1rem+0.6vw,1.4375rem)] leading-[1.45] text-pretty text-muted-foreground";
-const eyebrowCls = "ui-case font-display text-[0.9375rem] font-semibold tracking-[-0.005em] text-brand";
+const eyebrowCls = "ui-case font-display text-[0.9375rem] font-semibold tracking-[-0.005em] text-brand-ink";
 
 export function GalleryEyebrow({ children, className }: { children: React.ReactNode; className?: string }) {
   return <p className={cn(eyebrowCls, className)}>{children}</p>;
@@ -158,7 +158,7 @@ export function GalleryShowcase({
       id={id}
       className={cn(
         pad,
-        "bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--accent-ink:#8f7f70] [--brand:#e98a5f]",
+        "bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--accent-ink:#8f7f70] [--brand:#e98a5f] [--brand-ink:#e98a5f]",
       )}
     >
       <div className={cn(wrap, "motion-stagger text-center")}>
@@ -229,16 +229,23 @@ export function GallerySpread({
 
 /** Full-bleed photograph with the story bottom-left and a device stepping out of the frame. */
 export function GalleryCover({
+  as = "h2",
   eyebrow,
   title,
   lede: ledeText,
+  actions,
+  note,
   image,
   device,
   credit,
 }: {
+  /** "h1" when the cover is the page hero. */
+  as?: "h1" | "h2";
   eyebrow?: React.ReactNode;
   title: React.ReactNode;
   lede?: React.ReactNode;
+  actions?: React.ReactNode;
+  note?: React.ReactNode;
   image: string;
   device?: Img;
   credit?: React.ReactNode;
@@ -246,20 +253,24 @@ export function GalleryCover({
   return (
     <>
       <section
-        className="relative isolate text-white [--foreground:#fff] [--muted-foreground:rgb(255_255_255/0.86)] [--brand:#ffd9c2] md:min-h-[clamp(40rem,62vw,56rem)]"
+        className="relative isolate text-white [--foreground:#fff] [--muted-foreground:rgb(255_255_255/0.88)] [--brand-ink:#ffd9c2] [--accent-ink:#ffd9c2] md:min-h-[clamp(40rem,62vw,56rem)]"
       >
         <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
           <div className="motion-parallax size-full bg-cover bg-[40%_center]" style={{ backgroundImage: `url(${image})` }} />
         </div>
         <div
           aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(90deg,rgb(20_12_6/0.62)_0%,rgb(20_12_6/0.25)_45%,transparent_70%),linear-gradient(0deg,rgb(20_12_6/0.55),transparent_45%)]"
+          className="absolute inset-0 bg-[linear-gradient(90deg,rgb(20_12_6/0.74)_0%,rgb(20_12_6/0.5)_45%,rgb(20_12_6/0.12)_80%),linear-gradient(0deg,rgb(20_12_6/0.6),transparent_55%)]"
         />
         <div className={cn(wrap, "relative grid items-end gap-10 pb-[clamp(3.5rem,7vw,6rem)] pt-28 md:min-h-[inherit] md:grid-cols-[1.25fr_0.75fr] md:pt-0")}>
           <div className="motion-stagger">
             {eyebrow && <GalleryEyebrow>{eyebrow}</GalleryEyebrow>}
-            <GalleryTitle className="mt-4">{title}</GalleryTitle>
+            <GalleryTitle as={as} size={as === "h1" ? "xl" : "lg"} className="mt-4">
+              {title}
+            </GalleryTitle>
             {ledeText && <GalleryLede className="mt-6">{ledeText}</GalleryLede>}
+            {actions && <div className="mt-8 flex flex-wrap items-center gap-3.5">{actions}</div>}
+            {note && <GalleryNote className="mt-4 text-white/75">{note}</GalleryNote>}
           </div>
           {device && (
             <Device image={device} className="motion-reveal mx-auto w-[13.75rem] md:mx-0 md:w-[clamp(13.75rem,22vw,20rem)] md:translate-y-[clamp(7rem,12vw,11.25rem)] md:justify-self-end" />
@@ -305,7 +316,7 @@ export function GalleryStatement({
                 <dt className="font-display text-[1.375rem] font-semibold tracking-[-0.025em]">{r.title}</dt>
                 <dd className="col-span-full row-start-2 font-text text-[1.1875rem] text-muted-foreground md:col-span-1 md:row-start-auto">{r.body}</dd>
                 {r.status && (
-                  <dd className={cn("col-start-2 row-start-1 text-right font-display text-[0.8125rem] font-semibold md:col-start-auto md:row-start-auto", r.on ? "text-brand" : "text-muted-foreground/80")}>
+                  <dd className={cn("col-start-2 row-start-1 text-right font-display text-[0.8125rem] font-semibold md:col-start-auto md:row-start-auto", r.on ? "text-brand-ink" : "text-muted-foreground/80")}>
                     {r.status}
                   </dd>
                 )}
@@ -352,7 +363,7 @@ export function GalleryClosing({
       <div aria-hidden className="motion-drift absolute inset-0 -z-10 bg-cover bg-[12%_60%] md:bg-[center_60%]" style={{ backgroundImage: `url(${image})` }} />
       <div
         aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_srgb,var(--background)_70%,transparent)_30%,transparent_60%)]"
+        className="absolute inset-0 bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_srgb,var(--background)_85%,transparent)_38%,transparent_72%)]"
       />
       <div className={cn(wrap, "motion-stagger relative pt-[clamp(5rem,10vw,8.75rem)] text-center")}>
         <GalleryTitle>{title}</GalleryTitle>
@@ -372,10 +383,65 @@ export function GalleryButton({ href, variant = "primary", children }: { href: s
       className={cn(
         "ui-case inline-flex h-[3.25rem] items-center gap-[0.45em] rounded-full font-display text-[1.0625rem] font-semibold tracking-[-0.01em] transition-colors",
         variant === "primary" && "bg-brand px-[1.625rem] text-brand-foreground hover:bg-[color-mix(in_oklch,var(--brand)_88%,black)]",
-        variant === "link" && "px-2 text-brand hover:underline hover:underline-offset-4",
+        variant === "link" && "px-2 text-brand-ink hover:underline hover:underline-offset-4",
       )}
     >
       {children}
     </a>
+  );
+}
+
+/** A quiet grid of image tiles (catalogs, collections): image, small label, one line. */
+export function GalleryGrid({
+  id,
+  eyebrow,
+  title,
+  lede: ledeText,
+  items,
+}: {
+  id?: string;
+  eyebrow?: React.ReactNode;
+  title: React.ReactNode;
+  lede?: React.ReactNode;
+  items: { image: Img; label?: string; title: string; href?: string }[];
+}) {
+  return (
+    <section id={id} className={pad}>
+      <div className={wrap}>
+        <div className="motion-stagger grid items-end gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2">
+          <div>
+            {eyebrow && <GalleryEyebrow>{eyebrow}</GalleryEyebrow>}
+            <GalleryTitle size="md" className="mt-4">
+              {title}
+            </GalleryTitle>
+          </div>
+          {ledeText && <GalleryLede>{ledeText}</GalleryLede>}
+        </div>
+        <ul className="motion-stagger mt-[clamp(3.5rem,7vw,5.5rem)] grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((it) => {
+            const body = (
+              <>
+                <div className="overflow-hidden rounded-[var(--radius)]">
+                  <Picture image={it.image} className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+                </div>
+                {it.label && <p className={cn(eyebrowCls, "mt-5 text-[0.8125rem]")}>{it.label}</p>}
+                <p className="mt-1.5 font-display text-[1.375rem] leading-tight tracking-[-0.02em]">{it.title}</p>
+              </>
+            );
+            return (
+              <li key={it.title}>
+                {it.href ? (
+                  <a href={it.href} className="group block">
+                    {body}
+                  </a>
+                ) : (
+                  body
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
   );
 }

@@ -1,0 +1,247 @@
+{
+  "template": "workbench",
+  "page": {
+    "title": "Reader — Turn saved sources into working knowledge",
+    "description": "A personal research library for articles and PDFs.",
+    "theme": "paper",
+    "icon": "/demo/reader/icon.svg"
+  },
+  "product": "Reader",
+  "url": "https://read.significanthobbies.com",
+  "mark": "/demo/reader/icon.svg",
+  "nav": [
+    {
+      "label": "The loop",
+      "href": "#loop"
+    },
+    {
+      "label": "Library",
+      "href": "#library"
+    },
+    {
+      "label": "Current state",
+      "href": "#state"
+    },
+    {
+      "label": "FAQ",
+      "href": "#faq"
+    }
+  ],
+  "header": {
+    "secondary": {
+      "label": "Sign in",
+      "href": "#"
+    },
+    "primary": {
+      "label": "Open Reader",
+      "href": "#",
+      "icon": "ArrowUpRight"
+    }
+  },
+  "hero": {
+    "eyebrow": "Personal research library",
+    "title": "Turn the things you save into *things you can use.*",
+    "lede": "Reader is for people who save serious articles and PDFs, then lose them among browser tabs and bookmarks. It gives each source a quiet place to read, mark, question, and find again.",
+    "primary": {
+      "label": "Open Reader",
+      "href": "#",
+      "icon": "ArrowUpRight"
+    },
+    "secondary": {
+      "label": "Try a sample document",
+      "href": "#"
+    },
+    "note": "Browser-local start · Google sign-in for the library · No checkout",
+    "window": {
+      "title": "reader / systems",
+      "src": "/demo/reader/reading-surface.png",
+      "alt": "Reader's reading surface: a saved article with a highlighted passage, a research set on the left and a note beside it",
+      "width": 1792,
+      "height": 780,
+      "chrome": "none"
+    },
+    "backdrop": "/demo/reader/reader-precise-original-v1.webp",
+    "caption": "Illustrative interface · example text, not a customer document"
+  },
+  "sections": [
+    {
+      "id": "loop",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "The reading loop",
+          "title": "A saved tab is *only an intention.*",
+          "lede": "Reader earns its place after “save”. It carries one source through attentive reading and back into reach when the thought becomes useful.",
+          "points": [
+            {
+              "title": "Capture the source",
+              "body": "Paste an article URL or upload a PDF. Reader keeps the source and prepares it for focused reading."
+            },
+            {
+              "title": "Read without the page",
+              "body": "Web clutter falls away. The text, document structure, reading controls and your place remain."
+            },
+            {
+              "title": "Mark what matters",
+              "body": "Highlight the exact passage, leave a note beside it, or listen when reading is not practical."
+            },
+            {
+              "title": "Find the thought again",
+              "body": "Search the library, return through tags and lists, arrange a board, or question the open source."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "surface": "muted",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "One working library",
+          "title": "Keep the source, the mark, and *the next question* together.",
+          "points": [
+            {
+              "title": "Articles and PDFs, one shelf",
+              "body": "Web articles and PDFs live in the same library. PDF text is extracted for search and source-grounded discussion."
+            },
+            {
+              "title": "More than one way back",
+              "body": "Full-text search, tags, lists and boards give the same source several useful ways back in."
+            },
+            {
+              "title": "AI over what you chose",
+              "body": "Summaries and chat work on material you opened. Use the Fleet gateway or browser-held keys."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "state",
+      "blocks": [
+        {
+          "type": "statement",
+          "eyebrow": "Current boundary",
+          "title": "Maintained for real use, *not expansion for its own sake.*",
+          "lede": "Reader is a mature personal-use product in maintenance-first support. New work is limited to problems that block the capture-to-reading loop.",
+          "points": [
+            {
+              "title": "No account",
+              "body": "Capture and read in this browser without a Reader account."
+            },
+            {
+              "title": "Google sign-in",
+              "body": "Account library, isolated per user; PDFs behind an ownership-checking proxy."
+            },
+            {
+              "title": "Extension",
+              "body": "Source-built MV3 companion for local unpacked installs."
+            },
+            {
+              "title": "Commerce",
+              "body": "No public plan or checkout, and no promise either way."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faq",
+      "surface": "muted",
+      "blocks": [
+        {
+          "type": "faq",
+          "title": "Before you put *a source inside.*",
+          "items": [
+            {
+              "q": "Does Reader publish what I save?",
+              "a": "No. Libraries are private by default. Sharing an article or board requires an explicit share action."
+            },
+            {
+              "q": "What does AI see?",
+              "a": "AI features work on the material you open and ask about. Browser-held keys are used per request and never stored server-side."
+            },
+            {
+              "q": "Can I install the Chrome extension?",
+              "a": "It is available from source for local unpacked installation. Public browser-store distribution is deferred."
+            },
+            {
+              "q": "Can I take my data out?",
+              "a": "Yes. Reader includes a JSON export for account-scoped articles, boards, and lists."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "compact": true,
+      "blocks": [
+        {
+          "type": "cta",
+          "title": "Bring one source you mean *to understand.*",
+          "lede": "Start in this browser, or sign in with Google for the account-backed library.",
+          "primary": {
+            "label": "Open Reader",
+            "href": "#",
+            "icon": "ArrowUpRight"
+          },
+          "secondary": {
+            "label": "Try the sample",
+            "href": "#"
+          }
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "summary": "A maintained personal research library for turning saved sources into working knowledge. Personal use, maintenance-first, no public checkout.",
+    "groups": [
+      {
+        "title": "Product",
+        "links": [
+          {
+            "label": "Open Reader",
+            "href": "#"
+          },
+          {
+            "label": "Changelog",
+            "href": "#"
+          },
+          {
+            "label": "Roadmap",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "title": "Resources",
+        "links": [
+          {
+            "label": "FAQ",
+            "href": "#faq"
+          },
+          {
+            "label": "Current state",
+            "href": "#state"
+          }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          {
+            "label": "About",
+            "href": "#"
+          },
+          {
+            "label": "Privacy",
+            "href": "#"
+          }
+        ]
+      }
+    ],
+    "legal": "© 2026 Significant Hobbies"
+  }
+}

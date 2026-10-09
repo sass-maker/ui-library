@@ -133,7 +133,11 @@ function Block({ block: b, className: base }: { block: WorkbenchBlock; className
         <div className={className}>
           <SectionHeader align="split" eyebrow={b.eyebrow} title={rich(b.title)} lede={b.lede} />
           {b.points && (
-            <dl className="motion-stagger mt-14 grid gap-x-12 gap-y-10 border-t border-border pt-10 md:grid-cols-3">
+            <dl
+              className={`motion-stagger mt-14 grid gap-x-12 gap-y-10 border-t border-border pt-10 ${
+                b.points.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : b.points.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3"
+              }`}
+            >
               {b.points.map((pt) => (
                 <div key={pt.title}>
                   <dt className="font-display text-lg">{pt.title}</dt>
@@ -199,8 +203,12 @@ export function WorkbenchPage({ content: c }: { content: WorkbenchContent }) {
               {h.brackets && <Brackets />}
               <Stage
                 className="motion-tilt mx-auto max-w-6xl text-left"
-                backdrop="mesh"
-                main={<WindowFrame title={h.window.title} image={{ ...h.window, priority: true }} />}
+                backdrop={h.backdrop ? { image: { src: h.backdrop, alt: "", priority: true } } : "mesh"}
+                main={
+                  <div className={h.backdrop ? "mx-auto max-w-4xl" : undefined}>
+                    <WindowFrame title={h.window.title} chrome={h.window.chrome} image={{ ...h.window, priority: true }} />
+                  </div>
+                }
                 overlayPosition="bottom-right"
                 overlay={
                   h.receipt && (

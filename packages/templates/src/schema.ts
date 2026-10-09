@@ -35,7 +35,11 @@ const footer = z
 
 // ── Gallery ──────────────────────────────────────────────────────────────
 
+const tile = z.object({ image: z.string(), alt: z.string(), label: z.string().optional(), title: z.string(), href: z.string().optional() }).strict();
+
 const gallerySection = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("grid"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), items: z.array(tile).min(1) }).strict(),
+  z.object({ kind: z.literal("faq"), id: z.string().optional(), title: z.string().optional(), lede: z.string().optional(), items: z.array(z.object({ q: z.string(), a: z.string() }).strict()) }).strict(),
   z.object({ kind: z.literal("showcase"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), screen, caption: caption.optional(), note: z.string().optional() }).strict(),
   z.object({ kind: z.literal("spread"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), backdrop: z.string().optional(), screen, caption: caption.optional() }).strict(),
   z.object({ kind: z.literal("cover"), id: z.string().optional(), eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), image: z.string(), screen: screen.optional(), credit: z.string().optional() }).strict(),
@@ -63,9 +67,21 @@ export const galleryContent = z
     screenSize: z.object({ width: z.number(), height: z.number() }).strict().optional(),
     nav: z.array(link),
     headerAction: link,
+    /** A device hero (backdrop + screen) or a full-bleed photo cover (image). */
     hero: z
-      .object({ eyebrow: z.string().optional(), title: z.string(), lede: z.string().optional(), primary: link, secondary: link.optional(), note: z.string().optional(), backdrop: z.string(), screen })
-      .strict(),
+      .object({
+        eyebrow: z.string().optional(),
+        title: z.string(),
+        lede: z.string().optional(),
+        primary: link,
+        secondary: link.optional(),
+        note: z.string().optional(),
+        backdrop: z.string().optional(),
+        screen: screen.optional(),
+        image: z.string().optional(),
+      })
+      .strict()
+      .refine((h) => (h.backdrop && h.screen) || h.image, { message: "hero needs backdrop + screen, or image" }),
     sections: z.array(gallerySection),
     closing: z.object({ id: z.string().optional(), title: z.string(), primary: link, note: z.string().optional(), image: z.string(), credit: z.string().optional() }).strict(),
     footer: footer.extend({ links: z.array(link) }).strict(),
@@ -150,7 +166,11 @@ export const workbenchContent = z
         primary: link,
         secondary: link.optional(),
         note: z.string().optional(),
-        window: z.object({ title: z.string(), src: z.string(), alt: z.string(), width: z.number(), height: z.number() }).strict(),
+        window: z
+          .object({ title: z.string(), src: z.string(), alt: z.string(), width: z.number(), height: z.number(), chrome: z.enum(["mac", "browser", "none"]).optional() })
+          .strict(),
+        /** Artwork behind the window; without it the stage is a soft brand mesh. */
+        backdrop: z.string().optional(),
         receipt: z
           .object({
             title: z.string(),

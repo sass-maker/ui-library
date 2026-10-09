@@ -1,0 +1,207 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "Live — Make your bucket list happen",
+    "description": "Find things you want to do and keep a bucket list of your own.",
+    "theme": "gallery",
+    "icon": "/demo/live/icon.svg",
+    "tokens": {
+      "--brand": "oklch(0.8 0.16 80)",
+      "--brand-foreground": "oklch(0.2 0.02 60)",
+      "--brand-soft": "oklch(0.94 0.06 85)",
+      "--brand-ink": "oklch(0.55 0.13 60)"
+    }
+  },
+  "product": "Live",
+  "url": "https://live.significanthobbies.com",
+  "mark": "/demo/live/icon.svg",
+  "nav": [
+    {
+      "label": "Catalog",
+      "href": "#catalog"
+    },
+    {
+      "label": "How it works",
+      "href": "#how"
+    },
+    {
+      "label": "Questions",
+      "href": "#faq"
+    }
+  ],
+  "headerAction": {
+    "label": "Explore the catalog",
+    "href": "#catalog"
+  },
+  "hero": {
+    "eyebrow": "Live by Significant Hobbies",
+    "title": "Make your bucket list *happen.*",
+    "lede": "Find things you want to do, from big bucket-list experiences to small side quests. Keep your own list, mark things done, and remember your week.",
+    "primary": {
+      "label": "Explore the catalog",
+      "href": "#catalog"
+    },
+    "note": "Free to use. No account required to begin.",
+    "image": "/demo/live/hobby-horizon-poster.jpg"
+  },
+  "sections": [
+    {
+      "kind": "grid",
+      "id": "catalog",
+      "eyebrow": "Need a nudge?",
+      "title": "What will you do *before you die?*",
+      "lede": "Borrow an idea, reject the obvious, then make a list that could only belong to you. 419 ideas and counting.",
+      "items": [
+        {
+          "image": "/demo/live/outdoor-800.webp",
+          "alt": "Outdoor category illustration",
+          "label": "Outdoor",
+          "title": "Places to go and paths to walk",
+          "href": "#"
+        },
+        {
+          "image": "/demo/live/culinary-800.webp",
+          "alt": "Culinary category illustration",
+          "label": "Culinary",
+          "title": "Things to cook, taste and share",
+          "href": "#"
+        },
+        {
+          "image": "/demo/live/creative-800.webp",
+          "alt": "Creative category illustration",
+          "label": "Creative",
+          "title": "Things to make with your hands",
+          "href": "#"
+        },
+        {
+          "image": "/demo/live/music-800.webp",
+          "alt": "Music category illustration",
+          "label": "Music",
+          "title": "Songs to learn and shows to see",
+          "href": "#"
+        },
+        {
+          "image": "/demo/live/social-800.webp",
+          "alt": "Social category illustration",
+          "label": "Social",
+          "title": "People to gather and evenings to host",
+          "href": "#"
+        },
+        {
+          "image": "/demo/live/physical-800.webp",
+          "alt": "Physical category illustration",
+          "label": "Physical",
+          "title": "Challenges to train for",
+          "href": "#"
+        }
+      ]
+    },
+    {
+      "kind": "statement",
+      "id": "how",
+      "eyebrow": "Discover · choose · remember",
+      "title": "Turn “someday” into a life *you can actually see.*",
+      "rows": [
+        {
+          "title": "Find",
+          "body": "Search the catalog for bucket-list ideas, places and small adventures."
+        },
+        {
+          "title": "Keep",
+          "body": "Save what you want to try. Add your own, mark things done, or make a Bingo board."
+        },
+        {
+          "title": "Remember",
+          "body": "Log a habit when you do it. Write one private journal entry about the week before.",
+          "status": "Private by default",
+          "on": true
+        }
+      ]
+    },
+    {
+      "kind": "cover",
+      "eyebrow": "Bingo boards",
+      "title": "Turn a season into *a game you can win.*",
+      "lede": "Pick sixteen things from the catalog or your own list, then mark them off as the weeks go by. No streaks, no points: just a card that fills up with things you actually did.",
+      "image": "/demo/live/live.webp",
+      "credit": "Illustrative artwork"
+    },
+    {
+      "kind": "statement",
+      "eyebrow": "Life in weeks",
+      "title": "Time is the only thing *you can't save.*",
+      "lede": "The life-in-weeks view puts your time in perspective. No streaks, no scores: just the weeks you've lived and the ones still to come."
+    },
+    {
+      "kind": "faq",
+      "id": "faq",
+      "title": "Questions, *answered.*",
+      "lede": "Start free without an account. Keep control of what is public.",
+      "items": [
+        {
+          "q": "What is Live?",
+          "a": "Live helps you find things to do and keep a bucket list of your own. Browse ideas and side quests, mark them done, check in on habits, and keep one private weekly journal entry."
+        },
+        {
+          "q": "Is Live free?",
+          "a": "Yes. Live is free to use and there is no paid plan or checkout. You can begin without an account."
+        },
+        {
+          "q": "Do I need an account?",
+          "a": "No. Signed-out work stays on this device. Sign in with Google when you want records across devices or choose to publish."
+        },
+        {
+          "q": "Is my work public?",
+          "a": "Not by default. Publication is opt-in per item. Private work stays private unless you explicitly choose otherwise."
+        },
+        {
+          "q": "How often do I write?",
+          "a": "Once a week, about the week before. Habit check-ins are separate: log them when you do them, without a streak or score."
+        }
+      ]
+    }
+  ],
+  "closing": {
+    "title": "You don't need a life plan.\n*You need one thing worth trying next.*",
+    "primary": {
+      "label": "Explore the catalog",
+      "href": "#catalog"
+    },
+    "image": "/demo/live/dawn-valley-1920.webp",
+    "credit": "Illustrative artwork"
+  },
+  "footer": {
+    "summary": "Find what deserves your time. A free bucket list, side quests, habits and one weekly journal entry, private by default.",
+    "links": [
+      {
+        "label": "Catalog",
+        "href": "#catalog"
+      },
+      {
+        "label": "Life in weeks",
+        "href": "#"
+      },
+      {
+        "label": "Bingo",
+        "href": "#"
+      },
+      {
+        "label": "Changelog",
+        "href": "#"
+      },
+      {
+        "label": "Roadmap",
+        "href": "#"
+      },
+      {
+        "label": "Privacy",
+        "href": "#"
+      },
+      {
+        "label": "Significant Hobbies",
+        "href": "https://significanthobbies.com"
+      }
+    ],
+    "legal": "© 2026 Significant Hobbies"
+  }
+}

@@ -5,11 +5,13 @@ import {
   GalleryCaption,
   GalleryClosing,
   GalleryCover,
+  GalleryGrid,
   GalleryHero,
   GalleryShowcase,
   GallerySpread,
   GalleryStatement,
 } from "@saas-maker/ui/blocks/gallery";
+import { Faq } from "@saas-maker/ui/blocks/closing";
 import { StudioFooter } from "@saas-maker/ui/blocks/footer";
 import { rich } from "./rich";
 import type { GalleryContent, GallerySection } from "./schema";
@@ -20,7 +22,7 @@ import type { GalleryContent, GallerySection } from "./schema";
  * In any text field, *words* render as the theme's accent phrase.
  */
 
-type Screen = GalleryContent["hero"]["screen"];
+type Screen = NonNullable<GalleryContent["hero"]["screen"]>;
 type Caption = { lead?: string; text?: string };
 
 export type { GalleryContent, GallerySection };
@@ -30,6 +32,17 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
   const device = (s: Screen) => ({ ...s, ...size });
   const caption = (cap?: Caption) => cap && <GalleryCaption lead={cap.lead}>{cap.text}</GalleryCaption>;
   const mark = <img src={c.mark} alt="" width={26} height={26} className="size-[1.625rem] rounded-[0.45rem]" />;
+
+  const heroActions = (
+    <>
+      <GalleryButton href={c.hero.primary.href}>{c.hero.primary.label}</GalleryButton>
+      {c.hero.secondary && (
+        <GalleryButton href={c.hero.secondary.href} variant="link">
+          {c.hero.secondary.label}
+        </GalleryButton>
+      )}
+    </>
+  );
 
   return (
     <>
@@ -44,31 +57,44 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
       />
 
       <main id="main">
-        <GalleryHero
-          eyebrow={c.hero.eyebrow}
-          title={rich(c.hero.title)}
-          lede={c.hero.lede}
-          actions={
-            <>
-              <GalleryButton href={c.hero.primary.href}>{c.hero.primary.label}</GalleryButton>
-              {c.hero.secondary && (
-                <GalleryButton href={c.hero.secondary.href} variant="link">
-                  {c.hero.secondary.label}
-                </GalleryButton>
-              )}
-            </>
-          }
-          note={c.hero.note}
-          backdrop={c.hero.backdrop}
-          device={device(c.hero.screen)}
-        />
+        {c.hero.image ? (
+          <GalleryCover
+            as="h1"
+            eyebrow={c.hero.eyebrow}
+            title={rich(c.hero.title)}
+            lede={c.hero.lede}
+            actions={heroActions}
+            note={c.hero.note}
+            image={c.hero.image}
+          />
+        ) : (
+          <GalleryHero
+            eyebrow={c.hero.eyebrow}
+            title={rich(c.hero.title)}
+            lede={c.hero.lede}
+            actions={heroActions}
+            note={c.hero.note}
+            backdrop={c.hero.backdrop!}
+            device={device(c.hero.screen!)}
+          />
+        )}
 
         {c.sections.map((s, i) => {
           // A cover's device steps out of the photo; the next section starts closer.
           const prev = c.sections[i - 1];
           const afterDevice = prev?.kind === "cover" && prev.screen ? "pt-[clamp(2.5rem,6vw,5rem)]" : undefined;
+          if (s.kind === "faq")
+            return (
+              <section key={i} id={s.id} className="py-[clamp(5rem,10vw,8rem)]">
+                <div className="mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]">
+                  <Faq className="motion-reveal" title={s.title && rich(s.title)} lede={s.lede} items={s.items} />
+                </div>
+              </section>
+            );
           const common = { eyebrow: s.eyebrow, title: rich(s.title), lede: s.lede };
           switch (s.kind) {
+            case "grid":
+              return <GalleryGrid key={i} {...common} id={s.id} items={s.items.map((t) => ({ image: { src: t.image, alt: t.alt }, label: t.label, title: t.title, href: t.href }))} />;
             case "showcase":
               return <GalleryShowcase key={i} {...common} id={s.id} device={device(s.screen)} caption={caption(s.caption)} note={s.note} />;
             case "spread":
@@ -82,7 +108,7 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
 
         <GalleryClosing
           id={c.closing.id}
-          title={<span className="[&_em]:text-brand">{rich(c.closing.title)}</span>}
+          title={<span className="[&_em]:text-brand-ink">{rich(c.closing.title)}</span>}
           actions={<GalleryButton href={c.closing.primary.href}>{c.closing.primary.label}</GalleryButton>}
           note={c.closing.note}
           image={c.closing.image}

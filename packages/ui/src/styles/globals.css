@@ -49,6 +49,8 @@
   --brand: oklch(0.55 0.2 264);
   --brand-foreground: oklch(0.99 0 0);
   --brand-soft: oklch(0.95 0.03 264);
+  /* Brand as text on the page background; light brands set a deeper ink. */
+  --brand-ink: var(--brand);
 
   --background: oklch(0.993 0 0);
   --foreground: oklch(0.17 0.005 270);
@@ -310,6 +312,7 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
   --color-tone-1: var(--tone-1);
   --color-tone-2: var(--tone-2);
   --color-tone-3: var(--tone-3);
