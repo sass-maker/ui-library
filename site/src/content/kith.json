@@ -129,6 +129,7 @@
     },
     {
       "kind": "spread",
+      "id": "features",
       "eyebrow": "Person",
       "title": "Keep the context that makes care specific.",
       "lede": "A person holds their circle, birthday, how you met, standing notes, and a chronological log of notes, hangouts, calls, gifts and things to remember.",
@@ -143,6 +144,7 @@
     },
     {
       "kind": "cover",
+      "id": "connections",
       "eyebrow": "Begin",
       "title": "Start with one real person, not an import.",
       "lede": "A name, their circle and closeness, and one thing worth remembering. That first moment stays with them, ready when you come back.",

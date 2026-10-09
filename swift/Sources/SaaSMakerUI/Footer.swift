@@ -53,6 +53,7 @@ public struct SMStudioFooter: View {
     @State private var showFeedback = false
     private let product: String
     private let url: String
+    private let privacyUrl: URL
     private let summary: String?
     private let capture: SMCapture
     private let studio: [SMStudioLink]
@@ -63,6 +64,7 @@ public struct SMStudioFooter: View {
     /// - Parameters:
     ///   - product: Product name, as in the catalog.
     ///   - url: The product's public address, used in the Ask AI question.
+    ///   - privacyUrl: Privacy link in the subscribe and feedback consent text.
     ///   - projectKey: SaaS Maker publishable project key.
     ///   - catalogId: Fleet catalog id; resolves the key once when none is given.
     ///   - capture: Sign-up kind from the catalog capture policy, or `.off`.
@@ -73,6 +75,7 @@ public struct SMStudioFooter: View {
         product: String,
         url: String,
         summary: String? = nil,
+        privacyUrl: URL = SMFooterClient.privacyURL,
         projectKey: String? = nil,
         catalogId: String? = nil,
         capture: SMCapture = .newsletter,
@@ -83,6 +86,7 @@ public struct SMStudioFooter: View {
     ) {
         self.product = product
         self.url = url
+        self.privacyUrl = privacyUrl
         self.summary = summary
         self.capture = capture
         self.studio = studio
@@ -95,7 +99,7 @@ public struct SMStudioFooter: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 36) {
             if capture != .off {
-                SMSubscribeCard(product: product, kind: capture, client: client)
+                SMSubscribeCard(product: product, kind: capture, client: client, privacyUrl: privacyUrl)
             }
             VStack(alignment: .leading, spacing: 18) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -128,7 +132,7 @@ public struct SMStudioFooter: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .sheet(isPresented: $showFeedback) {
-            SMFeedbackForm(product: product, screen: screen, client: client) { showFeedback = false }
+            SMFeedbackForm(product: product, screen: screen, client: client, privacyUrl: privacyUrl) { showFeedback = false }
                 .smTheme(p)
             #if os(macOS)
                 .frame(width: 500)
@@ -187,6 +191,7 @@ struct SMConsentCheck: View {
     @Environment(\.smPalette) private var p
     @Binding var isOn: Bool
     let copy: String
+    var privacyUrl: URL = SMFooterClient.privacyURL
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 10) {
@@ -211,7 +216,7 @@ struct SMConsentCheck: View {
     private var consentLine: AttributedString {
         var line = AttributedString(copy + " ")
         var link = AttributedString("Privacy")
-        link.link = SMFooterClient.privacyURL
+        link.link = privacyUrl
         link.underlineStyle = .single
         line += link
         return line
@@ -245,6 +250,7 @@ struct SMSubscribeCard: View {
     let product: String
     let kind: SMCapture
     let client: SMFooterClient
+    var privacyUrl: URL = SMFooterClient.privacyURL
     @State private var email = ""
     @State private var consent = false
     @State private var state = SMSendState.idle
@@ -266,7 +272,7 @@ struct SMSubscribeCard: View {
                     HStack(spacing: 10) { field; button }
                     VStack(alignment: .leading, spacing: 10) { field; button.frame(maxWidth: .infinity) }
                 }
-                SMConsentCheck(isOn: $consent, copy: kind.consentCopy ?? "")
+                SMConsentCheck(isOn: $consent, copy: kind.consentCopy ?? "", privacyUrl: privacyUrl)
                 SMStatusLine(state: state)
             }
         }
@@ -479,6 +485,7 @@ struct SMFeedbackForm: View {
     let product: String
     let screen: String
     let client: SMFooterClient
+    var privacyUrl: URL = SMFooterClient.privacyURL
     var close: () -> Void
     @State private var draft = SMFeedbackDraft()
     @State private var consent = false
@@ -490,10 +497,11 @@ struct SMFeedbackForm: View {
     @State private var importing = false
     #endif
 
-    init(product: String, screen: String, client: SMFooterClient, draft: SMFeedbackDraft = SMFeedbackDraft(), close: @escaping () -> Void) {
+    init(product: String, screen: String, client: SMFooterClient, privacyUrl: URL = SMFooterClient.privacyURL, draft: SMFeedbackDraft = SMFeedbackDraft(), close: @escaping () -> Void) {
         self.product = product
         self.screen = screen
         self.client = client
+        self.privacyUrl = privacyUrl
         self.close = close
         _draft = State(initialValue: draft)
     }
@@ -546,7 +554,7 @@ struct SMFeedbackForm: View {
 
                 screenshotRow
 
-                SMConsentCheck(isOn: $consent, copy: SMFooterCopy.feedbackConsent)
+                SMConsentCheck(isOn: $consent, copy: SMFooterCopy.feedbackConsent, privacyUrl: privacyUrl)
 
                 VStack(alignment: .leading, spacing: 6) {
                     label("Email, if you want a reply")

@@ -1,18 +1,18 @@
 ---
 /**
- * Every content-driven product page. Add src/content/<slug>.json with a
- * "template" ("gallery" or "workbench") and "page" settings; no code needed.
+ * Gallery content pages. Workbench content uses the sibling rest route so
+ * each route imports only its own template CSS. Add src/content/<slug>.json
+ * with "template" and "page" settings; no code needed.
  * The build validates each file against @saas-maker/templates/schema.
  */
 import { getCollection } from "astro:content";
 import Base from "@saas-maker/templates/Base.astro";
 import { GalleryPage } from "@saas-maker/templates/gallery-page";
-import { WorkbenchPage } from "@saas-maker/templates/workbench-page";
 import { baseProps } from "@saas-maker/templates/page";
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
-  return products.map((p) => ({ params: { slug: p.id }, props: { content: p.data } }));
+  return products.filter((p) => p.data.template === "gallery").map((p) => ({ params: { slug: p.id }, props: { content: p.data } }));
 }
 
 const { content } = Astro.props;
@@ -20,5 +20,4 @@ const { content } = Astro.props;
 
 <Base {...baseProps(content)}>
   {content.template === "gallery" && <GalleryPage content={content} />}
-  {content.template === "workbench" && <WorkbenchPage content={content} />}
 </Base>

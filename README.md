@@ -17,7 +17,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.10"
+G="github:sass-maker/ui-library#v0.1.11"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -27,9 +27,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.10&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.10&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.10&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.11&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.11&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.11&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -37,19 +37,34 @@ Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
 (with or without `--save-exact`), so the next fresh install gets the wrong
 package. To upgrade, change the tag in all three lines and run `pnpm install`.
 
-Styles: `Base.astro` already imports `@saas-maker/templates/styles.css`, the
-theme plus every class the ui and templates packages use. With your own
-layout, import that one file instead (from a layout, or `@import` it at the
-top of your app stylesheet):
+Styles: `Base.astro` imports only `@saas-maker/ui/theme.css` (tokens, fonts
+and base styles). `GalleryPage`, `WorkbenchPage` and `ConsolePage` each import
+their own scoped CSS automatically. Base + GalleryPage includes Gallery's
+sources, without scanning unrelated templates. With your own
+layout or hand-built template, choose an entry explicitly:
 
 ```css
-@import "@saas-maker/templates/styles.css";
+@import "@saas-maker/templates/gallery.css"; /* or workbench.css, console.css */
 ```
 
-Your app's own files are scanned automatically. Apps that use only
-`@saas-maker/ui` import `@saas-maker/ui/styles.css`. Each package's
-`@source` is relative to its own stylesheet, so this works under pnpm's
-`node_modules/.pnpm` layout with no extra `@source` lines.
+For hand-built pages using the full library, the backward-compatible all path
+is `@saas-maker/templates/styles.css`; UI-only pages can use
+`@saas-maker/ui/styles.css` for all UI sources, or `@saas-maker/ui/theme.css`
+plus Tailwind's utilities layer and their own narrow `@source` entries. The
+scoped and full entry files already include that utilities layer. Your app's own files are scanned
+automatically. Each package's sources are relative to its own stylesheet,
+so this works with pnpm's isolated layout.
+
+A page must have only one Tailwind entry that imports utilities: do not add a
+second one alongside a template component's automatic CSS import. Keep your
+own styles in plain CSS, or use `@reference` for `@apply`. To extend the sources on a hand-built page,
+make an app stylesheet the only entry, explicitly import the template entry
+CSS there, and add narrow `@source` lines for your direct UI block/component
+imports and their dependencies; use the full `@saas-maker/ui/styles.css` entry
+only on hand-built pages that need all UI sources.
+
+Leave Astro's `build.inlineStylesheets` at its default (`"auto"`) so substantial
+CSS stays in an external, cacheable file; do not force `"always"`.
 
 Add `src/content/<slug>.json` and render it with `GalleryPage` or
 `WorkbenchPage` inside `Base.astro`. Write `*phrase*` for the accent phrase.
@@ -114,6 +129,10 @@ keeps its existing tags:
 ```
 
 ### Your own header or footer
+
+Set `footer.privacyUrl` to override the subscribe and feedback privacy link
+(default `https://sassmaker.com/privacy`). `StudioFooter` and Swift
+`SMStudioFooter` also accept `privacyUrl` directly.
 
 Both templates render `SiteHeader` and `StudioFooter` by default. To keep a
 product's own nav or footer without forking the template:
@@ -204,7 +223,7 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.10")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.11")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```

@@ -1,3 +1,4 @@
+import "./console.css";
 import * as React from "react";
 import { MenuIcon } from "lucide-react";
 import { cn } from "@saas-maker/ui/utils";

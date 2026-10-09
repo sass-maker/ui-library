@@ -7,9 +7,13 @@
 //
 // BASE_URL (default http://localhost:4321) and CHROME (path to Chrome) override.
 import { spawn } from "node:child_process";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+
+const assets = new URL("../dist/_astro/", import.meta.url);
+const motionChunk = readdirSync(assets).find((file) => file.endsWith(".js") && /\bas initMotion\b/.test(readFileSync(new URL(file, assets), "utf8")));
+if (!motionChunk) throw new Error("Build the site before running browser checks.");
 
 const base = (process.env.BASE_URL ?? "http://localhost:4321").replace(/\/$/, "");
 const chromePath = process.env.CHROME ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -94,8 +98,24 @@ handlers.set("Fetch.requestPaused", async ({ requestId, request }) => {
   await cdp("Fetch.fulfillRequest", { requestId, responseCode: status, responseHeaders: cors, body: Buffer.from(body).toString("base64") });
 });
 
+// Every Gallery section kind keeps its content id on the rendered section.
+const sectionKinds = new Set();
+for (const slug of ["kith", "live", "anchor"]) {
+  const content = JSON.parse(readFileSync(new URL(`../src/content/${slug}.json`, import.meta.url), "utf8"));
+  await open(`/demo/${slug}/`);
+  for (const section of content.sections.filter((s) => s.id)) {
+    sectionKinds.add(section.kind);
+    check(`gallery: ${slug} ${section.kind} #${section.id}`, await js(`document.getElementById(${JSON.stringify(section.id)})?.tagName === 'SECTION'`));
+  }
+  const privacyUrl = content.footer.privacyUrl ?? "https://sassmaker.com/privacy";
+  check(`gallery: ${slug} privacy links use the content URL or default`, await js(`(() => { const links = [...document.querySelectorAll('form[data-subscribe] a, [data-feedback-dialog] a')].filter((a) => a.textContent === 'Privacy'); return links.length === 2 && links.every((a) => a.getAttribute('href') === ${JSON.stringify(privacyUrl)}); })()`));
+  check(`motion: ${slug} initializes after lazy loading`, await waitFor("document.querySelector('.motion-parallax')?.style.transform || document.querySelector('.motion-reveal[style]')"));
+}
+check("gallery: all section kinds have DOM id coverage", ["grid", "showcase", "spread", "cover", "statement", "faq"].every((kind) => sectionKinds.has(kind)));
+
 // ── Data demo: FacetFilter by keyboard, compare picks from the URL, selection counter
 await open("/demo/data/?pick=nowhere,lisbon-portugal,lisbon-portugal");
+check("motion: a page without motion classes never loads the motion chunk", await js(`!document.querySelector('.motion-reveal,.motion-stagger,.motion-zoom,.motion-tilt,.motion-parallax,.motion-drift,.motion-draw,.motion-type') && !performance.getEntriesByType('resource').some((r) => r.name.endsWith('/' + ${JSON.stringify(motionChunk)}))`));
 check("data: no horizontal scroll at 1440", await js("document.documentElement.scrollWidth <= innerWidth"));
 const picks = await js("new URLSearchParams(location.search).get('pick')");
 check("data: unknown and repeated picks are dropped from the URL", picks === "lisbon-portugal", `pick=${picks}`);

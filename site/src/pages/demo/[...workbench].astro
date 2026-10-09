@@ -1,0 +1,17 @@
+---
+import { getCollection } from "astro:content";
+import Base from "@saas-maker/templates/Base.astro";
+import { WorkbenchPage } from "@saas-maker/templates/workbench-page";
+import { baseProps } from "@saas-maker/templates/page";
+
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products.filter((p) => p.data.template === "workbench").map((p) => ({ params: { workbench: p.id }, props: { content: p.data } }));
+}
+
+const { content } = Astro.props;
+---
+
+<Base {...baseProps(content)}>
+  {content.template === "workbench" && <WorkbenchPage content={content} />}
+</Base>

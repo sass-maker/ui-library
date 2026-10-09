@@ -1,4 +1,5 @@
-import { animate, inView, scroll } from "motion";
+import { animate } from "motion/mini";
+import { inView, scroll } from "motion";
 
 /**
  * Fleet motion: one small script that animates server-rendered HTML by class.

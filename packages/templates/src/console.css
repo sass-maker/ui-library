@@ -1,0 +1,4 @@
+@import "@saas-maker/ui/theme.css";
+@import "@saas-maker/ui/source-console.css";
+
+@source "./{Base.astro,console-page.tsx}";
