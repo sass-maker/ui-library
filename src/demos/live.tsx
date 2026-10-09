@@ -25,7 +25,7 @@ function LifeInWeeks() {
   const years = 40;
   const lived = 31 * 52 + 22;
   return (
-    <figure className="rounded-2xl bg-card p-5 shadow-lg ring-1 ring-black/5 sm:p-8">
+    <figure className="rounded-2xl bg-[color-mix(in_oklch,var(--foreground)_6%,transparent)] p-5 ring-1 ring-[color-mix(in_oklch,var(--foreground)_12%,transparent)] sm:p-8">
       <div className="flex items-baseline justify-between gap-4">
         <figcaption className="font-display text-[1.5rem]">Your first 40 years, in weeks</figcaption>
         <span className="font-mono text-xs text-muted-foreground">Illustrative · 1 dot = 1 week</span>
@@ -36,16 +36,16 @@ function LifeInWeeks() {
             key={i}
             className={
               i < lived
-                ? "aspect-square rounded-full bg-foreground/80"
+                ? "aspect-square rounded-full bg-foreground/75"
                 : i === lived
                   ? "aspect-square rounded-full bg-brand ring-2 ring-brand/40"
-                  : "aspect-square rounded-full bg-foreground/10"
+                  : "aspect-square rounded-full bg-foreground/15"
             }
           />
         ))}
       </div>
       <p className="mt-5 text-sm text-muted-foreground">
-        The yellow dot is this week. <span className="text-foreground">The rest is still unwritten.</span>
+        The bright dot is this week. <span className="text-foreground">The rest is still unwritten.</span>
       </p>
     </figure>
   );
@@ -123,7 +123,7 @@ export default function LivePage() {
           </div>
         </Band>
 
-        <Band tone={2}>
+        <Section>
           <div id="how" className="container-page">
             <SectionHeader
               eyebrow="Discover · choose · remember"
@@ -134,7 +134,7 @@ export default function LivePage() {
               }
             />
             <Steps
-              className="mt-14 bg-foreground/10 [--background:var(--tone-2)]"
+              className="mt-14"
               items={[
                 { title: "Find something to do", body: "Search the catalog for bucket-list ideas, places and small adventures.", detail: <span className="eyebrow">Search or browse</span> },
                 { title: "Keep your own list", body: "Save what you want to try. Add your own, mark things done, or make a Bingo board.", detail: <span className="eyebrow">Your choices</span> },
@@ -142,9 +142,9 @@ export default function LivePage() {
               ]}
             />
           </div>
-        </Band>
+        </Section>
 
-        <Band tone={3}>
+        <Band tone="ink">
           <div className="container-page grid items-center gap-12 lg:grid-cols-12">
             <div className="lg:col-span-5">
               <SectionHeader

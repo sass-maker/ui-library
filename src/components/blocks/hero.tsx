@@ -87,7 +87,7 @@ export function Hero({
           {image && (
             <img src={image.src} alt={image.alt ?? ""} fetchPriority="high" className="absolute inset-0 -z-10 size-full object-cover" />
           )}
-          <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-black/75 via-black/25 to-black/10" />
+          <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/45 to-black/15" />
           <div className="container-page pb-16 pt-40 text-white md:pb-24 [--foreground:white] [--muted-foreground:rgb(255_255_255/0.78)] [--accent-ink:var(--brand)]">
             {eyebrowNode}
             <h1 className="hero-in font-display max-w-[14ch] text-[clamp(3.25rem,1.6rem+7vw,8rem)] [--d:60ms]">{title}</h1>

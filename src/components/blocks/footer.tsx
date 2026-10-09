@@ -77,9 +77,9 @@ export function StudioFooter({
             <textarea
               id="ask-ai"
               name="q"
-              rows={2}
+              rows={3}
               defaultValue={question}
-              className="mt-3 w-full resize-none rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25"
+              className="mt-3 min-h-[5.5rem] w-full resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25"
             />
             <div className="mt-3 flex flex-wrap gap-2">
               {assistants.map((a) => (
@@ -142,7 +142,13 @@ export function StudioFooter({
       </div>
       {art && (
         <div className="container-page mt-6">
-          <img src={art.src} alt={art.alt} loading="lazy" decoding="async" className="block aspect-[3/1] w-full rounded-xl object-cover" />
+          <img
+            src={art.src}
+            alt={art.alt}
+            loading="lazy"
+            decoding="async"
+            className="block aspect-[5/2] w-full object-cover [mask-image:radial-gradient(ellipse_75%_85%_at_50%_55%,black_55%,transparent_100%)] sm:aspect-[3/1]"
+          />
         </div>
       )}
 

@@ -18,7 +18,7 @@ export function Section({ surface = "default", rule, size = "default", className
   return (
     <section
       className={cn(
-        size === "default" ? "section" : "py-14 md:py-20",
+        size === "default" ? "section" : "pb-16 pt-0 md:pb-24",
         surface === "muted" && "bg-surface [--section-bg:var(--surface)]",
         surface === "inverse" && "bg-primary text-primary-foreground [--section-bg:var(--primary)] [--muted-foreground:color-mix(in_oklch,var(--primary-foreground)_68%,transparent)] [--border:color-mix(in_oklch,var(--primary-foreground)_14%,transparent)]",
         surface === "brand" && "bg-brand text-brand-foreground [--muted-foreground:color-mix(in_oklch,var(--brand-foreground)_72%,transparent)]",

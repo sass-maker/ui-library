@@ -79,7 +79,7 @@ export function CodeBlock({ code, label, className }: { code: string; label?: st
           {label}
         </figcaption>
       )}
-      <pre className="overflow-x-auto p-4 font-mono text-[0.8125rem] leading-[1.7] whitespace-pre-wrap break-words [overflow-wrap:anywhere] sm:p-5">
+      <pre className="overflow-x-auto p-4 font-mono text-[0.75rem] leading-[1.7] whitespace-pre-wrap [overflow-wrap:break-word] sm:p-5 sm:text-[0.8125rem]">
         <code>{code}</code>
       </pre>
     </figure>
@@ -116,6 +116,50 @@ export function Quote({
           {role && <span className="block text-muted-foreground">{role}</span>}
         </span>
       </figcaption>
+    </figure>
+  );
+}
+
+export type DiffLine = { kind: "add" | "del" | "ctx"; text: string; note?: React.ReactNode };
+
+/**
+ * A code change with an inline annotation, for developer tools that need to
+ * point at the exact line a verdict is about.
+ */
+export function DiffBlock({ file, lines, className }: { file: string; lines: DiffLine[]; className?: string }) {
+  return (
+    <figure className={cn("overflow-hidden rounded-xl border border-border bg-card font-mono text-[0.75rem] shadow-lg sm:text-[0.8125rem]", className)}>
+      <figcaption className="flex items-center justify-between gap-3 border-b border-hairline bg-surface px-4 py-2.5 text-[0.6875rem] text-muted-foreground">
+        <span className="truncate">{file}</span>
+        <span className="shrink-0">
+          <span className="text-success">+{lines.filter((l) => l.kind === "add").length}</span>{" "}
+          <span className="text-destructive">−{lines.filter((l) => l.kind === "del").length}</span>
+        </span>
+      </figcaption>
+      <ol className="py-2">
+        {lines.map((l, i) => (
+          <li key={i}>
+            <div
+              className={cn(
+                "grid grid-cols-[2.25rem_1rem_1fr] items-baseline pr-4 leading-[1.75]",
+                l.kind === "add" && "bg-success/10",
+                l.kind === "del" && "bg-destructive/10",
+              )}
+            >
+              <span className="select-none pr-2 text-right text-muted-foreground/60">{i + 1}</span>
+              <span className={cn("select-none", l.kind === "add" ? "text-success" : l.kind === "del" ? "text-destructive" : "text-muted-foreground/40")}>
+                {l.kind === "add" ? "+" : l.kind === "del" ? "−" : " "}
+              </span>
+              <code className="whitespace-pre-wrap [overflow-wrap:break-word]">{l.text}</code>
+            </div>
+            {l.note && (
+              <div className="mx-3 my-2 rounded-lg border border-border bg-background px-3.5 py-2.5 font-sans text-[0.8125rem] leading-relaxed text-foreground shadow-sm">
+                {l.note}
+              </div>
+            )}
+          </li>
+        ))}
+      </ol>
     </figure>
   );
 }

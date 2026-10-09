@@ -206,7 +206,7 @@ export default function ReaderPage() {
             <FeatureGrid
               className="mt-14"
               columns={2}
-              variant="cards"
+              variant="ruled"
               items={[
                 { kicker: "Without an account", title: "Start in this browser.", body: "Use the device-local path to capture and read without creating a Reader account." },
                 { kicker: "With Google sign-in", title: "Open the account library.", body: "Saved material is isolated per user; PDFs are stored behind an ownership-enforcing proxy." },

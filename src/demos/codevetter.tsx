@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/blocks/site-header";
 import { Hero } from "@/components/blocks/hero";
 import { Section, SectionHeader, FactRow } from "@/components/blocks/layout";
 import { FeatureGrid, FeatureSpread, Steps, Stats } from "@/components/blocks/features";
-import { Ledger, CodeBlock, StatusPill } from "@/components/blocks/proof";
+import { Ledger, CodeBlock, StatusPill, DiffBlock } from "@/components/blocks/proof";
 import { WindowFrame } from "@/components/blocks/frames";
 import { Faq, Cta } from "@/components/blocks/closing";
 import { StudioFooter } from "@/components/blocks/footer";
@@ -164,16 +164,45 @@ export default function CodeVetterPage() {
 
     <Section rule>
       <div className="container-page">
+        <SectionHeader
+          align="center"
+          eyebrow="Desktop workbench"
+          title={<>Every finding next to <em>the evidence.</em></>}
+          lede="The macOS app is the visual workbench: review result, finding list, evidence status, and the code under inspection in one window."
+        />
+        <div className="relative mt-14">
+          <div aria-hidden className="absolute inset-x-10 -top-6 bottom-10 -z-10 rounded-[2rem] bg-brand/15 blur-3xl" />
+          <WindowFrame
+            title="CodeVetter — review"
+            image={{ src: "/demo/codevetter/workbench.png", alt: "CodeVetter desktop review workbench showing a local review result, finding list, evidence status, and code inspection panel", width: 1440, height: 900 }}
+          />
+          <p className="mt-4 text-center font-mono text-xs text-muted-foreground">Repository-tracked capture · local app · fixture-backed review</p>
+        </div>
         <FeatureSpread
+          className="mt-24 md:mt-32"
           items={[
             {
-              kicker: "Desktop workbench",
-              title: <>See every finding next to <em>the evidence.</em></>,
-              body: "The macOS app is the visual workbench: the review result, finding list, evidence status, and the code under inspection in one window.",
+              kicker: "Failures stay attached",
+              title: <>Point at the line <em>the verdict is about.</em></>,
+              body: "A failing check is linked back to the exact change that caused it, with the command, the bounded output and the limitation, so a reviewer can confirm it in seconds instead of re-running everything.",
               media: (
-                <WindowFrame
-                  title="CodeVetter — review"
-                  image={{ src: "/demo/codevetter/workbench.png", alt: "CodeVetter desktop review workbench showing a local review result, finding list, evidence status, and code inspection panel", width: 1440, height: 900 }}
+                <DiffBlock
+                  file="src/auth/session.ts · illustrative example"
+                  lines={[
+                    { kind: "ctx", text: "export function isExpired(session: Session, now = Date.now()) {" },
+                    { kind: "del", text: "  return session.expiresAt < now;" },
+                    {
+                      kind: "add",
+                      text: "  return session.expiresAt <= now - REFRESH_GRACE_MS;",
+                      note: (
+                        <span className="flex flex-col gap-1.5">
+                          <StatusPill tone="danger">pnpm test auth/session.test.ts · exit 1</StatusPill>
+                          <span>Expired sessions inside the grace window are still accepted, so the requested behavior is not verified.</span>
+                        </span>
+                      ),
+                    },
+                    { kind: "ctx", text: "}" },
+                  ]}
                 />
               ),
             },
@@ -184,14 +213,15 @@ export default function CodeVetterPage() {
               media: (
                 <CodeBlock
                   label="zsh — ~/work/auth-service"
-                  code={`/Applications/CodeVetter.app/Contents/MacOS/codevetter check \\
-  --range main...HEAD \\
-  --task "Reject expired sessions" \\
-  --json
+                  code={`# bundled at /Applications/CodeVetter.app/Contents/MacOS/codevetter
+$ codevetter check \
+    --range main...HEAD \
+    --task "Reject expired sessions" \
+    --json
 
-✗ fail   pnpm test auth/session.test.ts   exit 1
-✓ pass   pnpm typecheck                   exit 0
-? unverified  browser refresh journey (not run)`}
+✗ fail        pnpm test auth/session.test.ts
+✓ pass        pnpm typecheck
+? unverified  browser refresh journey`}
                 />
               ),
             },

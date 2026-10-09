@@ -234,11 +234,11 @@ export function AreaChart({
   const colorOf = (s: { color?: string }, i: number) => s.color ?? `var(--chart-${i + 1})`;
   return (
     <figure className={cn("w-full", className)}>
-      <div className="relative" style={{ height }}>
+      <div className="relative ml-9" style={{ height }}>
         <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
           {Array.from({ length: ticks + 1 }, (_, i) => (
             <div key={i} className={cn("relative border-t border-dashed border-border", i === ticks && "border-solid")}>
-              <span className="absolute -top-2.5 right-0 bg-card pl-2 font-mono text-[0.6875rem] tabular-nums text-muted-foreground">
+              <span className="absolute -left-9 -top-2 w-7 text-right font-mono text-[0.6875rem] tabular-nums text-muted-foreground">
                 {Math.round(max - (i / ticks) * max).toLocaleString()}
               </span>
             </div>
@@ -263,7 +263,7 @@ export function AreaChart({
           })}
         </svg>
       </div>
-      <div className="mt-2 flex justify-between font-mono text-[0.6875rem] text-muted-foreground">
+      <div className="ml-9 mt-2 flex justify-between font-mono text-[0.6875rem] text-muted-foreground">
         {labels.map((l, i) => (
           <span key={l + i} className={cn(i % 2 === 1 && "hidden sm:inline")}>
             {l}

@@ -168,6 +168,19 @@ export default function AppHealthPage() {
           </Panel>
           <Panel title="Referral sources">
             <BarList items={sources} />
+            <div className="mt-6 border-t border-hairline pt-5">
+              <p className="mb-3 text-xs text-muted-foreground">Devices</p>
+              <div className="flex h-2 overflow-hidden rounded-full">
+                <span className="bg-chart-1" style={{ width: "58%" }} />
+                <span className="bg-chart-2" style={{ width: "36%" }} />
+                <span className="bg-chart-3" style={{ width: "6%" }} />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-chart-1" />Desktop 58%</span>
+                <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-chart-2" />Mobile 36%</span>
+                <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-chart-3" />Tablet 6%</span>
+              </div>
+            </div>
           </Panel>
         </div>
 
@@ -190,7 +203,10 @@ export default function AppHealthPage() {
                         {e.name}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">{e.count}</TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {e.count}
+                      <span className="block font-mono text-[0.6875rem] text-muted-foreground sm:hidden">{e.change}</span>
+                    </TableCell>
                     <TableCell className="hidden text-right font-mono text-xs text-muted-foreground sm:table-cell">{e.change}</TableCell>
                   </TableRow>
                 ))}

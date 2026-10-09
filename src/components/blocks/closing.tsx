@@ -102,7 +102,7 @@ export function Band({
 }) {
   const bg =
     tone === "ink"
-      ? "bg-tone-ink text-[oklch(0.97_0.01_80)] [--foreground:oklch(0.97_0.01_80)] [--muted-foreground:oklch(0.97_0.01_80/0.68)] [--border:oklch(1_0_0/0.14)] [--section-bg:var(--tone-ink)]"
+      ? "bg-tone-ink text-[oklch(0.97_0.01_80)] [--foreground:oklch(0.97_0.01_80)] [--muted-foreground:oklch(0.97_0.01_80/0.68)] [--border:oklch(1_0_0/0.14)] [--section-bg:var(--tone-ink)] [--accent-ink:var(--brand)]"
       : tone === "brand"
         ? "bg-brand text-brand-foreground [--foreground:var(--brand-foreground)] [--muted-foreground:color-mix(in_oklch,var(--brand-foreground)_70%,transparent)] [--section-bg:var(--brand)]"
         : {

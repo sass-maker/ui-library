@@ -27,11 +27,11 @@ function HeroStage() {
       />
       <Photo
         tilt="left"
-        className="absolute -left-2 top-4 w-36 sm:-left-6 sm:top-10 sm:w-48"
+        className="absolute bottom-6 left-0 w-32 sm:-left-4 sm:bottom-12 sm:w-44"
         image={{ src: img("coastal-walk-v2.webp"), alt: "Illustrative scene of two friends walking along a coastal path", width: 760, height: 507 }}
         caption={<span className="font-display text-[0.8125rem] italic">A little time together.</span>}
       />
-      <span className="absolute bottom-10 right-0 rounded-full bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-md sm:right-2">
+      <span className="absolute right-0 top-8 rounded-full bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-md sm:right-2">
         The actual app
       </span>
     </div>
