@@ -15,7 +15,7 @@ one theme.
 
 ```sh
 # installed from the private repo, not npm (templates needs ui + motion beside it)
-G="github:sass-maker/ui-library#v0.1.6"
+G="github:sass-maker/ui-library#v0.1.7"
 pnpm add "$G&path:/packages/ui" "$G&path:/packages/motion" "$G&path:/packages/templates"
 ```
 
@@ -57,7 +57,7 @@ Demo: `/demo/data/` (Nomad Atlas places snapshot, Nomads.com data).
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.6")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.7")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```
