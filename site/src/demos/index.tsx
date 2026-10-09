@@ -41,15 +41,16 @@ const kithExcerpt = `{
   ]
 }`;
 
-const webInstall = `# from the private repo, not npm
-G="github:sass-maker/ui-library#v0.1.8"
-pnpm add "$G&path:/packages/ui" \\
-  "$G&path:/packages/motion" \\
-  "$G&path:/packages/templates"`;
+const webInstall = `# from the GitHub repo, not npm (pnpm add drops #tag&path)
+G="github:sass-maker/ui-library#v0.1.9"
+pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \\
+  "dependencies.@saas-maker/motion=$G&path:/packages/motion" \\
+  "dependencies.@saas-maker/templates=$G&path:/packages/templates"
+pnpm install`;
 
 const swiftInstall = `.package(
   url: "https://github.com/sass-maker/ui-library",
-  from: "0.1.8"
+  from: "0.1.9"
 )`;
 
 function DemoLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -275,7 +276,7 @@ export default function IndexPage() {
                 From GitHub, <em>not npm.</em>
               </GalleryTitle>
               <GalleryLede className="mx-auto mt-6">
-                SaaS Maker UI is not published to npm. Products add it from the private GitHub repo at a tagged release.
+                SaaS Maker UI is not published to npm. Products add it from the GitHub repo at a tagged release.
               </GalleryLede>
             </div>
             <div className="motion-stagger mt-[clamp(3.5rem,7vw,5.5rem)] grid gap-x-8 gap-y-12 md:grid-cols-2">

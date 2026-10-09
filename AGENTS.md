@@ -18,7 +18,7 @@ One design system for every Fleet product, web and Apple.
   Health). Keep every demo.
 
 Rules:
-- Not published to npm. Products install from the private GitHub repo.
+- Not published to npm. Products install from the public GitHub repo at a tag.
 - Products differ by tokens, imagery, content and block choice. Do not fork a
   block per product; add a variant or token.
 - Quiet design: one idea per section, one focal visual, accent used sparingly.

@@ -13,11 +13,11 @@ one theme.
 
 ## Web product (Astro)
 
-Install from the private repo, not npm. Write the specs into `package.json`
+Install from the GitHub repo (public), not npm. Write the specs into `package.json`
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.8"
+G="github:sass-maker/ui-library#v0.1.9"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -27,9 +27,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.8&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.8&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.8&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.9&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.9&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.9&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -204,7 +204,7 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.8")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.9")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```
