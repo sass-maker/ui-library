@@ -10,7 +10,14 @@ import { cn } from "../lib/utils";
 
 /** A round element of the screenshot (in its pixels) that gently breathes, e.g. a lantern. */
 type Spot = { x: number; y: number; r: number };
-type Img = { src: string; alt: string; width?: number; height?: number; priority?: boolean; spots?: Spot[] };
+/** phone: an iPhone silhouette. desktop: a quiet Mac window. none: the bare screenshot, rounded. */
+export type DeviceFrame = "phone" | "desktop" | "none";
+type Img = { src: string; alt: string; width?: number; height?: number; priority?: boolean; spots?: Spot[]; frame?: DeviceFrame };
+
+/** Width classes per frame: phones stay narrow, desktop windows take the measure. */
+function sized(device: Img, phone: string, wide = "w-[min(100%,60rem)]") {
+  return (device.frame ?? "phone") === "phone" ? phone : wide;
+}
 
 function Picture({ image, className }: { image: Img; className?: string }) {
   return (
@@ -49,8 +56,34 @@ function Breath({ spot: { x, y, r }, src, w, h, i }: { spot: Spot; src: string; 
   );
 }
 
-/** A phone whose bezel, corners and island scale with its width. Set width with className. */
+/**
+ * A phone whose bezel, corners and island scale with its width, or (with
+ * image.frame) a desktop window or a bare rounded screenshot. Set width with className.
+ */
 export function Device({ image, className }: { image: Img; className?: string }) {
+  const breath = image.width && image.height && image.spots?.map((p, i) => <Breath key={i} spot={p} src={image.src} w={image.width!} h={image.height!} i={i} />);
+  if (image.frame === "desktop" || image.frame === "none")
+    return (
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-[0.875rem] shadow-[0_50px_100px_-30px_rgb(40_20_10/0.45),0_30px_60px_-40px_rgb(40_20_10/0.5)]",
+          image.frame === "desktop" && "bg-card ring-1 ring-black/10",
+          className,
+        )}
+      >
+        {image.frame === "desktop" && (
+          <div aria-hidden className="flex h-[clamp(1.5rem,2.4vw,2rem)] items-center gap-1.5 px-3">
+            <span className="size-2.5 rounded-full bg-black/15" />
+            <span className="size-2.5 rounded-full bg-black/15" />
+            <span className="size-2.5 rounded-full bg-black/15" />
+          </div>
+        )}
+        <div className="relative">
+          <Picture image={image} className="block h-auto w-full" />
+          {breath}
+        </div>
+      </div>
+    );
   return (
     <div
       className={cn(
@@ -60,7 +93,7 @@ export function Device({ image, className }: { image: Img; className?: string })
     >
       <div className="relative m-[3%] w-[94%]">
         <Picture image={image} className="block h-auto w-full rounded-[11.5%/5.3%]" />
-        {image.width && image.height && image.spots?.map((p, i) => <Breath key={i} spot={p} src={image.src} w={image.width!} h={image.height!} i={i} />)}
+        {breath}
       </div>
       <span aria-hidden className="absolute left-1/2 top-[3.3%] h-[2.5%] w-[27%] -translate-x-1/2 rounded-full bg-[#0d0a08]" />
     </div>
@@ -150,12 +183,18 @@ export function GalleryHero({
         {actions && <div className="hero-in mt-8 flex flex-wrap items-center justify-center gap-3.5 [--d:180ms]">{actions}</div>}
         {note && <GalleryNote className="hero-in mt-4 [--d:220ms]">{note}</GalleryNote>}
       </div>
-      <div className="relative mt-[clamp(3rem,5vw,4rem)] h-[clamp(32rem,60vw,52.5rem)] overflow-hidden">
+      {/* A phone is cropped by a fixed stage; a desktop window sets the stage height itself. */}
+      <div
+        className={cn(
+          "relative mt-[clamp(3rem,5vw,4rem)] overflow-hidden",
+          (device.frame ?? "phone") === "phone" ? "h-[clamp(32rem,60vw,52.5rem)]" : "pb-[clamp(3rem,7vw,6rem)]",
+        )}
+      >
         <div aria-hidden className="absolute inset-x-0 bottom-0 top-[clamp(8.75rem,14vw,12.5rem)] overflow-hidden">
           <div className="motion-parallax size-full bg-cover bg-[center_30%]" style={{ backgroundImage: `url(${backdrop})` }} />
         </div>
         <div className="hero-in relative [--d:260ms]">
-          <Device image={{ ...device, priority: true }} className="mx-auto w-[clamp(15.5rem,27vw,24.5rem)]" />
+          <Device image={{ ...device, priority: true }} className={cn("mx-auto", sized(device, "w-[clamp(15.5rem,27vw,24.5rem)]", "w-[min(calc(100%-2.5rem),62rem)]"))} />
         </div>
       </div>
     </section>
@@ -197,7 +236,7 @@ export function GalleryShowcase({
         <div className="mt-[clamp(3.5rem,7vw,6rem)] bg-[radial-gradient(closest-side,#3a2a1f,transparent)] py-[clamp(1rem,3vw,2.5rem)]">
           <Device
             image={device}
-            className="motion-zoom mx-auto w-[clamp(16.5rem,26vw,22.5rem)] shadow-[0_60px_120px_-30px_rgb(0_0_0/0.75)]"
+            className={cn("motion-zoom mx-auto shadow-[0_60px_120px_-30px_rgb(0_0_0/0.75)]", sized(device, "w-[clamp(16.5rem,26vw,22.5rem)]", "w-[min(calc(100%-2.5rem),60rem)]"))}
           />
         </div>
         {(caption || note) && (
@@ -246,7 +285,7 @@ export function GallerySpread({
           ) : (
             <div aria-hidden className="absolute inset-0 -z-10 bg-surface" />
           )}
-          <Device image={device} className="motion-reveal mx-auto w-[clamp(16.25rem,30vw,26.25rem)] shadow-[0_60px_120px_-30px_rgb(60_15_0/0.6)]" />
+          <Device image={device} className={cn("motion-reveal mx-auto shadow-[0_60px_120px_-30px_rgb(60_15_0/0.6)]", sized(device, "w-[clamp(16.25rem,30vw,26.25rem)]", "w-[min(calc(100%-2.5rem),60rem)]"))} />
         </div>
         {caption && <figcaption className={cn(wrap, "mt-6 flex justify-center text-center")}>{caption}</figcaption>}
       </figure>
@@ -300,7 +339,13 @@ export function GalleryCover({
             {note && <GalleryNote className="mt-4 text-white/75">{note}</GalleryNote>}
           </div>
           {device && (
-            <Device image={device} className="motion-reveal mx-auto w-[13.75rem] md:mx-0 md:w-[clamp(13.75rem,22vw,20rem)] md:translate-y-[clamp(7rem,12vw,11.25rem)] md:justify-self-end" />
+            <Device
+              image={device}
+              className={cn(
+                "motion-reveal mx-auto md:mx-0 md:translate-y-[clamp(7rem,12vw,11.25rem)] md:justify-self-end",
+                sized(device, "w-[13.75rem] md:w-[clamp(13.75rem,22vw,20rem)]", "w-full"),
+              )}
+            />
           )}
         </div>
         {credit && <span className="absolute bottom-3 right-[clamp(1.25rem,4vw,3.5rem)] font-display text-xs text-white/80">{credit}</span>}

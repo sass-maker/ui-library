@@ -8,6 +8,7 @@ import { getCollection } from "astro:content";
 import Base from "@saas-maker/templates/Base.astro";
 import { GalleryPage } from "@saas-maker/templates/gallery-page";
 import { WorkbenchPage } from "@saas-maker/templates/workbench-page";
+import { baseProps } from "@saas-maker/templates/page";
 
 export async function getStaticPaths() {
   const products = await getCollection("products");
@@ -15,10 +16,9 @@ export async function getStaticPaths() {
 }
 
 const { content } = Astro.props;
-const { page } = content;
 ---
 
-<Base title={page.title} description={page.description} theme={page.theme} mode={page.mode} tokens={page.tokens} icon={page.icon}>
+<Base {...baseProps(content)}>
   {content.template === "gallery" && <GalleryPage content={content} />}
   {content.template === "workbench" && <WorkbenchPage content={content} />}
 </Base>

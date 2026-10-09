@@ -8,6 +8,7 @@
     "./styles.css": "./src/styles.css",
     "./*.astro": "./src/*.astro",
     "./schema": "./src/schema.ts",
+    "./page": "./src/page.ts",
     "./*": "./src/*.tsx"
   },
   "dependencies": {

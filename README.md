@@ -66,6 +66,120 @@ Brand tokens: `--brand`, `--brand-foreground`, `--brand-soft`, and
 `--brand-ink` (brand as readable text; set it deeper for light brands).
 The previous hand-built layouts stay at `/demo/*-classic/`.
 
+## Using the templates in a product
+
+The demo route is the whole integration:
+
+```astro
+---
+import Base from "@saas-maker/templates/Base.astro";
+import { GalleryPage } from "@saas-maker/templates/gallery-page";
+import { baseProps } from "@saas-maker/templates/page";
+import { galleryContent } from "@saas-maker/templates/schema";
+import json from "../content/kith.json";
+const content = galleryContent.parse(json); // fails the build with the exact field
+---
+<Base {...baseProps(content)}>
+  <GalleryPage content={content} />
+</Base>
+```
+
+`baseProps` maps the file's `page` settings to `Base.astro` props. Use
+`workbenchContent` / `WorkbenchPage` for Workbench files, or load a folder of
+files as an Astro content collection with `productContent` as its schema.
+
+### Head tags (SEO and analytics)
+
+Content options under `page`, all optional:
+
+| Field | Renders |
+| --- | --- |
+| `canonical` | `<link rel="canonical">` and `og:url` |
+| `robots` | `<meta name="robots">`, e.g. `"noindex, nofollow"` |
+| `og` | `og:*` and `twitter:*`: `title`/`description` (default: the page's), `image` (relative paths become absolute against `canonical`, else `url`), `imageAlt`, `imageWidth`, `imageHeight`, `type` (default `website`), `siteName`, `twitterCard` (default `summary_large_image` with an image), `twitterSite` |
+| `jsonLd` | one object or a list, as `application/ld+json` (`<` escaped) |
+
+`Base.astro` takes the same props directly. Anything else (Clarity, App
+Health, markdown alternates, preloads) goes in the `head` slot, so a product
+keeps its existing tags:
+
+```astro
+<Base {...baseProps(content)}>
+  <Fragment slot="head">
+    <link rel="alternate" type="text/markdown" href="/index.md" />
+    <script is:inline src="/clarity.js" data-project="..."></script>
+  </Fragment>
+  <GalleryPage content={content} />
+</Base>
+```
+
+### Your own header or footer
+
+Both templates render `SiteHeader` and `StudioFooter` by default. To keep a
+product's own nav or footer without forking the template:
+
+- In Astro, pass a named slot; it replaces that part:
+  `<GalleryPage content={content}><MyNav slot="header" /><MyFooter slot="footer" /></GalleryPage>`.
+- From React, pass `header` / `footer` props (`null` renders none).
+- In the content file, `"header": false` and/or `"footer": false` drop them.
+  `nav` is the header's link list; Gallery's `headerAction` is optional.
+
+A page without `StudioFooter` loses the subscribe, feedback, Ask AI and studio
+strip contract, and the Fleet footer audit only recognises
+`<footer data-fleet-footer="studio" data-catalog-id="<id>">`, which
+`StudioFooter` renders when `footer.catalogId` is set.
+
+### Studio strip
+
+The strip lists sibling products, leaves out the current one, and adds
+`?ref=<catalogId>` to each link; "All projects" goes to
+`https://sassmaker.com/projects`. Without `footer.studio` it uses a short
+default list. To feed it from the catalog, read SaaS Maker's public projects
+feed (`https://sassmaker.com/projects.json`, generated from
+`saas-maker/catalog/generated/public.json`; the same source the old
+portfolio project strip used) at build time:
+
+```astro
+---
+import { studioFromProjects, studioProjectsFeed } from "@saas-maker/ui/blocks/footer";
+const projects = await fetch(studioProjectsFeed).then((r) => (r.ok ? r.json() : [])).catch(() => []);
+// First three non-current projects in catalog order; [] falls back to the default list.
+if (content.footer) content.footer.studio = studioFromProjects(projects, { current: "kith" });
+---
+```
+
+Or write `"studio": [{ "id": "live", "label": "Live", "href": "https://live.significanthobbies.com" }]`
+in `footer`. `StudioFooter` takes the same list as its `studio` prop.
+
+### Motion opt-out
+
+`"motion": false` in `page` (or `motion={false}` on `Base`) drops the scroll
+motion script. Pages are complete without it: motion only hides elements it is
+about to animate, after the script runs. `footerScript={false}` drops the
+small StudioFooter script too, for pages with their own footer and zero
+JavaScript; keep it whenever `StudioFooter` is on the page, since its forms
+post through it.
+
+### Images, frames and status
+
+- **Asset root.** Image fields (`mark`, `src`, `image`, `backdrop`, footer
+  art, `page.icon`, `og.image`) may be relative: `"images/hero.webp"`
+  resolves against `page.assetBase` (default `/`), so it is served from the
+  product's own `public/images/`. Paths starting with `/`, a scheme or
+  `data:` are used as written; the demos use `/demo/<id>/…`. A consumer can
+  also pass `assetBase` to `GalleryPage` / `WorkbenchPage`, or call
+  `withAssetBase(content, base)` from `@saas-maker/templates/page`.
+- **Frames (Gallery).** `"frame": "phone" | "desktop" | "none"` at the top of
+  the file (default `phone`); a screen's own `frame` wins. Desktop screens
+  give their `width`/`height` (phone screens default to `screenSize`). Use
+  `none` for captures that already include window chrome.
+- **Status.** `hero.status`, e.g.
+  `{ "label": "Internal TestFlight beta", "href": "/testflight/" }` or
+  `{ "label": "Public beta", "href": "/release/" }`, shows an honest
+  availability line beside the hero note. CTAs are plain links, so a product
+  that decides them at build time (TestFlight vs App Store vs download) sets
+  `content.hero.primary` before rendering.
+
 ## Data apps (Console)
 
 For private data tools: `ConsolePage` (`@saas-maker/templates/console-page`)

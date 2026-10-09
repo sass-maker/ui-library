@@ -1,6 +1,22 @@
 ---
 import "./styles.css";
 
+/** Open Graph and Twitter card; text falls back to the page title and description. */
+interface Og {
+  title?: string;
+  description?: string;
+  /** Absolute URL (social crawlers do not resolve relative paths). */
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  /** og:type, default "website". */
+  type?: string;
+  siteName?: string;
+  twitterCard?: "summary" | "summary_large_image";
+  twitterSite?: string;
+}
+
 interface Props {
   title: string;
   description?: string;
@@ -9,12 +25,45 @@ interface Props {
   /** Product identity overrides, e.g. { "--brand": "oklch(...)" }. */
   tokens?: Record<string, string>;
   icon?: string;
+  /** Canonical URL; also og:url. */
+  canonical?: string;
+  /** Robots directive, e.g. "noindex, nofollow". */
+  robots?: string;
+  /** Open Graph + Twitter card. Pass {} for text-only tags from title/description. */
+  og?: Og;
+  /** Structured data, written as application/ld+json. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** false: no scroll-motion script. Pages are complete without it (motion only animates). */
+  motion?: boolean;
+  /**
+   * false: no StudioFooter script (form posting, feedback dialog, mobile-menu close).
+   * Only for pages without StudioFooter: its forms need this script to post.
+   */
+  footerScript?: boolean;
 }
 
-const { title, description, theme = "base", mode = "light", tokens = {}, icon } = Astro.props;
+const {
+  title,
+  description,
+  theme = "base",
+  mode = "light",
+  tokens = {},
+  icon,
+  canonical,
+  robots,
+  og,
+  jsonLd,
+  motion = true,
+  footerScript = true,
+} = Astro.props;
 const style = Object.entries(tokens)
   .map(([k, v]) => `${k}:${v}`)
   .join(";");
+const ogTitle = og?.title ?? title;
+const ogDescription = og?.description ?? description;
+const card = og?.twitterCard ?? (og?.image ? "summary_large_image" : "summary");
+// JSON-LD inside a script element: escape "<" so no string can close the tag.
+const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
@@ -26,6 +75,32 @@ const style = Object.entries(tokens)
     {description && <meta name="description" content={description} />}
     {icon && <link rel="icon" href={icon} />}
     <meta name="color-scheme" content={theme === "ink" || mode === "dark" ? "dark" : "light"} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {robots && <meta name="robots" content={robots} />}
+    {
+      og && (
+        <>
+          <meta property="og:type" content={og.type ?? "website"} />
+          <meta property="og:title" content={ogTitle} />
+          {ogDescription && <meta property="og:description" content={ogDescription} />}
+          {canonical && <meta property="og:url" content={canonical} />}
+          {og.siteName && <meta property="og:site_name" content={og.siteName} />}
+          {og.image && <meta property="og:image" content={og.image} />}
+          {og.image && og.imageAlt && <meta property="og:image:alt" content={og.imageAlt} />}
+          {og.image && og.imageWidth && <meta property="og:image:width" content={String(og.imageWidth)} />}
+          {og.image && og.imageHeight && <meta property="og:image:height" content={String(og.imageHeight)} />}
+          <meta name="twitter:card" content={card} />
+          <meta name="twitter:title" content={ogTitle} />
+          {ogDescription && <meta name="twitter:description" content={ogDescription} />}
+          {og.image && <meta name="twitter:image" content={og.image} />}
+          {og.image && og.imageAlt && <meta name="twitter:image:alt" content={og.imageAlt} />}
+          {og.twitterSite && <meta name="twitter:site" content={og.twitterSite} />}
+        </>
+      )
+    }
+    {ld && <script is:inline type="application/ld+json" set:html={ld} />}
+    {/* Product head tags: analytics (Clarity, App Health), alternates, preloads. */}
+    <slot name="head" />
   </head>
   <body>
     <a
@@ -34,11 +109,15 @@ const style = Object.entries(tokens)
       >Skip to content</a
     >
     <slot />
-    <script>
-      import { initMotion } from "@saas-maker/motion";
-      initMotion();
-    </script>
-    <script is:inline>
+    {
+      motion && (
+        <script>
+          import { initMotion } from "@saas-maker/motion";
+          initMotion();
+        </script>
+      )
+    }
+    {footerScript && <script is:inline>
       // Close any open popover (mobile menu) after in-page navigation.
       addEventListener("hashchange", () => document.querySelectorAll(":popover-open").forEach((p) => p.hidePopover()));
 
@@ -189,6 +268,6 @@ const style = Object.entries(tokens)
           }, "You're on the list.");
         }
       });
-    </script>
+    </script>}
   </body>
 </html>

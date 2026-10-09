@@ -10,6 +10,8 @@ import { WindowFrame, Stage } from "@saas-maker/ui/blocks/frames";
 import { Faq, Cta } from "@saas-maker/ui/blocks/closing";
 import { StudioFooter } from "@saas-maker/ui/blocks/footer";
 import { rich } from "./rich";
+import { withAssetBase } from "./page";
+import { HeroStatus, heroNote } from "./status";
 import type { WorkbenchContent, WorkbenchBlock } from "./schema";
 
 /**
@@ -169,20 +171,36 @@ function Block({ block: b, className: base }: { block: WorkbenchBlock; className
   }
 }
 
-export function WorkbenchPage({ content: c }: { content: WorkbenchContent }) {
+export type WorkbenchPageProps = {
+  content: WorkbenchContent;
+  /** Replaces the header; false or null renders none. In Astro, a slot="header" element. */
+  header?: React.ReactNode;
+  /** Replaces the StudioFooter; false or null renders none. In Astro, a slot="footer" element. */
+  footer?: React.ReactNode;
+  /** Root for relative image paths; overrides the file's page.assetBase. */
+  assetBase?: string;
+};
+
+export function WorkbenchPage({ content, header, footer, assetBase }: WorkbenchPageProps) {
+  const c = withAssetBase(content, assetBase ?? content.page.assetBase);
   const h = c.hero;
+  const actions = c.header;
   return (
     <>
-      <SiteHeader
-        brand={{ name: c.product, mark: <img src={c.mark} alt="" width={22} height={22} className="size-[22px]" /> }}
-        links={c.nav}
-        actions={
-          <>
-            {c.header.secondary && <LinkButton link={c.header.secondary} size="sm" variant="ghost" />}
-            <LinkButton link={c.header.primary} size="sm" />
-          </>
-        }
-      />
+      {header !== undefined ? (
+        header || null
+      ) : actions === false ? null : (
+        <SiteHeader
+          brand={{ name: c.product, mark: <img src={c.mark} alt="" width={22} height={22} className="size-[22px]" /> }}
+          links={c.nav}
+          actions={
+            <>
+              {actions.secondary && <LinkButton link={actions.secondary} size="sm" variant="ghost" />}
+              <LinkButton link={actions.primary} size="sm" />
+            </>
+          }
+        />
+      )}
 
       <main id="main">
         <Hero
@@ -197,7 +215,7 @@ export function WorkbenchPage({ content: c }: { content: WorkbenchContent }) {
               {h.secondary && <LinkButton link={h.secondary} size="xl" variant="outline" />}
             </>
           }
-          note={h.note}
+          note={heroNote(h.status && <HeroStatus status={h.status} />, h.note)}
           media={
             <div className="relative">
               {h.brackets && <Brackets />}
@@ -242,7 +260,22 @@ export function WorkbenchPage({ content: c }: { content: WorkbenchContent }) {
         ))}
       </main>
 
-      <StudioFooter product={c.product} url={c.url} summary={c.footer.summary} groups={c.footer.groups} legal={c.footer.legal} feedbackKey={c.footer.feedbackKey} subscribeKey={c.footer.subscribeKey} catalogId={c.footer.catalogId} capture={c.footer.capture} />
+      {footer !== undefined
+        ? footer || null
+        : c.footer && (
+            <StudioFooter
+              product={c.product}
+              url={c.url}
+              summary={c.footer.summary}
+              groups={c.footer.groups}
+              legal={c.footer.legal}
+              feedbackKey={c.footer.feedbackKey}
+              subscribeKey={c.footer.subscribeKey}
+              catalogId={c.footer.catalogId}
+              capture={c.footer.capture}
+              studio={c.footer.studio}
+            />
+          )}
     </>
   );
 }

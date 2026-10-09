@@ -4,7 +4,15 @@ import { cn } from "../lib/utils";
 import { AssistantLogo } from "./assistant-logos";
 
 type LinkGroup = { title: string; links: { label: string; href: string }[] };
-type StudioLink = { label: string; href: string };
+/** A sibling product in the studio strip; id is its Fleet catalog id. */
+export type StudioLink = { label: string; href: string; id?: string };
+/** One entry of SaaS Maker's public projects feed (https://sassmaker.com/projects.json). */
+export type StudioProject = { id: string; name: string; url: string };
+
+/** SaaS Maker's public project catalog, the source the old portfolio strip used. */
+export const studioProjectsFeed = "https://sassmaker.com/projects.json";
+/** "All projects" goes to SaaS Maker's projects page. */
+export const studioProjectsPage = "https://sassmaker.com/projects";
 
 const assistants = [
   { name: "Claude", action: "https://claude.ai/new" },
@@ -40,13 +48,46 @@ const chip =
 const quietButton =
   "inline-flex h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-foreground/30 hover:bg-accent";
 
-const defaultStudio: StudioLink[] = [
-  { label: "CodeVetter", href: "https://codevetter.com" },
-  { label: "HeyPace", href: "https://heypace.app" },
-  { label: "PostTrainLLM", href: "https://posttrainllm.com" },
-  { label: "Live", href: "https://live.significanthobbies.com" },
-  { label: "Kith", href: "https://kith.significanthobbies.com" },
+/** The fallback strip, in catalog order; products pass a fresher list from the feed. */
+export const defaultStudio: StudioLink[] = [
+  { id: "codevetter", label: "CodeVetter", href: "https://codevetter.com" },
+  { id: "pace", label: "HeyPace", href: "https://heypace.app" },
+  { id: "posttrainllm", label: "PostTrainLLM", href: "https://posttrainllm.com" },
+  { id: "live", label: "Live", href: "https://live.significanthobbies.com" },
+  { id: "kith", label: "Kith", href: "https://kith.significanthobbies.com" },
 ];
+
+/**
+ * Turn SaaS Maker's public projects feed into studio links: drops malformed
+ * entries, duplicates and the current product, and keeps the first `limit`
+ * in catalog order (three, like the old strip). Returns [] for anything that
+ * is not a list, so the footer falls back to its default.
+ */
+export function studioFromProjects(projects: unknown, { current, limit = 3 }: { current?: string; limit?: number } = {}): StudioLink[] {
+  if (!Array.isArray(projects)) return [];
+  const seen = new Set<string>();
+  const links: StudioLink[] = [];
+  for (const p of projects as Partial<StudioProject>[]) {
+    if (!p || typeof p.id !== "string" || typeof p.name !== "string" || typeof p.url !== "string") continue;
+    if (!/^https?:\/\//.test(p.url) || p.id === current || seen.has(p.id)) continue;
+    seen.add(p.id);
+    links.push({ id: p.id, label: p.name, href: p.url });
+    if (links.length >= limit) break;
+  }
+  return links;
+}
+
+/** The link with ref=<catalogId> set, so the sibling can see where a visit came from. */
+export function withRef(href: string, ref?: string) {
+  if (!ref) return href;
+  try {
+    const url = new URL(href);
+    url.searchParams.set("ref", ref);
+    return url.toString();
+  } catch {
+    return href;
+  }
+}
 
 /** Product updates sign-up: the most visible action in the footer. */
 function Subscribe({ product, kind, projectKey, catalogId }: { product: string; kind: CaptureKind; projectKey?: string; catalogId?: string }) {
@@ -238,17 +279,17 @@ function Feedback({ product, feedbackKey, catalogId }: { product: string; feedba
   );
 }
 
-function StudioStrip({ product, studio }: { product: string; studio: StudioLink[] }) {
-  const others = studio.filter((s) => s.label !== product);
+function StudioStrip({ product, studio, catalogId }: { product: string; studio: StudioLink[]; catalogId?: string }) {
+  const others = studio.filter((s) => s.label.toLowerCase() !== product.toLowerCase() && !(catalogId && s.id === catalogId));
   return (
     <nav aria-label="From the studio" className="flex flex-wrap items-baseline gap-x-5 gap-y-2 text-sm">
       <span className="text-muted-foreground">From the studio</span>
       {others.map((s) => (
-        <a key={s.href} href={s.href} className="font-medium text-foreground transition-colors hover:text-brand-ink">
+        <a key={s.href} href={withRef(s.href, catalogId)} className="font-medium text-foreground transition-colors hover:text-brand-ink">
           {s.label}
         </a>
       ))}
-      <a href="https://sassmaker.com" className="inline-flex items-center gap-0.5 font-medium text-foreground transition-colors hover:text-brand-ink">
+      <a href={studioProjectsPage} className="inline-flex items-center gap-0.5 font-medium text-foreground transition-colors hover:text-brand-ink">
         All projects <ArrowUpRightIcon aria-hidden className="size-3" />
       </a>
     </nav>
@@ -273,7 +314,7 @@ export function StudioFooter({
   subscribeKey,
   catalogId,
   capture = "newsletter",
-  studio = defaultStudio,
+  studio,
   legal,
   artMode = "panel",
   wordmark = "poster",
@@ -294,7 +335,11 @@ export function StudioFooter({
   catalogId?: string;
   /** Updates sign-up kind from the catalog capture policy; false when capture is not applicable. */
   capture?: CaptureKind | false;
-  /** Sibling products for the studio strip; the current product is left out. */
+  /**
+   * Sibling products for the studio strip (see studioFromProjects); the
+   * current product is left out and links carry ref=<catalogId>. Empty or
+   * absent uses the default list.
+   */
   studio?: StudioLink[];
   legal?: React.ReactNode;
   /** panel: framed art under the wordmark. scene: full-bleed closing art the page fades into. */
@@ -418,7 +463,7 @@ export function StudioFooter({
       <div className={cn(wrap, "pb-10", art && wordmark !== "fill" ? "pt-8" : "mt-14")}>
         <div className={cn("flex flex-col gap-4", !(art && wordmark !== "fill") && "border-t border-border pt-7")}>
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
-            <StudioStrip product={product} studio={studio} />
+            <StudioStrip product={product} studio={studio?.length ? studio : defaultStudio} catalogId={catalogId} />
             {legal && <p className="font-display text-[0.8125rem] text-muted-foreground">{legal}</p>}
           </div>
           {variant === "gallery" && (

@@ -14,6 +14,8 @@ import {
 import { Faq } from "@saas-maker/ui/blocks/closing";
 import { StudioFooter } from "@saas-maker/ui/blocks/footer";
 import { rich } from "./rich";
+import { withAssetBase } from "./page";
+import { HeroStatus, heroNote } from "./status";
 import type { GalleryContent, GallerySection } from "./schema";
 
 /**
@@ -27,9 +29,23 @@ type Caption = { lead?: string; text?: string };
 
 export type { GalleryContent, GallerySection };
 
-export function GalleryPage({ content: c }: { content: GalleryContent }) {
+export type GalleryPageProps = {
+  content: GalleryContent;
+  /** Replaces the header; false or null renders none. In Astro, a slot="header" element. */
+  header?: React.ReactNode;
+  /** Replaces the StudioFooter; false or null renders none. In Astro, a slot="footer" element. */
+  footer?: React.ReactNode;
+  /** Root for relative image paths; overrides the file's page.assetBase. */
+  assetBase?: string;
+};
+
+export function GalleryPage({ content, header, footer, assetBase }: GalleryPageProps) {
+  const c = withAssetBase(content, assetBase ?? content.page.assetBase);
   const size = c.screenSize ?? { width: 603, height: 1311 };
-  const device = (s: Screen) => ({ ...s, ...size });
+  const device = (s: Screen) => {
+    const frame = s.frame ?? c.frame ?? "phone";
+    return frame === "phone" ? { ...size, ...s, frame } : { ...s, frame };
+  };
   const caption = (cap?: Caption) => cap && <GalleryCaption lead={cap.lead}>{cap.text}</GalleryCaption>;
   const mark = <img src={c.mark} alt="" width={26} height={26} className="size-[1.625rem] rounded-[0.45rem]" />;
 
@@ -44,17 +60,25 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
     </>
   );
 
+  const note = heroNote(c.hero.status && <HeroStatus status={c.hero.status} />, c.hero.note);
+
   return (
     <>
-      <SiteHeader
-        brand={{ name: c.product, mark }}
-        links={c.nav}
-        actions={
-          <a href={c.headerAction.href} className="ui-case rounded-full bg-primary px-3.5 py-[0.45rem] text-[0.8125rem] font-semibold text-primary-foreground">
-            {c.headerAction.label}
-          </a>
-        }
-      />
+      {header !== undefined ? (
+        header || null
+      ) : c.header === false ? null : (
+        <SiteHeader
+          brand={{ name: c.product, mark }}
+          links={c.nav}
+          actions={
+            c.headerAction && (
+              <a href={c.headerAction.href} className="ui-case rounded-full bg-primary px-3.5 py-[0.45rem] text-[0.8125rem] font-semibold text-primary-foreground">
+                {c.headerAction.label}
+              </a>
+            )
+          }
+        />
+      )}
 
       <main id="main">
         {c.hero.image ? (
@@ -64,7 +88,7 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
             title={rich(c.hero.title)}
             lede={c.hero.lede}
             actions={heroActions}
-            note={c.hero.note}
+            note={note}
             image={c.hero.image}
           />
         ) : (
@@ -73,7 +97,7 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
             title={rich(c.hero.title)}
             lede={c.hero.lede}
             actions={heroActions}
-            note={c.hero.note}
+            note={note}
             backdrop={c.hero.backdrop!}
             device={device(c.hero.screen!)}
           />
@@ -116,21 +140,26 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
         />
       </main>
 
-      <StudioFooter
-        variant="gallery"
-        product={c.product}
-        mark={mark}
-        url={c.url}
-        summary={c.footer.summary}
-        groups={[{ title: "Links", links: c.footer.links }]}
-        legal={c.footer.legal}
-        feedbackKey={c.footer.feedbackKey}
-        subscribeKey={c.footer.subscribeKey}
-        catalogId={c.footer.catalogId}
-        capture={c.footer.capture}
-        art={c.footer.art}
-        wordmark={c.footer.wordmark}
-      />
+      {footer !== undefined
+        ? footer || null
+        : c.footer && (
+            <StudioFooter
+              variant="gallery"
+              product={c.product}
+              mark={mark}
+              url={c.url}
+              summary={c.footer.summary}
+              groups={[{ title: "Links", links: c.footer.links }]}
+              legal={c.footer.legal}
+              feedbackKey={c.footer.feedbackKey}
+              subscribeKey={c.footer.subscribeKey}
+              catalogId={c.footer.catalogId}
+              capture={c.footer.capture}
+              studio={c.footer.studio}
+              art={c.footer.art}
+              wordmark={c.footer.wordmark}
+            />
+          )}
     </>
   );
 }
