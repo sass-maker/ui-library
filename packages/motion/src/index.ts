@@ -13,6 +13,7 @@ import { animate, inView, scroll } from "motion";
  *   .motion-parallax  an image drifts slower than the page
  *   .motion-drift     a slow settling zoom on closing art
  *   .motion-draw      SVG paths draw in (give them pathLength="1")
+ *   .motion-type      its child lines print one after another, like a terminal
  */
 
 const ease = [0.22, 0.8, 0.24, 1] as const;
@@ -51,6 +52,23 @@ export function initMotion() {
   const all = (selector: string) => [...document.querySelectorAll<HTMLElement>(selector)];
 
   reveal(all(".motion-reveal"));
+
+  for (const el of all(".motion-type").filter((t) => !onScreen(t))) {
+    const lines = [...el.children] as HTMLElement[];
+    for (const line of lines) line.style.opacity = "0";
+    inView(
+      el,
+      () => {
+        // Blank lines are pauses; each printed line takes a beat.
+        let t = 0.3;
+        for (const line of lines) {
+          animate(line, { opacity: 1 }, { duration: 0.18, delay: t });
+          t += line.textContent?.trim() ? 0.32 : 0.45;
+        }
+      },
+      { amount: 0.5 },
+    );
+  }
   reveal(all(".motion-stagger").flatMap((g) => [...g.children] as HTMLElement[]));
 
   for (const el of all(".motion-zoom")) link(el, { transform: ["scale(0.82)", "scale(1)"] }, ["start end", "center center"]);

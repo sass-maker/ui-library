@@ -123,7 +123,7 @@ function Block({ block: b, className: base }: { block: WorkbenchBlock; className
                 }))}
               />
             ) : it.code ? (
-              <CodeBlock label={it.code.label} code={it.code.code} />
+              <CodeBlock label={it.code.label} code={it.code.code} play />
             ) : null,
           }))}
         />

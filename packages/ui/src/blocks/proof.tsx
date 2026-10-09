@@ -70,7 +70,8 @@ export function Ledger({
 }
 
 /** Terminal-style command block. Content wraps instead of clipping. */
-export function CodeBlock({ code, label, className }: { code: string; label?: string; className?: string }) {
+/** A terminal or code sample. play: lines print one after another when it scrolls into view. */
+export function CodeBlock({ code, label, play, className }: { code: string; label?: string; play?: boolean; className?: string }) {
   return (
     <figure className={cn("overflow-hidden rounded-xl border border-border bg-[oklch(0.16_0.008_265)] text-[oklch(0.92_0.005_265)] shadow-lg", className)}>
       {label && (
@@ -80,7 +81,17 @@ export function CodeBlock({ code, label, className }: { code: string; label?: st
         </figcaption>
       )}
       <pre className="overflow-x-auto p-4 font-mono text-[0.75rem] leading-[1.7] whitespace-pre-wrap [overflow-wrap:break-word] sm:p-5 sm:text-[0.8125rem]">
-        <code>{code}</code>
+        {play ? (
+          <code className="motion-type">
+            {code.split("\n").map((line, i) => (
+              <span key={i} className="block min-h-[1.7em]">
+                {line}
+              </span>
+            ))}
+          </code>
+        ) : (
+          <code>{code}</code>
+        )}
       </pre>
     </figure>
   );

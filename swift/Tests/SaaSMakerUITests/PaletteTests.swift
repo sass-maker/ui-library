@@ -17,7 +17,7 @@ import Testing
         #expect(amber.brand == .orange)
         #expect(amber.background == SMPalette.ink.background)
         #expect(amber.accentInk == .orange, "ink's accent phrase follows the brand")
-        #expect(SMPalette.gallery.brand(.orange).accentInk == SMPalette.gallery.accentInk, "gallery's accent stays muted")
+        #expect(SMPalette.gallery.brand(.orange).accentInk == .orange, "gallery's accent phrase follows the brand too")
     }
 }
 
