@@ -21,7 +21,9 @@ public struct SMButtonStyle: ButtonStyle {
             switch kind {
             case .brand: label.foregroundStyle(p.brandForeground).background(p.brand, in: .capsule)
             case .solid: label.foregroundStyle(p.primaryForeground).background(p.primary, in: .capsule)
-            case .outline: label.foregroundStyle(p.foreground).overlay(Capsule().strokeBorder(p.border))
+            // Circular, not the default continuous capsule: a continuous capsule's
+            // stroke draws stray vertical hairlines at its ends.
+            case .outline: label.foregroundStyle(p.foreground).overlay(Capsule(style: .circular).strokeBorder(p.border))
             case .link: label.foregroundStyle(p.brand)
             }
         }

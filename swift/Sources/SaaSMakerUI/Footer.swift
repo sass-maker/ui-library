@@ -28,11 +28,20 @@ public struct SMStudioLink: Sendable, Hashable {
         SMStudioLink("Live", url: URL(string: "https://live.significanthobbies.com")!),
         SMStudioLink("Kith", url: URL(string: "https://kith.significanthobbies.com")!),
     ]
-    public static let allProjects = URL(string: "https://sassmaker.com")!
+    /// SaaS Maker's projects page (the old portfolio strip's "All projects").
+    public static let allProjects = URL(string: "https://sassmaker.com/projects")!
 
     /// The strip for a product: every sibling except itself.
     public static func siblings(of product: String, in studio: [SMStudioLink]) -> [SMStudioLink] {
         studio.filter { $0.label.caseInsensitiveCompare(product) != .orderedSame }
+    }
+
+    /// The link with `ref=<catalogId>` set, as the portfolio strip does, so a
+    /// sibling can see where its visit came from. Unchanged without an id.
+    public func referred(by catalogId: String?) -> URL {
+        guard let catalogId, !catalogId.isEmpty, var parts = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
+        parts.queryItems = (parts.queryItems ?? []).filter { $0.name != "ref" } + [URLQueryItem(name: "ref", value: catalogId)]
+        return parts.url ?? url
     }
 }
 
@@ -49,6 +58,7 @@ public struct SMStudioFooter: View {
     private let studio: [SMStudioLink]
     private let legal: String?
     private let screen: String
+    private let catalogId: String?
 
     /// - Parameters:
     ///   - product: Product name, as in the catalog.
@@ -56,7 +66,7 @@ public struct SMStudioFooter: View {
     ///   - projectKey: SaaS Maker publishable project key.
     ///   - catalogId: Fleet catalog id; resolves the key once when none is given.
     ///   - capture: Sign-up kind from the catalog capture policy, or `.off`.
-    ///   - studio: Sibling products; the current product is left out.
+    ///   - studio: Sibling products; the current product is left out. Links carry `ref=<catalogId>`.
     ///   - screen: Where the footer lives (for feedback's `app://<bundle>/<screen>`).
     ///   - transport: Network transport; inject a fake in tests and previews.
     public init(
@@ -78,6 +88,7 @@ public struct SMStudioFooter: View {
         self.studio = studio
         self.legal = legal
         self.screen = screen
+        self.catalogId = catalogId
         _client = State(initialValue: SMFooterClient(projectKey: projectKey, catalogId: catalogId, transport: transport))
     }
 
@@ -107,7 +118,7 @@ public struct SMStudioFooter: View {
             SMAskAI(product: product, url: url)
             VStack(alignment: .leading, spacing: 14) {
                 Rectangle().fill(p.hairline).frame(height: 1)
-                SMStudioStrip(product: product, studio: studio)
+                SMStudioStrip(product: product, studio: studio, ref: catalogId)
                 if let legal {
                     Text(legal)
                         .font(.custom(p.displayFont, size: 13))
@@ -146,13 +157,22 @@ private struct SMField: ViewModifier {
     @Environment(\.smPalette) private var p
     var capsule = false
     func body(content: Content) -> some View {
-        content
+        let field = content
             .textFieldStyle(.plain)
             .font(.custom(p.sansFont, size: 15))
             .padding(.horizontal, capsule ? 18 : 12)
             .padding(.vertical, 11)
-            .background(p.background, in: .rect(cornerRadius: capsule ? 999 : p.radius * 0.6))
-            .overlay(RoundedRectangle(cornerRadius: capsule ? 999 : p.radius * 0.6).strokeBorder(p.input))
+        // A circular capsule, not an oversized corner radius or the default
+        // continuous capsule: both draw stray vertical hairlines at the ends.
+        if capsule {
+            field
+                .background(p.background, in: Capsule(style: .circular))
+                .overlay(Capsule(style: .circular).strokeBorder(p.input))
+        } else {
+            field
+                .background(p.background, in: .rect(cornerRadius: p.radius * 0.6))
+                .overlay(RoundedRectangle(cornerRadius: p.radius * 0.6).strokeBorder(p.input))
+        }
     }
 }
 
@@ -346,12 +366,13 @@ struct SMStudioStrip: View {
     @Environment(\.smPalette) private var p
     let product: String
     let studio: [SMStudioLink]
+    var ref: String? = nil
 
     var body: some View {
         SMFlow(spacing: 18, lineSpacing: 8) {
             Text("From the studio").foregroundStyle(p.mutedForeground)
             ForEach(SMStudioLink.siblings(of: product, in: studio), id: \.self) { link in
-                Link(link.label, destination: link.url).foregroundStyle(p.foreground)
+                Link(link.label, destination: link.referred(by: ref)).foregroundStyle(p.foreground)
             }
             Link(destination: SMStudioLink.allProjects) {
                 HStack(spacing: 2) {
@@ -427,7 +448,7 @@ private struct SMScreenshotChip: View {
         .padding(.horizontal, 14)
         .frame(height: 34)
         .background(p.background, in: .capsule)
-        .overlay(Capsule().strokeBorder(p.border))
+        .overlay(Capsule(style: .circular).strokeBorder(p.border))
         .contentShape(.capsule)
     }
 }

@@ -134,6 +134,13 @@ private func json(_ data: Data?) throws -> [String: Any] {
         let others = SMStudioLink.siblings(of: "kith", in: SMStudioLink.studio)
         #expect(others.map(\.label) == ["CodeVetter", "HeyPace", "PostTrainLLM", "Live"])
     }
+
+    @Test func studioLinksCarryTheReferringProduct() {
+        let live = SMStudioLink("Live", url: URL(string: "https://live.significanthobbies.com/?ref=old")!)
+        #expect(live.referred(by: "kith").absoluteString == "https://live.significanthobbies.com/?ref=kith")
+        #expect(live.referred(by: nil) == live.url)
+        #expect(SMStudioLink.allProjects.absoluteString == "https://sassmaker.com/projects")
+    }
 }
 
 @Suite struct FooterClientTests {
