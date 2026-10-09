@@ -14,7 +14,8 @@
         "@fontsource-variable/geist-mono",
         "@fontsource-variable/newsreader",
         "@fontsource/instrument-serif",
-        "@fontsource-variable/fraunces"
+        "@fontsource-variable/fraunces",
+        "@fontsource-variable/instrument-sans"
       ],
       "files": [
         {
@@ -100,6 +101,25 @@
       "files": [
         {
           "path": "src/components/blocks/frames.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "gallery",
+      "type": "registry:block",
+      "title": "gallery",
+      "description": "Gallery family for consumer apps: monumental hero, room-scale device showcase, spreads, photo covers, quiet statements and closing art. Use with data-theme=\"gallery\".",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/blocks/gallery.tsx",
           "type": "registry:component"
         }
       ]
