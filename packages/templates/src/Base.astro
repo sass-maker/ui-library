@@ -44,6 +44,20 @@ const style = Object.entries(tokens)
 
       // Footer forms post to SaaS Maker with a publishable key. Without one they run in preview mode.
       const api = "https://api.sassmaker.com";
+      // A page address without query or fragment, which can carry private tokens.
+      const pageUrl = () => location.origin + location.pathname;
+      // The publishable project key: given directly, or resolved once from the catalog id.
+      const keys = {};
+      async function projectKey(form) {
+        if (form.dataset.key) return form.dataset.key;
+        const id = form.dataset.catalog;
+        if (!id) return null;
+        keys[id] ??= fetch(api + "/v1/capture-config/" + encodeURIComponent(id), { credentials: "omit" })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((c) => c?.api_key ?? null)
+          .catch(() => null);
+        return keys[id];
+      }
       const dialog = () => document.querySelector("[data-feedback-dialog]");
       let anchor = null;
 
@@ -82,7 +96,7 @@ const style = Object.entries(tokens)
           removeEventListener("keydown", key, true);
           box.remove();
           tip.remove();
-          if (el) anchor = { selector: selectorFor(el), tag: el.tagName.toLowerCase(), text: (el.innerText || el.alt || "").trim().slice(0, 140), source: "click", url: location.href };
+          if (el) anchor = { selector: selectorFor(el), tag: el.tagName.toLowerCase(), text: (el.innerText || el.alt || "").trim().slice(0, 140), source: "click", url: pageUrl() };
           showAnchor();
           d.showModal();
         };
@@ -141,20 +155,21 @@ const style = Object.entries(tokens)
           const data = new FormData(form);
           const email = String(data.get("email") || "").trim();
           const shot = data.get("screenshot");
-          const sent = await send(form, "[data-feedback-status]", () => {
-            if (!form.dataset.feedback) return null;
+          const sent = await send(form, "[data-feedback-status]", async () => {
+            const key = await projectKey(form);
+            if (!key) return null;
             const body = new FormData();
             body.set("feedback", JSON.stringify({
               type: data.get("type") || "feedback",
               title: String(data.get("title") || "").trim(),
               description: String(data.get("message") || "").trim(),
               ...(email && { submitter_email: email }),
-              page: { url: location.href, title: document.title },
+              page: { url: pageUrl(), title: document.title },
               ...(anchor && { anchor }),
               source: "studio-footer",
             }));
             if (shot && shot.size) body.set("screenshot", shot);
-            return fetch(api + "/v1/feedback", { method: "POST", credentials: "omit", headers: { "X-Project-Key": form.dataset.feedback }, body });
+            return fetch(api + "/v1/feedback", { method: "POST", credentials: "omit", headers: { "X-Project-Key": key }, body });
           }, "Thanks, it reached the person who builds " + form.dataset.product + ".");
           if (sent) { anchor = null; showAnchor(); form.querySelector("[data-feedback-file-label]").textContent = "Add a screenshot"; }
         }
@@ -163,17 +178,13 @@ const style = Object.entries(tokens)
           e.preventDefault();
           const email = String(new FormData(form).get("email") || "").trim();
           await send(form, "[data-subscribe-status]", async () => {
-            let key = form.dataset.key;
-            if (!key && form.dataset.catalog) {
-              const cfg = await fetch(api + "/v1/capture-config/" + encodeURIComponent(form.dataset.catalog), { credentials: "omit" });
-              if (cfg.ok) key = (await cfg.json()).api_key;
-            }
+            const key = await projectKey(form);
             if (!key) return null;
             return fetch(api + "/v1/subscriptions", {
               method: "POST",
               credentials: "omit",
               headers: { "Content-Type": "application/json", "X-Project-Key": key },
-              body: JSON.stringify({ email, kind: "newsletter", source: "footer", consent: true }),
+              body: JSON.stringify({ email, kind: form.dataset.kind || "newsletter", source: "footer", consent: true }),
             });
           }, "You're on the list.");
         }

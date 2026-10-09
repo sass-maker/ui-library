@@ -242,7 +242,7 @@ export function WorkbenchPage({ content: c }: { content: WorkbenchContent }) {
         ))}
       </main>
 
-      <StudioFooter product={c.product} url={c.url} summary={c.footer.summary} groups={c.footer.groups} legal={c.footer.legal} feedbackKey={c.footer.feedbackKey} subscribeKey={c.footer.subscribeKey} catalogId={c.footer.catalogId} />
+      <StudioFooter product={c.product} url={c.url} summary={c.footer.summary} groups={c.footer.groups} legal={c.footer.legal} feedbackKey={c.footer.feedbackKey} subscribeKey={c.footer.subscribeKey} catalogId={c.footer.catalogId} capture={c.footer.capture} />
     </>
   );
 }

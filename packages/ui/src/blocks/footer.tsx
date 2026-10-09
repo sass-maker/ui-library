@@ -20,8 +20,18 @@ const feedbackTypes = [
   { value: "feedback", label: "General feedback" },
 ];
 
-/** Must match SaaS Maker's server consent snapshot (CONSENT_COPY_V1.newsletter). */
-const consentCopy = "I agree to receive newsletter emails about this product. I can unsubscribe at any time.";
+type CaptureKind = "newsletter" | "waitlist";
+/** Must match SaaS Maker's server consent snapshot (newsletter-capture CONSENT_COPY_V1). */
+const consentCopy: Record<CaptureKind, string> = {
+  newsletter: "I agree to receive newsletter emails about this product. I can unsubscribe at any time.",
+  waitlist: "I agree to receive early-access and availability emails about this product. I can unsubscribe at any time.",
+};
+const privacyUrl = "https://sassmaker.com/privacy";
+const privacyLink = (
+  <a href={privacyUrl} className="underline underline-offset-2 hover:text-foreground">
+    Privacy
+  </a>
+);
 
 const field =
   "w-full rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25";
@@ -39,20 +49,23 @@ const defaultStudio: StudioLink[] = [
 ];
 
 /** Product updates sign-up: the most visible action in the footer. */
-function Subscribe({ product, projectKey, catalogId }: { product: string; projectKey?: string; catalogId?: string }) {
+function Subscribe({ product, kind, projectKey, catalogId }: { product: string; kind: CaptureKind; projectKey?: string; catalogId?: string }) {
   return (
     <form
       data-subscribe=""
+      data-kind={kind}
       data-key={projectKey ?? ""}
       data-catalog={catalogId ?? ""}
       className="grid gap-6 rounded-[1.75rem] bg-card p-6 shadow-xs ring-1 ring-border sm:p-9 lg:grid-cols-[1fr_1.15fr] lg:items-center lg:gap-12"
     >
       <div>
         <h2 className="font-display text-[clamp(1.75rem,1.3rem+1.6vw,2.5rem)] leading-[1.05] text-balance">
-          Get {product} updates
+          {kind === "waitlist" ? `Get early access to ${product}` : `Get ${product} updates`}
         </h2>
         <p className="mt-3 max-w-[26em] font-text text-[1.0625rem] leading-relaxed text-muted-foreground">
-          A short note when something new ships. No spam, and you can leave with one click.
+          {kind === "waitlist"
+            ? "One email when it's ready for you. No spam, and you can leave with one click."
+            : "A short note when something new ships. No spam, and you can leave with one click."}
         </p>
       </div>
       <div>
@@ -79,7 +92,9 @@ function Subscribe({ product, projectKey, catalogId }: { product: string; projec
         </div>
         <label className="mt-3 flex items-start gap-2.5 text-xs leading-relaxed text-muted-foreground">
           <input type="checkbox" name="consent" required className="mt-0.5 size-4 shrink-0 accent-[var(--brand)]" />
-          {consentCopy}
+          <span>
+            {consentCopy[kind]} {privacyLink}
+          </span>
         </label>
         <p data-subscribe-status role="status" aria-live="polite" className="mt-2 text-sm text-foreground empty:hidden" />
       </div>
@@ -121,7 +136,7 @@ function AskAi({ product, url }: { product: string; url: string }) {
 }
 
 /** A button that opens the full feedback form: type, details, a pointed-at element, a screenshot and email. */
-function Feedback({ product, feedbackKey }: { product: string; feedbackKey?: string }) {
+function Feedback({ product, feedbackKey, catalogId }: { product: string; feedbackKey?: string; catalogId?: string }) {
   return (
     <>
       <button type="button" data-feedback-open="" className={quietButton}>
@@ -133,7 +148,7 @@ function Feedback({ product, feedbackKey }: { product: string; feedbackKey?: str
         aria-labelledby="fb-title"
         className="m-auto w-[min(34rem,calc(100vw-2rem))] rounded-2xl border border-border bg-card p-0 text-foreground shadow-2xl backdrop:bg-black/40 backdrop:backdrop-blur-[2px]"
       >
-        <form id="feedback" data-feedback={feedbackKey ?? ""} data-product={product} className="p-6 sm:p-7">
+        <form id="feedback" data-feedback="" data-key={feedbackKey ?? ""} data-catalog={catalogId ?? ""} data-product={product} className="p-6 sm:p-7">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 id="fb-title" className="font-display text-2xl">
@@ -195,7 +210,14 @@ function Feedback({ product, feedbackKey }: { product: string; feedbackKey?: str
             </button>
           </p>
 
-          <label htmlFor="fb-email" className="mt-5 block text-xs font-medium text-muted-foreground">
+          <label className="mt-5 flex items-start gap-2.5 text-xs leading-relaxed text-muted-foreground">
+            <input type="checkbox" name="consent" required className="mt-0.5 size-4 shrink-0 accent-[var(--brand)]" />
+            <span>
+              I agree to send this feedback and the page details to SaaS Maker. {privacyLink}
+            </span>
+          </label>
+
+          <label htmlFor="fb-email" className="mt-4 block text-xs font-medium text-muted-foreground">
             Email, if you want a reply
           </label>
           <div className="mt-1.5 flex flex-col gap-2 sm:flex-row">
@@ -209,7 +231,7 @@ function Feedback({ product, feedbackKey }: { product: string; feedbackKey?: str
             </button>
           </div>
           <p data-feedback-status role="status" aria-live="polite" className="mt-3 text-sm text-foreground empty:hidden" />
-          <p className="mt-3 text-[0.6875rem] text-muted-foreground">Sends what you write, this page's address, and anything you point at or attach.</p>
+          <p className="mt-3 text-[0.6875rem] text-muted-foreground">Sends what you write, this page's address (without query or fragment), and anything you point at or attach.</p>
         </form>
       </dialog>
     </>
@@ -250,6 +272,7 @@ export function StudioFooter({
   feedbackKey,
   subscribeKey,
   catalogId,
+  capture = "newsletter",
   studio = defaultStudio,
   legal,
   artMode = "panel",
@@ -267,8 +290,10 @@ export function StudioFooter({
   feedbackKey?: string;
   /** Publishable key for the updates sign-up; defaults to feedbackKey. */
   subscribeKey?: string;
-  /** Fleet catalog id; resolves the sign-up key when no key is given. */
+  /** Fleet catalog id; resolves the publishable key for sign-up and feedback when no key is given. */
   catalogId?: string;
+  /** Updates sign-up kind from the catalog capture policy; false when capture is not applicable. */
+  capture?: CaptureKind | false;
   /** Sibling products for the studio strip; the current product is left out. */
   studio?: StudioLink[];
   legal?: React.ReactNode;
@@ -286,8 +311,8 @@ export function StudioFooter({
   mark?: React.ReactNode;
   className?: string;
 }) {
-  const subscribe = <Subscribe product={product} projectKey={subscribeKey ?? feedbackKey} catalogId={catalogId} />;
-  const feedback = <Feedback product={product} feedbackKey={feedbackKey} />;
+  const subscribe = capture && <Subscribe product={product} kind={capture} projectKey={subscribeKey ?? feedbackKey} catalogId={catalogId} />;
+  const feedback = <Feedback product={product} feedbackKey={feedbackKey} catalogId={catalogId} />;
   const wrap = variant === "gallery" ? "mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]" : "container-page";
   const wordmarkCls =
     "ui-case select-none overflow-hidden whitespace-nowrap text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em]";
@@ -317,11 +342,15 @@ export function StudioFooter({
     ));
 
   return (
-    <footer className={cn("overflow-hidden bg-surface pt-[clamp(4rem,7vw,6rem)]", variant === "studio" && "border-t border-border", className)}>
+    <footer
+      // Lets the Fleet footer audit recognise this footer and its catalog identity.
+      data-fleet-footer="studio"
+      data-catalog-id={catalogId}
+      className={cn("overflow-hidden bg-surface pt-[clamp(4rem,7vw,6rem)]", variant === "studio" && "border-t border-border", className)}>
       <div className={wrap}>
         {subscribe}
 
-        <div className="mt-[clamp(3rem,6vw,4.5rem)] grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+        <div className={cn("grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14", subscribe && "mt-[clamp(3rem,6vw,4.5rem)]")}>
           <div className="flex flex-col items-start gap-6">
             <div>
               <p className="flex items-center gap-2.5 font-display text-lg font-bold tracking-[-0.03em]">

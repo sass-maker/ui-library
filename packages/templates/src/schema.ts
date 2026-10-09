@@ -41,6 +41,8 @@ const footer = z
     subscribeKey: z.string().optional(),
     /** Fleet catalog id; resolves the sign-up key when no key is given. */
     catalogId: z.string().optional(),
+    /** Updates sign-up kind from the catalog capture policy; false when capture is not applicable. */
+    capture: z.union([z.enum(["newsletter", "waitlist"]), z.literal(false)]).optional(),
   })
   .strict();
 
