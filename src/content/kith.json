@@ -1,22 +1,50 @@
 {
+  "template": "gallery",
+  "page": {
+    "title": "Kith — Remember the people you want to stay close to",
+    "description": "A private relationship-memory app for iPhone.",
+    "theme": "gallery",
+    "icon": "/demo/kith/mark.webp"
+  },
   "product": "Kith",
   "url": "https://kith.significanthobbies.com",
   "mark": "/demo/kith/mark.webp",
   "nav": [
-    { "label": "How it works", "href": "#how" },
-    { "label": "Privacy", "href": "#privacy" },
-    { "label": "Questions", "href": "#beta" }
+    {
+      "label": "How it works",
+      "href": "#how"
+    },
+    {
+      "label": "Privacy",
+      "href": "#privacy"
+    },
+    {
+      "label": "Questions",
+      "href": "#beta"
+    }
   ],
-  "headerAction": { "label": "Beta status", "href": "#beta" },
+  "headerAction": {
+    "label": "Beta status",
+    "href": "#beta"
+  },
   "hero": {
     "eyebrow": "Kith for iPhone",
     "title": "Remember the people you want to stay close to.",
     "lede": "A place for how you met, what matters now, and the dated moments you do not want to forget, without turning care into a CRM.",
-    "primary": { "label": "See TestFlight status", "href": "#beta" },
-    "secondary": { "label": "See the real app ›", "href": "#how" },
+    "primary": {
+      "label": "See TestFlight status",
+      "href": "#beta"
+    },
+    "secondary": {
+      "label": "See the real app ›",
+      "href": "#how"
+    },
     "note": "Internal TestFlight only. No public invite or App Store listing.",
     "backdrop": "/demo/kith/book-stage.webp",
-    "screen": { "src": "/demo/kith/constellation.webp", "alt": "Kith on iPhone showing a warm constellation of people sized by chosen closeness" }
+    "screen": {
+      "src": "/demo/kith/constellation.webp",
+      "alt": "Kith on iPhone showing a warm constellation of people sized by chosen closeness"
+    }
   },
   "sections": [
     {
@@ -25,8 +53,14 @@
       "eyebrow": "Constellation",
       "title": "See closeness the way *you chose it.*",
       "lede": "Every person becomes a warm lantern. Its size comes only from the 1–5 closeness you set: not recency, message volume, or an algorithm.",
-      "screen": { "src": "/demo/kith/constellation.webp", "alt": "Kith home screen enlarged: lanterns for Amma, Arjun, Priya, Maya, Dev and Nora, each sized by chosen closeness" },
-      "caption": { "lead": "The real home screen, at the size of a room.", "text": "A searchable list view stays one tap away, for speed and VoiceOver." },
+      "screen": {
+        "src": "/demo/kith/constellation.webp",
+        "alt": "Kith home screen enlarged: lanterns for Amma, Arjun, Priya, Maya, Dev and Nora, each sized by chosen closeness"
+      },
+      "caption": {
+        "lead": "The real home screen, at the size of a room.",
+        "text": "A searchable list view stays one tap away, for speed and VoiceOver."
+      },
       "note": "Kith · iPhone · actual screen"
     },
     {
@@ -35,8 +69,14 @@
       "title": "Keep the context that makes care specific.",
       "lede": "A person holds their circle, birthday, how you met, standing notes, and a chronological log of notes, hangouts, calls, gifts and things to remember.",
       "backdrop": "/demo/kith/book-stage.webp",
-      "screen": { "src": "/demo/kith/person.webp", "alt": "Kith person page for Maya Rao with how you met, keep in mind, birthday and a dated log" },
-      "caption": { "lead": "Maya Rao, closeness 5.", "text": "“Hates being late. Always orders the extra chai.” The small facts, kept where you will find them." }
+      "screen": {
+        "src": "/demo/kith/person.webp",
+        "alt": "Kith person page for Maya Rao with how you met, keep in mind, birthday and a dated log"
+      },
+      "caption": {
+        "lead": "Maya Rao, closeness 5.",
+        "text": "“Hates being late. Always orders the extra chai.” The small facts, kept where you will find them."
+      }
     },
     {
       "kind": "cover",
@@ -44,7 +84,10 @@
       "title": "Start with one real person, not an import.",
       "lede": "A name, their circle and closeness, and one thing worth remembering. That first moment stays with them, ready when you come back.",
       "image": "/demo/kith/coastal-walk-v2.webp",
-      "screen": { "src": "/demo/kith/onboarding.webp", "alt": "Kith first-run flow asking for one real person and a chosen closeness" }
+      "screen": {
+        "src": "/demo/kith/onboarding.webp",
+        "alt": "Kith first-run flow asking for one real person and a chosen closeness"
+      }
     },
     {
       "kind": "statement",
@@ -53,21 +96,48 @@
       "title": "The iPhone stays *the working copy.*",
       "lede": "Edits save on your iPhone first, so Kith works offline. An optional Significant Hobbies account syncs through the private Hub; local use never needs it.",
       "rows": [
-        { "title": "iPhone", "body": "The full document. Adding people, closeness, search and notes all work here.", "status": "Always", "on": true },
-        { "title": "iCloud", "body": "A private CloudKit mirror stays on during the sync transition.", "status": "Private" },
-        { "title": "Hub", "body": "Structured person fields and dated notes, only if you connect an account.", "status": "Optional", "on": true },
-        { "title": "This site", "body": "Counts visits and named actions. Email updates only after you opt in.", "status": "Separate" }
+        {
+          "title": "iPhone",
+          "body": "The full document. Adding people, closeness, search and notes all work here.",
+          "status": "Always",
+          "on": true
+        },
+        {
+          "title": "iCloud",
+          "body": "A private CloudKit mirror stays on during the sync transition.",
+          "status": "Private"
+        },
+        {
+          "title": "Hub",
+          "body": "Structured person fields and dated notes, only if you connect an account.",
+          "status": "Optional",
+          "on": true
+        },
+        {
+          "title": "This site",
+          "body": "Counts visits and named actions. Email updates only after you opt in.",
+          "status": "Separate"
+        }
       ],
       "aside": [
-        { "title": "Kith may fit if", "body": "you want to keep the small facts and dated moments that help you be more thoughtful with family, close friends, and the other people who matter." },
-        { "title": "It is not", "body": "a contact book, social network, sales pipeline, messaging app, attention score, or reminder service. Kith never browses your address book or decides who deserves care." }
+        {
+          "title": "Kith may fit if",
+          "body": "you want to keep the small facts and dated moments that help you be more thoughtful with family, close friends, and the other people who matter."
+        },
+        {
+          "title": "It is not",
+          "body": "a contact book, social network, sales pipeline, messaging app, attention score, or reminder service. Kith never browses your address book or decides who deserves care."
+        }
       ]
     }
   ],
   "closing": {
     "id": "beta",
     "title": "Remember what mattered.\n*Show up with the context.*",
-    "primary": { "label": "See TestFlight status", "href": "#" },
+    "primary": {
+      "label": "See TestFlight status",
+      "href": "#"
+    },
     "note": "Internal TestFlight only. No public invite or App Store listing.",
     "image": "/demo/kith/memory-table-v2.webp",
     "credit": "Illustrative artwork"
@@ -75,14 +145,38 @@
   "footer": {
     "summary": "A private, device-first iPhone app for remembering the people you keep close. Internal TestFlight only.",
     "links": [
-      { "label": "Overview", "href": "#" },
-      { "label": "TestFlight", "href": "#beta" },
-      { "label": "Journal", "href": "#" },
-      { "label": "Privacy", "href": "#privacy" },
-      { "label": "Terms", "href": "#" },
-      { "label": "Accessibility", "href": "#" },
-      { "label": "Support", "href": "#" },
-      { "label": "Source code", "href": "#" }
+      {
+        "label": "Overview",
+        "href": "#"
+      },
+      {
+        "label": "TestFlight",
+        "href": "#beta"
+      },
+      {
+        "label": "Journal",
+        "href": "#"
+      },
+      {
+        "label": "Privacy",
+        "href": "#privacy"
+      },
+      {
+        "label": "Terms",
+        "href": "#"
+      },
+      {
+        "label": "Accessibility",
+        "href": "#"
+      },
+      {
+        "label": "Support",
+        "href": "#"
+      },
+      {
+        "label": "Source code",
+        "href": "#"
+      }
     ],
     "legal": "© 2026 Sarthak Agrawal"
   }
