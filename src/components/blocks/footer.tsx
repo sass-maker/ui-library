@@ -46,6 +46,8 @@ export function StudioFooter({
   feedbackKey,
   legal,
   artMode = "panel",
+  variant = "studio",
+  mark,
   className,
 }: {
   product: string;
@@ -59,9 +61,135 @@ export function StudioFooter({
   legal?: React.ReactNode;
   /** panel: framed art under the wordmark. scene: full-bleed closing art the page fades into. */
   artMode?: "panel" | "scene";
+  /** studio: full footer with link groups and art. gallery: the quiet single-row footer for Gallery pages. */
+  variant?: "studio" | "gallery";
+  /** Small product mark shown beside the name in the gallery variant. */
+  mark?: React.ReactNode;
   className?: string;
 }) {
   const question = `What does ${product} (${url}) do, and who is it best for? Keep it concise.`;
+  const askAi = (
+  <form method="get" target="_blank" className="flex flex-col rounded-xl border border-border bg-card p-5 shadow-xs">
+    <div className="flex items-center gap-2.5">
+      <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand">
+        <SparklesIcon className="size-3.5" />
+      </span>
+      <label htmlFor="ask-ai" className="text-sm font-medium text-foreground">
+        Ask AI about {product}
+      </label>
+    </div>
+    <p className="mt-2 text-xs text-muted-foreground">Opens your question in a new tab with the assistant you choose.</p>
+    <textarea
+      id="ask-ai"
+      name="q"
+      rows={3}
+      defaultValue={question}
+      className={field + " mt-3 min-h-[5.5rem] resize-y py-2 leading-relaxed"}
+    />
+    <div className="mt-3 flex flex-wrap gap-2">
+      {assistants.map((a) => (
+        <button key={a.name} type="submit" formAction={a.action} className={chip}>
+          {a.name}
+          <ArrowUpRightIcon aria-hidden className="size-3 text-muted-foreground" />
+        </button>
+      ))}
+    </div>
+    <p className="mt-auto pt-3 text-[0.6875rem] text-muted-foreground">Goes straight to the assistant. {product} never sees your question.</p>
+  </form>
+  );
+  const feedback = (
+  <form
+    id="feedback"
+    data-feedback={feedbackKey ?? ""}
+    data-product={product}
+    className="group/fb rounded-xl border border-border bg-card p-5 shadow-xs"
+  >
+    <div className="flex items-center gap-2.5">
+      <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand">
+        <MessageSquareIcon className="size-3.5" />
+      </span>
+      <h2 className="text-sm font-medium text-foreground">Send feedback</h2>
+    </div>
+    <p className="mt-2 text-xs text-muted-foreground">Read by the person who builds {product}. Bugs, ideas and anything that felt off.</p>
+    <fieldset className="mt-3 flex flex-wrap gap-2">
+      <legend className="sr-only">Feedback type</legend>
+      {feedbackTypes.map((t, i) => (
+        <label key={t.value} className={chip + " cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:checked]:text-brand has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/25"}>
+          <input type="radio" name="type" value={t.value} defaultChecked={i === 0} className="sr-only" />
+          {t.label}
+        </label>
+      ))}
+    </fieldset>
+    <label htmlFor="fb-message" className="sr-only">Your feedback</label>
+    <textarea
+      id="fb-message"
+      name="message"
+      required
+      minLength={4}
+      maxLength={4000}
+      rows={3}
+      placeholder="What happened, or what would make it better?"
+      className={field + " mt-3 min-h-[5.5rem] resize-y py-2 leading-relaxed placeholder:text-muted-foreground"}
+    />
+    <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+      <label htmlFor="fb-email" className="sr-only">Email (optional)</label>
+      <input
+        id="fb-email"
+        name="email"
+        type="email"
+        autoComplete="email"
+        placeholder="Email, if you want a reply"
+        className={field + " h-10 min-w-0 flex-1 placeholder:text-muted-foreground"}
+      />
+      <button type="submit" className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60">
+        Send
+        <SendIcon aria-hidden className="size-3.5" />
+      </button>
+    </div>
+    <p data-feedback-status role="status" aria-live="polite" className="mt-3 min-h-4 text-xs text-muted-foreground empty:hidden" />
+    <p className="mt-3 text-[0.6875rem] text-muted-foreground">Sends your message, email if given, and this page's address.</p>
+  </form>
+  );
+
+  if (variant === "gallery") {
+    return (
+      <footer className={cn("bg-surface pb-10 pt-[clamp(4.5rem,8vw,7rem)]", className)}>
+        <div className="mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]">
+          <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr_1fr] lg:gap-7">
+            <div className="mb-6 lg:mb-0">
+              <p className="flex items-center gap-2.5 font-display text-lg font-bold tracking-[-0.03em]">
+                {mark}
+                {product}
+              </p>
+              <p className="mt-4 max-w-[22em] font-text text-[1.0625rem] leading-relaxed text-muted-foreground">{summary}</p>
+            </div>
+            {askAi}
+            {feedback}
+          </div>
+          <p
+            aria-hidden
+            className="mt-[4.5rem] select-none overflow-hidden text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em] text-foreground/90"
+          >
+            {product}
+          </p>
+          <div className="mt-16 flex flex-wrap items-center justify-between gap-x-7 gap-y-3 border-t border-border pt-6 font-display text-[0.8125rem] text-muted-foreground">
+            <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2.5">
+              {groups.flatMap((g) => g.links).map((l) => (
+                <a key={l.href + l.label} href={l.href} className="transition-colors hover:text-foreground">
+                  {l.label}
+                </a>
+              ))}
+              <a href="https://sassmaker.com" className="inline-flex items-center gap-0.5 transition-colors hover:text-foreground">
+                More from the studio <ArrowUpRightIcon aria-hidden className="size-3" />
+              </a>
+            </nav>
+            {legal && <p>{legal}</p>}
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className={cn("border-t border-border bg-surface", className)}>
       <div className="container-page grid gap-12 py-16 md:py-20 lg:grid-cols-12">
@@ -113,85 +241,9 @@ export function StudioFooter({
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:col-span-12">
-          <form method="get" target="_blank" className="flex flex-col rounded-xl border border-border bg-card p-5 shadow-xs">
-            <div className="flex items-center gap-2.5">
-              <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand">
-                <SparklesIcon className="size-3.5" />
-              </span>
-              <label htmlFor="ask-ai" className="text-sm font-medium text-foreground">
-                Ask AI about {product}
-              </label>
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">Opens your question in a new tab with the assistant you choose.</p>
-            <textarea
-              id="ask-ai"
-              name="q"
-              rows={3}
-              defaultValue={question}
-              className={field + " mt-3 min-h-[5.5rem] resize-y py-2 leading-relaxed"}
-            />
-            <div className="mt-3 flex flex-wrap gap-2">
-              {assistants.map((a) => (
-                <button key={a.name} type="submit" formAction={a.action} className={chip}>
-                  {a.name}
-                  <ArrowUpRightIcon aria-hidden className="size-3 text-muted-foreground" />
-                </button>
-              ))}
-            </div>
-            <p className="mt-auto pt-3 text-[0.6875rem] text-muted-foreground">Goes straight to the assistant. {product} never sees your question.</p>
-          </form>
+          {askAi}
 
-          <form
-            id="feedback"
-            data-feedback={feedbackKey ?? ""}
-            data-product={product}
-            className="group/fb rounded-xl border border-border bg-card p-5 shadow-xs"
-          >
-            <div className="flex items-center gap-2.5">
-              <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-brand-soft text-brand">
-                <MessageSquareIcon className="size-3.5" />
-              </span>
-              <h2 className="text-sm font-medium text-foreground">Send feedback</h2>
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">Read by the person who builds {product}. Bugs, ideas and anything that felt off.</p>
-            <fieldset className="mt-3 flex flex-wrap gap-2">
-              <legend className="sr-only">Feedback type</legend>
-              {feedbackTypes.map((t, i) => (
-                <label key={t.value} className={chip + " cursor-pointer has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:checked]:text-brand has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/25"}>
-                  <input type="radio" name="type" value={t.value} defaultChecked={i === 0} className="sr-only" />
-                  {t.label}
-                </label>
-              ))}
-            </fieldset>
-            <label htmlFor="fb-message" className="sr-only">Your feedback</label>
-            <textarea
-              id="fb-message"
-              name="message"
-              required
-              minLength={4}
-              maxLength={4000}
-              rows={3}
-              placeholder="What happened, or what would make it better?"
-              className={field + " mt-3 min-h-[5.5rem] resize-y py-2 leading-relaxed placeholder:text-muted-foreground"}
-            />
-            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-              <label htmlFor="fb-email" className="sr-only">Email (optional)</label>
-              <input
-                id="fb-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="Email, if you want a reply"
-                className={field + " h-10 min-w-0 flex-1 placeholder:text-muted-foreground"}
-              />
-              <button type="submit" className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60">
-                Send
-                <SendIcon aria-hidden className="size-3.5" />
-              </button>
-            </div>
-            <p data-feedback-status role="status" aria-live="polite" className="mt-3 min-h-4 text-xs text-muted-foreground empty:hidden" />
-            <p className="mt-3 text-[0.6875rem] text-muted-foreground">Sends your message, email if given, and this page's address.</p>
-          </form>
+          {feedback}
         </div>
       </div>
 
