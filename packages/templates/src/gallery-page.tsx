@@ -128,6 +128,7 @@ export function GalleryPage({ content: c }: { content: GalleryContent }) {
         subscribeKey={c.footer.subscribeKey}
         catalogId={c.footer.catalogId}
         art={c.footer.art}
+        wordmark={c.footer.wordmark}
       />
     </>
   );

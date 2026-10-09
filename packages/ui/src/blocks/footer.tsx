@@ -253,6 +253,7 @@ export function StudioFooter({
   studio = defaultStudio,
   legal,
   artMode = "panel",
+  wordmark = "poster",
   variant = "studio",
   mark,
   className,
@@ -273,6 +274,12 @@ export function StudioFooter({
   legal?: React.ReactNode;
   /** panel: framed art under the wordmark. scene: full-bleed closing art the page fades into. */
   artMode?: "panel" | "scene";
+  /**
+   * How the wordmark meets the art (default poster). stack: wordmark, then the art.
+   * fill: the art shows through the letters (no separate band).
+   * poster: the wordmark sits on the art in light ink.
+   */
+  wordmark?: "stack" | "fill" | "poster";
   /** studio: full footer with link groups. gallery: the quiet footer for Gallery pages. */
   variant?: "studio" | "gallery";
   /** Small product mark shown beside the name in the gallery variant. */
@@ -282,6 +289,10 @@ export function StudioFooter({
   const subscribe = <Subscribe product={product} projectKey={subscribeKey ?? feedbackKey} catalogId={catalogId} />;
   const feedback = <Feedback product={product} feedbackKey={feedbackKey} />;
   const wrap = variant === "gallery" ? "mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]" : "container-page";
+  const wordmarkCls =
+    "ui-case select-none overflow-hidden whitespace-nowrap text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em]";
+  // Long names shrink to stay on one line; short ones keep the full scale.
+  const wordmarkSize = product.length > 8 ? { fontSize: `min(${(125 / product.length).toFixed(2)}vw, 20rem)` } : undefined;
   const artImg =
     art &&
     (variant === "gallery" || artMode === "scene" ? (
@@ -343,18 +354,39 @@ export function StudioFooter({
           </nav>
         )}
 
-        <p
-          aria-hidden
-          className="ui-case mt-[clamp(3.5rem,7vw,4.5rem)] select-none overflow-hidden whitespace-nowrap text-center font-display text-[clamp(6rem,22vw,20rem)] font-bold leading-[0.8] tracking-[-0.06em] text-foreground/90"
-          // Long names shrink to stay on one line; short ones keep the full scale.
-          style={product.length > 8 ? { fontSize: `min(${(125 / product.length).toFixed(2)}vw, 20rem)` } : undefined}
-        >
-          {product}
-        </p>
+        {!(art && wordmark === "poster") && (
+          <p
+            aria-hidden
+            className={cn(wordmarkCls, "mt-[clamp(3.5rem,7vw,4.5rem)]", art && wordmark === "fill" ? "bg-cover bg-clip-text text-transparent" : "text-foreground/90")}
+            style={{ ...wordmarkSize, ...(art && wordmark === "fill" && { backgroundImage: `url(${art.src})`, backgroundPosition: art.position ?? "center" }) }}
+          >
+            {product}
+          </p>
+        )}
       </div>
-      {artImg}
+      {art && wordmark === "stack" && artImg}
+      {art && wordmark === "poster" && (
+        <div className="relative isolate mt-[clamp(2rem,5vw,3.5rem)] overflow-hidden">
+          <img
+            src={art.src}
+            alt={art.alt}
+            loading="lazy"
+            decoding="async"
+            style={art.position ? { objectPosition: art.position } : undefined}
+            className="block h-[clamp(16rem,38vw,34rem)] w-full object-cover [mask-image:linear-gradient(to_bottom,transparent,black_30%)]"
+          />
+          <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent" />
+          <p
+            aria-hidden
+            className={cn(wordmarkCls, "absolute inset-x-0 bottom-[-0.02em] text-[#fbf5ec]")}
+            style={wordmarkSize}
+          >
+            {product}
+          </p>
+        </div>
+      )}
 
-      <div className={cn(wrap, "flex flex-col gap-5 pb-10", art ? "pt-8" : "mt-14 border-t border-border pt-7")}>
+      <div className={cn(wrap, "flex flex-col gap-5 pb-10", art && wordmark !== "fill" ? "pt-8" : "mt-14 border-t border-border pt-7")}>
         <StudioStrip product={product} studio={studio} />
         <div className="flex flex-wrap items-center justify-between gap-x-7 gap-y-3 font-display text-[0.8125rem] text-muted-foreground">
           {variant === "gallery" ? (

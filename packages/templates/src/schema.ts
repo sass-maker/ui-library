@@ -93,6 +93,8 @@ export const galleryContent = z
         links: z.array(link),
         /** Wide artwork under the wordmark; position is a CSS object-position. */
         art: z.object({ src: z.string(), alt: z.string(), position: z.string().optional() }).strict().optional(),
+        /** How the wordmark meets the art: poster (default), fill (art inside the letters) or stack. */
+        wordmark: z.enum(["stack", "fill", "poster"]).optional(),
       })
       .strict(),
   })
