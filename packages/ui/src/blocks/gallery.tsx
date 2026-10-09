@@ -157,7 +157,7 @@ export function GalleryShowcase({
     <section
       id={id}
       className={cn(
-        pad,
+        "pb-[clamp(4.5rem,9vw,7.5rem)] pt-[clamp(6rem,13vw,11.25rem)]",
         "bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--accent-ink:#8f7f70] [--brand:#e98a5f] [--brand-ink:#e98a5f]",
       )}
     >
@@ -167,16 +167,16 @@ export function GalleryShowcase({
         {ledeText && <GalleryLede className="mx-auto mt-6">{ledeText}</GalleryLede>}
       </div>
       <figure>
-        <div className="mt-[clamp(3.5rem,7vw,6rem)] bg-[radial-gradient(50%_60%_at_50%_45%,#3a2a1f_0%,transparent_100%)] py-[clamp(1rem,3vw,2.5rem)]">
+        <div className="mt-[clamp(3.5rem,7vw,6rem)] bg-[radial-gradient(closest-side,#3a2a1f,transparent)] py-[clamp(1rem,3vw,2.5rem)]">
           <Device
             image={device}
             className="motion-zoom mx-auto w-[clamp(16.5rem,26vw,22.5rem)] shadow-[0_60px_120px_-30px_rgb(0_0_0/0.75)]"
           />
         </div>
         {(caption || note) && (
-          <figcaption className="mx-auto mt-[clamp(2.5rem,5vw,4rem)] flex max-w-[82.5rem] flex-col gap-1.5 px-[clamp(1.25rem,4vw,3.5rem)] md:flex-row md:items-baseline md:justify-between md:gap-6">
+          <figcaption className="mx-auto mt-[clamp(2rem,4vw,3rem)] flex max-w-[36rem] flex-col items-center gap-2 px-[clamp(1.25rem,4vw,3.5rem)] text-center">
             {caption}
-            {note && <GalleryNote className="whitespace-nowrap">{note}</GalleryNote>}
+            {note && <GalleryNote>{note}</GalleryNote>}
           </figcaption>
         )}
       </figure>
@@ -221,7 +221,7 @@ export function GallerySpread({
           )}
           <Device image={device} className="motion-reveal mx-auto w-[clamp(16.25rem,30vw,26.25rem)] shadow-[0_60px_120px_-30px_rgb(60_15_0/0.6)]" />
         </div>
-        {caption && <figcaption className={cn(wrap, "mt-5")}>{caption}</figcaption>}
+        {caption && <figcaption className={cn(wrap, "mt-6 flex justify-center text-center")}>{caption}</figcaption>}
       </figure>
     </section>
   );

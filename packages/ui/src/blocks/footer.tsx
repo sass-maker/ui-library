@@ -386,21 +386,21 @@ export function StudioFooter({
         </div>
       )}
 
-      <div className={cn(wrap, "flex flex-col gap-5 pb-10", art && wordmark !== "fill" ? "pt-8" : "mt-14 border-t border-border pt-7")}>
-        <StudioStrip product={product} studio={studio} />
-        <div className="flex flex-wrap items-center justify-between gap-x-7 gap-y-3 font-display text-[0.8125rem] text-muted-foreground">
-          {variant === "gallery" ? (
-            <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2.5">
+      <div className={cn(wrap, "pb-10", art && wordmark !== "fill" ? "pt-8" : "mt-14")}>
+        <div className={cn("flex flex-col gap-4", !(art && wordmark !== "fill") && "border-t border-border pt-7")}>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
+            <StudioStrip product={product} studio={studio} />
+            {legal && <p className="font-display text-[0.8125rem] text-muted-foreground">{legal}</p>}
+          </div>
+          {variant === "gallery" && (
+            <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2.5 font-display text-[0.8125rem] text-muted-foreground">
               {groups.flatMap((g) => g.links).map((l) => (
                 <a key={l.href + l.label} href={l.href} className="transition-colors hover:text-foreground">
                   {l.label}
                 </a>
               ))}
             </nav>
-          ) : (
-            <span />
           )}
-          {legal && <p>{legal}</p>}
         </div>
       </div>
     </footer>
