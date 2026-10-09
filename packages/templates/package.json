@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/templates",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "type": "module",
   "description": "Content-driven landing page templates (Gallery, Workbench) and the base layout.",
