@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "SaaSMakerUI", targets: ["SaaSMakerUI"]),
     ],
     targets: [
-        .target(name: "SaaSMakerUI", path: "swift/Sources/SaaSMakerUI"),
+        .target(name: "SaaSMakerUI", path: "swift/Sources/SaaSMakerUI", resources: [.copy("Fonts")]),
         .testTarget(name: "SaaSMakerUITests", dependencies: ["SaaSMakerUI"], path: "swift/Tests/SaaSMakerUITests"),
     ]
 )

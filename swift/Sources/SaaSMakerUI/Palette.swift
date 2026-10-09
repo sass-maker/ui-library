@@ -35,11 +35,23 @@ public struct SMPalette: Sendable, Equatable {
     public var accentSerif: Bool
     /// Long-form text (ledes, captions) in a serif, like the web --font-text.
     public var textSerif: Bool
+    /// Font families (bundled; see SMFonts). Same faces as the web theme.
+    public var displayFont: String
+    public var accentFont: String
+    public var textFont: String
+    public var sansFont: String
+    public var monoFont: String
+    /// Fleet voice: headings and buttons/nav in lowercase.
+    public var displayLowercase: Bool
+    public var uiLowercase: Bool
     public var isDark: Bool
 
     /// The product identity override, like the web `--brand` tokens.
     public func brand(_ brand: Color, foreground: Color? = nil, soft: Color? = nil) -> SMPalette {
         var p = self
+        // Presets whose accent phrase follows the brand (like the web's
+        // --accent-ink: var(--brand)) keep following it.
+        if accentInk == self.brand { p.accentInk = brand }
         p.brand = brand
         if let foreground { p.brandForeground = foreground }
         p.brandSoft = soft ?? brand.opacity(isDark ? 0.14 : 0.12)
@@ -61,9 +73,11 @@ extension EnvironmentValues {
 extension View {
     /// Apply a preset to a view tree: sets the palette, background, tint and color scheme.
     public func smTheme(_ palette: SMPalette) -> some View {
-        environment(\.smPalette, palette)
+        SMFonts.register()
+        return environment(\.smPalette, palette)
             .tint(palette.brand)
             .foregroundStyle(palette.foreground)
+            .font(.custom(palette.sansFont, size: 16, relativeTo: .body))
             .background(palette.background.ignoresSafeArea())
             .preferredColorScheme(palette.isDark ? .dark : .light)
     }

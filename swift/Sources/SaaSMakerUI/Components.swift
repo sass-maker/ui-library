@@ -13,7 +13,8 @@ public struct SMButtonStyle: ButtonStyle {
 
     public func makeBody(configuration: Configuration) -> some View {
         let label = configuration.label
-            .font(.system(size: 16, weight: .semibold))
+            .font(.custom(p.displayFont, size: 16).weight(.semibold))
+            .textCase(p.uiLowercase ? .lowercase : nil)
             .padding(.horizontal, kind == .link ? 4 : 22)
             .frame(minHeight: kind == .link ? 32 : 46)
         return Group {
@@ -87,7 +88,6 @@ public struct SMSectionHeader: View {
         }
         .multilineTextAlignment(alignment == .center ? .center : .leading)
         .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .top))
-        .smReveal()
     }
 }
 
@@ -113,7 +113,7 @@ public struct SMStatusPill: View {
         }
         HStack(spacing: 5) {
             Circle().fill(color).frame(width: 5, height: 5)
-            Text(text).font(.system(size: 11, weight: .medium, design: .monospaced))
+            Text(text).font(.custom(p.monoFont, size: 11).weight(.medium))
         }
         .foregroundStyle(color)
         .padding(.horizontal, 8)

@@ -31,6 +31,13 @@ extension SMPalette {
         displaySerif: false,
         accentSerif: false,
         textSerif: false,
+        displayFont: "Figtree",
+        accentFont: "Figtree",
+        textFont: "Geist",
+        sansFont: "Geist",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
         isDark: false
     )
 
@@ -63,6 +70,13 @@ extension SMPalette {
         displaySerif: false,
         accentSerif: false,
         textSerif: false,
+        displayFont: "Figtree",
+        accentFont: "Figtree",
+        textFont: "Geist",
+        sansFont: "Geist",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
         isDark: true
     )
 
@@ -95,6 +109,13 @@ extension SMPalette {
         displaySerif: true,
         accentSerif: true,
         textSerif: false,
+        displayFont: "Newsreader",
+        accentFont: "Newsreader",
+        textFont: "Geist",
+        sansFont: "Geist",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
         isDark: false
     )
 
@@ -127,6 +148,13 @@ extension SMPalette {
         displaySerif: false,
         accentSerif: true,
         textSerif: false,
+        displayFont: "Figtree",
+        accentFont: "Instrument Serif",
+        textFont: "Geist",
+        sansFont: "Geist",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
         isDark: true
     )
 
@@ -159,6 +187,13 @@ extension SMPalette {
         displaySerif: true,
         accentSerif: true,
         textSerif: false,
+        displayFont: "Fraunces",
+        accentFont: "Fraunces",
+        textFont: "Geist",
+        sansFont: "Geist",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
         isDark: false
     )
 
@@ -191,6 +226,13 @@ extension SMPalette {
         displaySerif: true,
         accentSerif: true,
         textSerif: false,
+        displayFont: "Instrument Serif",
+        accentFont: "Instrument Serif",
+        textFont: "Geist",
+        sansFont: "Geist",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
         isDark: false
     )
 
@@ -223,6 +265,13 @@ extension SMPalette {
         displaySerif: false,
         accentSerif: false,
         textSerif: true,
+        displayFont: "Figtree",
+        accentFont: "Figtree",
+        textFont: "Newsreader",
+        sansFont: "Figtree",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
         isDark: false
     )
 }

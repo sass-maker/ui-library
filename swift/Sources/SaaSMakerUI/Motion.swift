@@ -40,7 +40,8 @@ private struct SMZoom: ViewModifier {
 }
 
 extension View {
-    /// Fade and rise into view on scroll (inside a ScrollView).
+    /// Fade and rise into view on scroll. Use only on views inside a ScrollView:
+    /// outside one there is no scroll phase and the view stays hidden.
     public func smReveal() -> some View { modifier(SMReveal()) }
     /// Grow from 82% to full size while scrolling into the center (inside a ScrollView).
     public func smZoom() -> some View { modifier(SMZoom()) }

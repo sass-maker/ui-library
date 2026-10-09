@@ -78,6 +78,8 @@ for (const [name, vars] of Object.entries(presets)) {
     colors[role] = c.map((v) => Math.round(v * 1000) / 1000);
   }
   const font = (v, d = 0) => (d < 6 && v?.startsWith("var(") ? font(vars[v.slice(6, -1)], d + 1) : v ?? "");
+  // First family of a stack, as Apple names it ("Figtree Variable" -> "Figtree").
+  const family = (v) => font(v).split(",")[0].replace(/["']/g, "").replace(/ Variable$/, "").trim();
   const serif = (v) => /Newsreader|Fraunces|Instrument Serif|Georgia/.test(font(v));
   const rem = (v) => Math.round(parseFloat(v) * 16 * 10) / 10;
   tokens[name] = {
@@ -90,6 +92,13 @@ for (const [name, vars] of Object.entries(presets)) {
     displaySerif: serif(vars["font-display"]),
     accentSerif: serif(vars["font-accent"]),
     textSerif: serif(vars["font-text"]),
+    displayFont: family(vars["font-display"]),
+    accentFont: family(vars["font-accent"]),
+    textFont: family(vars["font-text"]),
+    sansFont: family(vars["font-sans"]),
+    monoFont: family(vars["font-mono"]),
+    displayLowercase: vars["display-case"] === "lowercase",
+    uiLowercase: vars["ui-case"] === "lowercase",
     dark: name === "ink" || name === "base-dark",
   };
 }
@@ -112,6 +121,13 @@ ${COLORS.map((r) => `        ${camel(r)}: ${swiftColor(t.colors[r])},`).join("\n
         displaySerif: ${t.displaySerif},
         accentSerif: ${t.accentSerif},
         textSerif: ${t.textSerif},
+        displayFont: "${t.displayFont}",
+        accentFont: "${t.accentFont}",
+        textFont: "${t.textFont}",
+        sansFont: "${t.sansFont}",
+        monoFont: "${t.monoFont}",
+        displayLowercase: ${t.displayLowercase},
+        uiLowercase: ${t.uiLowercase},
         isDark: ${t.dark}
     )`)
   .join("\n\n")}

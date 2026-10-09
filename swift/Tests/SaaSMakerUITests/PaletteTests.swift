@@ -1,3 +1,4 @@
+import CoreText
 import SwiftUI
 import Testing
 @testable import SaaSMakerUI
@@ -15,5 +16,24 @@ import Testing
         let amber = SMPalette.ink.brand(.orange)
         #expect(amber.brand == .orange)
         #expect(amber.background == SMPalette.ink.background)
+        #expect(amber.accentInk == .orange, "ink's accent phrase follows the brand")
+        #expect(SMPalette.gallery.brand(.orange).accentInk == SMPalette.gallery.accentInk, "gallery's accent stays muted")
+    }
+}
+
+@Suite struct FontTests {
+    @Test func bundledFamiliesRegister() {
+        SMFonts.register()
+        for family in ["Figtree", "Newsreader", "Geist", "Geist Mono", "Instrument Serif", "Fraunces"] {
+            let font = CTFontCreateWithName(family as CFString, 20, nil)
+            #expect(CTFontCopyFamilyName(font) as String == family, "\(family) is not registered")
+        }
+    }
+
+    @Test func themesUseTheWebFaces() {
+        #expect(SMPalette.gallery.displayFont == "Figtree")
+        #expect(SMPalette.gallery.textFont == "Newsreader")
+        #expect(SMPalette.ink.accentFont == "Instrument Serif")
+        #expect(SMPalette.gallery.displayLowercase && SMPalette.ink.uiLowercase)
     }
 }

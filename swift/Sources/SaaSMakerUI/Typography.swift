@@ -1,8 +1,8 @@
 import SwiftUI
 
 /// Type roles shared with the web: display (headlines), accent (the emphasized
-/// phrase), text (ledes and captions), eyebrow and mono. System faces stand in
-/// for the web fonts: SF for Instrument Sans and Geist, New York for Newsreader.
+/// phrase), text (ledes and captions), eyebrow and mono, in the same bundled
+/// faces as the web theme (Figtree, Newsreader, Geist, Instrument Serif, Fraunces).
 public enum SMType {
     case display(CGFloat)
     case text(CGFloat)
@@ -12,13 +12,13 @@ public enum SMType {
     func font(_ p: SMPalette) -> Font {
         switch self {
         case .display(let size):
-            return .system(size: size, weight: Font.Weight(css: p.displayWeight), design: p.displaySerif ? .serif : .default)
+            return .custom(p.displayFont, size: size).weight(Font.Weight(css: p.displayWeight))
         case .text(let size):
-            return .system(size: size, design: p.textSerif ? .serif : .default)
+            return .custom(p.textFont, size: size)
         case .eyebrow:
-            return .system(size: 13, weight: .semibold)
+            return .custom(p.displayFont, size: 13).weight(.semibold)
         case .mono(let size):
-            return .system(size: size, design: .monospaced)
+            return .custom(p.monoFont, size: size)
         }
     }
 }
@@ -56,8 +56,8 @@ public struct SMDisplay: View {
         if let accent {
             var tail = AttributedString(" " + accent)
             tail.foregroundColor = p.accentInk
-            let accentFont: Font = p.accentSerif && !p.displaySerif
-                ? .system(size: size, weight: .regular, design: .serif)
+            let accentFont: Font = p.accentFont != p.displayFont
+                ? .custom(p.accentFont, size: size)
                 : SMType.display(size).font(p)
             tail.font = p.accentItalic ? accentFont.italic() : accentFont
             line += tail
@@ -65,6 +65,7 @@ public struct SMDisplay: View {
         return Text(line)
             .font(SMType.display(size).font(p))
             .tracking(size * p.displayTracking)
+            .textCase(p.displayLowercase ? .lowercase : nil)
             .lineSpacing(0)
             .fixedSize(horizontal: false, vertical: true)
     }

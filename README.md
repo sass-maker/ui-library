@@ -30,6 +30,11 @@ Add `src/content/<slug>.json` (see `site/src/content/kith.json` and
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```
 
+The Swift package bundles the same fonts as the web theme (Figtree, Newsreader,
+Geist, Geist Mono, Instrument Serif, Fraunces; SIL OFL, licenses in
+`swift/Sources/SaaSMakerUI/Fonts/Licenses`) and follows the theme's lowercase
+voice for headings and buttons.
+
 ## Develop
 
 ```sh
