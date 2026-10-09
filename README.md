@@ -7,7 +7,7 @@ one theme.
 | --- | --- |
 | `@saas-maker/ui` | shadcn/ui components, theme presets, page blocks |
 | `@saas-maker/motion` | scroll motion presets (Motion library) |
-| `@saas-maker/templates` | Gallery and Workbench landing templates, base layout |
+| `@saas-maker/templates` | Gallery and Workbench landing templates, Console app template, base layout |
 | `@saas-maker/tokens` | theme tokens as JSON (generated) |
 | `SaaSMakerUI` (Swift) | palette, type, components and motion for Mac/iOS |
 
@@ -35,6 +35,24 @@ the build with the exact field).
 Brand tokens: `--brand`, `--brand-foreground`, `--brand-soft`, and
 `--brand-ink` (brand as readable text; set it deeper for light brands).
 The previous hand-built layouts stay at `/demo/*-classic/`.
+
+## Data apps (Console)
+
+For private data tools: `ConsolePage` (`@saas-maker/templates/console-page`)
+is a static shell (collections sidebar, breadcrumbs, search trigger, one
+content area); put the interactive view in it as a React island.
+
+| Piece | Import |
+| --- | --- |
+| `DataTable` (sort, pages, column toggle, sticky header, row keyboard nav, loading/empty/error; TanStack Table v9) | `components/data-table` |
+| `FilterBar`, `FacetFilter` (multi-select with counts), `RangeFilter`, `DateRangeFilter`, `ActiveFilters`, `useUrlFilters` | `blocks/filter-bar` |
+| `readFilters` / `writeFilters` (query string), `filterRows`, `facetCounts` | `lib/filters` |
+| `SearchPalette` (⌘K, grouped sources) and `SearchTrigger` | `blocks/search-palette` |
+| `RecordDetail` (side panel, sheet on phones), `KeyValueList`, `Provenance` | `blocks/record-detail` |
+| `ExportMenu` (CSV/JSON of the current view), `toCSV` / `toJSON` | `blocks/export-menu`, `lib/export` |
+| `Breadcrumbs`, `Pagination`, `Popover`, `Command`, `Slider` | `components/*` |
+
+Demo: `/demo/data/` (Nomad Atlas places snapshot, Nomads.com data).
 
 ## Mac / iOS app
 

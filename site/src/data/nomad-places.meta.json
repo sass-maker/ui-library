@@ -1,0 +1,23 @@
+{
+  "collection": "places",
+  "count": 1374,
+  "source": "Nomads.com",
+  "sourceUrl": "https://nomads.com/",
+  "collectedAt": "2026-09-07",
+  "via": "Nomad Atlas saved snapshot (nomad-data-adventure cities.json, commit 517cbeb)",
+  "viaUrl": "https://nomad.significanthobbies.com/",
+  "note": "Saved snapshot, not live prices, visa rules or conditions. Missing values stay missing. Nine novelty entries in the source's Space region are excluded, as in Nomad Atlas.",
+  "units": {
+    "costNomad": "USD/month",
+    "costLocal": "USD/month",
+    "rent": "USD/month, 1BR centre",
+    "coworking": "USD/month",
+    "internet": "Mbps",
+    "overall": "0-5",
+    "safety": "0-5",
+    "walkability": "0-5",
+    "english": "0-5",
+    "healthcare": "0-5",
+    "fun": "0-5"
+  }
+}

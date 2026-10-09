@@ -1,0 +1,35 @@
+---
+/**
+ * Data workbench demo: the Console app template with a real collection
+ * (Nomad Atlas's places snapshot, Nomads.com data). Only the table view is a
+ * hydrated island; the shell is static.
+ */
+import Base from "@saas-maker/templates/Base.astro";
+import { ConsolePage } from "@saas-maker/templates/console-page";
+import PlacesWorkbench from "@/demos/data-workbench";
+import meta from "@/data/nomad-places.meta.json";
+const collected = new Date(meta.collectedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+---
+
+<Base title="Places — data workbench" description="Places from the Nomad Atlas snapshot of Nomads.com data, in the SaaS Maker UI console template." theme="base">
+  <ConsolePage
+    brand={{ name: "workbench", href: "/demo/data/" }}
+    breadcrumbs={[{ label: "workbench", href: "/demo/data/" }, { label: "places" }]}
+    nav={[
+      { title: "collections", items: [{ label: "places", href: "/demo/data/", count: meta.count, active: true }] },
+      {
+        title: "sources",
+        items: [
+          { label: "nomad atlas", href: meta.viaUrl, external: true },
+          { label: "nomads.com", href: meta.sourceUrl, external: true },
+        ],
+      },
+    ]}
+    title="places"
+    description={`Cost, internet and livability for ${meta.count.toLocaleString()} places, from the Nomads.com snapshot Nomad Atlas saved on ${collected}.`}
+    search={{ label: "Search places…" }}
+    sidebarFooter={`Data: Nomads.com, collected ${collected}. A saved snapshot, not live prices or visa rules.`}
+  >
+    <PlacesWorkbench client:load />
+  </ConsolePage>
+</Base>
