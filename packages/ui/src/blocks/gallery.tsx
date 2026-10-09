@@ -8,7 +8,9 @@ import { cn } from "../lib/utils";
  * UI, font-text (serif) for ledes and captions.
  */
 
-type Img = { src: string; alt: string; width?: number; height?: number; priority?: boolean };
+/** A round element of the screenshot (in its pixels) that gently breathes, e.g. a lantern. */
+type Spot = { x: number; y: number; r: number };
+type Img = { src: string; alt: string; width?: number; height?: number; priority?: boolean; spots?: Spot[] };
 
 function Picture({ image, className }: { image: Img; className?: string }) {
   return (
@@ -25,6 +27,28 @@ function Picture({ image, className }: { image: Img; className?: string }) {
   );
 }
 
+/** A circular crop of the screenshot over its own pixels that breathes, so the real screen feels alive. */
+function Breath({ spot: { x, y, r }, src, w, h, i }: { spot: Spot; src: string; w: number; h: number; i: number }) {
+  const d = 2 * r;
+  return (
+    <span
+      aria-hidden
+      className="motion-breathe pointer-events-none absolute rounded-full bg-no-repeat"
+      style={{
+        left: `${((x - r) / w) * 100}%`,
+        top: `${((y - r) / h) * 100}%`,
+        width: `${(d / w) * 100}%`,
+        height: `${(d / h) * 100}%`,
+        backgroundImage: `url(${src})`,
+        backgroundSize: `${(w / d) * 100}% ${(h / d) * 100}%`,
+        backgroundPosition: `${((x - r) / (w - d)) * 100}% ${((y - r) / (h - d)) * 100}%`,
+        animationDelay: `${(-i * 1.37) % 6}s`,
+        animationDuration: `${5.5 + (i % 3) * 0.9}s`,
+      }}
+    />
+  );
+}
+
 /** A phone whose bezel, corners and island scale with its width. Set width with className. */
 export function Device({ image, className }: { image: Img; className?: string }) {
   return (
@@ -34,7 +58,10 @@ export function Device({ image, className }: { image: Img; className?: string })
         className,
       )}
     >
-      <Picture image={image} className="m-[3%] block h-auto w-[94%] rounded-[11.5%/5.3%]" />
+      <div className="relative m-[3%] w-[94%]">
+        <Picture image={image} className="block h-auto w-full rounded-[11.5%/5.3%]" />
+        {image.width && image.height && image.spots?.map((p, i) => <Breath key={i} spot={p} src={image.src} w={image.width!} h={image.height!} i={i} />)}
+      </div>
       <span aria-hidden className="absolute left-1/2 top-[3.3%] h-[2.5%] w-[27%] -translate-x-1/2 rounded-full bg-[#0d0a08]" />
     </div>
   );

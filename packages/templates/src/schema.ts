@@ -7,7 +7,14 @@ import { z } from "astro/zod";
  */
 
 const link = z.object({ label: z.string(), href: z.string(), icon: z.string().optional() }).strict();
-const screen = z.object({ src: z.string(), alt: z.string().min(1) }).strict();
+const screen = z
+  .object({
+    src: z.string(),
+    alt: z.string().min(1),
+    /** Round elements (in screenshot pixels) that gently breathe: the screen's one live moment. */
+    spots: z.array(z.object({ x: z.number(), y: z.number(), r: z.number() }).strict()).optional(),
+  })
+  .strict();
 const caption = z.object({ lead: z.string().optional(), text: z.string().optional() }).strict();
 const tone = z.enum(["neutral", "success", "danger", "warning", "brand"]);
 const pill = z.object({ tone, label: z.string() }).strict();

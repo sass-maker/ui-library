@@ -43,7 +43,39 @@
     "backdrop": "/demo/kith/book-stage.webp",
     "screen": {
       "src": "/demo/kith/constellation.webp",
-      "alt": "Kith on iPhone showing a warm constellation of people sized by chosen closeness"
+      "alt": "Kith on iPhone showing a warm constellation of people sized by chosen closeness",
+      "spots": [
+        {
+          "x": 181,
+          "y": 404,
+          "r": 114
+        },
+        {
+          "x": 423,
+          "y": 468,
+          "r": 114
+        },
+        {
+          "x": 252,
+          "y": 622,
+          "r": 93
+        },
+        {
+          "x": 375,
+          "y": 816,
+          "r": 114
+        },
+        {
+          "x": 153,
+          "y": 833,
+          "r": 75
+        },
+        {
+          "x": 341,
+          "y": 1014,
+          "r": 60
+        }
+      ]
     }
   },
   "sections": [
@@ -55,7 +87,39 @@
       "lede": "Every person becomes a warm lantern. Its size comes only from the 1–5 closeness you set: not recency, message volume, or an algorithm.",
       "screen": {
         "src": "/demo/kith/constellation.webp",
-        "alt": "Kith home screen enlarged: lanterns for Amma, Arjun, Priya, Maya, Dev and Nora, each sized by chosen closeness"
+        "alt": "Kith home screen enlarged: lanterns for Amma, Arjun, Priya, Maya, Dev and Nora, each sized by chosen closeness",
+        "spots": [
+          {
+            "x": 181,
+            "y": 404,
+            "r": 114
+          },
+          {
+            "x": 423,
+            "y": 468,
+            "r": 114
+          },
+          {
+            "x": 252,
+            "y": 622,
+            "r": 93
+          },
+          {
+            "x": 375,
+            "y": 816,
+            "r": 114
+          },
+          {
+            "x": 153,
+            "y": 833,
+            "r": 75
+          },
+          {
+            "x": 341,
+            "y": 1014,
+            "r": 60
+          }
+        ]
       },
       "caption": {
         "lead": "The real home screen.",

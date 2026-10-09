@@ -473,6 +473,21 @@
    .motion-* classes. Until it runs, and with reduced motion, pages render
    at rest. */
 
+/* A live element of a screenshot breathing in place. It only grows, so the
+   original pixels underneath never show. */
+@keyframes sm-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.motion-breathe {
+  animation: sm-breathe 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-breathe { animation: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
