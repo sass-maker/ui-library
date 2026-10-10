@@ -25,6 +25,8 @@ export type SearchResult = {
   meta?: string;
   /** Navigate here on select unless `onSelect` handles it. */
   href?: string;
+  /** Shown but not selectable, e.g. a record whose page is not ready. */
+  disabled?: boolean;
 };
 
 export type SearchSource = {
@@ -33,7 +35,19 @@ export type SearchSource = {
   label: string;
   /** Sync or async. Return the best few; the palette shows them in order. */
   search: (query: string) => SearchResult[] | Promise<SearchResult[]>;
+  /**
+   * Externally controlled loading, e.g. a collection still downloading its
+   * index. The group shows a quiet "loading…" line and is not searched until
+   * it clears.
+   */
+  loading?: boolean;
+  /** Quiet status line for the group, e.g. "indexing 12,000 records". Replaces "loading…". */
+  status?: string;
+  /** Group is listed but not searched, e.g. unavailable offline. Pair with `status` to say why. */
+  disabled?: boolean;
 };
+
+type SourceState = { source: SearchSource; items: SearchResult[]; pending: boolean; failed: boolean };
 
 const OPEN_EVENT = "sm:search-open";
 
@@ -120,36 +134,55 @@ export function SearchPalette({
   }, [hotkey, open, setOpen]);
 
   const [query, setQuery] = React.useState("");
-  const [results, setResults] = React.useState<{ source: SearchSource; items: SearchResult[] }[]>([]);
-  const [pending, setPending] = React.useState(false);
+  const [states, setStates] = React.useState<Record<string, SourceState>>({});
   React.useEffect(() => {
     const q = query.trim();
     if (!q) {
-      setResults([]);
-      setPending(false);
+      setStates({});
       return;
     }
     let live = true;
-    setPending(true);
-    const t = setTimeout(async () => {
-      const settled = await Promise.all(
-        sources.map(async (source) => {
-          try {
-            return { source, items: await source.search(q) };
-          } catch {
-            return { source, items: [] };
-          }
-        }),
-      );
-      if (!live) return;
-      setResults(settled.filter((r) => r.items.length));
-      setPending(false);
+    const searchable = sources.filter((s) => !s.disabled && !s.loading);
+    // Slow sources show as pending; fast ones appear as soon as they settle.
+    setStates((prev) =>
+      Object.fromEntries(searchable.map((source) => [source.id, { source, items: prev[source.id]?.items ?? [], pending: true, failed: false }])),
+    );
+    const t = setTimeout(() => {
+      for (const source of searchable) {
+        Promise.resolve()
+          .then(() => source.search(q))
+          .then(
+            (items) => ({ items, failed: false }),
+            () => ({ items: [] as SearchResult[], failed: true }),
+          )
+          .then(({ items, failed }) => {
+            if (live) setStates((prev) => ({ ...prev, [source.id]: { source, items, pending: false, failed } }));
+          });
+      }
     }, 90);
     return () => {
       live = false;
       clearTimeout(t);
     };
   }, [query, sources]);
+
+  const groups = (query.trim() ? sources : [])
+    .map((source) => {
+      const state = states[source.id];
+      const note = source.disabled
+        ? source.status
+        : source.loading
+          ? (source.status ?? "loading…")
+          : state?.pending
+            ? (source.status ?? "searching…")
+            : state?.failed
+              ? "couldn’t search this collection"
+              : source.status;
+      return { source, items: source.disabled || source.loading ? [] : (state?.items ?? []), note, busy: !!source.loading || !!state?.pending };
+    })
+    .filter((g) => g.items.length || g.note);
+  const anyBusy = groups.some((g) => g.busy);
+  const hasItems = groups.some((g) => g.items.length);
 
   React.useEffect(() => {
     if (!open) setQuery("");
@@ -176,11 +209,26 @@ export function SearchPalette({
       <CommandInput placeholder={placeholder} value={query} onValueChange={setQuery} />
       <CommandList>
         {!query.trim() && <p className="px-4 py-8 text-center text-sm text-muted-foreground">{emptyHint}</p>}
-        {query.trim() && !pending && <CommandEmpty>No results for “{query.trim()}”.</CommandEmpty>}
-        {results.map(({ source, items }) => (
-          <CommandGroup key={source.id} heading={source.label}>
+        {query.trim() && !anyBusy && !hasItems && <CommandEmpty>No results for “{query.trim()}”.</CommandEmpty>}
+        {groups.map(({ source, items, note, busy }) => (
+          <CommandGroup
+            key={source.id}
+            aria-busy={busy || undefined}
+            heading={
+              <span className="flex items-center justify-between gap-3">
+                <span>{source.label}</span>
+                {note && <span className="font-normal normal-case tracking-normal opacity-80">{note}</span>}
+              </span>
+            }
+          >
             {items.map((r) => (
-              <CommandItem key={r.id} value={`${source.id}:${r.id}`} onSelect={() => choose(r, source.id)} className="gap-3">
+              <CommandItem
+                key={r.id}
+                value={`${source.id}:${r.id}`}
+                disabled={r.disabled}
+                onSelect={() => choose(r, source.id)}
+                className="gap-3"
+              >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-foreground">{r.title}</span>
                   {r.subtitle && <span className="block truncate text-xs text-muted-foreground">{r.subtitle}</span>}

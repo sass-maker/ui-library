@@ -17,7 +17,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.11"
+G="github:sass-maker/ui-library#v0.1.12"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -27,15 +27,17 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.11&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.11&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.11&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.12&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.12&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.12&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
 `git+https://github.com/sass-maker/ui-library.git`, dropping `#tag&path:`
 (with or without `--save-exact`), so the next fresh install gets the wrong
 package. To upgrade, change the tag in all three lines and run `pnpm install`.
+
+Fonts: the theme ships Latin-only, weight-clamped woff2 subsets (about 50 KB on a Gallery page, about 105 KB on a Workbench paper page; `@font-face` is lazy and `Base.astro` preloads only the display font). Characters outside Latin fall back to the system font; add your own `@font-face` for other scripts. Regenerate with `pnpm --filter @saas-maker/ui fonts:build`.
 
 Styles: `Base.astro` imports only `@saas-maker/ui/theme.css` (tokens, fonts
 and base styles). `GalleryPage`, `WorkbenchPage` and `ConsolePage` each import
@@ -210,7 +212,7 @@ content area); put the interactive view in it as a React island.
 | `DataTable` (sort, pages, column toggle, sticky header, row keyboard nav, loading/empty/error, row selection with `selection={{ selected, onChange, max }}` for compare flows; TanStack Table v9) | `components/data-table` |
 | `FilterBar`, `FacetFilter` (multi-select with counts), `RangeFilter`, `DateRangeFilter`, `ActiveFilters`, `useUrlFilters` | `blocks/filter-bar` |
 | `readFilters` / `writeFilters` (query string), `filterRows`, `facetCounts` | `lib/filters` |
-| `SearchPalette` (⌘K, grouped sources) and `SearchTrigger` | `blocks/search-palette` |
+| `SearchPalette` (⌘K, grouped sources; each source settles on its own and can set `loading`, `status` (quiet line in the group heading) or `disabled`; a result can be `disabled`) and `SearchTrigger` | `blocks/search-palette` |
 | `RecordDetail` (side panel, sheet on phones), `KeyValueList` (labels keep their width, values wrap; `align="start"` for prose), `Provenance` (from, via + endpoint, collected, read at, snapshot) | `blocks/record-detail` |
 | `QuoteList` (verbatim quotes or claims: speaker, never named unless verified; source, date, timestamp link, type; keyboard rows), `QuoteRow`, `formatTimestamp` | `blocks/quote-list` |
 | `ExportMenu` (CSV/JSON of the current view), `toCSV` / `toJSON` | `blocks/export-menu`, `lib/export` |
@@ -223,7 +225,7 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.11")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.12")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```

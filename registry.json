@@ -7,21 +7,20 @@
       "name": "theme",
       "type": "registry:file",
       "title": "Fleet UI theme",
-      "description": "Tokens, five presets (base, paper, ink, hearth, signal), fonts and base styles.",
+      "description": "Tokens, six presets (base, paper, ink, hearth, signal, gallery) and base styles. Fonts: Latin woff2 subsets ship in @saas-maker/ui (src/fonts); a shadcn copy needs them in src/fonts.",
       "dependencies": [
-        "tw-animate-css",
-        "@fontsource-variable/geist",
-        "@fontsource-variable/geist-mono",
-        "@fontsource-variable/newsreader",
-        "@fontsource/instrument-serif",
-        "@fontsource-variable/fraunces",
-        "@fontsource-variable/figtree"
+        "tw-animate-css"
       ],
       "files": [
         {
           "path": "packages/ui/src/styles/theme.css",
           "type": "registry:file",
           "target": "src/styles/fleet-ui.css"
+        },
+        {
+          "path": "packages/ui/src/styles/fonts.css",
+          "type": "registry:file",
+          "target": "src/styles/fonts.css"
         }
       ]
     },

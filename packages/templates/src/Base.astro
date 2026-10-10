@@ -59,6 +59,15 @@ const {
 const style = Object.entries(tokens)
   .map(([k, v]) => `${k}:${v}`)
   .join(";");
+// Preload only the display font (the one every page paints first); body faces load on demand.
+const displayFont =
+  theme === "paper"
+    ? (await import("@saas-maker/ui/fonts/newsreader-display-latin-normal.woff2?url")).default
+    : theme === "hearth"
+      ? (await import("@saas-maker/ui/fonts/fraunces-latin-normal.woff2?url")).default
+      : theme === "signal"
+        ? (await import("@saas-maker/ui/fonts/instrument-serif-latin-normal.woff2?url")).default
+        : (await import("@saas-maker/ui/fonts/figtree-latin-normal.woff2?url")).default;
 const ogTitle = og?.title ?? title;
 const ogDescription = og?.description ?? description;
 const card = og?.twitterCard ?? (og?.image ? "summary_large_image" : "summary");
@@ -72,6 +81,7 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     {description && <meta name="description" content={description} />}
     {icon && <link rel="icon" href={icon} />}
     <meta name="color-scheme" content={theme === "ink" || mode === "dark" ? "dark" : "light"} />

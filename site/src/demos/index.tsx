@@ -42,7 +42,7 @@ const kithExcerpt = `{
 }`;
 
 const webInstall = `# from the GitHub repo, not npm (pnpm add drops #tag&path)
-G="github:sass-maker/ui-library#v0.1.11"
+G="github:sass-maker/ui-library#v0.1.12"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \\
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \\
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -50,7 +50,7 @@ pnpm install`;
 
 const swiftInstall = `.package(
   url: "https://github.com/sass-maker/ui-library",
-  from: "0.1.11"
+  from: "0.1.12"
 )`;
 
 function DemoLink({ href, children }: { href: string; children: React.ReactNode }) {
