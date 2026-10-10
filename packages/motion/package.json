@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/motion",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "private": true,
   "type": "module",
   "description": "Quiet scroll motion for server-rendered pages, driven by .motion-* classes.",

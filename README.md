@@ -17,7 +17,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.13"
+G="github:sass-maker/ui-library#v0.1.14"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -27,9 +27,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.13&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.13&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.13&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.14&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.14&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.14&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -70,6 +70,8 @@ plus Tailwind's utilities layer and their own narrow `@source` entries. The
 scoped and full entry files already include that utilities layer. Your app's own files are scanned
 automatically. Each package's sources are relative to its own stylesheet,
 so this works with pnpm's isolated layout.
+
+Pages that style their own content but keep `SiteHeader` and `StudioFooter` can import `@saas-maker/ui/source-shell.css` (header, mobile nav, footer only) as their one utilities entry instead of a whole template entry.
 
 A page must have only one Tailwind entry that imports utilities: do not add a
 second one alongside a template component's automatic CSS import. Keep your
@@ -304,7 +306,7 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.13")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.14")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```
