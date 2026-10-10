@@ -1,17 +1,19 @@
 {
   "name": "ui-library",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.33.2",
   "scripts": {
     "dev": "pnpm --filter @saas-maker/ui-site dev",
     "build": "pnpm --filter @saas-maker/ui-site build && pnpm registry:build",
-    "check": "pnpm typecheck && pnpm --filter @saas-maker/ui-site check",
+    "check": "pnpm test && pnpm typecheck && pnpm --filter @saas-maker/ui-site check",
     "check:browser": "node site/scripts/browser-check.mjs",
     "registry:build": "shadcn build --output site/dist/r",
     "typecheck": "tsc -p tsconfig.json",
-    "tokens:build": "node packages/tokens/build.mjs"
+    "tokens:build": "node packages/tokens/build.mjs",
+    "footer:build": "pnpm --filter @saas-maker/ui footer:build",
+    "test": "pnpm --filter @saas-maker/ui test"
   },
   "devDependencies": {
     "@types/react": "19.3.0",
@@ -22,6 +24,11 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ]
+    ],
+    "overrides": {
+      "@vitest/spy@3.2.7>tinyspy": "4.0.4",
+      "vite@7.3.7>rollup": "4.63.1",
+      "happy-dom>@types/node": "25.9.5"
+    }
   }
 }
