@@ -17,7 +17,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.14"
+G="github:sass-maker/ui-library#v0.1.15"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -27,9 +27,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.14&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.14&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.14&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.15&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.15&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.15&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -306,7 +306,7 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.14")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.15")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```
@@ -337,3 +337,87 @@ pnpm check:browser  # keyboard, focus and footer checks in Chrome (needs the sit
 pnpm tokens:build   # regenerate tokens.json and the Swift tokens
 swift build && swift test
 ```
+
+## Static site / no framework
+
+Install the pinned UI package with the same GitHub spec style:
+
+```sh
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.15&path:/packages/ui'
+pnpm install
+cp node_modules/@saas-maker/ui/footer.* public/
+```
+
+The committed `footer.js` and `footer.css` need no React, Tailwind, CDN imports,
+or consumer build step. Serve these files at your static asset path:
+
+```html
+<link rel="stylesheet" href="/footer.css">
+<script type="module" src="/footer.js"></script>
+<studio-footer product="Reader" url="https://reader.significanthobbies.com"
+  catalog-id="reader" capture="newsletter" variant="studio">
+  <script type="application/json">
+    {"summary":"Your saved links.","groups":[]}
+  </script>
+</studio-footer>
+```
+
+Attributes use kebab case; JSON and `.config` use the React prop names.
+JSON is merged with `.config`, then attributes take precedence. Supported scalar
+attributes: `product`, `url`, `summary`, `catalog-id`, `feedback-key`,
+`subscribe-key`, `capture` (`newsletter`, `waitlist`, `false`), `variant`
+(`studio`, `gallery`), `art-mode` (`panel`, `scene`), `wordmark`
+(`poster`, `stack`, `fill`), `privacy-url`, `legal`, `class-name`, and `ref`.
+JSON or `.config` supplies `groups`, `art`, `studio`, and the other props.
+`summary`, `legal`, and `mark` accept escaped text rather than React nodes;
+there is no raw HTML interpolation. All other markup and copy comes from the
+unchanged React footer source. The system-font defaults use the same theme
+roles; define `--font-display` / `--font-text` on your page to use your fonts.
+`data-theme` and `data-mode="dark"` use the web theme palettes.
+
+`projects` accepts the public projects list and uses `studioFromProjects`, with
+`catalogId` as the current project and `studioLimit` defaulting to three.
+`studio-from-projects="true"` (or `studioFromProjects: true`) fetches
+`https://sassmaker.com/projects.json` in the browser; a URL value selects your
+own feed. Explicit `studio` takes precedence; empty or failed sources use
+`defaultStudio`. Links use `ref=<catalogId>` unless `ref` overrides it.
+The Node helper is synchronous: fetch a feed yourself and pass `projects`.
+
+For a Cloudflare Worker string template, prerender the exact same footer and
+wrap it in the element. It is visible before JavaScript loads; the element
+attaches behavior to the existing footer without replacing it:
+
+```js
+import { renderStudioFooterHtml } from "@saas-maker/ui/footer-html";
+export default {
+  fetch() {
+    const footer = renderStudioFooterHtml({
+      product: "Reader", url: "https://reader.significanthobbies.com",
+      catalogId: "reader", summary: "Your saved links.", groups: [],
+    });
+    return new Response(`<!doctype html><html><head>
+      <link rel="stylesheet" href="/footer.css">
+      <script type="module" src="/footer.js"></script>
+      </head><body><studio-footer>${footer}</studio-footer></body></html>`,
+      { headers: { "Content-Type": "text/html; charset=utf-8" } });
+  },
+};
+```
+
+Serve the copied assets through your existing static asset route. No project
+key means preview mode; catalog lookups use the same retry/cache rules and
+Unreachable message as `Base.astro`. `subscribeKey` falls back to `feedbackKey`.
+The default consent privacy link is `https://sassmaker.com/privacy`.
+
+**Do not use both `footer.js` and the `Base.astro` footer script.** Use
+`footerScript={false}` if embedding this element in Base. Element handlers
+stop handled events before Base's window listeners as a defensive guard;
+other page scripts keep their own scope. Multiple element instances scope
+forms, dialogs, anchors and key caches independently (markup retains the
+React component's fixed field IDs, so prefer one footer per page).
+
+Rebuild with `pnpm footer:build`; `pnpm test` includes React/static parity.
+The parity test sorts attributes and drops React comment nodes only. It preserves
+text whitespace, entity spelling, attribute casing, void-element syntax, child
+order, classes, and inline styles. Text-only ReactNode props are the sole
+intentional prop limitation; raw React elements cannot be passed to JSON.

@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/tokens",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "private": true,
   "type": "module",
   "description": "Design tokens generated from the web theme for non-CSS consumers (Swift, JSON).",
