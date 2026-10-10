@@ -5,8 +5,9 @@ export interface StudioFooterProps {
   product: string;
   url: string;
   summary?: string;
+  cta?: { label: string; href: string };
   groups?: { title: string; links: { label: string; href: string }[] }[];
-  art?: { src: string; alt: string; position?: string };
+  art?: { src: string; alt: string; position?: string; width?: number; height?: number; credit?: string; creditHref?: string };
   feedbackKey?: string;
   subscribeKey?: string;
   catalogId?: string;

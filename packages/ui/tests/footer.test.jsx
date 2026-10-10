@@ -13,6 +13,7 @@ import {
   withRef,
 } from "../footer-html.js";
 import { createProjectKey, Unreachable } from "../footer/keys.js";
+import { readFileSync } from "node:fs";
 const base = {
   product: "Reader",
   url: "https://reader.example",
@@ -55,7 +56,12 @@ describe("React parity", () => {
             src: "/art.webp?a=1&b=2",
             alt: "Art & light",
             position: "40% 60%",
+            width: 1200,
+            height: 800,
+            credit: "Art by <someone> & friends",
+            creditHref: "https://example.com/art?a=1&b=2",
           },
+          cta: { label: "Open <Reader> & read", href: "/open?a=1&b=2" },
           studio: [
             {
               id: "live",
@@ -74,6 +80,77 @@ describe("React parity", () => {
       expect(normalize(renderStudioFooterHtml(props))).toEqual(
         normalize(renderToStaticMarkup(<StudioFooter {...props} />)),
       ));
+});
+function fragment(props) {
+  const t = document.createElement("template");
+  t.innerHTML = renderStudioFooterHtml({ ...base, ...props });
+  return t.content;
+}
+it("renders one escaped product CTA outside subscribe and validates its href", () => {
+  for (const href of ["https://example.com/open", "http://example.com", '/open?q="<bad>&x=1', "/open?a=1&b=2", "./open", "../open", "open"]) {
+    const dom = fragment({ cta: { label: '<b>Open</b> & "read"', href } });
+    const links = dom.querySelectorAll("a.bg-brand");
+    expect(links).toHaveLength(1);
+    expect(links[0].getAttribute("href")).toBe(href);
+    expect(links[0].textContent).toBe('<b>Open</b> & "read"');
+    expect(links[0].querySelector("b")).toBeNull();
+    expect(links[0].closest("form")).toBeNull();
+  }
+  for (const href of ["javascript:alert(1)", "data:text/html,bad", "mailto:a@b.co", "//other.example", "/\\other.example", "\njavascript:bad", "https://", ""]) {
+    expect(fragment({ cta: { label: "Open", href } }).querySelector("a.bg-brand")).toBeNull();
+  }
+  expect(fragment({}).querySelector("a.bg-brand")).toBeNull();
+  expect(() => fragment({ cta: { label: { html: "<b>raw</b>" }, href: "/open" } })).toThrow("cta.label must be text");
+});
+it("keeps subscribe height on mobile and flexes only in the row layout", () => {
+  const input = fragment({}).querySelector("#subscribe-email");
+  expect(input.classList.contains("h-12")).toBe(true);
+  expect(input.classList.contains("shrink-0")).toBe(true);
+  expect(input.classList.contains("sm:flex-1")).toBe(true);
+  expect(input.classList.contains("flex-1")).toBe(false);
+});
+it("renders art dimensions, focal points and escaped credits in every mode", () => {
+  const art = { src: "/art.webp", alt: "Art", width: 1200, height: 800, position: "40% 60%", credit: "<b>Artist</b> & friends", creditHref: "https://example.com/art?a=1&b=2" };
+  for (const wordmark of ["poster", "stack", "fill"]) {
+    for (const artMode of ["panel", "scene"]) {
+      const dom = fragment({ art, wordmark, artMode });
+      if (wordmark === "fill") {
+        expect(dom.querySelector(".bg-clip-text").style.backgroundPosition).toBe(art.position);
+      } else {
+        const img = dom.querySelector("img");
+        expect(img.getAttribute("width")).toBe("1200");
+        expect(img.getAttribute("height")).toBe("800");
+        expect(img.style.objectPosition).toBe(art.position);
+      }
+      const credit = dom.querySelector('a[href^="https://example.com/art"]');
+      expect(credit.textContent).toBe(art.credit);
+      expect(credit.querySelector("b")).toBeNull();
+    }
+  }
+  for (const creditHref of [undefined, "/artist", "javascript:bad", "//example.com", "https://"]) {
+    const dom = fragment({ art: { ...art, creditHref } });
+    const credit = [...dom.querySelectorAll("p")].find((p) => p.textContent === art.credit);
+    expect(credit).toBeTruthy();
+    expect(credit.querySelector("a")).toBeNull();
+  }
+  expect(fragment({ art: { ...art, creditHref: "http://example.com/artist" } }).querySelector('a[href="http://example.com/artist"]')).not.toBeNull();
+  expect(() => fragment({ art: { ...art, credit: { html: "<b>raw</b>" } } })).toThrow("art.credit must be text");
+});
+it("ships the reset and theme adapter outside Tailwind layers", () => {
+  const css = readFileSync("footer.css", "utf8");
+  const rules = [];
+  let depth = 0, start = 0;
+  for (let i = 0; i < css.length; i++) {
+    if (css[i] === "{") depth++;
+    if (css[i] === "}" && --depth === 0) {
+      rules.push(css.slice(start, i + 1));
+      start = i + 1;
+    }
+  }
+  expect(rules.some((rule) => rule.startsWith("footer[data-fleet-footer]") && rule.includes("font:revert-layer") && rule.includes("margin:revert-layer"))).toBe(true);
+  expect(rules.some((rule) => rule.startsWith("footer[data-fleet-footer]{") && rule.includes("--background:") && rule.includes("color-scheme:light"))).toBe(true);
+  expect(rules.some((rule) => rule.includes('[data-theme=dark]') && rule.includes(".dark") && rule.includes("color-scheme:dark") && !rule.startsWith("@layer"))).toBe(true);
+  expect(rules.some((rule) => rule.startsWith("@media(prefers-color-scheme:dark)") && rule.includes(':not([data-theme=light])') && rule.includes("--muted-foreground:"))).toBe(true);
 });
 it("escapes interpolated text and attributes", () => {
   const html = renderStudioFooterHtml({
@@ -238,6 +315,22 @@ it("JSON/property/attributes and feed fallback work in the built element", async
   });
   host.remove();
   fetch.mockRestore();
+});
+it("supports CTA attributes and passes JSON art metadata through unchanged", async () => {
+  await import("../footer.js");
+  const host = document.createElement("studio-footer");
+  const art = { src: "/art.webp", alt: "Art", width: 640, height: 480, position: "20% 80%", credit: "<Artist>", creditHref: "https://example.com/artist" };
+  host.innerHTML = '<script type="application/json">' + JSON.stringify({ ...base, art }) + '</script>';
+  host.setAttribute("cta-label", "Open Reader");
+  host.setAttribute("cta-href", "/open");
+  document.body.append(host);
+  expect(host.readConfig().art).toEqual(art);
+  expect(host.querySelector("a.bg-brand").textContent).toBe("Open Reader");
+  expect(host.querySelector("img").getAttribute("width")).toBe("640");
+  expect(host.querySelector('a[href="https://example.com/artist"]').textContent).toBe("<Artist>");
+  host.setAttribute("cta-href", "javascript:bad");
+  expect(host.querySelector("a.bg-brand")).toBeNull();
+  host.remove();
 });
 it("posts subscribe once and blocks Base-style window delegation", async () => {
   await import("../footer.js");

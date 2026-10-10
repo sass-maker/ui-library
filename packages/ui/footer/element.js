@@ -8,6 +8,8 @@ const attributes = [
   "product",
   "url",
   "summary",
+  "cta-label",
+  "cta-href",
   "catalog-id",
   "feedback-key",
   "subscribe-key",
@@ -61,6 +63,12 @@ export class StudioFooterElement extends HTMLElement {
           this.getAttribute(name);
       }
     if (config.capture === "false") config.capture = false;
+    if (config.ctaLabel != null || config.ctaHref != null)
+      config.cta = {
+        ...config.cta,
+        ...(config.ctaLabel != null && { label: config.ctaLabel }),
+        ...(config.ctaHref != null && { href: config.ctaHref }),
+      };
     if (config.studioFromProjects === "") config.studioFromProjects = true;
     if (config.studioFromProjects === "false")
       config.studioFromProjects = false;
