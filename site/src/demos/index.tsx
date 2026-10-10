@@ -102,7 +102,9 @@ export default function IndexPage() {
           { label: "Families", href: "#families" },
           { label: "Content", href: "#content" },
           { label: "Apple", href: "#apple" },
-          { label: "Install", href: "#install" },
+          { label: "loading demo", href: "/demo/loading/" },
+              { label: "loading guide", href: "/docs/loading/" },
+              { label: "Install", href: "#install" },
         ]}
         actions={
           <a href="#install" className="ui-case rounded-full bg-primary px-3.5 py-[0.45rem] text-[0.8125rem] font-semibold text-primary-foreground">
@@ -324,6 +326,8 @@ export default function IndexPage() {
               { label: "CodeVetter", href: "/demo/codevetter/" },
               { label: "Reader", href: "/demo/reader/" },
               { label: "App Health", href: "/demo/app-health/" },
+              { label: "loading demo", href: "/demo/loading/" },
+              { label: "loading guide", href: "/docs/loading/" },
               { label: "Install", href: "#install" },
             ],
           },

@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/ui",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "private": true,
   "type": "module",
   "description": "SaaS Maker UI: shadcn/ui components, theme presets and page blocks shared across Fleet products.",

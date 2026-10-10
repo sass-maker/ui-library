@@ -174,6 +174,27 @@ check("quotes: Space opens a row", await waitFor("!!document.querySelector('[dat
 await open("/demo/data/claims/", 390);
 check("claims: no horizontal scroll at 390", await js("document.documentElement.scrollWidth <= innerWidth"));
 
+// ── Loading demo: same-shape placeholder, retry recovery and cached revisit
+await open("/demo/loading/", 390);
+check("loading: skeleton appears for a slow request", await waitFor("!!document.querySelector('[data-resource-demo] [role=status][aria-busy=true]')"));
+check("loading: no horizontal scroll at 390", await js("document.documentElement.scrollWidth <= innerWidth"));
+check("loading: slow request resolves", await waitFor("!!document.querySelector('[data-loaded-record]')"));
+await js("document.querySelector('[data-revisit]').click()");
+await js("document.querySelector('[data-revisit]').click()");
+check("loading: revisit uses cached content immediately", await js("!!document.querySelector('[data-loaded-record]') && !document.querySelector('[data-resource-demo] [aria-busy=true]')"));
+await js("document.querySelector('[data-mode=error]').click()");
+check("loading: error offers try again", await waitFor("[...document.querySelectorAll('[data-resource-demo] button')].some(b => b.textContent === 'try again')"));
+await js("[...document.querySelectorAll('[data-resource-demo] button')].find(b => b.textContent === 'try again').click()");
+check("loading: retry recovers", await waitFor("!!document.querySelector('[data-loaded-record]')"));
+await js("document.querySelector('[data-mode=empty]').click()");
+check("loading: empty result is distinct", await waitFor("document.querySelector('[data-resource-demo]')?.dataset.resourceStatus === 'empty'"));
+
+await cdp("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+check("loading: reduced motion stops pulse", await js("[...document.querySelectorAll('[data-slot=skeleton]')].every(b => getComputedStyle(b).animationName === 'none')"));
+await js("document.querySelector('[data-mode=fast]').click()");
+check("loading: fast request avoids a visible placeholder", await js("(() => new Promise(resolve => { let flashed = false; const sample = () => { const bone = document.querySelector('[data-resource-demo] [data-slot=card-skeleton]'); if (bone && getComputedStyle(bone.parentElement).visibility !== 'hidden') flashed = true; }; const timer = setInterval(sample, 10); setTimeout(() => { clearInterval(timer); resolve(!flashed && !!document.querySelector('[data-loaded-record]')); }, 250); }))()"));
+await cdp("Emulation.setEmulatedMedia", { features: [] });
+
 // ── Gallery footer: lookup failure is an error, retried next time; selector is unique; no globals
 await open("/demo/anchor/");
 check("gallery: no horizontal scroll at 1440", await js("document.documentElement.scrollWidth <= innerWidth"));

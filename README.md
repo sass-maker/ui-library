@@ -303,6 +303,96 @@ Demo: `/demo/data/` (Nomad Atlas places snapshot, Nomads.com data; pick up
 to three rows to compare) and `/demo/data/claims/` (a verbatim sample of
 High Signal Podcasts claims from its public API, read 9 Oct 2026).
 
+## Loading states
+
+Show a same-shape placeholder within 300 ms; delay it about 150 ms to avoid
+flashing on fast responses. Reserve image ratios, table columns and row heights.
+Keep the shell visible, avoid full-page spinners, and show cached data on revisit.
+Every collection needs an empty state and every failure needs a retry action.
+Skeleton containers announce “loading” once; bones are hidden from assistive
+technology and pulse stops under reduced motion.
+
+```tsx
+"use client";
+import { useResource } from "@saas-maker/ui/lib/use-resource";
+import { ResourceBoundary } from "@saas-maker/ui/blocks/resource-boundary";
+import { CardSkeleton } from "@saas-maker/ui/blocks/skeletons";
+
+async function fetchItems(signal: AbortSignal) {
+  const response = await fetch("/api/items", { signal });
+  if (!response.ok) throw Object.assign(new Error("could not load items"), {
+    status: response.status, // retries network/5xx, never 4xx
+  });
+  return response.json() as Promise<{ id: string; name: string }[]>;
+}
+export function Items() {
+  const resource = useResource("items", fetchItems, { staleTime: 30_000 });
+  return <ResourceBoundary resource={resource} skeleton={<CardSkeleton />}>
+    {(items) => <ul>{items.map((item) => <li key={item.id}>{item.name}</li>)}</ul>}
+  </ResourceBoundary>;
+}
+```
+
+Use `SkeletonText`, `SkeletonAvatar`, `SkeletonBlock`/`SkeletonImage` from
+`components/skeleton`; shaped layouts (`CardSkeleton`, `CardGridSkeleton`,
+`StatTileSkeleton`, `QuoteListSkeleton`, `RecordDetailSkeleton`,
+`ConsolePageSkeleton`) from `blocks/skeletons`. `DataTableSkeleton` lives beside
+`DataTable` in `components/data-table`; reuse the loaded table's column widths
+and row count. `EmptyState` and `ErrorState` also work independently.
+`useResource` shares a key-based in-memory cache and deduplicates requests;
+include account, filters and locale in keys. Use separate resource clients for
+server requests and recreate account-scoped clients on sign-out. Pass `initialData` for
+server-rendered values. Session storage is opt-in: use it only for safe data.
+
+```tsx
+import { createResourceClient, invalidate, prefetch } from "@saas-maker/ui/lib/use-resource";
+const client = createResourceClient(); // one per account or server request
+// Inside a client leaf:
+const resource = useResource("public-items", fetchItems, {
+  client, staleTime: 30_000, cacheTime: 300_000,
+  persist: { ttl: 60_000 }, // optional sessionStorage; only safe public data
+  revalidateOnFocus: true, revalidateOnReconnect: true,
+});
+// Default shared client; use client.prefetch/client.invalidate for isolated caches:
+await prefetch("items", fetchItems);
+invalidate("items");
+```
+
+### Streaming and partial hydration
+
+The site pins Astro 7.3.5 and React 19.3.0. Its static build demonstrates a
+`client:load` island, not a deployed server island. In an Astro product with an
+adapter, defer an **Astro** data component and put the matching skeleton in its
+fallback slot (the surrounding shell renders immediately):
+
+```astro
+---
+import ItemPanel from "../components/ItemPanel.astro";
+import { CardSkeleton } from "@saas-maker/ui/blocks/skeletons";
+---
+<ItemPanel server:defer>
+  <CardSkeleton slot="fallback" />
+</ItemPanel>
+```
+
+Use `client:visible` for below-fold React leaves, or `client:idle` for
+noncritical interactive leaves; neither directive defers the initial server
+HTML. Keep immediately needed controls on `client:load`. For client navigation
+prefetch, call `prefetch("items", fetchItems)` from `lib/use-resource` on a
+link's focus/pointer-enter, using the same key as the destination island.
+
+In a Next App Router product, put a matching skeleton in `app/items/loading.tsx`
+for the route, or place `<Suspense fallback={<CardSkeleton />}>` around an async
+Server Component nearer the fetch. Fetch within that component so the boundary
+can stream independently. Keep `useResource` in `"use client"` leaves; seed
+those leaves with `initialData` when the server already fetched the data.
+Next is a consumer recipe, not an installed or tested framework in this repo.
+
+See [the loading demo](/demo/loading/) and [loading guide](/docs/loading/).
+Framework references: [Astro server islands](https://docs.astro.build/en/guides/server-islands/),
+[Astro directives](https://docs.astro.build/en/reference/directives-reference/),
+[Next streaming](https://nextjs.org/docs/app/getting-started/fetching-data).
+
 ## Mac / iOS app
 
 ```swift

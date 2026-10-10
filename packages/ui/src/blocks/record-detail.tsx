@@ -250,3 +250,5 @@ export function RecordDetail({
 export function RecordLayout({ children, className }: { children: React.ReactNode; className?: string }) {
   return <div className={cn("flex min-w-0 items-start gap-6", className)}>{children}</div>;
 }
+
+export { RecordDetailSkeleton } from "./skeletons";
