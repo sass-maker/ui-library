@@ -1,0 +1,74 @@
+---
+import Base from "@saas-maker/templates/Base.astro";
+const resource = `"use client";
+import { useResource, prefetch } from "@saas-maker/ui/lib/use-resource";
+import { ResourceBoundary } from "@saas-maker/ui/blocks/resource-boundary";
+import { CardSkeleton } from "@saas-maker/ui/blocks/skeletons";
+async function fetchItems(signal: AbortSignal) {
+  const r = await fetch("/api/items", { signal });
+  if (!r.ok) throw Object.assign(new Error("could not load items"), { status: r.status });
+  return r.json() as Promise<{ id: string; name: string }[]>;
+}
+export function Items() {
+  const result = useResource("items", fetchItems, { staleTime: 30_000 });
+  return <ResourceBoundary resource={result} skeleton={<CardSkeleton />}>
+    {(items) => <ul>{items.map((item) => <li key={item.id}>{item.name}</li>)}</ul>}
+  </ResourceBoundary>;
+}
+// on the destination link's pointer-enter or focus:
+// void prefetch("items", fetchItems);`;
+const astro = `---
+import ItemPanel from "../components/ItemPanel.astro";
+import { CardSkeleton } from "@saas-maker/ui/blocks/skeletons";
+---
+<ItemPanel server:defer>
+  <CardSkeleton slot="fallback" />
+</ItemPanel>
+<!-- Separate, noncritical React leaves: -->
+<BelowFoldItems client:visible />
+<SecondaryControls client:idle />`;
+const next = `// app/items/loading.tsx
+import { CardSkeleton } from "@saas-maker/ui/blocks/skeletons";
+export default function Loading() { return <CardSkeleton />; }
+
+// Or narrow the boundary in an App Router Server Component:
+import { Suspense } from "react";
+async function Items() {
+  const items = await loadItems(); // your server data source
+  return <ItemList items={items} />;
+}
+export default function Page() {
+  return <Suspense fallback={<CardSkeleton />}><Items /></Suspense>;
+}`;
+---
+<Base title="Loading states — guide" description="Same-shape skeletons, stale-while-revalidate resources, and streaming recipes." theme="base" motion={false}>
+  <main>
+    <nav><a href="/">saas maker ui</a><a href="/demo/loading/">try the demo ↗</a></nav>
+    <h1>loading states</h1>
+    <p>Keep the shell visible and reserve the space that content will occupy. Show a matching placeholder within 300 ms; a 150 ms delay avoids flashes for fast requests. Avoid full-page spinners. Keep stale data on revisit and revalidation, and give every error a retry and every empty collection a clear explanation.</p>
+    <h2>start with a resource boundary</h2>
+    <p>The hook shares a key-based cache, deduplicates requests, aborts abandoned work and retries network/5xx failures. Include account, filters and locale in the key. Use separate clients per server request and recreate account-scoped clients on sign-out. Session storage is opt-in for safe data only.</p>
+    <pre><code>{resource}</code></pre>
+    <h2>choose the shape</h2>
+    <p><code>components/skeleton</code> exports text, avatar, block and image primitives. <code>blocks/skeletons</code> exports card, card grid, stat tile, record detail, quote list and console content layouts. <code>DataTableSkeleton</code> lives in <code>components/data-table</code>; pass the loaded table's column widths and row count. Image ratios reserve space. Containers announce loading once and pulse respects reduced motion.</p>
+    <h2>astro: defer the data, hydrate the leaves</h2>
+    <p>This site pins Astro 7.3.5 and React 19.3.0. Its static demo uses <code>client:load</code>. Server islands require a deployed adapter; place <code>server:defer</code> on an Astro component with the same-shape fallback below. This example is a consumer pattern, not a deployed server island here.</p>
+    <pre><code>{astro}</code></pre>
+    <p><code>client:visible</code> hydrates when a leaf enters the viewport; <code>client:idle</code> waits for idle time. Both still render initial server HTML. Use <code>client:load</code> for immediately needed controls. Prefetch using the destination's resource key on focus or pointer-enter.</p>
+    <p>Reference: <a href="https://docs.astro.build/en/guides/server-islands/">Astro server islands</a> and <a href="https://docs.astro.build/en/reference/directives-reference/">hydration directives</a>.</p>
+    <h2>next: stream server components</h2>
+    <p>In the App Router, <code>loading.tsx</code> supplies the route's Suspense fallback. A narrower Suspense boundary lets the rest of a screen render independently; the fetch must happen inside its async Server Component. Keep <code>useResource</code> in client leaves and pass <code>initialData</code> when the server already fetched their values. Next is not installed or tested in this repository.</p>
+    <pre><code>{next}</code></pre>
+    <p>Reference: <a href="https://nextjs.org/docs/app/getting-started/fetching-data">Next data fetching and streaming</a>.</p>
+  </main>
+</Base>
+<style>
+  main { max-width: 800px; margin: auto; padding: 32px 24px 80px; }
+  nav { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; }
+  h1 { font: 500 clamp(36px, 6vw, 56px)/1.1 var(--font-display); letter-spacing: -.04em; margin: 64px 0 24px; }
+  h2 { font-size: 22px; font-weight: 500; margin: 48px 0 16px; }
+  p { color: var(--muted-foreground); line-height: 1.75; margin: 16px 0; }
+  a { text-decoration: underline; text-underline-offset: 3px; }
+  pre { padding: 24px; overflow-x: auto; background: var(--muted); border: 1px solid var(--border); border-radius: 12px; font-size: 12px; line-height: 1.7; }
+  code { font-family: var(--font-mono); }
+</style>

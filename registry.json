@@ -417,7 +417,8 @@
       "registryDependencies": [
         "utils",
         "button",
-        "sheet"
+        "sheet",
+        "skeletons"
       ],
       "files": [
         {
@@ -460,7 +461,8 @@
       ],
       "registryDependencies": [
         "utils",
-        "skeleton"
+        "skeleton",
+        "skeletons"
       ],
       "files": [
         {
@@ -533,6 +535,115 @@
         {
           "path": "packages/ui/src/blocks/search-palette.tsx",
           "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:component",
+      "title": "skeleton",
+      "description": "Accessible, reduced-motion content-shaped skeleton primitives.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/skeleton.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:component",
+      "title": "empty-state",
+      "description": "Quiet empty state with a primary action.",
+      "registryDependencies": [
+        "utils",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/empty-state.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "error-state",
+      "type": "registry:component",
+      "title": "error-state",
+      "description": "Retryable errors and offline state with safe expandable details.",
+      "registryDependencies": [
+        "utils",
+        "button",
+        "empty-state"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/error-state.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "skeletons",
+      "type": "registry:block",
+      "title": "skeletons",
+      "description": "Card, stat, record, quote and console skeleton layouts.",
+      "registryDependencies": [
+        "utils",
+        "skeleton",
+        "card",
+        "data-table"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/skeletons.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "use-resource",
+      "type": "registry:hook",
+      "title": "use-resource",
+      "description": "Shared stale-while-revalidate resources, retries and navigation prefetch.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "packages/ui/src/lib/use-resource.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "resource-boundary",
+      "type": "registry:block",
+      "title": "resource-boundary",
+      "description": "Loading, empty and error states while preserving stale content.",
+      "registryDependencies": [
+        "utils",
+        "empty-state",
+        "error-state",
+        "use-delayed-flag"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/resource-boundary.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "use-delayed-flag",
+      "type": "registry:hook",
+      "title": "use-delayed-flag",
+      "description": "Delay loading feedback up to 300ms to avoid fast-response flashes.",
+      "files": [
+        {
+          "path": "packages/ui/src/lib/use-delayed-flag.ts",
+          "type": "registry:hook"
         }
       ]
     }

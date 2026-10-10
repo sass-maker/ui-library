@@ -1,5 +1,5 @@
 @import "tailwindcss/utilities.css" layer(utilities);
 
 /* Sources are relative to this UI package, including under isolated pnpm installs. */
-@source "../blocks/{search-palette,filter-bar,record-detail,export-menu,quote-list,app,proof}.tsx";
-@source "../components/{breadcrumb,command,dialog,button,kbd,badge,input,table,data-table,checkbox,dropdown-menu,pagination,skeleton,popover,slider,sheet}.tsx";
+@source "../blocks/{search-palette,filter-bar,record-detail,export-menu,quote-list,app,proof,skeletons,resource-boundary}.tsx";
+@source "../components/{breadcrumb,command,dialog,button,kbd,badge,input,table,data-table,checkbox,dropdown-menu,pagination,skeleton,popover,slider,sheet,card,empty-state,error-state}.tsx";

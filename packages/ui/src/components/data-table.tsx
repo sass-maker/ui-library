@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu"
 import { Pagination } from "./pagination"
-import { Skeleton } from "./skeleton"
+import { Skeleton, SkeletonContainer } from "./skeleton"
 
 /**
  * DataTable: sortable, paginated, column-toggleable table on TanStack Table
@@ -101,6 +101,9 @@ type DataTableProps<T> = {
   /** Checkbox column for picking rows (compare, bulk actions). */
   selection?: DataSelection<T>
   status?: "ready" | "loading" | "error"
+  /** Alias for status="loading". */
+  loading?: boolean
+  skeletonRows?: number
   error?: React.ReactNode
   onRetry?: () => void
   empty?: React.ReactNode
@@ -149,7 +152,9 @@ function DataTable<T extends RowData>({
   onRowClick,
   selectedId,
   selection,
-  status = "ready",
+  status: requestedStatus = "ready",
+  loading = false,
+  skeletonRows = 8,
   error,
   onRetry,
   empty,
@@ -162,6 +167,7 @@ function DataTable<T extends RowData>({
   maxHeight = "min(68dvh, 46rem)",
   className,
 }: DataTableProps<T>) {
+  const status = loading ? "loading" : requestedStatus
   const [innerSort, setInnerSort] = React.useState<SortingState>(defaultSort)
   const sorting = (sort ?? innerSort) as SortingState
   const setSorting = React.useCallback(
@@ -264,6 +270,7 @@ function DataTable<T extends RowData>({
 
   return (
     <div data-slot="data-table" className={cn("flex min-w-0 flex-col gap-3", className)}>
+      {status === "loading" && <span role="status" className="sr-only">loading</span>}
       <div className="flex min-h-8 flex-wrap items-center justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-center gap-2">{toolbar?.({ rows: sortedRows, columns: visibleColumns })}</div>
         {hideable.length > 0 && (
@@ -374,16 +381,7 @@ function DataTable<T extends RowData>({
             ))}
           </thead>
           <tbody ref={bodyRef}>
-            {status === "loading" &&
-              Array.from({ length: 8 }, (_, i) => (
-                <tr key={i}>
-                  {Array.from({ length: colCount }, (_, j) => (
-                    <td key={j} className="border-b border-hairline px-3 py-3 first:pl-4 last:pr-4">
-                      <Skeleton className={cn("h-3.5", selection && j === 0 ? "w-4" : j === (selection ? 1 : 0) ? "w-32" : "w-14")} />
-                    </td>
-                  ))}
-                </tr>
-              ))}
+            {status === "loading" && <DataTableSkeletonRows columns={visibleColumns} rows={skeletonRows} selection={!!selection} />}
             {status === "error" && (
               <tr>
                 <td colSpan={colCount} className="px-4 py-16 text-center">
@@ -477,4 +475,40 @@ function DataTable<T extends RowData>({
   )
 }
 
-export { DataTable }
+type SkeletonColumn = Pick<DataColumn<unknown>, "id" | "header" | "align" | "minWidth" | "className">
+
+/** Shared with DataTable's loading branch so row geometry cannot drift. */
+function DataTableSkeletonRows({ columns, rows, selection }: { columns: SkeletonColumn[]; rows: number; selection: boolean }) {
+  return <>{Array.from({ length: Math.max(0, rows) }, (_, i) => <tr key={i}>
+    {selection && <td className="w-10 border-b border-hairline py-2.5 pl-4 pr-1"><div className="flex h-5 items-center"><Skeleton className="size-4" /></div></td>}
+    {columns.map((col, j) => <td key={col.id} className={cn("border-b border-hairline px-3 py-2.5 align-middle whitespace-nowrap first:pl-4 last:pr-4", col.className)} style={{ minWidth: col.minWidth }}>
+      <div className={cn("flex h-5 items-center", col.align === "right" && "justify-end")}><Skeleton className={cn("h-3.5 max-w-full", j === 0 ? "w-32" : "w-14")} /></div>
+    </td>)}
+  </tr>)}</>
+}
+
+function DataTableSkeleton({ columns, rows = 8, selection = false, label = "table", maxHeight = "min(68dvh, 46rem)", className, announce = true }: {
+  columns: SkeletonColumn[]
+  rows?: number
+  selection?: boolean
+  label?: string
+  maxHeight?: string
+  className?: string
+  announce?: boolean
+}) {
+  return <SkeletonContainer announce={announce} data-slot="data-table-skeleton" className={cn("flex min-w-0 flex-col gap-3", className)}>
+    <div className="flex min-h-8 items-center justify-end"><Skeleton className="h-8 w-24" /></div>
+    <div className="relative overflow-auto rounded-lg border border-border bg-card" style={{ maxHeight }}>
+      <table className="w-full border-separate border-spacing-0 text-sm" aria-hidden="true">
+        <caption className="sr-only">{label}</caption>
+        <thead><tr>
+          {selection && <th className="sticky top-0 z-10 h-10 w-10 border-b border-border bg-card pl-4 pr-1" />}
+          {columns.map(col => <th key={col.id} className={cn("sticky top-0 z-10 h-10 border-b border-border bg-card px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4", col.align === "right" && "text-right")} style={{ minWidth: col.minWidth }}><span className="ui-case">{col.header}</span></th>)}
+        </tr></thead>
+        <tbody><DataTableSkeletonRows columns={columns} rows={rows} selection={selection} /></tbody>
+      </table>
+    </div>
+  </SkeletonContainer>
+}
+
+export { DataTable, DataTableSkeleton }

@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { cn } from "../lib/utils";
-import { Skeleton } from "../components/skeleton";
+import { QuoteListSkeleton } from "./skeletons";
+export { QuoteListSkeleton } from "./skeletons";
 
 /**
  * Quote list: verbatim quotes or claims, each with who said it, where and
@@ -208,24 +209,14 @@ export function QuoteList({
     rows?.[Math.max(0, Math.min(rows.length - 1, from + dir))]?.focus();
   };
 
-  if (status === "loading")
-    return (
-      <div className={cn("flex flex-col gap-4 rounded-lg border border-border bg-card p-4", className)} aria-busy aria-label={label}>
-        {Array.from({ length: 6 }, (_, i) => (
-          <div key={i} className="flex flex-col gap-2">
-            <Skeleton className="h-4 w-11/12" />
-            <Skeleton className="h-3 w-1/3" />
-          </div>
-        ))}
-      </div>
-    );
+  if (status === "loading") return <QuoteListSkeleton label={label} className={className} />;
   if (status === "error")
     return (
       <div className={cn("rounded-lg border border-border bg-card px-4 py-16 text-center text-sm", className)}>
         {error ?? "These quotes could not load."}{" "}
         {onRetry && (
           <button type="button" className="underline underline-offset-4" onClick={onRetry}>
-            Try again
+            try again
           </button>
         )}
       </div>
