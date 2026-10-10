@@ -16,6 +16,8 @@ const motionChunk = readdirSync(assets).find((file) => file.endsWith(".js") && /
 if (!motionChunk) throw new Error("Build the site before running browser checks.");
 
 const base = (process.env.BASE_URL ?? "http://localhost:4321").replace(/\/$/, "");
+const probe = await fetch(base + "/demo/identity-form/").catch(() => null);
+if (!probe?.ok) throw new Error(`${base} does not serve this build (no /demo/identity-form/ page). A stale preview may be holding the port; stop it or run with BASE_URL pointing at this build's preview.`);
 const chromePath = process.env.CHROME ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
