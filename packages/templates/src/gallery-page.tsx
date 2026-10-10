@@ -2,6 +2,7 @@ import "./gallery.css";
 import * as React from "react";
 import { SiteHeader } from "@saas-maker/ui/blocks/site-header";
 import {
+  Device,
   GalleryButton,
   GalleryCaption,
   GalleryClosing,
@@ -14,6 +15,7 @@ import {
 } from "@saas-maker/ui/blocks/gallery";
 import { Faq } from "@saas-maker/ui/blocks/closing";
 import { StudioFooter } from "@saas-maker/ui/blocks/footer";
+import { IdentityHero, InlineForm } from "./identity-hero";
 import { rich } from "./rich";
 import { withAssetBase } from "./page";
 import { HeroStatus, heroNote } from "./status";
@@ -52,7 +54,7 @@ export function GalleryPage({ content, header, footer, assetBase }: GalleryPageP
 
   const heroActions = (
     <>
-      <GalleryButton href={c.hero.primary.href}>{c.hero.primary.label}</GalleryButton>
+      {c.hero.primary && <GalleryButton href={c.hero.primary.href}>{c.hero.primary.label}</GalleryButton>}
       {c.hero.secondary && (
         <GalleryButton href={c.hero.secondary.href} variant="link">
           {c.hero.secondary.label}
@@ -82,7 +84,13 @@ export function GalleryPage({ content, header, footer, assetBase }: GalleryPageP
       )}
 
       <main id="main">
-        {c.hero.image ? (
+        {(c.hero.layout && c.hero.layout !== "center") || c.hero.card ? (
+          <IdentityHero hero={c.hero} actions={heroActions} note={note} media={
+            c.hero.card ? <img {...c.hero.card} className="identity-card" fetchPriority="high" /> :
+            c.hero.screen ? <div style={c.hero.backdrop ? { backgroundImage: `url(${c.hero.backdrop})`, backgroundSize: "cover", padding: "2rem", borderRadius: "var(--radius)" } : undefined}><Device image={{ ...device(c.hero.screen), priority: true }} className={device(c.hero.screen).frame === "phone" ? "mx-auto w-[min(100%,20rem)]" : "w-full"} /></div> :
+            c.hero.image ? <img src={c.hero.image} alt="" className="identity-card" fetchPriority="high" /> : undefined
+          } />
+        ) : c.hero.image ? (
           <GalleryCover
             as="h1"
             eyebrow={c.hero.eyebrow}
@@ -134,7 +142,7 @@ export function GalleryPage({ content, header, footer, assetBase }: GalleryPageP
         <GalleryClosing
           id={c.closing.id}
           title={<span className="[&_em]:text-brand-ink">{rich(c.closing.title)}</span>}
-          actions={<GalleryButton href={c.closing.primary.href}>{c.closing.primary.label}</GalleryButton>}
+          actions={c.closing.form ? <InlineForm form={c.closing.form} id="closing-field" /> : c.closing.primary && <GalleryButton href={c.closing.primary.href}>{c.closing.primary.label}</GalleryButton>}
           note={c.closing.note}
           image={c.closing.image}
           credit={c.closing.credit}

@@ -113,6 +113,16 @@ for (const slug of ["kith", "live", "anchor"]) {
 }
 check("gallery: all section kinds have DOM id coverage", ["grid", "showcase", "spread", "cover", "statement", "faq"].every((kind) => sectionKinds.has(kind)));
 
+// Native form labels and progressive validation, without React hydration.
+await open("/demo/identity-form/", 390);
+check("form hero: label association and invalid alert", await js(`(() => {
+  const f = document.querySelector('[data-identity-form]'), i = f.querySelector('input');
+  f.requestSubmit();
+  return i.labels[0]?.htmlFor === i.id && i.getAttribute('aria-invalid') === 'true'
+    && !f.querySelector('[role=alert]').hidden && !!f.querySelector('[role=alert]').textContent
+    && i.getAttribute('aria-describedby').split(' ').every(id => !!document.getElementById(id));
+})()`));
+
 // ── Data demo: FacetFilter by keyboard, compare picks from the URL, selection counter
 await open("/demo/data/?pick=nowhere,lisbon-portugal,lisbon-portugal");
 check("motion: a page without motion classes never loads the motion chunk", await js(`!document.querySelector('.motion-reveal,.motion-stagger,.motion-zoom,.motion-tilt,.motion-parallax,.motion-drift,.motion-draw,.motion-type') && !performance.getEntriesByType('resource').some((r) => r.name.endsWith('/' + ${JSON.stringify(motionChunk)}))`));

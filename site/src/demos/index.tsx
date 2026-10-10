@@ -42,7 +42,7 @@ const kithExcerpt = `{
 }`;
 
 const webInstall = `# from the GitHub repo, not npm (pnpm add drops #tag&path)
-G="github:sass-maker/ui-library#v0.1.12"
+G="github:sass-maker/ui-library#v0.1.13"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \\
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \\
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -50,7 +50,7 @@ pnpm install`;
 
 const swiftInstall = `.package(
   url: "https://github.com/sass-maker/ui-library",
-  from: "0.1.12"
+  from: "0.1.13"
 )`;
 
 function DemoLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -155,6 +155,14 @@ export default function IndexPage() {
           </div>
         </section>
 
+        <nav aria-label="Identity demos" className="mx-auto flex max-w-[75rem] flex-wrap gap-5 px-5 py-8 text-sm">
+          <a href="/demo/identity-split/">split + serif</a>
+          <a href="/demo/identity-workbench/">split workbench</a>
+          <a href="/demo/identity-form/">inline form</a>
+          <a href="/demo/identity-masthead/">masthead</a>
+          <a href="/demo/identity-surface/">editorial dark</a>
+          <a href="/demo/identity-closing/">gradient + closing form</a>
+        </nav>
         {/* The two page families. */}
         <section id="families" className={pad}>
           <div className={wrap}>

@@ -29,6 +29,39 @@ const pill = z.object({ tone, label: z.string() }).strict();
 const status = z.object({ label: z.string(), href: z.string().optional() }).strict();
 const jsonLdObject = z.record(z.string(), z.unknown());
 
+/** A native GET form; JavaScript only enhances the browser's validation messages. */
+export const singleFieldForm = z.object({
+  label: z.string().min(1),
+  name: z.string().min(1),
+  placeholder: z.string().optional(),
+  submit: z.string().min(1),
+  action: z.string().url(),
+  method: z.literal("get").optional(),
+  type: z.enum(["text", "url", "email"]).optional(),
+  required: z.boolean(),
+  pattern: z.string().optional(),
+  hint: z.string().optional(),
+  error: z.string().optional(),
+  prefill: z.string().optional(),
+}).strict();
+const font = z.enum(["figtree", "newsreader", "instrument-serif", "fraunces", "geist"]);
+/** Omitted layout preserves the original hero. Plain cards need intrinsic dimensions. */
+const heroIdentity = {
+  layout: z.enum(["center", "split", "form", "masthead"]).optional(),
+  card: z.object({ src: z.string(), alt: z.string().min(1), width: z.number().positive(), height: z.number().positive() }).strict().optional(),
+  form: singleFieldForm.optional(),
+  issue: z.string().optional(),
+  issueNote: z.string().optional(),
+};
+function validateHero(h: { layout?: string; form?: unknown; primary?: unknown; card?: unknown; screen?: unknown; image?: unknown; window?: unknown; backdrop?: unknown }, ctx: z.RefinementCtx) {
+  const issue = (path: string, message: string) => ctx.addIssue({ code: z.ZodIssueCode.custom, path: [path], message });
+  if (h.layout === "form" && !h.form) issue("form", 'layout "form" requires hero.form');
+  if (h.form && h.layout !== "form") issue("form", 'hero.form requires layout "form"');
+  if (h.layout !== "form" && !h.primary) issue("primary", "hero requires a primary action");
+  if (h.layout !== "masthead" && !h.card && !h.screen && !h.image && !h.window) issue("card", "hero requires screen, window, image or card media");
+  if ((!h.layout || h.layout === "center") && !h.card && !h.window && !h.image && !(h.backdrop && h.screen)) issue("screen", "center hero needs backdrop + screen, image, or window");
+}
+
 export const pageSettings = z
   .object({
     title: z.string(),
@@ -37,6 +70,10 @@ export const pageSettings = z
     mode: z.enum(["light", "dark"]).optional(),
     /** Brand overrides, e.g. { "--brand": "oklch(...)" }. */
     tokens: z.record(z.string(), z.string()).optional(),
+    /** Per-product faces; Newsreader uses its fixed display/text optical sizes. */
+    fonts: z.object({ display: font.optional(), text: font.optional(), accent: font.optional(), accentStyle: z.enum(["italic", "normal"]).optional() }).strict().optional(),
+    /** Token-driven background treatment and optional warm editorial dark palette. */
+    surface: z.object({ backdrop: z.enum(["none", "gradient", "glow", "grid"]).optional(), variant: z.enum(["default", "editorial-dark"]).optional() }).strict().optional(),
     icon: z.string().optional(),
     /** Canonical URL of this page. */
     canonical: z.string().url().optional(),
@@ -136,10 +173,11 @@ export const galleryContent = z
     /** A device hero (backdrop + screen) or a full-bleed photo cover (image). */
     hero: z
       .object({
+        ...heroIdentity,
         eyebrow: z.string().optional(),
         title: z.string(),
         lede: z.string().optional(),
-        primary: link,
+        primary: link.optional(),
         secondary: link.optional(),
         note: z.string().optional(),
         status: status.optional(),
@@ -148,9 +186,11 @@ export const galleryContent = z
         image: z.string().optional(),
       })
       .strict()
-      .refine((h) => (h.backdrop && h.screen) || h.image, { message: "hero needs backdrop + screen, or image" }),
+      .superRefine(validateHero),
     sections: z.array(gallerySection),
-    closing: z.object({ id: z.string().optional(), title: z.string(), primary: link, note: z.string().optional(), image: z.string(), credit: z.string().optional() }).strict(),
+    /** A form can replace the closing link; its prefill is an ordinary input default value. */
+    closing: z.object({ id: z.string().optional(), title: z.string(), primary: link.optional(), form: singleFieldForm.optional(), note: z.string().optional(), image: z.string(), credit: z.string().optional() }).strict()
+      .refine((c) => c.primary || c.form, { path: ["primary"], message: "closing requires primary or form" }),
     /** false: render no footer (the product supplies its own). */
     footer: z.union([
       footer
@@ -240,16 +280,17 @@ export const workbenchContent = z
     header: z.union([z.object({ primary: link, secondary: link.optional() }).strict(), z.literal(false)]),
     hero: z
       .object({
+        ...heroIdentity,
         eyebrow: z.string().optional(),
         title: z.string(),
         lede: z.string().optional(),
-        primary: link,
+        primary: link.optional(),
         secondary: link.optional(),
         note: z.string().optional(),
         status: status.optional(),
         window: z
           .object({ title: z.string(), src: z.string(), alt: z.string(), width: z.number(), height: z.number(), chrome: z.enum(["mac", "browser", "none"]).optional() })
-          .strict(),
+          .strict().optional(),
         /** Artwork behind the window; without it the stage is a soft brand mesh. */
         backdrop: z.string().optional(),
         receipt: z
@@ -265,7 +306,7 @@ export const workbenchContent = z
         /** Brand brackets framing the stage (the CodeVetter mark's code scope). */
         brackets: z.boolean().optional(),
       })
-      .strict(),
+      .strict().superRefine(validateHero),
     sections: z.array(
       z
         .object({
@@ -290,3 +331,5 @@ export type GallerySection = GalleryContent["sections"][number];
 export type WorkbenchContent = z.infer<typeof workbenchContent>;
 export type WorkbenchBlock = z.infer<typeof workbenchBlock>;
 export type ProductContent = z.infer<typeof productContent>;
+
+export type SingleFieldForm = z.infer<typeof singleFieldForm>;

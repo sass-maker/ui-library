@@ -274,4 +274,43 @@ extension SMPalette {
         uiLowercase: true,
         isDark: false
     )
+
+    public static let editorialDark = SMPalette(
+        background: Color(.sRGB, red: 0.09, green: 0.082, blue: 0.075, opacity: 1),
+        foreground: Color(.sRGB, red: 0.933, green: 0.906, blue: 0.867, opacity: 1),
+        surface: Color(.sRGB, red: 0.157, green: 0.137, blue: 0.118, opacity: 1),
+        card: Color(.sRGB, red: 0.129, green: 0.118, blue: 0.102, opacity: 1),
+        primary: Color(.sRGB, red: 0.933, green: 0.906, blue: 0.867, opacity: 1),
+        primaryForeground: Color(.sRGB, red: 0.09, green: 0.082, blue: 0.075, opacity: 1),
+        secondary: Color(.sRGB, red: 0.157, green: 0.137, blue: 0.118, opacity: 1),
+        muted: Color(.sRGB, red: 0.157, green: 0.137, blue: 0.118, opacity: 1),
+        mutedForeground: Color(.sRGB, red: 0.71, green: 0.667, blue: 0.616, opacity: 1),
+        accent: Color(.sRGB, red: 0.157, green: 0.137, blue: 0.118, opacity: 1),
+        border: Color(.sRGB, red: 0.251, green: 0.22, blue: 0.184, opacity: 1),
+        hairline: Color(.sRGB, red: 0.251, green: 0.22, blue: 0.184, opacity: 1),
+        input: Color(.sRGB, red: 0.251, green: 0.22, blue: 0.184, opacity: 1),
+        brand: Color(.sRGB, red: 0.769, green: 0.349, blue: 0.184, opacity: 1),
+        brandForeground: Color(.sRGB, red: 1, green: 0.973, blue: 0.945, opacity: 1),
+        brandSoft: Color(.sRGB, red: 0.953, green: 0.863, blue: 0.804, opacity: 1),
+        accentInk: Color(.sRGB, red: 0.82, green: 0.702, blue: 0.6, opacity: 1),
+        toneInk: Color(.sRGB, red: 0.09, green: 0.067, blue: 0.051, opacity: 1),
+        destructive: Color(.sRGB, red: 0.981, green: 0.533, blue: 0.503, opacity: 1),
+        success: Color(.sRGB, red: 0, green: 0.601, blue: 0.339, opacity: 1),
+        warning: Color(.sRGB, red: 0.896, green: 0.62, blue: 0.131, opacity: 1),
+        radius: 20,
+        displayWeight: 800,
+        displayTracking: -0.038,
+        accentItalic: false,
+        displaySerif: false,
+        accentSerif: false,
+        textSerif: true,
+        displayFont: "Figtree",
+        accentFont: "Figtree",
+        textFont: "Newsreader",
+        sansFont: "Figtree",
+        monoFont: "Geist Mono",
+        displayLowercase: true,
+        uiLowercase: true,
+        isDark: true
+    )
 }
