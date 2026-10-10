@@ -446,9 +446,10 @@
   }
 }
 
+/* No opacity: Chrome ignores opacity-0 elements as LCP candidates, so a fade
+   delays LCP by the whole animation. Rise and focus only. */
 @keyframes hero-in {
   from {
-    opacity: 0;
     transform: translateY(14px);
     filter: blur(4px);
   }
