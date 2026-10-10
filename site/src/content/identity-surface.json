@@ -1,0 +1,53 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "SaaS Maker UI \u2014 surface demo",
+    "theme": "gallery",
+    "fonts": {
+      "display": "fraunces",
+      "text": "figtree",
+      "accentStyle": "italic"
+    },
+    "surface": {
+      "backdrop": "glow",
+      "variant": "editorial-dark"
+    }
+  },
+  "product": "SaaS Maker UI",
+  "url": "https://github.com/sass-maker/ui-library",
+  "mark": "/demo/kith/mark.webp",
+  "nav": [],
+  "hero": {
+    "layout": "split",
+    "eyebrow": "shared UI for Fleet products",
+    "title": "one library. *your own identity.*",
+    "lede": "Gallery and Workbench templates, web components and a Swift package, generated from one theme.",
+    "primary": {
+      "label": "view the source",
+      "href": "https://github.com/sass-maker/ui-library"
+    },
+    "secondary": {
+      "label": "back to the library",
+      "href": "/"
+    },
+    "card": {
+      "src": "/demo/reader/reading-surface.png",
+      "alt": "Reader's reading surface: a saved article with a highlighted passage, a research set on the left and a note beside it",
+      "width": 1792,
+      "height": 780
+    },
+    "note": "Reader interface specimen from the library demo."
+  },
+  "sections": [],
+  "closing": {
+    "title": "build from *one theme.*",
+    "primary": {
+      "label": "view the source",
+      "href": "https://github.com/sass-maker/ui-library"
+    },
+    "image": "/demo/kith/memory-table-v2.webp",
+    "credit": "Illustrative artwork from the Kith demo"
+  },
+  "footer": false,
+  "header": false
+}

@@ -1,0 +1,49 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "SaaS Maker UI \u2014 split demo",
+    "theme": "gallery",
+    "fonts": {
+      "display": "instrument-serif",
+      "text": "figtree",
+      "accentStyle": "italic"
+    }
+  },
+  "product": "SaaS Maker UI",
+  "url": "https://github.com/sass-maker/ui-library",
+  "mark": "/demo/kith/mark.webp",
+  "nav": [],
+  "hero": {
+    "layout": "split",
+    "eyebrow": "shared UI for Fleet products",
+    "title": "one library. *your own identity.*",
+    "lede": "Gallery and Workbench templates, web components and a Swift package, generated from one theme.",
+    "primary": {
+      "label": "view the source",
+      "href": "https://github.com/sass-maker/ui-library"
+    },
+    "secondary": {
+      "label": "back to the library",
+      "href": "/"
+    },
+    "note": "Kith person page from the library demo.",
+    "screen": {
+      "src": "/demo/kith/person.webp",
+      "alt": "Kith person page for Maya Rao with how you met, keep in mind, birthday and a dated log",
+      "width": 603,
+      "height": 1311
+    }
+  },
+  "sections": [],
+  "closing": {
+    "title": "build from *one theme.*",
+    "primary": {
+      "label": "view the source",
+      "href": "https://github.com/sass-maker/ui-library"
+    },
+    "image": "/demo/kith/memory-table-v2.webp",
+    "credit": "Illustrative artwork from the Kith demo"
+  },
+  "footer": false,
+  "header": false
+}

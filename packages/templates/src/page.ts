@@ -32,7 +32,7 @@ function mapImages(value: unknown, base: string): unknown {
  */
 export function withAssetBase<T extends ProductContent>(content: T, base = content.page.assetBase ?? "/"): T {
   const resolved = mapImages(content, base) as T;
-  return { ...resolved, page: { ...resolved.page, icon: content.page.icon && resolveAsset(content.page.icon, base) } };
+  return { ...resolved, page: { ...resolved.page, surface: content.page.surface, icon: content.page.icon && resolveAsset(content.page.icon, base) } };
 }
 
 /**
@@ -58,6 +58,8 @@ export function baseProps(content: ProductContent) {
     description: page.description,
     theme: page.theme,
     mode: page.mode,
+    fonts: page.fonts,
+    surface: page.surface,
     tokens: page.tokens,
     icon: page.icon,
     canonical: page.canonical,

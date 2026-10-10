@@ -65,6 +65,7 @@ const presets = {
   hearth: { ...base, ...block('[data-theme="hearth"]') },
   signal: { ...base, ...block('[data-theme="signal"]') },
   gallery: { ...base, ...block('[data-theme="gallery"]') },
+  "editorial-dark": { ...base, ...block('[data-theme="gallery"]'), ...block('[data-surface="editorial-dark"]') },
 };
 
 const tokens = {};
@@ -79,11 +80,12 @@ for (const [name, vars] of Object.entries(presets)) {
   }
   const font = (v, d = 0) => (d < 6 && v?.startsWith("var(") ? font(vars[v.slice(6, -1)], d + 1) : v ?? "");
   // First family of a stack, as Apple names it ("Figtree Variable" -> "Figtree").
-  const family = (v) => font(v).split(",")[0].replace(/["']/g, "").replace(/ Variable$/, "").trim();
+  const family = (v) => font(v).split(",")[0].replace(/["']/g, "").replace(/ Variable$/, "").replace(/^Newsreader (Display|Text)$/, "Newsreader").trim();
   const serif = (v) => /Newsreader|Fraunces|Instrument Serif|Georgia/.test(font(v));
   const rem = (v) => Math.round(parseFloat(v) * 16 * 10) / 10;
   tokens[name] = {
     colors,
+    surfaceBackdrops: Object.fromEntries(["gradient", "glow", "grid"].map((kind) => [kind, vars[`surface-backdrop-${kind}`]])),
     radius: rem(vars.radius),
     displayWeight: parseFloat(vars["display-weight"]),
     displayTracking: parseFloat(vars["display-tracking"]),
@@ -99,7 +101,7 @@ for (const [name, vars] of Object.entries(presets)) {
     monoFont: family(vars["font-mono"]),
     displayLowercase: vars["display-case"] === "lowercase",
     uiLowercase: vars["ui-case"] === "lowercase",
-    dark: name === "ink" || name === "base-dark",
+    dark: name === "ink" || name === "base-dark" || name === "editorial-dark",
   };
 }
 

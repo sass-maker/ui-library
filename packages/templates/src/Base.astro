@@ -1,5 +1,7 @@
 ---
 import "@saas-maker/ui/theme.css";
+import type { PageSettings } from "./schema";
+import { fontOverrides } from "./fonts";
 
 /** Open Graph and Twitter card; text falls back to the page title and description. */
 interface Og {
@@ -24,6 +26,8 @@ interface Props {
   mode?: "light" | "dark";
   /** Product identity overrides, e.g. { "--brand": "oklch(...)" }. */
   tokens?: Record<string, string>;
+  fonts?: PageSettings["fonts"];
+  surface?: PageSettings["surface"];
   icon?: string;
   /** Canonical URL; also og:url. */
   canonical?: string;
@@ -48,6 +52,8 @@ const {
   theme = "base",
   mode = "light",
   tokens = {},
+  fonts,
+  surface,
   icon,
   canonical,
   robots,
@@ -56,17 +62,19 @@ const {
   motion = true,
   footerScript = true,
 } = Astro.props;
-const style = Object.entries(tokens)
+const style = Object.entries({ ...fontOverrides(fonts, theme), ...tokens })
   .map(([k, v]) => `${k}:${v}`)
   .join(";");
 // Preload only the display font (the one every page paints first); body faces load on demand.
-const displayFont =
-  theme === "paper"
-    ? (await import("@saas-maker/ui/fonts/newsreader-display-latin-normal.woff2?url")).default
-    : theme === "hearth"
-      ? (await import("@saas-maker/ui/fonts/fraunces-latin-normal.woff2?url")).default
-      : theme === "signal"
-        ? (await import("@saas-maker/ui/fonts/instrument-serif-latin-normal.woff2?url")).default
+const displayFace = fonts?.display ?? (theme === "paper" ? "newsreader" : theme === "hearth" ? "fraunces" : theme === "signal" ? "instrument-serif" : "figtree");
+const displayFont = displayFace === "newsreader"
+  ? (await import("@saas-maker/ui/fonts/newsreader-display-latin-normal.woff2?url")).default
+  : displayFace === "fraunces"
+    ? (await import("@saas-maker/ui/fonts/fraunces-latin-normal.woff2?url")).default
+    : displayFace === "instrument-serif"
+      ? (await import("@saas-maker/ui/fonts/instrument-serif-latin-normal.woff2?url")).default
+      : displayFace === "geist"
+        ? (await import("@saas-maker/ui/fonts/geist-latin-normal.woff2?url")).default
         : (await import("@saas-maker/ui/fonts/figtree-latin-normal.woff2?url")).default;
 const ogTitle = og?.title ?? title;
 const ogDescription = og?.description ?? description;
@@ -76,7 +84,7 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
-<html lang="en" data-theme={theme} data-mode={mode} data-motion={motion ? undefined : "off"} style={style || undefined}>
+<html lang="en" data-theme={theme} data-mode={surface?.variant === "editorial-dark" ? "dark" : mode} data-surface={surface?.variant} data-backdrop={surface?.backdrop} data-motion={motion ? undefined : "off"} style={style || undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -84,7 +92,7 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     {description && <meta name="description" content={description} />}
     {icon && <link rel="icon" href={icon} />}
-    <meta name="color-scheme" content={theme === "ink" || mode === "dark" ? "dark" : "light"} />
+    <meta name="color-scheme" content={theme === "ink" || mode === "dark" || surface?.variant === "editorial-dark" ? "dark" : "light"} />
     {canonical && <link rel="canonical" href={canonical} />}
     {robots && <meta name="robots" content={robots} />}
     {

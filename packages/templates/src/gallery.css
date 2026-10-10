@@ -2,3 +2,6 @@
 @import "@saas-maker/ui/source-gallery.css";
 
 @source "./{Base.astro,gallery-page.tsx,rich.tsx,status.tsx}";
+
+@import "./identity.css";
+@source "./identity-hero.tsx";

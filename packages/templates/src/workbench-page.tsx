@@ -10,6 +10,7 @@ import { Ledger, CodeBlock, StatusPill, DiffBlock } from "@saas-maker/ui/blocks/
 import { WindowFrame, Stage } from "@saas-maker/ui/blocks/frames";
 import { Faq, Cta } from "@saas-maker/ui/blocks/closing";
 import { StudioFooter } from "@saas-maker/ui/blocks/footer";
+import { IdentityHero } from "./identity-hero";
 import { rich } from "./rich";
 import { withAssetBase } from "./page";
 import { HeroStatus, heroNote } from "./status";
@@ -186,6 +187,35 @@ export function WorkbenchPage({ content, header, footer, assetBase }: WorkbenchP
   const c = withAssetBase(content, assetBase ?? content.page.assetBase);
   const h = c.hero;
   const actions = c.header;
+  const media = h.card ? <img {...h.card} className="identity-card" fetchPriority="high" /> : h.window ? (
+    <div className="relative">
+      {h.brackets && <Brackets />}
+      <Stage
+        className="motion-tilt mx-auto max-w-6xl text-left"
+        backdrop={h.backdrop ? { image: { src: h.backdrop, alt: "", priority: true } } : "mesh"}
+        main={
+          <div className={h.backdrop ? "mx-auto max-w-4xl" : undefined}>
+            <WindowFrame title={h.window.title} chrome={h.window.chrome} image={{ ...h.window, priority: true }} />
+          </div>
+        }
+        overlayPosition="bottom-right"
+        overlay={
+          h.receipt && (
+            <Ledger
+              title={h.receipt.title}
+              meta={h.receipt.meta}
+              rows={h.receipt.rows.map((r) => ({
+                label: r.label,
+                value: r.mono ? <span className="font-mono text-[0.8125rem]">{r.value}</span> : r.strong ? <strong className="font-semibold">{r.value}</strong> : r.value,
+                status: r.status,
+              }))}
+            />
+          )
+        }
+        caption={h.caption}
+      />
+    </div>
+  ) : undefined;
   return (
     <>
       {header !== undefined ? (
@@ -204,7 +234,9 @@ export function WorkbenchPage({ content, header, footer, assetBase }: WorkbenchP
       )}
 
       <main id="main">
-        <Hero
+        {(h.layout && h.layout !== "center") || h.card ? <IdentityHero hero={h} media={media}
+          note={heroNote(h.status && <HeroStatus status={h.status} />, h.note)}
+          actions={<>{h.primary && <LinkButton link={h.primary} size="xl" />}{h.secondary && <LinkButton link={h.secondary} size="xl" variant="outline" />}</>} /> : <Hero
           layout="centered"
           backdrop="grid"
           eyebrow={h.eyebrow}
@@ -212,42 +244,14 @@ export function WorkbenchPage({ content, header, footer, assetBase }: WorkbenchP
           lede={h.lede}
           actions={
             <>
-              <LinkButton link={h.primary} size="xl" />
+              {h.primary && <LinkButton link={h.primary} size="xl" />}
               {h.secondary && <LinkButton link={h.secondary} size="xl" variant="outline" />}
             </>
           }
           note={heroNote(h.status && <HeroStatus status={h.status} />, h.note)}
-          media={
-            <div className="relative">
-              {h.brackets && <Brackets />}
-              <Stage
-                className="motion-tilt mx-auto max-w-6xl text-left"
-                backdrop={h.backdrop ? { image: { src: h.backdrop, alt: "", priority: true } } : "mesh"}
-                main={
-                  <div className={h.backdrop ? "mx-auto max-w-4xl" : undefined}>
-                    <WindowFrame title={h.window.title} chrome={h.window.chrome} image={{ ...h.window, priority: true }} />
-                  </div>
-                }
-                overlayPosition="bottom-right"
-                overlay={
-                  h.receipt && (
-                    <Ledger
-                      title={h.receipt.title}
-                      meta={h.receipt.meta}
-                      rows={h.receipt.rows.map((r) => ({
-                        label: r.label,
-                        value: r.mono ? <span className="font-mono text-[0.8125rem]">{r.value}</span> : r.strong ? <strong className="font-semibold">{r.value}</strong> : r.value,
-                        status: r.status,
-                      }))}
-                    />
-                  )
-                }
-                caption={h.caption}
-              />
-            </div>
-          }
+          media={media}
           footer={h.facts && <FactRow className="justify-center font-mono text-xs" items={h.facts} />}
-        />
+        />}
 
         {c.sections.map((s, i) => (
           <Section key={i} id={s.id} surface={s.surface} rule={!s.compact} size={s.compact ? "compact" : undefined}>

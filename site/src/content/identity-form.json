@@ -1,0 +1,45 @@
+{
+  "template": "workbench",
+  "page": {
+    "title": "SaaS Maker UI \u2014 form demo",
+    "theme": "base",
+    "fonts": {
+      "display": "geist",
+      "text": "geist"
+    }
+  },
+  "product": "SaaS Maker UI",
+  "url": "https://github.com/sass-maker/ui-library",
+  "mark": "/demo/reader/icon.svg",
+  "nav": [],
+  "header": false,
+  "hero": {
+    "layout": "form",
+    "eyebrow": "shared UI for Fleet products",
+    "title": "one library. *your own identity.*",
+    "lede": "Gallery and Workbench templates, web components and a Swift package, generated from one theme.",
+    "secondary": {
+      "label": "back to the library",
+      "href": "/"
+    },
+    "card": {
+      "src": "/demo/reader/reading-surface.png",
+      "alt": "Reader's reading surface: a saved article with a highlighted passage, a research set on the left and a note beside it",
+      "width": 1792,
+      "height": 780
+    },
+    "note": "Reader interface specimen from the library demo.",
+    "form": {
+      "label": "search the library source",
+      "name": "q",
+      "placeholder": "a component or template",
+      "submit": "search",
+      "action": "https://github.com/sass-maker/ui-library/search",
+      "required": true,
+      "hint": "Searches this public GitHub repository.",
+      "error": "Enter a component or template to search for."
+    }
+  },
+  "sections": [],
+  "footer": false
+}

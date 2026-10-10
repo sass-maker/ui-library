@@ -15,6 +15,9 @@
  * component.
  */
 :root {
+  --surface-backdrop-gradient: linear-gradient(135deg, color-mix(in oklch, var(--brand-soft) 65%, transparent), transparent 65%);
+  --surface-backdrop-glow: radial-gradient(ellipse at 75% 12%, color-mix(in oklch, var(--brand) 12%, transparent), transparent 65%);
+  --surface-backdrop-grid: linear-gradient(color-mix(in oklch, var(--border) 45%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklch, var(--border) 45%, transparent) 1px, transparent 1px);
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", monospace;
   /* Smooth bold display face shared by every sans preset. */
@@ -379,6 +382,7 @@
   .font-display .accent {
     font-family: var(--font-accent);
     font-style: var(--accent-style);
+    font-synthesis: none;
     font-weight: inherit;
     color: var(--accent-ink, var(--brand));
     letter-spacing: -0.01em;
@@ -483,4 +487,43 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Identity surfaces: all treatments derive from semantic brand/surface tokens. */
+
+[data-backdrop="gradient"] { --surface-backdrop: var(--surface-backdrop-gradient); }
+[data-backdrop="glow"] { --surface-backdrop: var(--surface-backdrop-glow); }
+[data-backdrop="grid"] { --surface-backdrop: var(--surface-backdrop-grid); }
+[data-backdrop="none"] { --surface-backdrop: none; }
+html[data-backdrop] body { background-image: var(--surface-backdrop); background-repeat: no-repeat; background-size: 100% min(100vh, 60rem); }
+html[data-backdrop="grid"] body { background-repeat: repeat; background-size: 4rem 4rem; }
+/* Gallery has its own warm dark palette; this also composes with mode: dark. */
+[data-theme="gallery"][data-mode="dark"], [data-surface="editorial-dark"] {
+  --background: #171513;
+  --foreground: #eee7dd;
+  --card: #211e1a;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --surface: #28231e;
+  --muted: #28231e;
+  --muted-foreground: #b5aa9d;
+  --border: #40382f;
+  --input: var(--border);
+  --hairline: var(--border);
+  --primary: var(--foreground);
+  --primary-foreground: var(--background);
+  --secondary: var(--surface);
+  --secondary-foreground: var(--foreground);
+  --accent: var(--surface);
+  --accent-foreground: var(--foreground);
+  --brand-ink: #d1b399;
+  --accent-ink: var(--brand-ink);
+  --ring: var(--brand-ink);
+  --destructive: oklch(0.75 0.14 25);
+  color-scheme: dark;
+}
+html[style*="--font-"] .font-display em, html[style*="--font-"] .font-display .accent {
+  font-weight: var(--accent-weight, inherit);
+  font-synthesis: none;
 }

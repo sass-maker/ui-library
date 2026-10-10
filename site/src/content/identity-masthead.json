@@ -1,0 +1,44 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "SaaS Maker UI \u2014 masthead demo",
+    "theme": "gallery",
+    "fonts": {
+      "display": "newsreader",
+      "text": "figtree",
+      "accentStyle": "italic"
+    }
+  },
+  "product": "SaaS Maker UI",
+  "url": "https://github.com/sass-maker/ui-library",
+  "mark": "/demo/kith/mark.webp",
+  "nav": [],
+  "hero": {
+    "layout": "masthead",
+    "eyebrow": "shared UI for Fleet products",
+    "title": "one library. *your own identity.*",
+    "lede": "Gallery and Workbench templates, web components and a Swift package, generated from one theme.",
+    "primary": {
+      "label": "view the source",
+      "href": "https://github.com/sass-maker/ui-library"
+    },
+    "secondary": {
+      "label": "back to the library",
+      "href": "/"
+    },
+    "issue": "UI 0.1.13",
+    "issueNote": "Gallery + Workbench"
+  },
+  "sections": [],
+  "closing": {
+    "title": "build from *one theme.*",
+    "primary": {
+      "label": "view the source",
+      "href": "https://github.com/sass-maker/ui-library"
+    },
+    "image": "/demo/kith/memory-table-v2.webp",
+    "credit": "Illustrative artwork from the Kith demo"
+  },
+  "footer": false,
+  "header": false
+}

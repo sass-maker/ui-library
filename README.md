@@ -17,7 +17,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.12"
+G="github:sass-maker/ui-library#v0.1.13"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -27,15 +27,29 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.12&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.12&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.12&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.13&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.13&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.13&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
 `git+https://github.com/sass-maker/ui-library.git`, dropping `#tag&path:`
 (with or without `--save-exact`), so the next fresh install gets the wrong
 package. To upgrade, change the tag in all three lines and run `pnpm install`.
+
+The templates are React components. Consumers must also install exact versions
+of `@astrojs/react`, `react` and `react-dom`, and enable the Astro React integration
+(even when rendering without hydration). The library site currently uses:
+
+```sh
+pnpm add --save-exact @astrojs/react@7.0.0 react@19.3.0 react-dom@19.3.0
+```
+
+```js
+import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
+export default defineConfig({ integrations: [react()] });
+```
 
 Fonts: the theme ships Latin-only, weight-clamped woff2 subsets (about 50 KB on a Gallery page, about 105 KB on a Workbench paper page; `@font-face` is lazy and `Base.astro` preloads only the display font). Characters outside Latin fall back to the system font; add your own `@font-face` for other scripts. Regenerate with `pnpm --filter @saas-maker/ui fonts:build`.
 
@@ -104,6 +118,71 @@ const content = galleryContent.parse(json); // fails the build with the exact fi
 `baseProps` maps the file's `page` settings to `Base.astro` props. Use
 `workbenchContent` / `WorkbenchPage` for Workbench files, or load a folder of
 files as an Astro content collection with `productContent` as its schema.
+
+### Hero identity
+
+Both templates accept `hero.layout`: `center` (default, existing layout),
+`split` (copy left, media right; copy first on phones), `form` (split with a
+single-field GET form), or `masthead` (editorial issue line and oversized title).
+`hero.issue` and `hero.issueNote` are optional masthead labels. Media uses the
+existing Gallery `screen`/`image` or Workbench `window`, or a plain
+`hero.card: { src, alt, width, height }`. A card takes precedence over other
+media. Mastheads can omit media; other layouts require it. Existing center
+Gallery screens still require their backdrop. Buttons require `hero.primary`,
+except in form layout; `hero.secondary` becomes a quiet text link beside the form.
+
+`hero.form` requires `layout: "form"`. Gallery also accepts `closing.form` in
+place of `closing.primary` (at least one is required; a form takes precedence):
+
+```json
+{
+  "label": "search the source",
+  "name": "q",
+  "placeholder": "a component or template",
+  "submit": "search",
+  "action": "https://github.com/sass-maker/ui-library/search",
+  "method": "get",
+  "type": "text",
+  "required": true,
+  "hint": "Searches the public repository.",
+  "error": "Enter a search term.",
+  "prefill": "templates"
+}
+```
+
+`label`, `name`, `submit`, `action` (absolute URL), and `required` are required.
+`placeholder`, `method` (only `get`), `type` (`text`, `url`, `email`), `pattern`,
+`hint`, `error`, and `prefill` are optional. Native HTML validation works without
+JavaScript; a small inline script adds `aria-invalid` and an alert message.
+The form navigates with a GET query parameter and adds no React hydration.
+
+`page.fonts` independently sets `display`, `text`, and `accent` to `figtree`,
+`newsreader`, `instrument-serif`, `fraunces`, or `geist`. `accentStyle` is
+`italic` or `normal`; write `*phrase*` for an accent. All italic faces are real,
+bundled Latin subsets; font synthesis is disabled for overridden accents.
+Newsreader uses its fixed display/text optical sizes. `text` overrides both
+`--font-sans` and `--font-text`; omitted roles retain theme defaults.
+`display` overrides `--font-display` and its supported weight; `accent` sets
+`--font-accent`. Only the chosen display face is preloaded. Other faces load
+lazily when rendered; no font request is made just for declaring a face.
+
+```json
+{
+  "fonts": { "display": "instrument-serif", "text": "figtree", "accentStyle": "italic" },
+  "surface": { "backdrop": "gradient", "variant": "editorial-dark" }
+}
+```
+
+`page.surface.backdrop` is `none`, `gradient`, `glow`, or `grid`; omitted keeps
+today's surface. Treatments derive from `--brand`, `--brand-soft`, and
+`--border`. Override `--surface-backdrop` directly in `page.tokens`, or customize
+`--surface-backdrop-gradient`, `--surface-backdrop-glow`, or
+`--surface-backdrop-grid`. `variant: "editorial-dark"` supplies a warm near-black
+surface, subdued text, and hairlines; `default` retains the theme. Gallery also
+supports `mode: "dark"`. Explicit token overrides win over font and surface
+presets. Demos: `/demo/identity-split/`, `/demo/identity-workbench/`,
+`/demo/identity-form/`, `/demo/identity-masthead/`, `/demo/identity-surface/`, and
+`/demo/identity-closing/`.
 
 ### Head tags (SEO and analytics)
 
@@ -225,7 +304,7 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.12")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.13")
 // ...
 ContentView().smTheme(.gallery.brand(Color("Brand")))
 ```
