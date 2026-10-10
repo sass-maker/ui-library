@@ -87,6 +87,15 @@ export function withRef(href: string, ref?: string) {
   }
 }
 
+/** Product actions accept web URLs or local routes; credits accept web URLs only. */
+function safeHref(href: string | undefined, relative = false) {
+  if (typeof href !== "string" || !href || /[\s\\\u0000-\u001f\u007f]/.test(href)) return undefined;
+  if (/^https?:\/\//i.test(href)) {
+    try { new URL(href); return href; } catch { return undefined; }
+  }
+  return relative && !/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(href) ? href : undefined;
+}
+
 /** Product updates sign-up: the most visible action in the footer. */
 function Subscribe({ product, kind, projectKey, catalogId, privacyUrl }: { product: string; kind: CaptureKind; projectKey?: string; catalogId?: string; privacyUrl: string }) {
   return (
@@ -120,7 +129,7 @@ function Subscribe({ product, kind, projectKey, catalogId, privacyUrl }: { produ
             maxLength={254}
             autoComplete="email"
             placeholder="you@example.com"
-            className={field + " h-12 min-w-0 flex-1 rounded-full px-5 text-base placeholder:text-muted-foreground"}
+            className={field + " h-12 min-w-0 shrink-0 sm:flex-1 rounded-full px-5 text-base placeholder:text-muted-foreground"}
           />
           <button
             type="submit"
@@ -306,6 +315,7 @@ export function StudioFooter({
   product,
   url,
   summary,
+  cta,
   groups,
   art,
   feedbackKey,
@@ -324,8 +334,9 @@ export function StudioFooter({
   product: string;
   url: string;
   summary: React.ReactNode;
+  cta?: { label: string; href: string };
   groups: LinkGroup[];
-  art?: { src: string; alt: string; position?: string };
+  art?: { src: string; alt: string; position?: string; width?: number; height?: number; credit?: string; creditHref?: string };
   /** SaaS Maker publishable project key for feedback. */
   feedbackKey?: string;
   /** Publishable key for the updates sign-up; defaults to feedbackKey. */
@@ -357,6 +368,13 @@ export function StudioFooter({
   mark?: React.ReactNode;
   className?: string;
 }) {
+  const ctaHref = safeHref(cta?.href, true);
+  const creditHref = safeHref(art?.creditHref);
+  const artProps = art && {
+    src: art.src, alt: art.alt, width: art.width, height: art.height,
+    loading: "lazy" as const, decoding: "async" as const,
+    style: art.position ? { objectPosition: art.position } : undefined,
+  };
   const subscribe = capture && <Subscribe product={product} kind={capture} projectKey={subscribeKey ?? feedbackKey} catalogId={catalogId} privacyUrl={privacyUrl} />;
   const feedback = <Feedback product={product} feedbackKey={feedbackKey} catalogId={catalogId} privacyUrl={privacyUrl} />;
   const wrap = variant === "gallery" ? "mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]" : "container-page";
@@ -368,20 +386,13 @@ export function StudioFooter({
     art &&
     (variant === "gallery" || artMode === "scene" ? (
       <img
-        src={art.src}
-        alt={art.alt}
-        loading="lazy"
-        decoding="async"
-        style={art.position ? { objectPosition: art.position } : undefined}
+        {...artProps}
         className="mt-[clamp(1.5rem,4vw,3rem)] block h-[clamp(12rem,30vw,26rem)] w-full object-cover [mask-image:linear-gradient(to_bottom,transparent,black_35%)]"
       />
     ) : (
       <div className="container-page mt-6">
         <img
-          src={art.src}
-          alt={art.alt}
-          loading="lazy"
-          decoding="async"
+          {...artProps}
           className="block aspect-[5/2] w-full object-cover [mask-image:radial-gradient(ellipse_75%_85%_at_50%_55%,black_55%,transparent_100%)] sm:aspect-[3/1]"
         />
       </div>
@@ -404,6 +415,7 @@ export function StudioFooter({
                 {product}
               </p>
               <p className="mt-3 max-w-[24em] font-text text-[1.0625rem] leading-relaxed text-muted-foreground">{summary}</p>
+              {ctaHref && <a href={ctaHref} className="ui-case mt-5 inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-[0.9375rem] font-semibold text-brand-foreground transition-opacity hover:opacity-90">{cta?.label}</a>}
             </div>
             {feedback}
           </div>
@@ -443,11 +455,7 @@ export function StudioFooter({
       {art && wordmark === "poster" && (
         <div className="relative isolate mt-[clamp(2rem,5vw,3.5rem)] overflow-hidden">
           <img
-            src={art.src}
-            alt={art.alt}
-            loading="lazy"
-            decoding="async"
-            style={art.position ? { objectPosition: art.position } : undefined}
+            {...artProps}
             className="block h-[clamp(16rem,38vw,34rem)] w-full object-cover [mask-image:linear-gradient(to_bottom,transparent,black_30%)]"
           />
           <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent" />
@@ -462,6 +470,7 @@ export function StudioFooter({
       )}
 
       <div className={cn(wrap, "pb-10", art && wordmark !== "fill" ? "pt-8" : "mt-14")}>
+        {art?.credit && <p className="mb-4 text-xs leading-relaxed text-muted-foreground">{creditHref ? <a href={creditHref} className="underline underline-offset-2 hover:text-foreground">{art.credit}</a> : art.credit}</p>}
         <div className={cn("flex flex-col gap-4", !(art && wordmark !== "fill") && "border-t border-border pt-7")}>
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
             <StudioStrip product={product} studio={studio?.length ? studio : defaultStudio} catalogId={catalogId} />

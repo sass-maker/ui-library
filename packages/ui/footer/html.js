@@ -13,8 +13,11 @@ export {
 } from "../src/blocks/footer.tsx";
 export function renderStudioFooterHtml(props) {
   const config = { summary: "", groups: [], ...props };
-  for (const name of ["summary", "legal", "mark"]) {
-    if (config[name] != null && typeof config[name] === "object")
+  for (const [name, value] of [
+    ["summary", config.summary], ["legal", config.legal], ["mark", config.mark],
+    ["cta.label", config.cta?.label], ["art.credit", config.art?.credit],
+  ]) {
+    if (value != null && typeof value === "object")
       throw new TypeError(name + " must be text");
   }
   if (config.projects && !config.studio?.length)

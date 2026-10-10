@@ -88,6 +88,16 @@ for (const [entry, outfile] of [
 // Extract only tokens/presets, Tailwind mappings and footer component roles.
 // No fonts, animations, page surfaces or unrelated component styles are shipped.
 const theme = await readFile("src/styles/theme.css", "utf8");
+const footerRoot = "footer[data-fleet-footer]";
+// Read surface roles from the canonical theme, rather than maintaining a palette here.
+const footerTokens = (selector) => theme
+  .match(new RegExp(selector + " \\{([^}]+)\\}"))[1]
+  .split("\n")
+  .filter((line) => /^\s*--(?:background|foreground|surface|card(?:-foreground)?|primary(?:-foreground)?|muted(?:-foreground)?|accent(?:-foreground)?|border|input|ring|shadow-color):/.test(line))
+  .join("\n");
+const lightTokens = footerTokens(":root");
+const darkTokens = footerTokens('\\[data-mode="dark"\\]') + "\n--brand-ink:var(--foreground);";
+const darkHost = ':is(.dark, [data-theme="dark"], [data-mode="dark"], [data-theme="ink"])';
 let tokens = theme.slice(
   theme.indexOf(":root {"),
   theme.indexOf("@layer base"),
@@ -125,18 +135,33 @@ ${darkGallery}
 /* Defaults have zero specificity, so a page's theme/font overrides win. */
 :where(:root) { --font-sans:ui-sans-serif,system-ui,sans-serif; --font-display:ui-sans-serif,system-ui,sans-serif; --font-text:var(--font-sans); --font-mono:ui-monospace,monospace; }
 studio-footer { display:block; }
+/* Unlayered host element rules must not hide the footer's layered utilities.
+   revert-layer exposes the library layers, including hover/responsive classes. */
+${footerRoot}, ${footerRoot} :where(*, *::before, *::after) {
+  box-sizing:revert-layer; margin:revert-layer; padding:revert-layer;
+  border:revert-layer; font:revert-layer; color:revert-layer;
+  line-height:revert-layer; list-style:revert-layer; text-decoration:revert-layer;
+}
+${footerRoot} :where(img, svg) { display:revert-layer; width:revert-layer; max-width:revert-layer; height:revert-layer; }
+${footerRoot} { ${lightTokens} color-scheme:light; }
+${darkHost} ${footerRoot}, ${footerRoot}${darkHost} { ${darkTokens} color-scheme:dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-mode="light"]) ${footerRoot}:not(:where([data-theme], [data-mode], .dark) *):not([data-theme]):not([data-mode]):not(.dark) {
+    ${darkTokens} color-scheme:dark;
+  }
+}
 @layer base {
-:where(studio-footer) { font-family:var(--font-sans); color:var(--foreground); line-height:1.5; }
-:where(studio-footer *,studio-footer *::before,studio-footer *::after) { box-sizing:border-box; border:0 solid; }
-:where(studio-footer h2,studio-footer p,studio-footer ul,studio-footer fieldset) { margin:0; padding:0; }
-:where(studio-footer ul) { list-style:none; }
-:where(studio-footer a) { color:inherit; text-decoration:inherit; }
-:where(studio-footer button,studio-footer input,studio-footer textarea) { font:inherit; color:inherit; background:transparent; }
-:where(studio-footer button) { cursor:pointer; }
-:where(studio-footer svg,studio-footer img) { display:block; vertical-align:middle; }
-:where(studio-footer img) { max-width:100%; }
-:where(studio-footer dialog:not([open])) { display:none; }
-:where(studio-footer :focus-visible) { outline:2px solid var(--ring); outline-offset:2px; }
+:where(${footerRoot}) { font-family:var(--font-sans); color:var(--foreground); line-height:1.5; }
+:where(${footerRoot}, ${footerRoot} *, ${footerRoot} *::before, ${footerRoot} *::after) { box-sizing:border-box; border:0 solid; margin:0; padding:0; }
+:where(${footerRoot} *) { font:inherit; color:inherit; }
+:where(${footerRoot} ul) { list-style:none; }
+:where(${footerRoot} a) { text-decoration:inherit; }
+:where(${footerRoot} button, ${footerRoot} input, ${footerRoot} textarea) { background:transparent; }
+:where(${footerRoot} button) { cursor:pointer; }
+:where(${footerRoot} svg, ${footerRoot} img) { display:block; vertical-align:middle; }
+:where(${footerRoot} img) { max-width:100%; height:auto; }
+:where(${footerRoot} dialog:not([open])) { display:none; }
+:where(${footerRoot} :focus-visible) { outline:2px solid var(--ring); outline-offset:2px; }
 }
 `;
 await writeFile("footer/input.css", css);
