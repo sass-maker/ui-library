@@ -118,7 +118,7 @@ export default function LivePage() {
       <main id="main">
         <Hero
           layout="cover"
-          image={{ src: img("hobby-horizon-poster.jpg") }}
+          image={{ src: img("live-hero-v3.webp") }}
           eyebrow="Live by Significant Hobbies"
           title={
             <>
@@ -246,7 +246,7 @@ export default function LivePage() {
         <Section size="compact">
           <div className="container-page">
             <div className="relative isolate flex min-h-[36rem] items-end overflow-hidden rounded-[2rem] sm:min-h-0 sm:items-stretch">
-              <img src={img("dawn-valley-1920.webp")} alt="" loading="lazy" className="absolute inset-0 -z-10 size-full object-cover object-[30%_20%] sm:object-center" />
+              <img src={img("live-closing-v3.webp")} alt="" loading="lazy" className="absolute inset-0 -z-10 size-full object-cover object-[30%_20%] sm:object-center" />
               <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/55 to-black/30 sm:bg-gradient-to-r sm:from-black/75 sm:via-black/40 sm:to-transparent" />
               <div className="max-w-2xl px-6 py-16 text-white sm:px-12 md:py-24 [--muted-foreground:rgb(255_255_255/0.8)] [--accent-ink:var(--brand)]">
                 <p className="eyebrow mb-5 text-white/80">Start with one real possibility</p>
