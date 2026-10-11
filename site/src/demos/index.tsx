@@ -42,7 +42,7 @@ const kithExcerpt = `{
 }`;
 
 const webInstall = `# from the GitHub repo, not npm (pnpm add drops #tag&path)
-G="github:sass-maker/ui-library#v0.1.14"
+G="github:sass-maker/ui-library#v0.1.20"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \\
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \\
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -50,7 +50,7 @@ pnpm install`;
 
 const swiftInstall = `.package(
   url: "https://github.com/sass-maker/ui-library",
-  from: "0.1.14"
+  from: "0.1.20"
 )`;
 
 function DemoLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -158,6 +158,9 @@ export default function IndexPage() {
         </section>
 
         <nav aria-label="Identity demos" className="mx-auto flex max-w-[75rem] flex-wrap gap-5 px-5 py-8 text-sm">
+          <a href="/demo/dark-gallery/">dark gallery</a>
+          <a href="/demo/dark-workbench/">dark workbench</a>
+          <a href="/demo/from-app/">from app</a>
           <a href="/demo/identity-split/">split + serif</a>
           <a href="/demo/identity-workbench/">split workbench</a>
           <a href="/demo/identity-form/">inline form</a>

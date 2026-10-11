@@ -1,5 +1,7 @@
 ---
 import "@saas-maker/ui/theme.css";
+import { tokensFromApp } from "./app-tokens";
+import { pageSettings } from "./schema";
 import type { PageSettings } from "./schema";
 import { fontOverrides } from "./fonts";
 
@@ -26,6 +28,7 @@ interface Props {
   mode?: "light" | "dark";
   /** Product identity overrides, e.g. { "--brand": "oklch(...)" }. */
   tokens?: Record<string, string>;
+  fromApp?: PageSettings["fromApp"];
   fonts?: PageSettings["fonts"];
   surface?: PageSettings["surface"];
   icon?: string;
@@ -50,9 +53,10 @@ const {
   title,
   description,
   theme = "base",
-  mode = "light",
+  mode = "dark",
   tokens = {},
   fonts,
+  fromApp,
   surface,
   icon,
   canonical,
@@ -62,12 +66,16 @@ const {
   motion = true,
   footerScript = true,
 } = Astro.props;
-const style = Object.entries({ ...fontOverrides(fonts, theme), ...tokens })
+// Validate direct Base consumers as well as content-collection pages.
+if (fromApp) pageSettings.parse({ title, fromApp, tokens });
+const style = Object.entries({ ...fontOverrides(fonts, theme), ...tokensFromApp(fromApp), ...(fromApp ? { "color-scheme": mode } : {}), ...tokens })
   .map(([k, v]) => `${k}:${v}`)
   .join(";");
 // Preload only the display font (the one every page paints first); body faces load on demand.
-const displayFace = fonts?.display ?? (theme === "paper" ? "newsreader" : theme === "hearth" ? "fraunces" : theme === "signal" ? "instrument-serif" : "figtree");
-const displayFont = displayFace === "newsreader"
+const displayFace = fromApp?.fonts?.display ?? fonts?.display ?? (theme === "paper" ? "newsreader" : theme === "hearth" ? "fraunces" : theme === "signal" ? "instrument-serif" : "figtree");
+const displayFont = displayFace === "system" || displayFace === "ui-rounded" ? undefined
+  : displayFace === "geist-mono" ? (await import("@saas-maker/ui/fonts/geist-mono-latin-normal.woff2?url")).default
+  : displayFace === "newsreader"
   ? (await import("@saas-maker/ui/fonts/newsreader-display-latin-normal.woff2?url")).default
   : displayFace === "fraunces"
     ? (await import("@saas-maker/ui/fonts/fraunces-latin-normal.woff2?url")).default
@@ -84,15 +92,15 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
-<html lang="en" data-theme={theme} data-mode={surface?.variant === "editorial-dark" ? "dark" : mode} data-surface={surface?.variant} data-backdrop={surface?.backdrop} data-motion={motion ? undefined : "off"} style={style || undefined}>
+<html lang="en" data-theme={theme} data-mode={fromApp ? mode : surface?.variant === "editorial-dark" ? "dark" : mode} data-surface={surface?.variant} data-backdrop={surface?.backdrop} data-motion={motion ? undefined : "off"} style={style || undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    {displayFont && <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />}
     {description && <meta name="description" content={description} />}
     {icon && <link rel="icon" href={icon} />}
-    <meta name="color-scheme" content={theme === "ink" || mode === "dark" || surface?.variant === "editorial-dark" ? "dark" : "light"} />
+    <meta name="color-scheme" content={fromApp ? mode : theme === "ink" || mode === "dark" || surface?.variant === "editorial-dark" ? "dark" : "light"} />
     {canonical && <link rel="canonical" href={canonical} />}
     {robots && <meta name="robots" content={robots} />}
     {

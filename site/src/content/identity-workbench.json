@@ -3,6 +3,7 @@
   "page": {
     "title": "SaaS Maker UI \u2014 workbench demo",
     "theme": "base",
+    "mode": "light",
     "fonts": {
       "display": "figtree",
       "text": "geist"

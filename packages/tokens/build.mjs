@@ -18,7 +18,7 @@ const COLORS = [
 function block(selector) {
   const start = css.indexOf(`${selector} {`);
   if (start < 0) throw new Error(`missing ${selector}`);
-  const body = css.slice(css.indexOf("{", start) + 1, css.indexOf("\n}", start));
+  const body = css.slice(css.indexOf("{", start) + 1, css.indexOf("}", start));
   const out = {};
   for (const m of body.matchAll(/--([\w-]+):\s*([^;]+);/g)) out[m[1]] = m[2].trim();
   return out;
@@ -57,16 +57,21 @@ function color(value, vars, depth = 0) {
 }
 
 const base = block(":root");
-const presets = {
+const baseThemes = {
   base,
-  "base-dark": { ...base, ...block('[data-mode="dark"]') },
   paper: { ...base, ...block('[data-theme="paper"]') },
   ink: { ...base, ...block('[data-theme="ink"]') },
   hearth: { ...base, ...block('[data-theme="hearth"]') },
   signal: { ...base, ...block('[data-theme="signal"]') },
   gallery: { ...base, ...block('[data-theme="gallery"]') },
-  "editorial-dark": { ...base, ...block('[data-theme="gallery"]'), ...block('[data-surface="editorial-dark"]') },
 };
+const presets = { ...baseThemes };
+for (const [name, vars] of Object.entries(baseThemes)) {
+  presets[`${name}-dark`] = { ...vars, ...block('[data-mode="dark"]'), ...block(`[data-theme="${name}"][data-mode="dark"]`) };
+}
+presets.workbench = baseThemes.ink;
+presets["workbench-dark"] = presets["ink-dark"];
+presets["editorial-dark"] = { ...presets["gallery-dark"], ...block('[data-surface="editorial-dark"]') };
 
 const tokens = {};
 for (const [name, vars] of Object.entries(presets)) {
@@ -101,7 +106,7 @@ for (const [name, vars] of Object.entries(presets)) {
     monoFont: family(vars["font-mono"]),
     displayLowercase: vars["display-case"] === "lowercase",
     uiLowercase: vars["ui-case"] === "lowercase",
-    dark: name === "ink" || name === "base-dark" || name === "editorial-dark",
+    dark: name === "ink" || name === "workbench" || name.endsWith("-dark"),
   };
 }
 

@@ -7,7 +7,7 @@
 //
 // BASE_URL (default http://localhost:4321) and CHROME (path to Chrome) override.
 import { spawn } from "node:child_process";
-import { mkdtempSync, readFileSync, readdirSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -31,7 +31,7 @@ for (let i = 0; i < 80 && !ws; i++) {
     if (page) ws = new WebSocket(page.webSocketDebuggerUrl);
   } catch {}
 }
-if (!ws) throw new Error("Chrome did not start; set CHROME to its path.");
+if (!ws) { chrome.kill(); throw new Error("Chrome did not start; set CHROME to its path."); }
 await new Promise((r) => ws.addEventListener("open", r));
 
 let seq = 0;
@@ -99,6 +99,68 @@ handlers.set("Fetch.requestPaused", async ({ requestId, request }) => {
   }
   await cdp("Fetch.fulfillRequest", { requestId, responseCode: status, responseHeaders: cors, body: Buffer.from(body).toString("base64") });
 });
+
+// Phase A: actual cascade contrast, app palette inheritance and responsive demos.
+const paletteChecks = `(() => {
+  const root = document.documentElement, original = root.getAttribute('style');
+  const theme = root.dataset.theme, mode = root.dataset.mode;
+  const probe = document.createElement('span'); document.body.append(probe);
+  const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+  const luminance = role => {
+    probe.style.color = 'var(--' + role + ')'; ctx.fillStyle = getComputedStyle(probe).color;
+    ctx.fillRect(0, 0, 1, 1);
+    const c = [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3).map(x => x / 255)
+      .map(x => x <= .04045 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4);
+    return c[0] * .2126 + c[1] * .7152 + c[2] * .0722;
+  };
+  const ratio = (a,b) => { const x=luminance(a), y=luminance(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); };
+  const failures = [];
+  try {
+    root.removeAttribute('style'); root.dataset.mode = 'dark';
+    for (const preset of ['base','paper','hearth','signal','gallery','ink']) {
+      root.dataset.theme = preset;
+      for (const text of ['foreground','muted-foreground']) for (const bg of ['background','card'])
+        if (ratio(text,bg) < 4.5) failures.push(preset + ':' + text + '/' + bg);
+      if (ratio('brand','brand-foreground') < 4.5) failures.push(preset + ':brand text');
+      if (ratio('brand','background') < 3) failures.push(preset + ':brand/background');
+      if (getComputedStyle(root).colorScheme !== 'dark') failures.push(preset + ':color-scheme');
+    }
+  } finally { probe.remove(); root.dataset.theme=theme; root.dataset.mode=mode; if(original === null) root.removeAttribute('style'); else root.setAttribute('style',original); }
+  return failures;
+})()`;
+await open('/demo/dark-gallery/');
+const paletteFailures = await js(paletteChecks);
+check('dark: every theme has AA text and brand contrast in the actual cascade', paletteFailures.length === 0, paletteFailures.join(', '));
+for (const slug of ['dark-gallery', 'dark-workbench', 'from-app']) {
+  for (const width of [390, 1440]) {
+    await open('/demo/' + slug + '/', width);
+    await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    await js('document.fonts.ready');
+    check(slug + ': dark at ' + width, await js("document.documentElement.dataset.mode === 'dark' && getComputedStyle(document.documentElement).colorScheme === 'dark'"));
+    check(slug + ': no horizontal scroll at ' + width, await js('document.documentElement.scrollWidth <= innerWidth'));
+    check(slug + ': no broken images at ' + width, await js("[...document.images].every(i => !i.complete || i.naturalWidth > 0)"));
+    if (slug === 'from-app') {
+      const app = JSON.parse(readFileSync(new URL('../src/content/from-app.json', import.meta.url), 'utf8')).page.fromApp;
+      check('from-app: background, text, card, border and brand inherit into footer', await js(`(() => {
+        const root = getComputedStyle(document.documentElement), footer = getComputedStyle(document.querySelector('footer'));
+        return Object.entries(${JSON.stringify(app)}).filter(([k]) => !['fonts','radius'].includes(k)).every(([k,v]) => {
+          const role = '--' + k.replace(/[A-Z]/g,c=>'-'+c.toLowerCase());
+          return root.getPropertyValue(role).trim() === v && footer.getPropertyValue(role).trim() === v;
+        }) && root.getPropertyValue('--font-text').includes('Geist') && root.getPropertyValue('--font-display').includes('Figtree');
+      })()`));
+    }
+    if (process.env.SCREENSHOT_DIR) {
+      mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
+      // Load lazy images before taking the full page capture.
+      await js("Promise.all([...document.images].map(i => { i.loading='eager'; return i.decode().catch(()=>{}); }))");
+      const metrics = await cdp('Page.getLayoutMetrics');
+      const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true,
+        clip: { x: 0, y: 0, width, height: metrics.result.cssContentSize.height, scale: 1 } });
+      writeFileSync(join(process.env.SCREENSHOT_DIR, slug + '-' + width + '.png'), Buffer.from(shot.result.data, 'base64'));
+    }
+  }
+}
+await cdp('Emulation.setEmulatedMedia', { features: [] });
 
 // Every Gallery section kind keeps its content id on the rendered section.
 const sectionKinds = new Set();

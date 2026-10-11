@@ -67,15 +67,15 @@ export function Device({ image, className }: { image: Img; className?: string })
       <div
         className={cn(
           "relative overflow-hidden rounded-[0.875rem] shadow-[0_50px_100px_-30px_rgb(40_20_10/0.45),0_30px_60px_-40px_rgb(40_20_10/0.5)]",
-          image.frame === "desktop" && "bg-card ring-1 ring-black/10",
+          image.frame === "desktop" && "bg-card ring-1 ring-border",
           className,
         )}
       >
         {image.frame === "desktop" && (
           <div aria-hidden className="flex h-[clamp(1.5rem,2.4vw,2rem)] items-center gap-1.5 px-3">
-            <span className="size-2.5 rounded-full bg-black/15" />
-            <span className="size-2.5 rounded-full bg-black/15" />
-            <span className="size-2.5 rounded-full bg-black/15" />
+            <span className="size-2.5 rounded-full bg-muted-foreground" />
+            <span className="size-2.5 rounded-full bg-muted-foreground" />
+            <span className="size-2.5 rounded-full bg-muted-foreground" />
           </div>
         )}
         <div className="relative">
@@ -148,7 +148,7 @@ export function GalleryCaption({ lead, children, className }: { lead?: React.Rea
 }
 
 export function GalleryNote({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <p className={cn("font-display text-[0.8125rem] text-muted-foreground/80", className)}>{children}</p>;
+  return <p className={cn("font-display text-[0.8125rem] text-muted-foreground", className)}>{children}</p>;
 }
 
 const wrap = "mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]";
@@ -224,7 +224,7 @@ export function GalleryShowcase({
       id={id}
       className={cn(
         "pb-[clamp(4.5rem,9vw,7.5rem)] pt-[clamp(6rem,13vw,11.25rem)]",
-        "bg-tone-ink text-[#f4ebe0] [--foreground:#f4ebe0] [--muted-foreground:#b4a596] [--brand-ink:color-mix(in_oklch,var(--brand)_72%,white)] [--accent-ink:var(--brand-ink)]",
+        "bg-surface text-foreground",
       )}
     >
       <div className={cn(wrap, "motion-stagger text-center")}>
@@ -233,7 +233,7 @@ export function GalleryShowcase({
         {ledeText && <GalleryLede className="mx-auto mt-6">{ledeText}</GalleryLede>}
       </div>
       <figure>
-        <div className="mt-[clamp(3.5rem,7vw,6rem)] bg-[radial-gradient(closest-side,#3a2a1f,transparent)] py-[clamp(1rem,3vw,2.5rem)]">
+        <div className="mt-[clamp(3.5rem,7vw,6rem)] bg-[radial-gradient(closest-side,var(--brand-soft),transparent)] py-[clamp(1rem,3vw,2.5rem)]">
           <Device
             image={device}
             className={cn("motion-zoom mx-auto shadow-[0_60px_120px_-30px_rgb(0_0_0/0.75)]", sized(device, "w-[clamp(16.5rem,26vw,22.5rem)]", "w-[min(calc(100%-2.5rem),60rem)]"))}
@@ -393,7 +393,7 @@ export function GalleryStatement({
                 <dt className="font-display text-[1.375rem] font-semibold tracking-[-0.025em]">{r.title}</dt>
                 <dd className="col-span-full row-start-2 font-text text-[1.1875rem] text-muted-foreground md:col-span-1 md:row-start-auto">{r.body}</dd>
                 {r.status && (
-                  <dd className={cn("col-start-2 row-start-1 text-right font-display text-[0.8125rem] font-semibold md:col-start-auto md:row-start-auto", r.on ? "text-brand-ink" : "text-muted-foreground/80")}>
+                  <dd className={cn("col-start-2 row-start-1 text-right font-display text-[0.8125rem] font-semibold md:col-start-auto md:row-start-auto", r.on ? "text-brand-ink" : "text-muted-foreground")}>
                     {r.status}
                   </dd>
                 )}
@@ -552,12 +552,12 @@ export function GalleryPair({
       </div>
       <div className={wrap}>
         <div className="relative mx-auto max-w-[66rem] pb-[30%] md:pb-[9%]">
-          <figure className="w-full overflow-hidden rounded-[clamp(0.5rem,1vw,0.875rem)] bg-[#141210] shadow-[0_0_0_1px_rgb(255_255_255/0.06),0_60px_120px_-40px_rgb(40_15_0/0.65),0_30px_60px_-30px_rgb(40_15_0/0.4)] md:w-[84%]">
-            <div className="flex h-[clamp(1.375rem,2.6vw,2.25rem)] items-center gap-[clamp(0.25rem,0.5vw,0.4rem)] border-b border-white/[0.06] px-[clamp(0.5rem,1.1vw,0.875rem)]">
+          <figure className="w-full overflow-hidden rounded-[clamp(0.5rem,1vw,0.875rem)] bg-card shadow-[0_0_0_1px_rgb(255_255_255/0.06),0_60px_120px_-40px_rgb(40_15_0/0.65),0_30px_60px_-30px_rgb(40_15_0/0.4)] md:w-[84%]">
+            <div className="flex h-[clamp(1.375rem,2.6vw,2.25rem)] items-center gap-[clamp(0.25rem,0.5vw,0.4rem)] border-b border-hairline px-[clamp(0.5rem,1.1vw,0.875rem)]">
               {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
                 <span key={c} aria-hidden className="size-[clamp(0.375rem,0.75vw,0.625rem)] rounded-full" style={{ background: c }} />
               ))}
-              {win.title && <span className="mx-auto pr-10 font-display text-[clamp(0.5625rem,0.9vw,0.75rem)] text-white/45">{win.title}</span>}
+              {win.title && <span className="mx-auto pr-10 font-display text-[clamp(0.5625rem,0.9vw,0.75rem)] text-muted-foreground">{win.title}</span>}
             </div>
             <Picture image={win} className="block h-auto w-full" />
           </figure>

@@ -61,6 +61,7 @@ export function baseProps(content: ProductContent) {
     fonts: page.fonts,
     surface: page.surface,
     tokens: page.tokens,
+    fromApp: page.fromApp,
     icon: page.icon,
     canonical: page.canonical,
     robots: page.robots,

@@ -6,9 +6,9 @@
     "theme": "gallery",
     "tokens": {
       "--brand": "#e1ad4a",
-      "--brand-ink": "#8a6114",
+      "--brand-ink": "var(--brand)",
       "--brand-foreground": "#111111",
-      "--brand-soft": "#f6e7c6"
+      "--brand-soft": "color-mix(in oklch, var(--brand) 18%, transparent)"
     },
     "icon": "/demo/anchor/anchor-mark-v29.png"
   },

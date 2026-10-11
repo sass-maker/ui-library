@@ -1,6 +1,7 @@
 import type { PageSettings } from "./schema";
 
 const faces = {
+  "ui-rounded": 'ui-rounded, "SF Pro Rounded", Nunito, Figtree, system-ui, sans-serif',
   figtree: '"Figtree Variable", ui-sans-serif, system-ui, sans-serif',
   newsreader: '"Newsreader Display", "Iowan Old Style", Georgia, serif',
   "instrument-serif": '"Instrument Serif", Georgia, serif',

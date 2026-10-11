@@ -3,6 +3,7 @@
   "page": {
     "title": "SaaS Maker UI \u2014 masthead demo",
     "theme": "gallery",
+    "mode": "light",
     "fonts": {
       "display": "newsreader",
       "text": "figtree",

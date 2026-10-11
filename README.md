@@ -17,7 +17,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.15"
+G="github:sass-maker/ui-library#v0.1.20"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -27,9 +27,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.15&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.15&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.15&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.20&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.20&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.20&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -121,6 +121,87 @@ const content = galleryContent.parse(json); // fails the build with the exact fi
 `workbenchContent` / `WorkbenchPage` for Workbench files, or load a folder of
 files as an Astro content collection with `productContent` as its schema.
 
+### Dark default and tokensFromApp
+
+As of the **0.1.20 release candidate**, omitted `page.mode` means `"dark"`
+for base, paper, hearth, signal, gallery and ink. Typography stays with the
+preset; neutral near-black surfaces and readable accents compose with both
+Gallery and Workbench. Product accents still come from tokens.
+
+**Migration from 0.1.19:** add `"mode": "light"` to intentional light showcases.
+Replace light-only `--brand-soft` and dark `--brand-ink` overrides when moving
+a page to dark. Existing demos remain available; the light identity showcases
+opt in explicitly. New examples: `/demo/dark-gallery/`, `/demo/dark-workbench/`
+and `/demo/from-app/`.
+
+A landing should use the same background, type and components as its app.
+Copy the app's resolved CSS palette into `page.fromApp` instead of choosing a
+second landing palette:
+
+```json
+{
+  "page": {
+    "title": "Your product",
+    "fromApp": {
+      "background": "#111111", "foreground": "#f5f5f5",
+      "card": "#191919", "surface": "#202020", "muted": "#202020",
+      "mutedForeground": "#b0b0b0", "border": "#363636",
+      "brand": "#4a7cf2", "brandForeground": "#111111",
+      "destructive": "#ff8585", "radius": "12px",
+      "fonts": { "sans": "geist", "display": "figtree", "mono": "geist-mono" }
+    }
+  }
+}
+```
+
+All color roles and radius are required; fonts and each font role are optional.
+Colors accept solid `#rgb`/`#rrggbb`, `rgb()` and `oklch()` values. Resolve
+`var()`, dynamic colors and transparency in the app first. Radius accepts px,
+rem or `0`. Font names are `figtree`, `newsreader`, `instrument-serif`,
+`fraunces`, `geist`, `geist-mono` and `system`; no unbundled font can be named.
+Sans also maps long-form text; display also maps heading accents. App fonts
+win over `page.fonts`. Explicit `page.tokens` win last.
+
+`tokensFromApp` (exported from `@saas-maker/templates/tokensFromApp`) maps the
+app roles plus dependent button, popover, focus and sidebar variables.
+`Base.astro` applies it automatically, defaults to dark, and accepts explicit
+`page.mode: "light"`. Content builds and direct Base usage reject unknown keys,
+invalid values, foreground or muted text below 4.5:1 on background/card,
+brand below 3:1 on background, or brand text below 4.5:1. Contrast includes
+explicit overrides for those roles; use solid colors there too.
+
+For **CSS apps**, copy resolved `--background`, `--foreground`, `--card`,
+`--surface`, `--muted`, `--muted-foreground`, `--border`, `--brand`,
+`--brand-foreground`, `--destructive`, `--radius` and their font families.
+Map the kebab-case role names to the camelCase JSON keys above. Reuse the same
+library components so buttons, cards and footers inherit the same roles.
+
+For **Swift apps**, copy the sRGB values from the app's `SMPalette` (or asset
+catalog dark appearance) as hex/rgb values; a Swift radius in points maps to
+web px. Map bundled Apple names (`Geist`, `Figtree`, `Geist Mono`, `Newsreader`,
+`Fraunces`, `Instrument Serif`) to the names above. Swift includes generated
+`.base.dark`, `.paper.dark`, `.hearth.dark`, `.signal.dark`, `.gallery.dark`,
+`.ink.dark` and `.workbench.dark` palettes, plus a helper:
+
+```swift
+let palette = SMPalette.fromApp(
+    background: Color("Background"), foreground: Color("Foreground"),
+    card: Color("Card"), border: Color("Border"), brand: Color("Brand"),
+    brandForeground: Color("BrandForeground"), surface: Color("Surface"),
+    muted: Color("Muted"), mutedForeground: Color("MutedForeground"),
+    destructive: Color("Destructive"), radius: 12,
+    sansFont: "Geist", displayFont: "Figtree", monoFont: "Geist Mono"
+)
+ContentView().smTheme(palette)
+```
+
+The helper defaults to dark. Swift's environment default is `.base.dark`;
+explicit light presets remain available. SwiftUI dynamic colors cannot be
+measured at compile time; the copied web palette is validated by the content
+build. This candidate also replaces fixed showcase/terminal colors with
+semantic roles and regenerates the shared JSON, Swift and static-footer assets.
+Release notes follow this repo's README and release-commit convention.
+
 ### Hero identity
 
 Both templates accept `hero.layout`: `center` (default, existing layout),
@@ -165,7 +246,7 @@ bundled Latin subsets; font synthesis is disabled for overridden accents.
 Newsreader uses its fixed display/text optical sizes. `text` overrides both
 `--font-sans` and `--font-text`; omitted roles retain theme defaults.
 `display` overrides `--font-display` and its supported weight; `accent` sets
-`--font-accent`. Only the chosen display face is preloaded. Other faces load
+`--font-accent`. Only a bundled display face is preloaded. Other faces load
 lazily when rendered; no font request is made just for declaring a face.
 
 ```json
@@ -180,11 +261,22 @@ today's surface. Treatments derive from `--brand`, `--brand-soft`, and
 `--border`. Override `--surface-backdrop` directly in `page.tokens`, or customize
 `--surface-backdrop-gradient`, `--surface-backdrop-glow`, or
 `--surface-backdrop-grid`. `variant: "editorial-dark"` supplies a warm near-black
-surface, subdued text, and hairlines; `default` retains the theme. Gallery also
-supports `mode: "dark"`. Explicit token overrides win over font and surface
+surface, subdued text, and hairlines; `default` retains the theme. All presets support `mode: "dark"` (the default). Explicit token overrides win over font and surface
 presets. Demos: `/demo/identity-split/`, `/demo/identity-workbench/`,
 `/demo/identity-form/`, `/demo/identity-masthead/`, `/demo/identity-surface/`, and
 `/demo/identity-closing/`.
+
+For native-app landings such as Anchor and Calorie, `display` and `text` also
+accept `"ui-rounded"` (the `accent` role retains its bundled-face options):
+
+```json
+{ "fonts": { "display": "ui-rounded", "text": "ui-rounded" } }
+```
+
+This maps to `ui-rounded, "SF Pro Rounded", Nunito, Figtree, system-ui,
+sans-serif`, so Apple devices use their native rounded face. Nunito and Figtree
+are fallbacks when available; this option adds no font dependency or font
+preload. Explicit `page.tokens` and `fromApp` font precedence still apply.
 
 ### Head tags (SEO and analytics)
 
@@ -396,9 +488,9 @@ Framework references: [Astro server islands](https://docs.astro.build/en/guides/
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.15")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.20")
 // ...
-ContentView().smTheme(.gallery.brand(Color("Brand")))
+ContentView().smTheme(.gallery.dark.brand(Color("Brand")))
 ```
 
 The Swift package bundles the same fonts as the web theme (Figtree, Newsreader,
@@ -433,7 +525,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.15&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.20&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

@@ -6,9 +6,9 @@
     "theme": "gallery",
     "tokens": {
       "--brand": "#74d4a6",
-      "--brand-ink": "#1f7a52",
+      "--brand-ink": "var(--brand)",
       "--brand-foreground": "#07150e",
-      "--brand-soft": "#d9f4e7"
+      "--brand-soft": "color-mix(in oklch, var(--brand) 18%, transparent)"
     },
     "icon": "/demo/contextdaddy/icon.webp"
   },
