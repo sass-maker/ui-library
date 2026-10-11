@@ -35,7 +35,7 @@ export function WindowFrame({
   return (
     <figure
       className={cn(
-        "overflow-hidden rounded-xl border border-border bg-card shadow-xl ring-1 ring-black/[0.03]",
+        "overflow-hidden rounded-xl border border-border bg-card shadow-xl ring-1 ring-border",
         className,
       )}
     >
@@ -99,7 +99,7 @@ export function Photo({
   return (
     <figure
       className={cn(
-        "rounded-[calc(var(--radius)*0.6)] bg-card p-2 shadow-lg ring-1 ring-black/5",
+        "rounded-[calc(var(--radius)*0.6)] bg-card p-2 shadow-lg ring-1 ring-border",
         tilt === "left" && "-rotate-2",
         tilt === "right" && "rotate-2",
         className,
@@ -150,7 +150,7 @@ export function MediaCard({
     <Comp
       {...(href ? { href } : {})}
       className={cn(
-        "group flex flex-col overflow-hidden rounded-[calc(var(--radius)*1.2)] bg-card shadow-sm ring-1 ring-black/5 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg",
+        "group flex flex-col overflow-hidden rounded-[calc(var(--radius)*1.2)] bg-card shadow-sm ring-1 ring-border transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg",
         className,
       )}
     >
@@ -188,7 +188,7 @@ export function Stage({
 }) {
   return (
     <figure className={cn("relative", className)}>
-      <div className="relative isolate overflow-hidden rounded-2xl ring-1 ring-black/5">
+      <div className="relative isolate overflow-hidden rounded-2xl ring-1 ring-border">
         {backdrop === "mesh" ? (
           <div aria-hidden className="mesh grain absolute inset-0 -z-10" />
         ) : (

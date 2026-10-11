@@ -3,6 +3,7 @@
   "page": {
     "title": "SaaS Maker UI \u2014 form demo",
     "theme": "base",
+    "mode": "light",
     "fonts": {
       "display": "geist",
       "text": "geist"

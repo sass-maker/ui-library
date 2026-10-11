@@ -9,8 +9,8 @@
     "tokens": {
       "--brand": "#2dd4bf",
       "--brand-foreground": "#05070d",
-      "--brand-soft": "rgb(45 212 191 / 0.14)",
-      "--brand-ink": "#5eead4",
+      "--brand-soft": "color-mix(in oklch, var(--brand) 18%, transparent)",
+      "--brand-ink": "var(--brand)",
       "--background": "#05070d",
       "--foreground": "#e8eef7",
       "--surface": "#0c111a",

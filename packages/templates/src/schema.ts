@@ -1,4 +1,5 @@
 import { z } from "astro/zod";
+import { contrast, rgb } from "./app-tokens";
 
 /**
  * The content-file format. A product page is one JSON file that must match
@@ -45,6 +46,7 @@ export const singleFieldForm = z.object({
   prefill: z.string().optional(),
 }).strict();
 const font = z.enum(["figtree", "newsreader", "instrument-serif", "fraunces", "geist"]);
+const pageFont = font.or(z.literal("ui-rounded"));
 /** Omitted layout preserves the original hero. Plain cards need intrinsic dimensions. */
 const heroIdentity = {
   layout: z.enum(["center", "split", "form", "masthead"]).optional(),
@@ -62,16 +64,29 @@ function validateHero(h: { layout?: string; form?: unknown; primary?: unknown; c
   if ((!h.layout || h.layout === "center") && !h.card && !h.window && !h.image && !(h.backdrop && h.screen)) issue("screen", "center hero needs backdrop + screen, image, or window");
 }
 
+const appColor = z.string().refine(v => rgb(v) !== null, "Use a solid #hex, rgb(), or oklch() color (no alpha or var())");
+const appFont = z.enum(["figtree", "newsreader", "instrument-serif", "fraunces", "geist", "geist-mono", "system"]);
+export const fromApp = z.object({
+  background: appColor, foreground: appColor, card: appColor, surface: appColor,
+  muted: appColor, mutedForeground: appColor, border: appColor, brand: appColor,
+  brandForeground: appColor, destructive: appColor,
+  radius: z.string().regex(/^(?:0|(?:\d+(?:\.\d+)?)(?:px|rem))$/, "Use a non-negative px or rem radius, or 0"),
+  fonts: z.object({ sans: appFont.optional(), display: appFont.optional(), mono: appFont.optional() }).strict().optional(),
+}).strict();
+
 export const pageSettings = z
   .object({
     title: z.string(),
     description: z.string().optional(),
     theme: z.enum(["base", "paper", "ink", "hearth", "signal", "gallery"]).optional(),
+    /** Defaults to dark; use light only for an intentional light showcase. */
     mode: z.enum(["light", "dark"]).optional(),
+    /** Copy the app palette; explicit tokens below still win. */
+    fromApp: fromApp.optional(),
     /** Brand overrides, e.g. { "--brand": "oklch(...)" }. */
     tokens: z.record(z.string(), z.string()).optional(),
     /** Per-product faces; Newsreader uses its fixed display/text optical sizes. */
-    fonts: z.object({ display: font.optional(), text: font.optional(), accent: font.optional(), accentStyle: z.enum(["italic", "normal"]).optional() }).strict().optional(),
+    fonts: z.object({ display: pageFont.optional(), text: pageFont.optional(), accent: font.optional(), accentStyle: z.enum(["italic", "normal"]).optional() }).strict().optional(),
     /** Token-driven background treatment and optional warm editorial dark palette. */
     surface: z.object({ backdrop: z.enum(["none", "gradient", "glow", "grid"]).optional(), variant: z.enum(["default", "editorial-dark"]).optional() }).strict().optional(),
     icon: z.string().optional(),
@@ -108,7 +123,26 @@ export const pageSettings = z
      */
     assetBase: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((page, ctx) => {
+    if (!page.fromApp) return;
+    const app = page.fromApp;
+    const value = (role: string, fallback: string) => page.tokens?.[`--${role}`] ?? fallback;
+    const pairs: [string, string, string, string, number][] = [
+      ["foreground", app.foreground, "background", app.background, 4.5],
+      ["muted-foreground", app.mutedForeground, "background", app.background, 4.5],
+      ["foreground", app.foreground, "card", app.card, 4.5],
+      ["muted-foreground", app.mutedForeground, "card", app.card, 4.5],
+      ["brand", app.brand, "background", app.background, 3],
+      ["brand-foreground", app.brandForeground, "brand", app.brand, 4.5],
+    ];
+    for (const [a, av, b, bv, minimum] of pairs) {
+      const x = value(a, av), y = value(b, bv);
+      if (!rgb(x) || !rgb(y) || contrast(x, y) < minimum) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["fromApp"], message: `${a}/${b} must use solid colors with contrast >= ${minimum}:1 (including page.tokens overrides)` });
+      }
+    }
+  });
 
 /** Sibling products for the footer studio strip; see studioFromProjects. */
 const studioLink = z.object({ label: z.string(), href: z.string().url(), id: z.string().optional() }).strict();

@@ -73,10 +73,10 @@ export function Ledger({
 /** A terminal or code sample. play: lines print one after another when it scrolls into view. */
 export function CodeBlock({ code, label, play, className }: { code: string; label?: string; play?: boolean; className?: string }) {
   return (
-    <figure className={cn("overflow-hidden rounded-xl border border-border bg-[oklch(0.16_0.008_265)] text-[oklch(0.92_0.005_265)] shadow-lg", className)}>
+    <figure className={cn("overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-lg", className)}>
       {label && (
-        <figcaption className="flex items-center gap-2 border-b border-white/[0.07] px-4 py-2.5 font-mono text-[0.6875rem] text-white/50">
-          <span aria-hidden className="size-1.5 rounded-full bg-[oklch(0.75_0.15_150)]" />
+        <figcaption className="flex items-center gap-2 border-b border-hairline px-4 py-2.5 font-mono text-[0.6875rem] text-muted-foreground">
+          <span aria-hidden className="size-1.5 rounded-full bg-success" />
           {label}
         </figcaption>
       )}

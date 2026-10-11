@@ -6,9 +6,9 @@
     "theme": "gallery",
     "tokens": {
       "--brand": "#47743a",
-      "--brand-ink": "#47743a",
+      "--brand-ink": "var(--brand)",
       "--brand-foreground": "#ffffff",
-      "--brand-soft": "#e7f0dc"
+      "--brand-soft": "color-mix(in oklch, var(--brand) 18%, transparent)"
     },
     "icon": "/demo/calorie/mark.png"
   },

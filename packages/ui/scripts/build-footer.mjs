@@ -118,8 +118,8 @@ tokens = tokens.replace(":root {", ":where(:root) {");
 const roles = ["font-display", "eyebrow", "container-page"]
   .map((name) => theme.match(new RegExp("  \\." + name + " \\{[^}]+\\}"))[0])
   .join("\n");
-const darkGallery = theme.slice(
-  theme.indexOf('[data-theme="gallery"][data-mode="dark"]'),
+const editorialDark = theme.slice(
+  theme.indexOf('[data-surface="editorial-dark"]'),
   theme.indexOf('html[style*="--font-"]'),
 );
 const css = `@layer theme, base, components, utilities;
@@ -127,7 +127,7 @@ const css = `@layer theme, base, components, utilities;
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 @source "../src/blocks/footer.tsx";
 ${tokens}
-${darkGallery}
+${editorialDark}
 @layer components { ${roles}
 :where(h1,h2,h3,h4).font-display { text-transform:var(--display-case); }
 .ui-case { text-transform:var(--ui-case); }
@@ -149,6 +149,11 @@ ${darkHost} ${footerRoot}, ${footerRoot}${darkHost} { ${darkTokens} color-scheme
   :root:not([data-theme="light"]):not([data-mode="light"]) ${footerRoot}:not(:where([data-theme], [data-mode], .dark) *):not([data-theme]):not([data-mode]):not(.dark) {
     ${darkTokens} color-scheme:dark;
   }
+}
+/* A themed host owns its palette. Fallback adapters above are for unthemed hosts. */
+:is([data-theme], [data-mode], [style*="--background"]) ${footerRoot}:not([data-theme]):not([data-mode]) {
+  ${[...new Set([...lightTokens.matchAll(/--([\w-]+):/g)].map(m => m[1]).concat(["brand", "brand-foreground", "brand-soft", "brand-ink"]))].map(role => `--${role}:inherit;`).join("\n")}
+  color-scheme:inherit;
 }
 @layer base {
 :where(${footerRoot}) { font-family:var(--font-sans); color:var(--foreground); line-height:1.5; }

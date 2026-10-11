@@ -6,9 +6,9 @@
     "theme": "gallery",
     "tokens": {
       "--brand": "#b9e83f",
-      "--brand-ink": "#4a6a10",
+      "--brand-ink": "var(--brand)",
       "--brand-foreground": "#18262e",
-      "--brand-soft": "#eef8d2"
+      "--brand-soft": "color-mix(in oklch, var(--brand) 18%, transparent)"
     },
     "icon": "/demo/setline/mark.webp"
   },
