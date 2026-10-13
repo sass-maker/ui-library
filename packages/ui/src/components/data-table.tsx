@@ -14,10 +14,10 @@ import {
   type SortingState,
   type ColumnVisibilityState,
 } from "@tanstack/react-table"
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, Columns3Icon } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, Columns3Icon, CheckIcon } from "lucide-react"
 import { cn } from "../lib/utils"
 import { Button } from "./button"
-import { Checkbox } from "./checkbox"
+import { Checkbox, checkboxClassName } from "./checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -144,6 +144,31 @@ function display(v: DataValue): React.ReactNode {
   return v
 }
 
+/** Table selection is controlled by ids, not by a form field. Avoid each
+ * non-form checkbox's ref/state/form-bridge commits. Tables embedded in forms
+ * retain the general checkbox's event and reset behavior. */
+function SelectionCheckbox({ inForm, checked, onCheckedChange, className, ...props }: {
+  inForm: boolean
+  checked: boolean | "indeterminate"
+  onCheckedChange: (checked: boolean | "indeterminate") => void
+} & Omit<React.ComponentProps<"button">, "onChange">) {
+  if (inForm) return <Checkbox checked={checked} onCheckedChange={onCheckedChange} className={className} {...props} />
+  return <button
+    {...props}
+    type="button"
+    role="checkbox"
+    aria-checked={checked === "indeterminate" ? "mixed" : checked}
+    data-slot="checkbox"
+    data-state={checked === "indeterminate" ? "indeterminate" : checked ? "checked" : "unchecked"}
+    data-disabled={props.disabled ? "" : undefined}
+    className={cn(checkboxClassName, className)}
+    onKeyDown={event => { if (event.key === "Enter") event.preventDefault() }}
+    onClick={() => onCheckedChange(checked === "indeterminate" || !checked)}
+  >
+    {checked && <span data-slot="checkbox-indicator" className="grid place-content-center text-current transition-none"><CheckIcon className="size-3.5" /></span>}
+  </button>
+}
+
 function DataTable<T extends RowData>({
   data,
   columns,
@@ -167,6 +192,9 @@ function DataTable<T extends RowData>({
   maxHeight = "min(68dvh, 46rem)",
   className,
 }: DataTableProps<T>) {
+  const rootRef = React.useRef<HTMLDivElement>(null)
+  const [inForm, setInForm] = React.useState(false)
+  React.useLayoutEffect(() => { setInForm(!!rootRef.current?.closest("form")) }, [])
   const status = loading ? "loading" : requestedStatus
   const [innerSort, setInnerSort] = React.useState<SortingState>(defaultSort)
   const sorting = (sort ?? innerSort) as SortingState
@@ -269,7 +297,7 @@ function DataTable<T extends RowData>({
   }, [pageIndex, sorting])
 
   return (
-    <div data-slot="data-table" className={cn("flex min-w-0 flex-col gap-3", className)}>
+    <div ref={rootRef} data-slot="data-table" className={cn("flex min-w-0 flex-col gap-3", className)}>
       {status === "loading" && <span role="status" className="sr-only">loading</span>}
       <div className="flex min-h-8 flex-wrap items-center justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-center gap-2">{toolbar?.({ rows: sortedRows, columns: visibleColumns })}</div>
@@ -320,7 +348,8 @@ function DataTable<T extends RowData>({
                 {selection && (
                   <th scope="col" className="sticky top-0 z-10 h-10 w-10 border-b border-border bg-card pl-4 pr-1 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground">
                     {selection.max == null ? (
-                      <Checkbox
+                      <SelectionCheckbox
+                        inForm={inForm}
                         aria-label="Select all rows on this page"
                         checked={pagePicked === 0 ? false : pagePicked === pageIds.length ? true : "indeterminate"}
                         onCheckedChange={togglePage}
@@ -431,7 +460,8 @@ function DataTable<T extends RowData>({
                         onClick={(e) => e.stopPropagation()}
                         onKeyDown={(e) => e.stopPropagation()}
                       >
-                        <Checkbox
+                        <SelectionCheckbox
+                        inForm={inForm}
                           checked={isPicked}
                           onCheckedChange={() => togglePick(row.original, row.id)}
                           aria-label={`Select ${selection.rowLabel?.(row.original) ?? row.id}`}
