@@ -520,6 +520,21 @@ Geist, Geist Mono, Instrument Serif, Fraunces; SIL OFL, licenses in
 `swift/Sources/SaaSMakerUI/Fonts/Licenses`) and follows the theme's lowercase
 voice for headings and buttons.
 
+`SMButtonStyle(.outline, size: .compact)` opts into small operational controls:
+14pt display type, 12pt horizontal inset and 32pt minimum height (links retain
+4pt inset). These match the shared web small-control rhythm. The default
+`.regular` size and `.smBrand` / `.smSolid` / `.smOutline` / `.smLink` shortcuts
+retain their original metrics and behavior. Keep primary actions regular; on
+touch devices, give compact labels a minimum 44pt target. Colors, fonts,
+capsules and press behavior still come from the same shared palette and motion.
+
+The `Native compact button` PR workflow builds/tests on macOS 14 (the supported
+minimum) and macOS 15. `SM_SNAPSHOT_DIR` emits genuine SwiftUI PNG examples at
+390 and 768 points, including disabled and larger-text controls. Its artifacts
+carry build/test logs and renders; native owner/device review is separate.
+No library tag is published by this workflow. Consumers can temporarily pin a
+reviewed exact branch commit until the owner approves a release tag.
+
 Beyond the theme, the package assembles whole screens: `SMHero`, `SMShowcase`,
 `SMCover`, `SMStatementRows` and `SMDevice` (Gallery), and `SMAppShell`,
 `SMPage`, `SMStatCard`, `SMSparkline`, `SMAreaChart` and `SMUptimeStrip`

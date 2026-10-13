@@ -241,8 +241,8 @@ private func json(_ data: Data?) throws -> [String: Any] {
         #expect(SMFooterCopy.failure(URLError(.notConnectedToInternet)) == SMFooterCopy.failed)
     }
 
-    @Test func returnKeyCannotSubscribeWithoutConsentOrEmail() {
-        // Evaluate on the suite's MainActor before the Testing macro creates
+    @MainActor @Test func returnKeyCannotSubscribeWithoutConsentOrEmail() {
+        // Evaluate on MainActor before the Testing macro creates
         // its nonisolated diagnostic closure (Swift 6.1 compatibility).
         let withoutConsent = SMSubscribeCard.canSubscribe(email: "a@b.co", consent: false, state: .idle)
         let invalidEmail = SMSubscribeCard.canSubscribe(email: "nope", consent: true, state: .idle)
