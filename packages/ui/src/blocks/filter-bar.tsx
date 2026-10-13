@@ -120,8 +120,6 @@ export function FacetFilter({
   onChange: (values: string[]) => void;
   searchPlaceholder?: string;
 }) {
-  const set = new Set(selected);
-  const toggle = (v: string) => onChange(set.has(v) ? selected.filter((x) => x !== v) : [...selected, v]);
   const summary = selected.length === 1 ? selected[0] : selected.length > 1 ? `${selected.length} selected` : null;
   return (
     <Popover>
@@ -138,43 +136,61 @@ export function FacetFilter({
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 p-0">
-        {/* The input is always there: it holds focus when the popover opens, so arrow keys,
-            Enter and Space work, and it names the listbox for screen readers. */}
-        <Command label={label}>
-          <CommandInput placeholder={searchPlaceholder ?? `Find ${label}…`} className="h-9" />
-          <CommandList className="max-h-72">
-            <CommandEmpty>No match.</CommandEmpty>
-            <CommandGroup>
-              {options.map((o) => {
-                const on = set.has(o.value);
-                return (
-                  <CommandItem key={o.value} value={o.value} onSelect={() => toggle(o.value)} aria-checked={on}>
-                    <span
-                      className={cn(
-                        "flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input",
-                        on && "border-primary bg-primary text-primary-foreground",
-                      )}
-                      aria-hidden
-                    >
-                      {on && <CheckIcon className="size-3 text-current" />}
-                    </span>
-                    <span className={cn("truncate", o.count === 0 && !on && "text-muted-foreground")}>{o.value}</span>
-                    <span className="ml-auto font-mono text-xs tabular-nums text-muted-foreground">{o.count.toLocaleString()}</span>
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-          </CommandList>
-          {selected.length > 0 && (
-            <div className="border-t border-border p-1">
-              <Button variant="ghost" size="sm" className="w-full justify-center text-muted-foreground" onClick={() => onChange([])}>
-                clear
-              </Button>
-            </div>
-          )}
-        </Command>
+        <FacetFilterContent label={label} options={options} selected={selected} onChange={onChange} searchPlaceholder={searchPlaceholder} />
       </PopoverContent>
     </Popover>
+  );
+}
+
+/** Keep option allocation/formatting behind the existing popover presence
+ * boundary. Closed facets retain their trigger without building hidden lists. */
+function FacetFilterContent({ label, options, selected, onChange, searchPlaceholder }: {
+  label: string
+  options: FacetOption[]
+  selected: string[]
+  onChange: (values: string[]) => void
+  searchPlaceholder?: string
+}) {
+  const set = new Set(selected);
+  const toggle = (v: string) => onChange(set.has(v) ? selected.filter((x) => x !== v) : [...selected, v]);
+  return (
+    <>
+      {/* The input holds focus when the popover opens, so arrow keys,
+          Enter and Space work, and it names the listbox for screen readers. */}
+      <Command label={label}>
+        <CommandInput placeholder={searchPlaceholder ?? `Find ${label}…`} className="h-9" />
+        <CommandList className="max-h-72">
+          <CommandEmpty>No match.</CommandEmpty>
+          <CommandGroup>
+            {options.map((o) => {
+              const on = set.has(o.value);
+              return (
+                <CommandItem key={o.value} value={o.value} onSelect={() => toggle(o.value)} aria-checked={on}>
+                  <span
+                    className={cn(
+                      "flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input",
+                      on && "border-primary bg-primary text-primary-foreground",
+                    )}
+                    aria-hidden
+                  >
+                    {on && <CheckIcon className="size-3 text-current" />}
+                  </span>
+                  <span className={cn("truncate", o.count === 0 && !on && "text-muted-foreground")}>{o.value}</span>
+                  <span className="ml-auto font-mono text-xs tabular-nums text-muted-foreground">{o.count.toLocaleString()}</span>
+                </CommandItem>
+              );
+            })}
+          </CommandGroup>
+        </CommandList>
+        {selected.length > 0 && (
+          <div className="border-t border-border p-1">
+            <Button variant="ghost" size="sm" className="w-full justify-center text-muted-foreground" onClick={() => onChange([])}>
+              clear
+            </Button>
+          </div>
+        )}
+      </Command>
+    </>
   );
 }
 
