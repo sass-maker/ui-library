@@ -303,6 +303,28 @@ keeps its existing tags:
 </Base>
 ```
 
+### App interior footer modes
+
+`StudioFooter` and the framework-free `renderStudioFooterHtml` accept
+`mode="compact"` for sign-in or empty interiors: only product identity and
+optional legal text remain, using existing theme tokens. `mode="suppressed"`
+renders no footer. The custom element accepts the same `mode` attribute or
+config property. Both modes omit subscription, feedback, Ask AI, artwork,
+wordmark and studio navigation; the page owns its relevant primary action.
+Omitting `mode` (or setting `full`) preserves the existing studio/gallery output.
+These modes do not resolve consumer Google/FedCM initialization.
+
+For template suppression, keep using `footer={null}`, `footer={false}` or
+content `footer: false`; use Base `footerScript={false}` when no footer behavior
+is needed. Base also skips sending setup when no footer forms are rendered.
+Consumer adoption and final owner/device/production acceptance remain separate.
+
+Controlled responsive check after building and starting a local site preview:
+`node site/scripts/footer-interior-check.cjs` (390/768/1440; inert primary actions,
+external requests blocked). Requires Playwright Core and Chromium; set
+`PLAYWRIGHT_MODULE` and `CHROME` for installed paths. `SCREENSHOT_DIR` sets
+the evidence destination.
+
 ### Your own header or footer
 
 Set `footer.privacyUrl` to override the subscribe and feedback privacy link

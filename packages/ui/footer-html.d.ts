@@ -18,6 +18,8 @@ export interface StudioFooterProps {
   artMode?: "panel" | "scene";
   wordmark?: "stack" | "fill" | "poster";
   variant?: "studio" | "gallery";
+  /** compact retains identity/legal only; suppressed renders nothing. Default: full. */
+  mode?: "full" | "compact" | "suppressed";
   mark?: string;
   className?: string;
   projects?: StudioProject[];

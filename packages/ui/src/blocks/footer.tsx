@@ -307,7 +307,8 @@ function StudioStrip({ product, studio, catalogId }: { product: string; studio: 
  * The Fleet studio footer contract: updates sign-up first, then the product
  * summary, Ask AI handoff and a feedback button, the wordmark, product
  * artwork, the studio strip and routes. Ask AI, feedback, subscribe and the
- * studio strip are always present. Feedback and subscribe post to SaaS Maker
+ * studio strip are present in full mode. Compact mode retains only identity
+ * and legal text; suppressed mode renders nothing. Feedback and subscribe post to SaaS Maker
  * through the small script in Base.astro; without keys they run in preview
  * mode and send nothing.
  */
@@ -328,6 +329,7 @@ export function StudioFooter({
   artMode = "panel",
   wordmark = "poster",
   variant = "studio",
+  mode = "full",
   mark,
   className,
 }: {
@@ -364,10 +366,22 @@ export function StudioFooter({
   wordmark?: "stack" | "fill" | "poster";
   /** studio: full footer with link groups. gallery: the quiet footer for Gallery pages. */
   variant?: "studio" | "gallery";
+  /** full preserves the marketing footer; compact is for app interiors; suppressed renders nothing. */
+  mode?: "full" | "compact" | "suppressed";
   /** Small product mark shown beside the name in the gallery variant. */
   mark?: React.ReactNode;
   className?: string;
 }) {
+  if (mode === "suppressed") return null;
+  if (mode === "compact") return (
+    <footer data-fleet-footer="studio" data-catalog-id={catalogId} data-footer-mode="compact"
+      className={cn("border-t border-border bg-surface py-6", className)}>
+      <div className="container-page flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
+        <p className="font-display text-sm font-bold tracking-[-0.03em]">{mark}{product}</p>
+        {legal && <p className="font-display text-[0.8125rem] text-muted-foreground">{legal}</p>}
+      </div>
+    </footer>
+  );
   const ctaHref = safeHref(cta?.href, true);
   const creditHref = safeHref(art?.creditHref);
   const artProps = art && {

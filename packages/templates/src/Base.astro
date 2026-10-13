@@ -150,6 +150,8 @@ const ld = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
       // Close any open popover (mobile menu) after in-page navigation.
       addEventListener("hashchange", () => document.querySelectorAll(":popover-open").forEach((p) => p.hidePopover()));
 
+      if (!document.querySelector("form[data-subscribe], form[data-feedback]")) return;
+
       // Footer forms post to SaaS Maker with a publishable key. Without one they run in preview mode.
       const api = "https://api.sassmaker.com";
       // A page address without query or fragment, which can carry private tokens.
