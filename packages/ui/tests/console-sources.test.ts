@@ -33,7 +33,7 @@ describe("Console isolated-install CSS sources", () => {
     expect(candidates).not.toContain("blur-[90px]");
     expect(after.files.some(file => file.endsWith("/frames.tsx"))).toBe(false);
     expect(after.files.some(file => file.endsWith("/gallery-page.tsx"))).toBe(false);
-    for (const name of ["data-table.tsx", "checkbox.tsx", "filter-bar.tsx", "search-palette.tsx", "record-detail.tsx", "console-page.tsx", "Base.astro"]) {
+    for (const name of ["data-table.tsx", "checkbox.tsx", "filter-bar.tsx", "search-palette.tsx", "record-detail.tsx", "console-page.tsx", "Base.astro", "select.tsx", "toggle-group.tsx", "toggle.tsx"]) {
       expect(after.files.some(file => file.endsWith(`/${name}`))).toBe(true);
     }
     const css = compiled.build(candidates);
