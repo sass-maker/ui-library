@@ -1,0 +1,41 @@
+name: Native compact button
+on:
+  pull_request:
+    paths:
+      - 'swift/**'
+      - 'Package.swift'
+      - '.github/workflows/native-button.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build at supported deployment minimum
+        run: |
+          set -o pipefail
+          mkdir -p evidence
+          sw_vers | tee evidence/platform.txt
+          swift --version | tee -a evidence/platform.txt
+          swift build 2>&1 | tee evidence/build.log
+      - name: Tests and genuine SwiftUI renders
+        run: |
+          set -o pipefail
+          mkdir -p evidence/renders
+          SM_SNAPSHOT_DIR="$PWD/evidence/renders" swift test 2>&1 | tee evidence/test.log
+          test -s evidence/renders/buttons-390.png
+          test -s evidence/renders/buttons-768.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-button-${{ matrix.os }}
+          path: evidence/
+          if-no-files-found: error
+          retention-days: 14
