@@ -6,17 +6,40 @@ import SwiftUI
 /// solid (primary color), outline, and link.
 public struct SMButtonStyle: ButtonStyle {
     public enum Kind: Sendable { case brand, solid, outline, link }
+    /// Compact uses the shared small-control rhythm (14pt type, 12pt inset,
+    /// 32pt minimum). Keep regular for primary actions and add a 44pt label
+    /// hit area for compact controls used on touch devices.
+    public enum Size: Sendable { case regular, compact }
     @Environment(\.smPalette) private var p
-    private let kind: Kind
+    let kind: Kind
+    let size: Size
 
-    public init(_ kind: Kind = .brand) { self.kind = kind }
+    public init(_ kind: Kind = .brand, size: Size = .regular) {
+        self.kind = kind
+        self.size = size
+    }
+
+    var metrics: Metrics { Metrics(kind: kind, size: size) }
+    struct Metrics: Equatable {
+        let fontSize: CGFloat
+        let horizontalPadding: CGFloat
+        let minimumHeight: CGFloat
+        init(kind: Kind, size: Size) {
+            fontSize = size == .compact ? 14 : 16
+            horizontalPadding = kind == .link ? 4 : size == .compact ? 12 : 22
+            minimumHeight = kind == .link || size == .compact ? 32 : 46
+        }
+    }
+
+    static func pressScale(_ pressed: Bool) -> CGFloat { pressed ? 0.98 : 1 }
+    static func pressOpacity(_ pressed: Bool) -> Double { pressed ? 0.9 : 1 }
 
     public func makeBody(configuration: Configuration) -> some View {
         let label = configuration.label
-            .font(.custom(p.displayFont, size: 16).weight(.semibold))
+            .font(.custom(p.displayFont, size: metrics.fontSize).weight(.semibold))
             .textCase(p.uiLowercase ? .lowercase : nil)
-            .padding(.horizontal, kind == .link ? 4 : 22)
-            .frame(minHeight: kind == .link ? 32 : 46)
+            .padding(.horizontal, metrics.horizontalPadding)
+            .frame(minHeight: metrics.minimumHeight)
         return Group {
             switch kind {
             case .brand: label.foregroundStyle(p.brandForeground).background(p.brand, in: .capsule)
@@ -28,8 +51,8 @@ public struct SMButtonStyle: ButtonStyle {
             }
         }
         .contentShape(.capsule)
-        .scaleEffect(configuration.isPressed ? 0.98 : 1)
-        .opacity(configuration.isPressed ? 0.9 : 1)
+        .scaleEffect(Self.pressScale(configuration.isPressed))
+        .opacity(Self.pressOpacity(configuration.isPressed))
         .animation(SMMotion.press, value: configuration.isPressed)
     }
 }
