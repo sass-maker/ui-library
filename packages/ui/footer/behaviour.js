@@ -1,7 +1,7 @@
 import { createProjectKey, Unreachable } from "./keys.js";
 const bound = new WeakSet();
 export function bindFooter(root) {
-  if (bound.has(root)) return;
+  if (bound.has(root) || !root.querySelector("form[data-subscribe], form[data-feedback]")) return;
   bound.add(root);
   // Footer forms post to SaaS Maker with a publishable key. Without one they run in preview mode.
   const api = "https://api.sassmaker.com";

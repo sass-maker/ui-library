@@ -15,6 +15,7 @@ const attributes = [
   "subscribe-key",
   "capture",
   "variant",
+  "mode",
   "art-mode",
   "wordmark",
   "privacy-url",
@@ -82,10 +83,12 @@ export class StudioFooterElement extends HTMLElement {
     this.querySelector("footer[data-fleet-footer]")?.remove();
     this.insertAdjacentHTML("beforeend", html);
     this.updateStrip(config);
+    bindFooter(this);
   }
   updateStrip(config) {
     const revision = ++this.#revision;
     if (
+      (!config.mode || config.mode === "full") &&
       config.studioFromProjects &&
       !config.studio?.length &&
       !config.projects

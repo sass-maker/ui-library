@@ -34,6 +34,7 @@ function normalize(html) {
 describe("React parity", () => {
   const cases = [
     base,
+    ...["full", "compact", "suppressed"].map(mode => ({ ...base, mode, legal: "© Reader" })),
     { ...base, capture: false, catalogId: "reader", legal: "© Reader" },
     {
       ...base,
@@ -455,4 +456,44 @@ it("feedback points at a unique element and posts page details and screenshot", 
   host.remove();
   target.remove();
   fetch.mockRestore();
+});
+
+
+describe("app interior modes", () => {
+  it("keeps the default full output byte-for-byte", () => {
+    expect(renderStudioFooterHtml(base)).toBe(renderStudioFooterHtml({ ...base, mode: "full" }));
+  });
+  it("retains escaped product identity, audit attributes and legal text only in compact mode", () => {
+    const dom = fragment({ mode: "compact", product: "Reader & <links>", catalogId: "reader", legal: "© Reader", cta: { label: "Open", href: "/open" }, art: { src: "/art.webp", alt: "Art" } });
+    expect(dom.querySelector("footer").dataset.catalogId).toBe("reader");
+    expect(dom.querySelector("footer").dataset.fleetFooter).toBe("studio");
+    expect(dom.textContent).toBe("Reader & <links>© Reader");
+    expect(dom.querySelector("form, button, a, nav, img, dialog, [aria-hidden]")).toBeNull();
+  });
+  it("suppresses all footer markup even with capture, art and CTA configured", () => {
+    expect(renderStudioFooterHtml({ ...base, mode: "suppressed", capture: "waitlist", cta: { label: "Open", href: "/open" } })).toBe("");
+  });
+  it("does not initialize sending or fetch the catalog in compact/suppressed elements, and supports later full mode", async () => {
+    await import("../footer.js");
+    const fetch = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("No network allowed"));
+    for (const mode of ["compact", "suppressed"]) {
+      const host = document.createElement("studio-footer");
+      host.config = { ...base, mode, studioFromProjects: true, catalogId: "reader" };
+      const listeners = vi.spyOn(host, "addEventListener");
+      document.body.append(host);
+      expect(listeners).not.toHaveBeenCalled();
+      expect(fetch).not.toHaveBeenCalled();
+      expect(host.querySelectorAll("footer")).toHaveLength(mode === "compact" ? 1 : 0);
+      host.config = { ...base, mode: "full" };
+      expect(listeners.mock.calls.some(([type]) => type === "submit")).toBe(true);
+      const dialog = host.querySelector("dialog");
+      dialog.showModal = vi.fn();
+      host.querySelector("[data-feedback-open]").click();
+      expect(dialog.showModal).toHaveBeenCalledOnce();
+      host.setAttribute("mode", "suppressed");
+      expect(host.querySelector("footer")).toBeNull();
+      host.remove();
+    }
+    fetch.mockRestore();
+  });
 });
