@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { compile } from "@tailwindcss/node";
 import { createRequire } from "node:module";
-import { cp, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, readFile, realpath, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 
@@ -14,7 +14,7 @@ describe("Console isolated-install CSS sources", () => {
   it("keeps consumer and declared Console utilities without unrelated package scans", async () => {
     const ui = resolve("src"), templates = resolve("../templates/src");
     const compiled = await compile(await readFile(resolve(templates, "console.css"), "utf8"), { base: templates, onDependency() {} });
-    const app = await mkdtemp(resolve(tmpdir(), "console-sources-"));
+    const app = await realpath(await mkdtemp(resolve(tmpdir(), "console-sources-")));
     const installedUi = resolve(app, "node_modules/.pnpm/ui/node_modules/@saas-maker/ui/src");
     const installedTemplates = resolve(app, "node_modules/.pnpm/templates/node_modules/@saas-maker/templates/src");
     await cp(ui, installedUi, { recursive: true });
@@ -29,6 +29,7 @@ describe("Console isolated-install CSS sources", () => {
     const candidates = after.scan();
     const declared = new Scanner({ sources: sources.filter(source => !source.negated) });
     declared.scan();
+    expect(declared.files).toHaveLength(33);
     expect(after.files.filter(file => file.startsWith(installedUi) || file.startsWith(installedTemplates)).sort()).toEqual(declared.files.sort());
     expect(candidates).not.toContain("blur-[90px]");
     expect(after.files.some(file => file.endsWith("/frames.tsx"))).toBe(false);

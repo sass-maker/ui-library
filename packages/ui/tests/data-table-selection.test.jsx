@@ -66,4 +66,27 @@ describe("controlled DataTable selection", () => {
     act(() => checks(container)[0].click()); expect(change).toHaveBeenCalledWith(["0"]);
     expect(formClick).not.toHaveBeenCalled(); // row selection cell still stops propagation
   });
+  it("resets the initial hydration selection after a parent layout update", () => {
+    const change = vi.fn();
+    function Parent() {
+      const [selected, setSelected] = React.useState([]);
+      React.useLayoutEffect(() => setSelected(["1"]), []);
+      return <form><DataTable {...base} selection={{ selected, max: 3, onChange: ids => { change(ids); setSelected(ids); } }} /></form>;
+    }
+    const { container } = mount(<Parent />, true);
+    expect(container.querySelectorAll("tr[data-row]")).toHaveLength(50);
+    expect(checks(container)[1].getAttribute("aria-checked")).toBe("true");
+    act(() => container.querySelector("form").reset());
+    expect(change).toHaveBeenLastCalledWith([]);
+    expect(checks(container)[1].getAttribute("aria-checked")).toBe("false");
+    expect(container.querySelectorAll("tr[data-row]")).toHaveLength(50);
+    change.mockClear();
+    act(() => container.querySelector("form").reset());
+    expect(change).not.toHaveBeenCalled();
+    act(() => checks(container)[1].click());
+    expect(change).toHaveBeenLastCalledWith(["1"]);
+    act(() => container.querySelector("form").reset());
+    expect(change).toHaveBeenLastCalledWith([]);
+  });
+
 });

@@ -152,9 +152,38 @@ function SelectionCheckbox({ inForm, checked, onCheckedChange, className, ...pro
   checked: boolean | "indeterminate"
   onCheckedChange: (checked: boolean | "indeterminate") => void
 } & Omit<React.ComponentProps<"button">, "onChange">) {
-  if (inForm) return <Checkbox checked={checked} onCheckedChange={onCheckedChange} className={className} {...props} />
+  const control = React.useRef<HTMLButtonElement>(null)
+  const initialChecked = React.useRef(checked)
+  const resetEvent = React.useRef<Event | null>(null)
+  const clickEvent = React.useRef<Event | null>(null)
+  React.useLayoutEffect(() => {
+    const form = control.current?.form
+    if (!form) return
+    const reset = (event: Event) => {
+      resetEvent.current = event
+      if (checked !== initialChecked.current) onCheckedChange(initialChecked.current)
+    }
+    // Capture before Radix's reset listener. Its delayed form mount must not
+    // replace the selection checkpoint from this control's first render.
+    form.addEventListener("reset", reset, true)
+    return () => form.removeEventListener("reset", reset, true)
+  }, [checked, onCheckedChange, inForm])
+  if (inForm) return <Checkbox
+    {...props}
+    ref={control}
+    checked={checked}
+    onCheckedChange={value => {
+      // eventPhase becomes NONE when native dispatch completes: no timer or
+      // delayed state synchronization. Nested real clicks still act normally.
+      if (resetEvent.current?.eventPhase && !clickEvent.current?.eventPhase) return
+      onCheckedChange(value)
+    }}
+    onClick={event => { clickEvent.current = event.nativeEvent }}
+    className={className}
+  />
   return <button
     {...props}
+    ref={control}
     type="button"
     role="checkbox"
     aria-checked={checked === "indeterminate" ? "mixed" : checked}
