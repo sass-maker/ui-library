@@ -1,0 +1,11 @@
+{
+  "repository": "Significant-Hobbies/motion",
+  "branch": "fix/ui13-compact-video",
+  "base": "d961d82199ac91fb46c3c692705675b9092e3c10",
+  "head": "325c0b5eb1281e2c3dac6f27e5153c997e64354f",
+  "tree": "5314937a1e1e95353db3cb9ce03bdaa70c798733",
+  "bundleSha256": "c573861cf0b3628bf06e94b1221897818dc6f49f6cd132ea85347ddefbe02495",
+  "verification": "git bundle verify passed; replay in isolated repository reproduced exact HEAD/TREE; frozen pnpm install and pnpm check passed",
+  "blocker": "git push HTTP 403; no credential or access expansion attempted",
+  "remaining": "Authorized consumer writer fetches bundle, opens PR referencing sass-maker/ui-library#13, runs existing iOS CI including built-app bundle/font evidence; physical-device and owner review remain"
+}

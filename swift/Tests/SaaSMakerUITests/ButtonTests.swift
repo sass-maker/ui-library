@@ -47,6 +47,44 @@ import Testing
         #expect(long.pixelsHigh >= compact.pixelsHigh)
     }
 
+
+    // Frozen pre-size-API layout: catches accidental default appearance changes,
+    // including disabled rendering, independently of the new metrics helpers.
+    private struct LegacyButtonStyle: ButtonStyle {
+        let kind: SMButtonStyle.Kind
+        @Environment(\.smPalette) private var p
+        func makeBody(configuration: Configuration) -> some View {
+            let label = configuration.label
+                .font(.custom(p.displayFont, size: 16).weight(.semibold))
+                .textCase(p.uiLowercase ? .lowercase : nil)
+                .padding(.horizontal, kind == .link ? 4 : 22)
+                .frame(minHeight: kind == .link ? 32 : 46)
+            return Group {
+                switch kind {
+                case .brand: label.foregroundStyle(p.brandForeground).background(p.brand, in: .capsule)
+                case .solid: label.foregroundStyle(p.primaryForeground).background(p.primary, in: .capsule)
+                case .outline: label.foregroundStyle(p.foreground).overlay(Capsule(style: .circular).strokeBorder(p.border))
+                case .link: label.foregroundStyle(p.brand)
+                }
+            }
+            .contentShape(.capsule)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .opacity(configuration.isPressed ? 0.9 : 1)
+            .animation(SMMotion.press, value: configuration.isPressed)
+        }
+    }
+
+    @Test(arguments: [SMButtonStyle.Kind.brand, .solid, .outline, .link])
+    func defaultAppearanceMatchesPreSizeAPI(kind: SMButtonStyle.Kind) throws {
+        for disabled in [false, true] {
+            let current = try bitmap(Button("Inspect") {}.buttonStyle(SMButtonStyle(kind)).disabled(disabled).smTheme(.baseDark))
+            let legacy = try bitmap(Button("Inspect") {}.buttonStyle(LegacyButtonStyle(kind: kind)).disabled(disabled).smTheme(.baseDark))
+            #expect(current.pixelsWide == legacy.pixelsWide)
+            #expect(current.pixelsHigh == legacy.pixelsHigh)
+            #expect(current.representation(using: .png, properties: [:]) == legacy.representation(using: .png, properties: [:]))
+        }
+    }
+
     @Test func nativeExamples() throws {
         guard let dir = ProcessInfo.processInfo.environment["SM_SNAPSHOT_DIR"] else { return }
         for width: CGFloat in [390, 768] {
@@ -61,8 +99,9 @@ import Testing
                     }
                 }
                 Text("Larger text · compact").font(.headline)
-                Button("Inspect selected item") {}.buttonStyle(SMButtonStyle(.outline, size: .compact))
-                    .dynamicTypeSize(.accessibility3)
+                Button {} label: {
+                    Text("Inspect selected item").font(.custom(SMPalette.baseDark.displayFont, size: 22).weight(.semibold))
+                }.buttonStyle(SMButtonStyle(.outline, size: .compact))
                 Text("Touch label retains a 44pt target").font(.headline)
                 Button {} label: { Label("Video", systemImage: "play.rectangle.fill").frame(minHeight: 44) }
                     .buttonStyle(SMButtonStyle(.outline, size: .compact))

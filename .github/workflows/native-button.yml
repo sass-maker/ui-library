@@ -42,3 +42,23 @@ jobs:
           path: evidence/
           if-no-files-found: error
           retention-days: 14
+
+  consumer-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify denied-push incremental consumer bundle
+        run: |
+          sha256sum -c <(echo 'c573861cf0b3628bf06e94b1221897818dc6f49f6cd132ea85347ddefbe02495  .github/consumer-handoffs/motion-ui13.bundle')
+          git clone --no-checkout https://github.com/Significant-Hobbies/motion.git "$RUNNER_TEMP/motion-recovery"
+          git -C "$RUNNER_TEMP/motion-recovery" bundle verify "$PWD/.github/consumer-handoffs/motion-ui13.bundle"
+          git -C "$RUNNER_TEMP/motion-recovery" fetch "$PWD/.github/consumer-handoffs/motion-ui13.bundle" HEAD:refs/heads/review-ui13
+          test "$(git -C "$RUNNER_TEMP/motion-recovery" rev-parse review-ui13)" = 325c0b5eb1281e2c3dac6f27e5153c997e64354f
+          test "$(git -C "$RUNNER_TEMP/motion-recovery" rev-parse 'review-ui13^{tree}')" = 5314937a1e1e95353db3cb9ce03bdaa70c798733
+      - uses: actions/upload-artifact@v4
+        with:
+          name: motion-ui13-verified-incremental-bundle
+          path: .github/consumer-handoffs/motion-ui13.*
+          if-no-files-found: error
+          retention-days: 30
