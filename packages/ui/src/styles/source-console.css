@@ -2,4 +2,11 @@
 
 /* Sources are relative to this UI package, including under isolated pnpm installs. */
 @source "../blocks/{search-palette,filter-bar,record-detail,export-menu,quote-list,app,proof,skeletons,resource-boundary}.tsx";
-@source "../components/{breadcrumb,command,dialog,button,kbd,badge,input,table,data-table,checkbox,dropdown-menu,pagination,skeleton,popover,slider,sheet,card,empty-state,error-state}.tsx";
+@source "../components/{breadcrumb,command,dialog,button,kbd,badge,input,table,data-table,checkbox,dropdown-menu,pagination,skeleton,popover,slider,sheet,card,empty-state,error-state,select,toggle-group,toggle}.tsx";
+
+/* In isolated pnpm installs, combining the consumer automatic root with these
+   explicit sources can promote package directories into automatic scan roots.
+   Keep the Console entry scoped to the sources above, rather than compiling
+   unrelated Gallery/Workbench blocks and controls as well. */
+@source not "../blocks/{assistant-logos,closing,features,footer,frames,gallery,hero,layout,mobile-nav,site-header}.tsx";
+@source not "../components/{accordion,avatar,label,navigation-menu,progress,scroll-area,separator,sonner,switch,tabs,textarea,tooltip}.tsx";

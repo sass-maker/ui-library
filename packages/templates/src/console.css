@@ -2,3 +2,6 @@
 @import "@saas-maker/ui/source-console.css";
 
 @source "./{Base.astro,console-page.tsx}";
+
+/* Match this entry's explicit template sources under isolated installs. */
+@source not "./{app-tokens.ts,console.css,fonts.ts,gallery-page.tsx,gallery.css,identity-hero.tsx,identity.css,page.ts,rich.tsx,schema.ts,status.tsx,styles.css,workbench-page.tsx,workbench.css}";
