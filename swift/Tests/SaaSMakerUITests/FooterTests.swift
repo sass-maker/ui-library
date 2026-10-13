@@ -242,10 +242,16 @@ private func json(_ data: Data?) throws -> [String: Any] {
     }
 
     @Test func returnKeyCannotSubscribeWithoutConsentOrEmail() {
-        #expect(!SMSubscribeCard.canSubscribe(email: "a@b.co", consent: false, state: .idle))
-        #expect(!SMSubscribeCard.canSubscribe(email: "nope", consent: true, state: .idle))
-        #expect(!SMSubscribeCard.canSubscribe(email: "a@b.co", consent: true, state: .sending))
-        #expect(SMSubscribeCard.canSubscribe(email: " a@b.co ", consent: true, state: .idle))
+        // Evaluate on the suite's MainActor before the Testing macro creates
+        // its nonisolated diagnostic closure (Swift 6.1 compatibility).
+        let withoutConsent = SMSubscribeCard.canSubscribe(email: "a@b.co", consent: false, state: .idle)
+        let invalidEmail = SMSubscribeCard.canSubscribe(email: "nope", consent: true, state: .idle)
+        let sending = SMSubscribeCard.canSubscribe(email: "a@b.co", consent: true, state: .sending)
+        let valid = SMSubscribeCard.canSubscribe(email: " a@b.co ", consent: true, state: .idle)
+        #expect(!withoutConsent)
+        #expect(!invalidEmail)
+        #expect(!sending)
+        #expect(valid)
     }
 
     @Test func onlyResultsAreAnnounced() {

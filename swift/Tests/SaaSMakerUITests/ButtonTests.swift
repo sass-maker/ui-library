@@ -31,7 +31,8 @@ import Testing
         let renderer = ImageRenderer(content: view)
         renderer.scale = 2
         let image = try #require(renderer.nsImage)
-        return try #require(NSBitmapImageRep(data: try #require(image.tiffRepresentation)))
+        let data = try #require(image.tiffRepresentation)
+        return try #require(NSBitmapImageRep(data: data))
     }
 
     @Test(arguments: [SMButtonStyle.Kind.brand, .solid, .outline, .link])

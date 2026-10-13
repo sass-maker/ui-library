@@ -18,6 +18,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Select Swift 6 toolchain on minimum macOS
+        if: matrix.os == 'macos-14'
+        run: sudo xcode-select --switch /Applications/Xcode_16.2.app/Contents/Developer
       - name: Build at supported deployment minimum
         run: |
           set -o pipefail
