@@ -65,6 +65,8 @@ export type DataColumn<T> = {
   sortDescFirst?: boolean
   /** Minimum width, e.g. "12rem". */
   minWidth?: string
+  /** Optional parent header. Consecutive columns with the same group share one header row. */
+  group?: string
   className?: string
 }
 
@@ -239,20 +241,43 @@ function DataTable<T extends RowData>({
     Object.fromEntries(columns.filter((c) => c.hidden).map((c) => [c.id, false]))
   )
 
-  const defs = React.useMemo<ColumnDef<typeof features, T>[]>(
-    () =>
-      columns.map((c) => ({
-        id: c.id,
-        accessorFn: (row: T) => c.value(row) ?? undefined,
-        header: c.header,
-        enableSorting: c.sortable !== false,
-        enableHiding: c.hideable !== false,
-        sortDescFirst: c.sortDescFirst ?? c.align === "right",
-        sortUndefined: "last" as const,
-        sortFn: (a, b, id) => compare(a.getValue(id), b.getValue(id)),
-      })),
-    [columns]
-  )
+  const defs = React.useMemo<ColumnDef<typeof features, T>[]>(() => {
+    const leaf = (c: DataColumn<T>): ColumnDef<typeof features, T> => ({
+      id: c.id,
+      accessorFn: (row: T) => c.value(row) ?? undefined,
+      header: c.header,
+      enableSorting: c.sortable !== false,
+      enableHiding: c.hideable !== false,
+      sortDescFirst: c.sortDescFirst ?? c.align === "right",
+      sortUndefined: "last" as const,
+      sortFn: (a, b, id) => compare(a.getValue(id), b.getValue(id)),
+    })
+    const result: ColumnDef<typeof features, T>[] = []
+    const usedIds = new Set(columns.map((column) => column.id))
+    let index = 0
+    let groupIndex = 0
+    while (index < columns.length) {
+      const column = columns[index]
+      if (!column.group) {
+        result.push(leaf(column))
+        index += 1
+        continue
+      }
+      const group = column.group
+      const children: DataColumn<T>[] = []
+      while (index < columns.length && columns[index].group === group) {
+        children.push(columns[index])
+        index += 1
+      }
+      const baseId = `__data_table_group__:${group}:${groupIndex++}`
+      let id = baseId
+      let collisionIndex = 1
+      while (usedIds.has(id)) id = `${baseId}:${collisionIndex++}`
+      usedIds.add(id)
+      result.push({ id, header: group, enableSorting: false, enableHiding: false, columns: children.map(leaf) })
+    }
+    return result
+  }, [columns])
 
   const table = useTable({
     features,
@@ -319,6 +344,8 @@ function DataTable<T extends RowData>({
   }
 
   const hideable = table.getAllLeafColumns().filter((c) => c.getCanHide())
+  const headerGroups = table.getHeaderGroups()
+  const grouped = columns.some((column) => !!column.group)
   const colCount = Math.max(1, visibleColumns.length) + (selection ? 1 : 0)
   const scrollRef = React.useRef<HTMLDivElement>(null)
   React.useEffect(() => {
@@ -372,10 +399,10 @@ function DataTable<T extends RowData>({
             {selection ? ` Tab from a row to its checkbox to select it${selection.max != null ? `, up to ${selection.max}` : ""}.` : ""}
           </caption>
           <thead>
-            {table.getHeaderGroups().map((group) => (
+            {headerGroups.map((group, rowIndex) => (
               <tr key={group.id}>
-                {selection && (
-                  <th scope="col" className="sticky top-0 z-10 h-10 w-10 border-b border-border bg-card pl-4 pr-1 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground">
+                {selection && rowIndex === 0 && (
+                  <th scope="col" rowSpan={headerGroups.length > 1 ? headerGroups.length : undefined} className="sticky top-0 z-10 h-10 w-10 border-b border-border bg-card pl-4 pr-1 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground">
                     {selection.max == null ? (
                       <SelectionCheckbox
                         inForm={inForm}
@@ -397,22 +424,31 @@ function DataTable<T extends RowData>({
                 )}
                 {group.headers.map((header) => {
                   const col = byId.get(header.column.id)
+                  if (header.isPlaceholder) return <th key={header.id} aria-hidden="true" colSpan={grouped ? header.colSpan : undefined} className="sticky top-0 z-10 h-10 border-b border-border bg-card" style={{ top: grouped && rowIndex > 0 ? rowIndex * 40 : undefined }} />
+                  const isGroupHeader = header.column.columns.length > 0
+                  const columnGroup = col?.group
                   const dir = header.column.getIsSorted()
                   const right = col?.align === "right"
                   return (
                     <th
                       key={header.id}
-                      scope="col"
+                      scope={isGroupHeader ? "colgroup" : "col"}
+                      colSpan={grouped ? header.colSpan : undefined}
+                      data-column-id={!isGroupHeader ? header.column.id : undefined}
+                      data-group-header={isGroupHeader ? String(header.column.columnDef.header ?? "") : undefined}
                       aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : undefined}
                       className={cn(
                         "sticky top-0 z-10 h-10 border-b border-border bg-card px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4",
                         right && "text-right"
                       )}
-                      style={{ minWidth: col?.minWidth }}
+                      style={{ top: grouped && rowIndex > 0 ? rowIndex * 40 : undefined, minWidth: col?.minWidth }}
                     >
-                      {header.column.getCanSort() ? (
+                      {isGroupHeader ? (
+                        <span className="ui-case">{String(header.column.columnDef.header ?? "")}</span>
+                      ) : header.column.getCanSort() ? (
                         <button
                           type="button"
+                          aria-label={columnGroup ? `${columnGroup}: ${col?.header ?? header.column.id}` : undefined}
                           onClick={header.column.getToggleSortingHandler()}
                           className={cn(
                             "ui-case -mx-1.5 inline-flex h-7 items-center gap-1 rounded-md px-1.5 transition-colors hover:bg-accent hover:text-foreground",
@@ -504,6 +540,7 @@ function DataTable<T extends RowData>({
                     {visibleColumns.map((col) => (
                       <td
                         key={col.id}
+                        data-column-id={col.id}
                         className={cn(
                           "border-b border-hairline px-3 py-2.5 align-middle whitespace-nowrap first:pl-4 last:pr-4",
                           col.align === "right" && "text-right tabular-nums",
