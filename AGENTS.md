@@ -27,3 +27,13 @@ Rules:
 - Pin exact dependency versions. Run `pnpm check` (typecheck + site build) and
   `swift build` after changes. Never run `npx biome`; never `rm -rf` or
   `find -delete` (use `/usr/bin/trash`).
+
+## Retained iOS landing factory
+
+`archives/ios-landings/` contains the complete former iOS Landings repository,
+imported with its Git history. It is a usable retained factory, not another
+Fleet product. Read its `AGENTS.md` before work inside it. Keep its independent
+pnpm workspace, lockfile and pinned UI dependency versions; routine library
+checks and token generation must not migrate or build these product sites.
+`pnpm landings:check` explicitly checks the factory. Existing site publication
+is manual and still requires the owner's production-release approval.

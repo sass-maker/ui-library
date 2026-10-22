@@ -11,6 +11,35 @@ one theme.
 | `@saas-maker/tokens` | theme tokens as JSON (generated) |
 | `SaaSMakerUI` (Swift) | palette, type, components and motion for Mac/iOS |
 
+
+## Retained native-app landing factory
+
+The complete former iOS Landings repository lives in
+[`archives/ios-landings`](archives/ios-landings/README.md), including product
+content, artwork, source, tests, historical evidence and deploy scripts. Its
+original history is retained in this repository. It is an absorbed component
+of UI Library, with no independent product roadmap.
+
+The factory keeps its own pnpm workspace and unchanged lockfile/UI pins.
+Install it separately with `pnpm --dir archives/ios-landings install --frozen-lockfile`.
+Fleet agents use `fleet-workspace install --repo <checkout>/archives/ios-landings`.
+
+```sh
+pnpm landings:dev
+pnpm landings:check
+PRODUCT=anchor pnpm landings:check:one
+```
+
+Production commands retain existing targets and require release approval:
+`pnpm landings:deploy kith --existing-only` and
+`pnpm landings:deploy:daddyrad`. The move itself does not deploy sites,
+change domains, or publish native apps. The archived factory's build-only
+Journal/Habits configurations and product-specific release restrictions remain
+in force.
+
+Imported from `Significant-Hobbies/ios-landings` at
+`5eb30350ca537f8a9ebed792343c1783946842a4` on 2026-10-22.
+
 ## Web product (Astro)
 
 Install from the GitHub repo (public), not npm. Write the specs into `package.json`
