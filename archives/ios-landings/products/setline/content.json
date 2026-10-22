@@ -1,0 +1,185 @@
+{
+  "template": "gallery",
+  "page": {
+    "title": "Setline — Run every workout exactly as written",
+    "description": "A native iPhone workout player that runs a written strength, cardio and mobility programme one set at a time.",
+    "theme": "gallery",
+    "icon": "images/brand/mark.webp",
+    "assetBase": "/",
+    "mode": "dark",
+    "fromApp": {
+      "background": "#0f181d",
+      "foreground": "#f7f6f0",
+      "card": "#18262e",
+      "surface": "#1f2f38",
+      "muted": "#2a373e",
+      "mutedForeground": "#b1b3b1",
+      "border": "#2f373b",
+      "brand": "#b9e83f",
+      "brandForeground": "#18262e",
+      "destructive": "#ff614d",
+      "radius": "10px"
+    },
+    "fonts": {
+      "display": "ui-rounded",
+      "text": "ui-rounded",
+      "accentStyle": "normal"
+    }
+  },
+  "product": "Setline",
+  "url": "https://setline.significanthobbies.com",
+  "mark": "images/brand/mark.webp",
+  "screenSize": {
+    "width": 1320,
+    "height": 2868
+  },
+  "nav": [
+    {
+      "label": "How it works",
+      "href": "/#how-it-works"
+    },
+    {
+      "label": "Privacy",
+      "href": "#privacy"
+    },
+    {
+      "label": "Questions",
+      "href": "#questions"
+    }
+  ],
+  "headerAction": {
+    "label": "Beta status",
+    "href": "/testflight/"
+  },
+  "hero": {
+    "eyebrow": "Setline for iPhone",
+    "title": "Run the workout *you already wrote.*",
+    "lede": "Keep strength, cardio, and mobility sessions in authored order. Setline puts the current set and rest clock in front of you, then records every explicit change.",
+    "primary": {
+      "label": "See TestFlight status",
+      "href": "/testflight/"
+    },
+    "secondary": {
+      "label": "See the real app ›",
+      "href": "#how-it-works"
+    },
+    "note": "Internal TestFlight only. No public invite or App Store listing.",
+    "backdrop": "images/story/setline-hero-v3.webp",
+    "screen": {
+      "src": "images/screens/workout-player.jpg",
+      "alt": "Setline workout player showing the current set: an easy cardio target of 5 minutes, the set timer, fields for recorded actuals, and the session rail"
+    }
+  },
+  "sections": [
+    {
+      "kind": "spread",
+      "eyebrow": "Today",
+      "title": "Start in *authored order.*",
+      "lede": "The local date resolves to the planned session, including explicit unplanned days. Start without reopening a PDF, note, or spreadsheet.",
+      "screen": {
+        "src": "images/screens/today.jpg",
+        "alt": "Setline Today screen with the session planned for this day"
+      }
+    },
+    {
+      "kind": "statement",
+      "eyebrow": "Player",
+      "title": "Keep target and actuals *separate.*",
+      "lede": "Complete the planned set, record ordered drop segments, or explicitly skip, add, or defer work. Setline preserves the deviation without rewriting the programme.",
+      "id": "how-it-works"
+    },
+    {
+      "kind": "spread",
+      "eyebrow": "Rest",
+      "title": "Measure the gap, *not just the countdown.*",
+      "lede": "Authored rest, any timer adjustment, and the actual completion-to-next-start gap remain separate. The next target is ready when you are.",
+      "screen": {
+        "src": "images/screens/rest-timer.jpg",
+        "alt": "Setline rest timer after a completed set, with the next target ready"
+      }
+    },
+    {
+      "kind": "statement",
+      "id": "privacy",
+      "eyebrow": "Device first",
+      "title": "The workout never waits *on a network.*",
+      "lede": "The active session reads and writes locally. Private iCloud continuity is implemented but still awaits two-device hardware verification. A connected Significant Hobbies account shares completed-workout summaries with Hub only after local writes; it never receives an active set, targets, templates, or plans.",
+      "aside": [
+        {
+          "title": "Setline may fit if",
+          "body": "you follow a structured strength, cardio, or mobility programme and want less decision-making between sets."
+        },
+        {
+          "title": "It is not a coach",
+          "body": "It does not prescribe a programme, diagnose readiness, count calories, or turn training into a social feed."
+        }
+      ]
+    },
+    {
+      "kind": "faq",
+      "id": "questions",
+      "title": "Questions, *answered.*",
+      "items": [
+        {
+          "q": "Do I need an account?",
+          "a": "No. Planning, starting, recording, resting, history, and export all work from local storage. No request sits between you and the next set."
+        },
+        {
+          "q": "Will it write my programme?",
+          "a": "No. Setline ships with one authored twelve-week programme and lets you build bounded custom plans, but it does not generate or prescribe training."
+        },
+        {
+          "q": "What can leave the iPhone?",
+          "a": "If you choose iCloud, Setline can reconcile plans, templates, targets, and completed workouts across your Apple devices. If you connect a Significant Hobbies account, Hub receives completed-workout summaries only. An active workout stays local."
+        },
+        {
+          "q": "Can I download it or pay for it?",
+          "a": "Not publicly. Setline is in internal TestFlight with no public invitation, App Store listing, paid plan, subscription, or checkout. No permanent free or paid model has been announced."
+        }
+      ]
+    }
+  ],
+  "closing": {
+    "id": "beta",
+    "title": "Write it once.\n*Run it set by set.*",
+    "primary": {
+      "label": "See TestFlight status",
+      "href": "/testflight/"
+    },
+    "note": "Internal TestFlight only. No public invite or App Store listing.",
+    "image": "images/story/setline-closing-v3.webp",
+    "credit": "Illustrative artwork"
+  },
+  "footer": {
+    "summary": "Device-first iPhone workout player. Internal TestFlight only; no public invite, App Store listing, paid plan, subscription, or checkout. Not medical care or a training prescription.",
+    "legal": "© 2026 Sarthak Agrawal",
+    "catalogId": "setline",
+    "links": [
+      {
+        "label": "TestFlight status",
+        "href": "/testflight/"
+      },
+      {
+        "label": "Changelog",
+        "href": "/changelog/"
+      },
+      {
+        "label": "Privacy",
+        "href": "/privacy/"
+      },
+      {
+        "label": "Terms",
+        "href": "/terms/"
+      },
+      {
+        "label": "Accessibility",
+        "href": "/accessibility/"
+      },
+      {
+        "label": "Support",
+        "href": "/support/"
+      }
+    ],
+    "capture": "newsletter"
+  }
+}

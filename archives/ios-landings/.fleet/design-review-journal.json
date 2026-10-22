@@ -1,0 +1,103 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Journal native-product landing within the shared Significant Hobbies template",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Journal's real current Today, writing, archive, account, and transfer screens",
+      "The native app's quiet illustrated morning and evening reflection language",
+      "The protected dated-entry archive and optional private account-sync model"
+    ],
+    "probes": [],
+    "selected": "quiet-daily-field-notes",
+    "approval": "agent-selected",
+    "before": "artifacts/design/journal-after-1440.jpg",
+    "contract": {
+      "purpose": "Explain Journal as a private, device-first iPhone writing practice for morning reflection, evening reflection, and free writing, while stating its real storage, sync, availability, and product boundaries.",
+      "purposeSource": "Journal PROJECT_STATUS.md, native source, current build settings, and Site Health dossier",
+      "canonicalPurpose": "Journal preserves dated morning, evening, and free-writing entries in a protected offline archive, with optional private Significant Hobbies account sync and no publishing or interpretation layer.",
+      "purposeAlignment": "match",
+      "driftNote": "The previous page described a browser preview, iPad support, D1 persistence, and Live-plan behavior that the current Journal product does not ship; those claims were removed.",
+      "audience": "A person who wants a quiet personal writing practice without social, diagnostic, or performance mechanics.",
+      "job": "Understand the daily writing loop, how entries are stored and revisited, what optional account sync does, what the app deliberately does not interpret or publish, and whether it is publicly available.",
+      "thesis": "The landing should feel like opening a calm dated notebook: warm, specific, private, and anchored by the real native writing surfaces.",
+      "system": "Warm paper, dark plum ink, measured serif display type, quiet rules, botanical accents, and real current native iPhone screens.",
+      "signature": "A dated writing proposition and real Today screen lead into the morning, evening, archive, and transfer loop rather than generic wellness claims.",
+      "risk": "Generic journaling or wellness language could falsely imply mood diagnosis, AI interpretation, publication, therapy, or a publicly available app; vague cloud wording could also misstate the optional Cloudflare-backed account as iCloud."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/journal-after-390.jpg"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/journal-after-768.jpg"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/journal-after-1440.jpg"
+      }
+    ],
+    "projectCheck": {
+      "command": "PRODUCT=journal pnpm check:one && pnpm check; ./scripts/check.sh in the native Journal repository",
+      "status": "pass",
+      "note": "Journal and the complete eight-product factory build with zero Astro diagnostics and validate 19 public surfaces per product. Browser inspection at 390, 768, and 1440 found no overflow or failed images. The native gate passed 27 tests and a release-simulator build."
+    },
+    "critique": {
+      "score": 36,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Independent review found no purpose, lifecycle, visual, responsive, data-boundary, or commercial-state P0/P1 issue.",
+        "The page deliberately avoids claiming emotional-pattern detection because that remains an unshipped idea."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "Independent fresh-visitor review by Harvey",
+      "answers": {
+        "product": "Journal is a private, device-first iPhone journal for morning reflection, evening reflection, and free writing on dated pages.",
+        "audience": "It is for people wanting a quiet personal writing practice without social, diagnostic, or performance mechanics.",
+        "value": "It preserves an honest, private record of each day that remains available offline and easy to revisit.",
+        "mechanism": "Morning and evening prompts, free writing, date navigation, archive browsing, export and import, and optional private Significant Hobbies account sync form the loop.",
+        "proof": "Real current iPhone screens, explicit archive and transfer controls, and precise internal TestFlight build 5 versus current source build 6 evidence support the claims.",
+        "nextAction": "Inspect the app and its internal TestFlight status while understanding there is no public invite, App Store release, paid plan, subscription, or checkout."
+      },
+      "purposeScore": {
+        "product": 25,
+        "audience": 14,
+        "value": 15,
+        "mechanism": 15,
+        "proof": 15,
+        "nextAction": 15,
+        "total": 99
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "agent-selected",
+    "note": "The operator authorized end-to-end portfolio landing work without repeated feedback loops; this receipt records local qualification, not deployment approval."
+  }
+}

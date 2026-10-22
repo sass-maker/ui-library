@@ -1,0 +1,122 @@
+{
+  "approved_reference": "artifacts/design/uplift/c-memory.png",
+  "generated_with": "built-in image_gen",
+  "produce": [
+    {
+      "id": "book-stage",
+      "source_crop": "artifacts/design/uplift/c-memory.png:right-hand coral bookcloth stage",
+      "output_path": "products/kith/public/images/story/book-stage.webp",
+      "source_original": "artifacts/design/uplift/asset-sources/book-stage.png",
+      "strategy": "faithful reference-conditioned clean plate",
+      "prompt_used": "Use case: product-mockup. Asset type: clean reusable production background plate for a landing-page phone composition. Input image: approved C Living Memory Book mock; reference for right-hand coral bookcloth material and warm directional daylight only. Produce a portrait 1024x1536 full-frame close overhead photograph of a coral terracotta linen-covered memory book panel. Preserve the reference rich woven linen texture, coral/rust warmth, subtle vertical spine/seam toward left edge, realistic warm sunlight from upper left. The bookcloth should fill the entire canvas without outer card edges or padding. Keep central 75 percent plain coral fabric for a real phone image to be layered in HTML. A delicate dried white daisy sprig rests narrowly along the extreme right edge, mostly outside central composition. NO phone, no UI, no people, no photos, no notebook, no typography, no handwriting, no labels, no logos, no buttons. No baked card border, rounded corners, perspective transforms, presentation shadows, letterboxing. Clean production image preserving material/lighting palette of the approved reference, not a page mockup.",
+      "dimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "format": "webp",
+      "bytes": 535264,
+      "transparency": false,
+      "deviations": [
+        "Phone, UI and handwritten copy removed for semantic composition; bookcloth fills frame without CSS-owned outer edges."
+      ],
+      "qa_status": "accepted",
+      "qa_notes": "Visually compared to approved reference: matching coral woven texture, left spine seam, warm light and right-edge daisies; central field clean."
+    },
+    {
+      "id": "coffee-friends",
+      "source_crop": "artifacts/design/uplift/c-memory.png:upper-left friends photograph",
+      "output_path": "products/kith/public/images/story/coffee-friends.webp",
+      "source_original": "artifacts/design/uplift/asset-sources/coffee-friends.png",
+      "strategy": "faithful reference-conditioned photograph regeneration",
+      "prompt_used": "Use case: photorealistic-natural. Asset type: clean reusable editorial lifestyle photograph for a framed memory photo on a landing page. Input image: approved C Living Memory Book mock, reference for the small photograph of three adult friends at a sunny outdoor café. Recreate only that photographic scene as a landscape 1536x1024 candid natural editorial photograph, filling the frame edge to edge. Three adult friends (a smiling East Asian woman on left, curly dark-haired man at center, and a smiling woman wearing sunglasses on right) laughing together over coffee at a small sunny outdoor café table in a warm Mediterranean city. Relaxed linen/cotton clothes, real unretouched skin, natural spontaneous expressions, ceramic cups on table. Eye-level camera, medium-close crop capturing all three faces and some table; softly blurred stone architecture and leafy shade behind. Warm directional daylight matching approved reference; warm ivory, muted coral, subtle indigo details and natural greens. Illustration of friendship, fictional people rather than customers or testimonials. NO photo frame, no white borders, no rounded corners, no handwriting, no dates, no captions, no text, no logos, no watermark, no phone or UI, no baked presentation shadow, no letterboxing. Preserve the approved photograph's intimate joyful mood and candid composition without redesign.",
+      "dimensions": {
+        "width": 640,
+        "height": 427
+      },
+      "format": "webp",
+      "bytes": 61616,
+      "transparency": false,
+      "deviations": [
+        "Regenerated illustrative adults rather than identical reference people; removed paper mat, caption, date and rotation for HTML/CSS.",
+        "Production image refined to 640px width for actual maximum 184px CSS display width; original PNG retained unchanged."
+      ],
+      "qa_status": "accepted",
+      "qa_notes": "Visually compared: candid three-person sunny cafe composition, similar expressions, cups, natural materials and warm city backdrop. No baked text or presentation frame. Sized above 3x maximum display width for efficient above-fold delivery."
+    },
+    {
+      "id": "memory-table",
+      "source_crop": "artifacts/design/uplift/c-memory.png:lower notebook section",
+      "output_path": "products/kith/public/images/story/memory-table.webp",
+      "source_original": "artifacts/design/uplift/asset-sources/memory-table.png",
+      "strategy": "faithful reference-conditioned clean plate",
+      "prompt_used": "Use case: product-mockup. Asset type: reusable clean production photographic background for the approved Living Memory Book section, landscape 1536x1024. Input image is approved C memory-book mock; preserve its lower section notebook/coffee material, overhead camera and warm directional daylight. Produce a clean full overhead flat-lay photograph of an open blank warm ivory notebook lying on a sunlit pale stone café table. Notebook fills most of the frame, center fold just right of middle, natural subtly worn deckled paper edges, fine paper texture; left half mostly uninterrupted blank ivory paper, especially top-left and center-left, reserved for semantic HTML heading and copy. Two ceramic coffees toward right: latte at upper right and black coffee near lower right. A delicate pressed botanical sprig along bottom near center-right, small coral bookcloth fragment clipped at lower left corner and another tiny coral fragment at far lower right. Same warm terracotta/coral, ivory, muted natural green palette as approved reference. Warm diagonal afternoon sunlight from upper-left, soft natural plant/window shadows on paper but left copy area remains readable. No writing whatsoever, no letters, no checklist, no stamp, no photos, no phone, no UI, no people. No designed layout chrome, no rounded frame, no captions, no logos, no watermark, no letterboxing. All notebook pages completely blank. Faithful material background ingredient, not a website screenshot.",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "format": "webp",
+      "bytes": 232944,
+      "transparency": false,
+      "deviations": [
+        "Removed all writing, stamp and framed memory photo for semantic HTML; coffees aligned to right to leave left paper blank."
+      ],
+      "qa_status": "accepted",
+      "qa_notes": "Visually compared: overhead blank ivory notebook, coral bookcloth fragments, botanical sprig, two coffees and directional warm daylight match approved materials. Left half usable for live HTML."
+    },
+    {
+      "id": "paper",
+      "source_crop": "artifacts/design/uplift/c-memory.png:upper-left warm ivory paper sheet",
+      "output_path": "products/kith/public/images/story/paper.webp",
+      "source_original": "artifacts/design/uplift/asset-sources/paper.png",
+      "strategy": "faithful reference-conditioned clean material texture",
+      "prompt_used": "Use case: product-mockup. Asset type: clean reusable photographic material texture for the left hero paper sheet of the approved C Living Memory Book landing. Input image: approved C composition; use only the warm ivory paper beneath the upper-left heading as binding material/color reference. Generate landscape 1536x1024 macro photograph of warm ivory writing paper, full-frame edge to edge. Preserve subtle real paper fibers, gentle natural tooth and slightly handmade tactile character, evenly lit by directional warm daylight. VERY restrained tonal variance and extremely subtle shallow texture so live indigo HTML text remains crisp and readable when composited. No bright white patches, no dark spots. Uniform warm ivory material. NO objects, text, handwriting, marks, stains, borders, outer edges, shadows, creases, folds, folded corners, notebook spine, photographs, phone, UI, logos, watermarks, frame, letterboxing or decorative details. Clean production texture only, not page design.",
+      "dimensions": {
+        "width": 768,
+        "height": 512
+      },
+      "format": "webp",
+      "bytes": 20284,
+      "transparency": false,
+      "deviations": [
+        "Produced clean full-frame material without mock objects or text; resized to 768x512 for restrained hero background texture."
+      ],
+      "qa_status": "accepted",
+      "qa_notes": "Inspected compressed production output against approved mock: warm ivory tone, subtle natural paper fibers/tooth, low tonal variance, no marks, objects or semantic text."
+    }
+  ],
+  "direct": [],
+  "semantic": [
+    {
+      "id": "hero-phone",
+      "implementation": "Place existing DeviceFrame and exact Kith screenshot above book-stage in an isolated positioned figure; CSS owns device offset/rotation/shadow, book panel radius and clipping. Preserve app screen pixels; use responsive scale and move figure below copy on narrow screens.",
+      "notes": "Generated book stage contains no phone or UI.",
+      "qa_status": "needs_parent_review"
+    },
+    {
+      "id": "memory-photo",
+      "implementation": "Use figure/img with coffee-friends.webp, ivory CSS paper mat and bottom padding; figcaption provides readable live handwritten-style caption; CSS owns transform and shadow. Reduce rotation on narrow screens and honor prefers-reduced-motion.",
+      "notes": "Generated photograph illustrates friendship; do not represent it as a customer testimonial.",
+      "qa_status": "needs_parent_review"
+    },
+    {
+      "id": "notebook-story",
+      "implementation": "Use section with decorative memory-table image and semantic live heading/body over left blank page, plus real linked CTA and SVG botanical stamp if wanted; left desktop copy constrained away from center fold. On narrow screens stack semantic copy with separate cropped image to avoid coffee occlusion. HTML/CSS owns any reveals and typography.",
+      "notes": "Images contain no page copy or controls.",
+      "qa_status": "needs_parent_review"
+    }
+  ],
+  "execution_order": [
+    "book-stage",
+    "coffee-friends",
+    "memory-table",
+    "paper"
+  ],
+  "blockers": [],
+  "assumptions": [
+    "Owner approved direction C Living Memory Book.",
+    "Opaque WebP production assets, PNG source originals retained non-destructively.",
+    "Existing transitive sharp@0.35.3 used for format conversion/compression; no dependency changes.",
+    "All produced assets visually inspected at original full resolution; responsive DOM composition belongs to parent."
+  ],
+  "total_production_bytes": 850108
+}

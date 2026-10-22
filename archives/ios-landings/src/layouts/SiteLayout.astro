@@ -1,0 +1,202 @@
+---
+import "../styles/global.css";
+import SiteHead from "../components/SiteHead.astro";
+import { primaryCta } from "../lib/distribution";
+import { links, productId, site } from "../site.config";
+import { getPublishedPosts } from "../lib/blog";
+import { actionColors } from "../lib/contrast.mjs";
+import { defaultTitle } from "../lib/page-title";
+import { tokensFromApp } from "@saas-maker/templates/tokensFromApp";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  image?: string;
+  robots?: string;
+  markdownAlternatePath?: string;
+  includeStructuredData?: boolean;
+}
+
+const { title = defaultTitle(), canonicalPath = "/" } = Astro.props;
+const cta = primaryCta();
+const t = site.tokens;
+const action = actionColors(t);
+const anchorContent = productId === "anchor" ? (await import("../../products/anchor/content.json")).default : undefined;
+const AnchorFactoryHeader = productId === "anchor" ? (await import("../components/AnchorFactoryHeader")).default : undefined;
+const anchorTheme = anchorContent ? {
+  ...tokensFromApp(anchorContent.page.fromApp),
+  ...anchorContent.page.tokens,
+  "--font-sans": 'ui-rounded, "SF Pro Rounded", Nunito, Figtree, system-ui, sans-serif',
+  "--font-display": 'ui-rounded, "SF Pro Rounded", Nunito, Figtree, system-ui, sans-serif',
+  "--font-text": 'ui-rounded, "SF Pro Rounded", Nunito, Figtree, system-ui, sans-serif',
+  "--display": "var(--font-display)",
+  "--body": "var(--font-text)",
+} : {};
+const tokenStyle = [
+  `--button-bg:${action.background}`,
+  `--button-fg:${action.foreground}`,
+  `--button-hover-bg:${action.hoverBackground}`,
+  `--button-hover-fg:${action.hoverForeground}`,
+  `--site-paper:${t.paper}`,
+  `--site-field:${t.field}`,
+  `--site-ink:${t.ink}`,
+  `--site-ink-soft:${t.inkSoft}`,
+  `--site-ink-faint:${t.inkFaint}`,
+  `--site-accent:${t.accent}`,
+  `--site-accent-dark:${t.accentDark}`,
+  `--site-accent-soft:${t.accentSoft}`,
+  `--site-lantern-a:${t.lanternA}`,
+  `--site-lantern-b:${t.lanternB}`,
+  `--site-lantern-c:${t.lanternC}`,
+  `--site-blush:${t.blush}`,
+  `--site-ink-on-dark:${t.inkOnDark}`,
+  `--site-ink-on-accent:${t.inkOnAccent ?? "#ffffff"}`,
+  ...Object.entries(anchorTheme).map(([name, value]) => `${name}:${value}`)
+].join(";");
+const scheme = site.colorScheme ?? "light";
+const portfolioProjectId = productId === "habits" ? "anchor" : productId;
+const isHistoricalSuccessor = productId === "habits";
+const footerArtId = isHistoricalSuccessor ? "anchor" : portfolioProjectId;
+const privateFooterArt: Record<string, { alt: string; width: number; height: number; credit: string; focalX: number; focalY: number }> = {
+  "journal": {
+    "alt": "Journal: A private evening writing ritual centers an open blank notebook under a lamp beside a lavender window. Closed previous volumes, tea and a quiet shelf imply a local archive without displaying entries.",
+    "width": 2169,
+    "height": 725,
+    "credit": "Original illustration for Journal",
+    "focalX": 50,
+    "focalY": 50
+  },
+  "motion": {
+    "alt": "Motion: A fictional living-room prototype groups a phone facing a simple human silhouette with a television showing an abstract game path. A short bounded local-sensing line joins the phone and figure; furniture stays quiet.",
+    "width": 2172,
+    "height": 724,
+    "credit": "Original illustration for Motion",
+    "focalX": 50,
+    "focalY": 50
+  }
+};
+const footerArtwork = isHistoricalSuccessor ? {
+  alt: "Anchor: A day-planning terrace centers the crossing between a planned stepping-stone path and a real-life detour. A pause bench, simple clock, task tokens and end-of-day notebook make interruptions ordinary. Habits remains a historical identity; its maintained successor is Anchor.",
+  width: 2171,
+  height: 724,
+  credit: "Original illustration for Anchor, the maintained successor to Habits",
+  focalX: 50,
+  focalY: 50
+} : privateFooterArt[footerArtId];
+const footerArtSrc = privateFooterArt[footerArtId]
+  ? `/footer-art/${footerArtId}.webp`
+  : `https://sassmaker.com/footer-art/${footerArtId}.webp`;
+const newsletterCapture = site.newsletterCapture === true;
+const newsletterTheme = scheme;
+const hasBlog = (await getPublishedPosts()).length > 0;
+---
+<!doctype html>
+<html lang="en" data-product={productId} data-device={site.device ?? "phone"} data-scheme={scheme} data-theme={anchorContent ? "gallery" : undefined} data-mode={anchorContent ? "dark" : undefined} style={tokenStyle}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <SiteHead {...Astro.props} title={title} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    {AnchorFactoryHeader ? <AnchorFactoryHeader /> : <header class="site-header">
+      <div class="shell">
+        <a class="wordmark" href="/" aria-label={`${site.name} home`}>
+          <img src={site.mark} width="38" height="38" alt="" />
+          <span>{site.name}</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="/#how-it-works">How it works</a>
+          <a href="/#privacy">Privacy</a>
+          {hasBlog && <a href="/blog/">Journal</a>}
+          <a class="header-beta" href={cta.href}>{cta.kind === "status" ? (site.device === "desktop" ? "Release status" : "Beta status") : cta.label}</a>
+        </nav>
+      </div>
+    </header>}
+    <main id="content"><slot /></main>
+    <fleet-footer-extension style={productId === "browserdaddy" ? "--fleet-footer-mobile-signature-size:clamp(2rem,10.2vw,2.75rem);--fleet-footer-app-mobile-signature-size:clamp(1.625rem,9vw,2.25rem)" : productId === "performancedaddy" ? "--fleet-footer-mobile-signature-size:clamp(1.625rem,8.6vw,2.15rem);--fleet-footer-app-mobile-signature-size:clamp(1.625rem,8.2vw,2rem)" : undefined} class="precise-footer" product-name={site.name} signature-name={site.name} font-base="https://sassmaker.com/fonts/fleet-footer-precise-v1/" surface={canonicalPath === "/" ? "landing" : "app"} art-src={footerArtSrc} art-alt={footerArtwork?.alt} art-width={footerArtwork?.width} art-height={footerArtwork?.height} art-credit={footerArtwork?.credit} art-position={footerArtwork ? `${footerArtwork.focalX}% ${footerArtwork.focalY}%` : undefined} theme={scheme}>
+      {Astro.slots.has("footer-cta") && <div slot="cta" data-fleet-footer-cta><slot name="footer-cta" /></div>}
+      {newsletterCapture ? (
+          <section slot="capture" class="footer-newsletter" aria-label={`${site.name} email updates`}>
+            <saas-maker-newsletter-capture
+              product-name={site.name}
+              catalog-id={productId}
+              kind="newsletter"
+              source="footer"
+              privacy-url={links.privacy}
+              theme={newsletterTheme}
+              layout="compact"
+              integrated
+              data-clarity-mask="true"
+            ></saas-maker-newsletter-capture>
+          </section>
+        ) : null}
+      <footer slot="navigation" data-fleet-footer-navigation class="site-footer precise-navigation">
+        <p class="footer-identity"><a href="/"><img src={site.mark} width="24" height="24" alt="" loading="lazy" decoding="async" />{site.name}</a></p>
+        <nav class="precise-routes" aria-label={`${site.name} footer navigation`}>
+          <div class="footer-route-group">
+            <h2 data-fleet-footer-group-label>Explore</h2>
+            <a href="/" data-fleet-footer-primary>Overview</a>
+            {site.device === "desktop" ? (
+              <a href="/release/" data-fleet-footer-primary>Release status</a>
+            ) : cta.kind === "web-app" || cta.kind === "successor" ? (
+              <a href={cta.href} data-fleet-footer-primary>{cta.label}</a>
+            ) : (
+              <a href="/testflight/" data-fleet-footer-primary>TestFlight</a>
+            )}
+            {hasBlog && <a href="/blog/">Journal</a>}
+          </div>
+          <div class="footer-route-group">
+            <h2 data-fleet-footer-group-label>Resources</h2>
+            <a href="/privacy/">Privacy</a>
+            <a href="/terms/">Terms</a>
+            <a href="/accessibility/">Accessibility</a>
+          </div>
+          <div class="footer-route-group footer-route-contact">
+            <h2 data-fleet-footer-group-label>Connect</h2>
+            <a href="/support/">Support</a>
+            {links.repository && <a href={links.repository} aria-label={`${site.name} source code on GitHub`} target="_blank" rel="noopener noreferrer">Source code ↗</a>}
+          </div>
+        </nav>
+        <p class="fine-print footer-legal" data-fleet-footer-legal>{site.footerFinePrint}</p>
+      </footer>
+    </fleet-footer-extension>
+    {anchorContent && <script is:inline>
+      (() => {
+        const footer = document.querySelector("fleet-footer-extension.precise-footer");
+        if (!footer) return;
+        const styleCapture = () => {
+          const capture = footer.querySelector("saas-maker-newsletter-capture");
+          if (!capture) return false;
+          const tokens = getComputedStyle(document.documentElement);
+          capture.style.setProperty("--newsletter-capture-action", tokens.getPropertyValue("--brand").trim());
+          capture.style.setProperty("--newsletter-capture-action-text", tokens.getPropertyValue("--brand-foreground").trim());
+          capture.style.setProperty("--newsletter-capture-focus", tokens.getPropertyValue("--brand-ink").trim());
+          return true;
+        };
+        if (styleCapture()) return;
+        const observer = new MutationObserver(() => {
+          if (styleCapture()) observer.disconnect();
+        });
+        observer.observe(footer, { childList: true });
+      })();
+    </script>}
+    <script
+      is:inline
+      src="https://sassmaker.com/project-strip.js?v=precise-b0adaa67"
+      data-project={portfolioProjectId}
+      data-theme={scheme}
+      defer
+    ></script>
+    <script
+      is:inline
+      src="https://sassmaker.com/ai-chat-footer.js?v=precise-b0adaa67"
+      data-name={site.name}
+      data-theme={scheme}
+      defer
+    ></script>
+    <slot name="body-end" />
+  </body>
+</html>

@@ -1,0 +1,61 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "action": {
+      "type": "tap",
+      "elementRef": "e40",
+      "x": 201,
+      "y": 673
+    },
+    "artifacts": {
+      "simulatorId": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "0nray4z",
+      "seq": 16,
+      "count": 37,
+      "targets": [
+        "e30|tap|button|Open Today||"
+      ],
+      "scroll": [
+        "e7|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e9|text|text|CALORIE||",
+        "e10|text|text|Your first useful log||",
+        "e11|text|text|Your day changed.||",
+        "e12|text|text|This is the real Today total after your saved entry—not sample data.||",
+        "e13|text|text|CAL, 300 kcal||",
+        "e14|text|text|CAL||",
+        "e17|text|text|PROTEIN, 0 g||",
+        "e18|text|text|PROTEIN||",
+        "e21|text|text|CARBS, 0 g||",
+        "e22|text|text|CARBS||",
+        "e25|text|text|FIBRE, 0 g||",
+        "e26|text|text|FIBRE||",
+        "e15|text|text|300||",
+        "e19|text|text|0||",
+        "e23|text|text|0||",
+        "e27|text|text|0||",
+        "e16|text|text|kcal||",
+        "e20|text|text|g||",
+        "e24|text|text|g||",
+        "e28|text|text|g||",
+        "e29|text|text|Targets are unset. Today's totals still work, and nothing is graded as good or bad.||"
+      ],
+      "udid": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    }
+  },
+  "nextSteps": [
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --within-element-ref e7 --direction up --distance 0.5",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --element-ref e30"
+  ]
+}

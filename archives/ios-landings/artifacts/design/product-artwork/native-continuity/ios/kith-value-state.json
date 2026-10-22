@@ -1,0 +1,41 @@
+{
+  "schema": "xcodebuildmcp.output.capture-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "0uqfwjt",
+      "seq": 11,
+      "count": 24,
+      "targets": [
+        "e12|tap|button|Demo Friend, Friends, closeness 3||",
+        "e18|tap|button|Open Kith||",
+        "e19|tap|button|Add another person||"
+      ],
+      "scroll": [],
+      "text": [
+        "e15|text|text|Your constellation has begun.||",
+        "e16|text|text|One person and one honest memory are enough. Add others when they naturally come to mind.||",
+        "e13|text|text|DF||",
+        "e14|text|text|Demo||",
+        "e17|text|text|Saved on this iPhone. Signing in later adds an optional private Cloudflare copy; Kith stays usable without it.||"
+      ],
+      "udid": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    }
+  },
+  "nextSteps": [
+    "Refresh after layout changes: xcodebuildmcp simulator snapshot-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842",
+    "Wait for UI to settle: xcodebuildmcp ui-automation wait-for-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --predicate settled",
+    "Batch same-screen taps: xcodebuildmcp ui-automation batch --json '{\"simulatorId\":\"28E413D9-B587-41D3-9D7C-3D903BC6F842\",\"steps\":[{\"action\":\"tap\",\"elementRef\":\"e18\"},{\"action\":\"tap\",\"elementRef\":\"e19\"}]}'",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --element-ref e12"
+  ]
+}

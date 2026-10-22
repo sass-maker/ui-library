@@ -1,0 +1,37 @@
+{
+  "schema": "xcodebuildmcp.output.build-run-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "request": {
+      "scheme": "Setline",
+      "projectPath": "/Users/sarthak/Desktop/fleet/setline/ios/Setline.xcodeproj",
+      "derivedDataPath": "/Users/sarthak/Desktop/fleet/ios-landings/.fleet-local/native-continuity/setline-build",
+      "configuration": "Debug",
+      "platform": "iOS Simulator",
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "summary": {
+      "status": "SUCCEEDED",
+      "durationMs": 21720,
+      "target": "simulator"
+    },
+    "artifacts": {
+      "appPath": "/Users/sarthak/Desktop/fleet/ios-landings/.fleet-local/native-continuity/setline-build/Build/Products/Debug-iphonesimulator/Setline.app",
+      "bundleId": "com.significanthobbies.setline",
+      "processId": 63573,
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842",
+      "buildLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/build_run_sim_2026-10-02T17-47-38-690Z_pid57658_1ffaf5b7.log",
+      "runtimeLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.significanthobbies.setline_2026-10-02T17-47-59-247Z_helperpid63527_ownerpid57658_3e351dfb.log",
+      "osLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.significanthobbies.setline_oslog_2026-10-02T17-48-00-384Z_helperpid64495_ownerpid57658_3316bc47.log"
+    },
+    "diagnostics": {
+      "warnings": [],
+      "errors": []
+    }
+  },
+  "nextSteps": [
+    "Stop app in simulator: xcodebuildmcp simulator stop --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --bundle-id com.significanthobbies.setline"
+  ]
+}

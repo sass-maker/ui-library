@@ -1,0 +1,103 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Setline native-product landing within the shared Significant Hobbies template",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Setline's real Today, workout-player, rest, plan, and history screens",
+      "The native scorecard and attempt-board design system",
+      "The owner's authored-programme workout loop"
+    ],
+    "probes": [],
+    "selected": "daylight-training-scorecard",
+    "approval": "agent-selected",
+    "before": "artifacts/design/setline-before-1440.png",
+    "contract": {
+      "purpose": "Explain Setline as an iPhone execution layer for an existing structured programme, demonstrate the authored-set-to-recorded-history loop, and state the real internal-TestFlight and data boundaries.",
+      "purposeSource": "Setline PRODUCT.md, PROJECT_STATUS.md, native source, and Site Health dossier",
+      "canonicalPurpose": "Setline runs a written strength, cardio, or mobility workout one set at a time while preserving authored order, explicit deviations, accurate rest, and planned-versus-recorded evidence.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "A person already following a structured training programme who wants less decision-making and data entry between sets.",
+      "job": "Understand how Setline executes an authored session, what it records, what remains local, what optional sync paths contain, and whether the app is publicly available.",
+      "thesis": "The landing should feel like the native workout instrument: bright, precise, factual, and dominated by the current action rather than fitness motivation.",
+      "system": "Matte paper, deep ink, lime execution signals, blue recorded evidence, coral exceptions, condensed numerals, fine rules, and real higher-resolution native screens.",
+      "signature": "The real current-set board leads the page, followed by the same Today, player, rest, and history sequence used during a workout.",
+      "risk": "Generic fitness language could make Setline sound like a coach or programme generator, while vague cloud language could collapse iCloud continuity and Hub summaries into one false promise."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/setline-after-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/setline-after-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/setline-after-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "PRODUCT=setline pnpm check:one && pnpm check",
+      "status": "pass",
+      "note": "Setline builds with zero Astro diagnostics and passes 17 required public-surface checks. The complete shared factory builds and validates all eight configured products. Browser inspection at 390, 768, and 1440 found no horizontal overflow or failed image requests."
+    },
+    "critique": {
+      "score": 36,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Independent review found no purpose, lifecycle, visual, or responsive P0/P1 issue.",
+        "Residual P2: the gallery leaves generous desktop whitespace, but it preserves evidence scale and the disciplined scorecard rhythm."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "Independent fresh-visitor review by Harvey",
+      "answers": {
+        "product": "Setline is a native iPhone workout execution tracker for a programme the user already follows.",
+        "audience": "It is for someone following structured strength, cardio, or mobility sessions who wants the next set and rest timing ready in the gym.",
+        "value": "It reduces between-set decisions and preserves an accurate history of the plan, explicit deviations, and actual work.",
+        "mechanism": "Today resolves authored order, the player separates targets from actuals, explicit skips/extras/deferrals remain evidence, and wall-clock timestamps retain real rest cadence.",
+        "proof": "Real native screens, exact workout examples, a physical-iPhone internal-build statement, and detailed local/iCloud/Hub boundaries support the claims.",
+        "nextAction": "Read the beta status while understanding there is no public TestFlight invitation, App Store listing, paid plan, subscription, or checkout."
+      },
+      "purposeScore": {
+        "product": 25,
+        "audience": 15,
+        "value": 15,
+        "mechanism": 15,
+        "proof": 14,
+        "nextAction": 15,
+        "total": 99
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "agent-selected",
+    "note": "The operator authorized end-to-end portfolio landing work without repeated feedback loops; this receipt records local qualification, not deployment approval."
+  }
+}

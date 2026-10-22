@@ -1,0 +1,7 @@
+{
+  // Guard/target file. Real deploys go through scripts/deploy.mjs, which
+  // uploads each product to its own Pages project.
+  "name": "kith",
+  "compatibility_date": "2026-08-17",
+  "pages_build_output_dir": "dist/kith"
+}

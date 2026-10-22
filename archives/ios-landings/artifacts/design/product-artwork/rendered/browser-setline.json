@@ -1,0 +1,188 @@
+{
+  "views": [
+    {
+      "product": "setline",
+      "width": 390,
+      "overflow": false,
+      "heading": "Setline:\nRun the workout\nyou already wrote.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/training-bench-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/workout-player.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "setline",
+      "width": 768,
+      "overflow": false,
+      "heading": "Setline:\nRun the workout\nyou already wrote.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/training-bench-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/workout-player.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "setline",
+      "width": 1440,
+      "overflow": false,
+      "heading": "Setline:\nRun the workout\nyou already wrote.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/training-bench-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/workout-player.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    }
+  ],
+  "interactions": [
+    {
+      "product": "setline",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 658.59375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 265.59375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 331.59375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "setline",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 855.53125,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 132.15625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 210.53125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 276.53125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "setline",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 321.109375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 399.484375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 465.484375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "setline",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "setline",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "setline",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    }
+  ],
+  "failures": [],
+  "pageErrors": [],
+  "externalServicesQualified": false
+}

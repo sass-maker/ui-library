@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.landing-audit.v1",
+  "project": "motion",
+  "priority": "P2",
+  "decision": "Hold",
+  "auditedAt": "2026-08-29",
+  "candidateUrl": "http://127.0.0.1:4346/",
+  "productionUrl": "https://motion.significanthobbies.com/",
+  "releaseState": "Local candidate qualified; focused truth, responsive, and image-payload changes are not deployed by this audit.",
+  "gates": {
+    "contentPurpose": {
+      "score": 99,
+      "status": "pass",
+      "evidence": "Independent review: product 30/30, audience 15/15, value 14/15, mechanism 15/15, proof and status honesty 10/10, next action and lifecycle 15/15."
+    },
+    "designQuality": {
+      "score": 91,
+      "status": "pass",
+    "evidence": "Fresh 390, 768, and 1440 browser checks found strong product-specific hierarchy, zero overflow, zero runtime errors, and visible project-strip and Ask AI components; only oversized desktop voids and repeated static prototype proof remain as P2 observations."
+    },
+    "seo": {
+      "score": 94,
+      "status": "pass",
+      "evidence": "Candidate passes all critical on-page and site checks. The sole tool failure asks a held unreleased application to fabricate aggregateRating or review data; local sitemap coverage warning is the expected canonical-host mismatch. Production passes sitemap coverage."
+    },
+    "geo": {
+      "score": 100,
+      "status": "pass",
+      "evidence": "Production agent-index audit is S-tier 100 with llms.txt, API/AI, Markdown homepage, robots AI rules, sitemap, and JSON-LD. The local 67 reflects only canonical production URLs being foreign to localhost, not missing candidate surfaces."
+    },
+    "performance": {
+      "score": 94,
+      "status": "pass",
+      "evidence": "Serial 20-run psi-swarm completed 20/20: balanced weighted LCP 1.70 s, CLS 0.000, TBT 0 ms; mobile-mid Lighthouse performance 94-100, mobile-fast and desktop 100. The intentionally harsh aggregate CWV p75 remains 3.15 s, recorded as a non-blocking P2 lab limitation.",
+      "report": ".fleet/evidence/motion-landing-audit/psi-swarm.html"
+    }
+  },
+  "nonCompensating": true,
+  "minimumGate": 90,
+  "minimumObserved": 91
+}

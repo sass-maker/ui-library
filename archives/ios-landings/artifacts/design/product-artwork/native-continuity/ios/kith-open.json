@@ -1,0 +1,36 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "action": {
+      "type": "tap",
+      "elementRef": "e18",
+      "x": 201,
+      "y": 736
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "diagnostics": {
+      "warnings": [
+        {
+          "message": "UI action succeeded, but the refreshed runtime snapshot did not settle before timeout. Run snapshot_ui again before reusing elementRefs from the previous snapshot."
+        }
+      ],
+      "errors": []
+    },
+    "uiError": {
+      "code": "SNAPSHOT_CAPTURE_FAILED",
+      "message": "UI action succeeded, but the refreshed runtime snapshot did not settle before timeout. runtime snapshot did not settle within 2500ms",
+      "recoveryHint": "Run snapshot_ui again before reusing elementRefs from the previous snapshot."
+    }
+  },
+  "nextSteps": [
+    "Refresh after UI action: xcodebuildmcp ui-automation snapshot-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842"
+  ]
+}

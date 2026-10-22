@@ -1,0 +1,246 @@
+[
+  {
+    "width": 1200,
+    "sceneHeight": 640,
+    "imageHeight": 640,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 26.15625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 7.644,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 10.719,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 11.084,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "sceneHeight": 640,
+    "imageHeight": 640,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 30.765625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 7.981,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 11.023,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 11.39,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      }
+    ]
+  },
+  {
+    "width": 1200,
+    "sceneHeight": 916.3125,
+    "imageHeight": 916.3125,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 26.15625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 7.545,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 11.071,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 11.034,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "sceneHeight": 916.3125,
+    "imageHeight": 916.3125,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 30.765625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 7.91,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 11.204,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 11.077,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      }
+    ]
+  }
+]

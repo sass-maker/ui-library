@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "project": "ios-landings",
+  "asset": "ios-landings.webp",
+  "sha256": "7129a19665d646a97dab84a6a0437a174db54215d6836b36137682a8065fb113",
+  "width": 2172,
+  "height": 724,
+  "bytes": 224010,
+  "credit": "Original illustration for iOS Landings",
+  "provenance": {
+    "kind": "original-generated-illustration",
+    "generator": "OpenAI image generation",
+    "generatedFor": "The owner-selected Precise footer of the existing app landing factory",
+    "description": "A pixel-print workshop with one shared page frame and distinct blank product folios; illustrative artwork, not product screenshots."
+  }
+}

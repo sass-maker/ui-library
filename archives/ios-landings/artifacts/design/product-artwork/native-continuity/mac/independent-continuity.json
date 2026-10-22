@@ -1,0 +1,515 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "Codex independent finish reviewer /root/design_finish_review",
+  "date": "2026-10-02",
+  "status": "pass",
+  "scope": "Independent paired continuity for artwork PR #32, currently applicable public access/release paths, current native render and bounded first useful mechanisms",
+  "checks": {
+    "designSystem": {
+      "status": "pass",
+      "observation": "Per-product concrete rendered comparisons and path/limit observations follow."
+    },
+    "identity": {
+      "status": "pass",
+      "observation": "Per-product concrete rendered comparisons and path/limit observations follow."
+    },
+    "vocabulary": {
+      "status": "pass",
+      "observation": "Per-product concrete rendered comparisons and path/limit observations follow."
+    },
+    "productTruth": {
+      "status": "pass",
+      "observation": "Per-product concrete rendered comparisons and path/limit observations follow."
+    },
+    "handoff": {
+      "status": "pass",
+      "observation": "Per-product concrete rendered comparisons and path/limit observations follow."
+    }
+  },
+  "products": {
+    "browserdaddy": {
+      "url": "https://browser.daddyrad.com/download",
+      "version": "0.4.7",
+      "build": "16",
+      "native": [
+        "browserdaddy-first-value-synthetic.png",
+        "browserdaddy-onboarding-public-review.png"
+      ],
+      "mode": "public-artifact synthetic production UI",
+      "flow": [
+        "Downloaded public DMG; mounted read-only; launched exact .app with --preview-fixture.",
+        "Searched synthetic archive for SwiftUI; one fixture visit rendered; Watcher off.",
+        "Opened Settings \u2192 Review first-run setup; captured access/external-tagging disclosure; did not connect, Sync History, tag, or Start watching."
+      ],
+      "limits": [
+        "Synthetic temporary archive; no real browser collection or OS permission acceptance verified.",
+        "Setup review displays an existing Chrome grant from preferences; no new grant was made. Long disclosure text truncates in this native layout; full consent accessibility/device audit is outside artwork scope."
+      ],
+      "download": {
+        "status": 200,
+        "bytes": 8372140,
+        "sha256": "4bf7c059fa236d0cdc1b8d12790fc76e0db211806c7ce65b6620f3b23e2560eb",
+        "artifactPath": ".fleet-local/native-continuity/mac/browserdaddy/download.dmg",
+        "mount": "read-only; no Applications installation"
+      },
+      "currentNativeSourceSHA": "82afe09470e9ab671e197db225873919b35f5b47",
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Actual public app renders the same black canvas, mint controls, lowercase brand and Scout mascot; table density belongs to native archive use."
+        },
+        "identity": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Canonical Scout remains in landing hero and native sidebar/setup; material archive scene is explanatory and is separated from real UI."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Archive/history, tabs, attention, read-only access and optional external tagging retain their meanings."
+        },
+        "productTruth": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Temporary synthetic archive returned one SwiftUI record with Watcher off. Artwork does not claim private history collection or anonymous external tagging."
+        },
+        "handoff": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Public download bytes \u2192 exact mounted public .app \u2192 existing safe preview flag \u2192 searched synthetic record; setup review captured without permissions or collection."
+        }
+      },
+      "status": "pass",
+      "nativeReleaseAcceptance": false
+    },
+    "contextdaddy": {
+      "url": "https://context.daddyrad.com/download",
+      "version": "0.2.3",
+      "build": "13",
+      "native": [
+        "contextdaddy-memory-current-test-host.png",
+        "contextdaddy-activity-current-test-host.png",
+        "contextdaddy-skills-current-test-host.png"
+      ],
+      "mode": "public download plus separate current-source native NSWindow test-host fixtures",
+      "flow": [
+        "Downloaded public DMG; mounted read-only; did not launch default personal-discovery path.",
+        "Executed current SkillLibraryViewTests/memoryAndActivityAnswersRenderWithoutHorizontalOverflow through XcodeBuildMCP: 1 passed, 0 failed.",
+        "Executed current SkillLibraryViewTests/rendersLibraryAtSupportedWidthsWithoutLiveData: 1 passed, 0 failed.",
+        "Inspected fresh actual NSHostingView/NSWindow images: synthetic demo instruction inventory, activity defaults and skill definition/agent access library."
+      ],
+      "limits": [
+        "Current native source test host, not the installed public DMG first-value path.",
+        "No personal context discovery, provider credentials, runtime grants, session scan, or mutation applied."
+      ],
+      "download": {
+        "status": 200,
+        "bytes": 7316217,
+        "sha256": "9eb6000be5fe01872474a061fe71b3a50b4cad8b738e9f872cb4dec26c835e60",
+        "artifactPath": ".fleet-local/native-continuity/mac/contextdaddy/download.dmg",
+        "mount": "read-only; no Applications installation"
+      },
+      "currentNativeSourceSHA": "e77c590dc4e74252799408f9661e0d8d680c85c4",
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Fresh current NSWindow Memory/Skills render uses black surfaces, mint metadata controls and dense rows matching the corrected landing."
+        },
+        "identity": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Landing clean canonical artwork is separate from full material story. Native library remains a tool for evidence review rather than decorative cards."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Instructions, saved memory, skill definitions, agent access and local activity are differentiated in actual rendered views."
+        },
+        "productTruth": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Fresh synthetic Memory inventory and Skills library render actual current code with explicit local-evidence limits. No demonstrated runtime grants or private scan inferred."
+        },
+        "handoff": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Actual public DMG downloaded; separate focused current native test-host path renders first useful inventory. This is a split evidence path, not public installed-artifact acceptance."
+        }
+      },
+      "status": "pass",
+      "nativeReleaseAcceptance": false
+    },
+    "performancedaddy": {
+      "url": "https://performance.daddyrad.com/download",
+      "version": "0.2.16",
+      "build": "21",
+      "native": [
+        "performancedaddy-first-value-synthetic.png"
+      ],
+      "mode": "public-artifact synthetic Diagnosis report",
+      "flow": [
+        "Downloaded public DMG; mounted read-only; launched exact .app with --preview-fixture.",
+        "Opened Diagnose; observed Preview evidence\u2014no live machine data, insufficient comparison evidence, five measurement domains and explicit causal limits.",
+        "Captured only synthetic diagnosis; no Stop, cleanup, permission expansion or recording action performed."
+      ],
+      "limits": [
+        "Preview flag seeds Diagnosis, not LiveViewModel; read-only process sampling occurred at startup. No live process list was saved as a screenshot.",
+        "No measured performance improvement or fan/hardware causal claim qualified. No separate onboarding wizard observed; relevant setup/measurement explanation is in actual report."
+      ],
+      "download": {
+        "status": 200,
+        "bytes": 8781025,
+        "sha256": "f1ff1f8a59499220a102d2eebcb4182ee61de55b13d4365568afcd0894766098",
+        "artifactPath": ".fleet-local/native-continuity/mac/performancedaddy/download.dmg",
+        "mount": "read-only; no Applications installation"
+      },
+      "currentNativeSourceSHA": "dfdbde5c380d099051f75050efb046bdbfee9aac",
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Black/mint sidebar and report controls match the landing; coral is an evidence warning signal in native diagnosis, not a new universal action palette."
+        },
+        "identity": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Software report UI supports revised software-evidence paper scene. Previous hardware/circuit-board subject contradiction is absent."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Diagnose, measurements, evidence limits and not-established root cause carry consistent meanings."
+        },
+        "productTruth": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Actual report explicitly says preview evidence/no live machine data; insufficient comparison is not presented as measured benefit. Scene remains illustrative."
+        },
+        "handoff": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Public download \u2192 exact public app \u2192 Diagnose preview report visible. Live startup sampling and report fixture distinguished; no stop or recording actions."
+        }
+      },
+      "status": "pass",
+      "nativeReleaseAcceptance": false
+    },
+    "storagedaddy": {
+      "url": "https://storage.daddyrad.com/download",
+      "version": "0.1.3",
+      "build": "110",
+      "native": [
+        "storagedaddy-onboarding-public.png",
+        "storagedaddy-first-value-synthetic.png"
+      ],
+      "mode": "public-artifact actual folder-picker and synthetic read-only scan",
+      "flow": [
+        "Downloaded public DMG; mounted read-only; launched scripted --scan for synthetic directory.",
+        "Scripted protected/hidden Desktop path was correctly rejected; captured explanatory first-use UI.",
+        "Used Scan Folder native picker to select explicit synthetic directory only.",
+        "Observed actual Treemap: Project 6MB, Media 6MB, Documents131KB; five files, zero skipped; on-device only. No cleanup action."
+      ],
+      "limits": [
+        "Does not establish Full Disk Access, whole-home scan, cleanup or personal-file correctness.",
+        "Fixture originally rendered at artifacts/design/product-artwork/native-continuity/mac/storage-fixture; after app stopped it was reversibly moved to .fleet-local/native-continuity/mac-storage-fixture to keep report tree free of synthetic file payloads."
+      ],
+      "download": {
+        "status": 200,
+        "bytes": 7124560,
+        "sha256": "d2e0109d189869d6425d8c30d50ca1e3365c3b66ec76270f3fdedbedffa4baee",
+        "artifactPath": ".fleet-local/native-continuity/mac/storagedaddy/download.dmg",
+        "mount": "read-only; no Applications installation"
+      },
+      "currentNativeSourceSHA": "44dbb36a596d102499ca8aafadc507340c10a270",
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Actual black/mint treemap uses colored folder shares and mint tool actions, consistent with the filing/cabinet narrative and foreground real screenshot."
+        },
+        "identity": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Native mascot, explorer hierarchy and review-before-cleanup behavior agree with landing; paper cabinet is explanatory artwork."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Scan, Explore, Developer Insights, Cleanup and on-disk/logical sizes retain operational meanings."
+        },
+        "productTruth": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Five synthetic files scanned with zero skipped after explicit picker selection. Nothing deleted; metadata and storage proportions, not reclaim estimates, observed."
+        },
+        "handoff": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Public download \u2192 exact public app \u2192 onboarding explanation \u2192 native picker for explicit synthetic folder \u2192 actual useful treemap; broad protected access not granted."
+        }
+      },
+      "status": "pass",
+      "nativeReleaseAcceptance": false
+    },
+    "anchor": {
+      "url": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg",
+      "version": "1.0",
+      "build": "29",
+      "native": [
+        "anchor-onboarding-welcome-public.png",
+        "anchor-onboarding-current-local.png",
+        "anchor-rehearsal-current-local.png",
+        "anchor-today-first-value-current-local.png",
+        "anchor-today-first-value-current-local.txt"
+      ],
+      "mode": "public first-run render plus separate current-source DebugLocal isolated first-use",
+      "flow": [
+        "Downloaded public DMG; mounted read-only; launched exact .app; captured actual public welcome and inspected first protected-time step. No unisolated selections saved.",
+        "Current DebugLocal build succeeded; two filtered UI tests did not execute because runner was killed before connection. This is a failed attempt, not a test pass.",
+        "Default CLI daemon did not inherit per-invocation environment. A separate official CLI socket started from /tmp with ANCHOR_STORE_PATH, ONBOARDING_DEMO and DEMO_DATA created a scoped native store.",
+        "Current actual local onboarding: selected synthetic Short videos / More creativity; shaped habit; continued locally at optional account step; entered labelled rehearsal and synthetic focus/interruption. Only rehearsal render is claimed; no session/history/analytics generated by rehearsal.",
+        "For distinct first-use run, fresh official CLI socket with explicit first-use-anchor.store, ONBOARDING_SKIP and DEMO_DATA launched current Anchor Local.app. Scoped DB/store-shm/store-wal were verified open by that exact process before and after interaction.",
+        "Opened Today \u2192 Add first entry \u2192 Synthetic landing review \u2192 Save; scrolled to visible scheduled block and captured actual native result. App stopped after capture."
+      ],
+      "limits": [
+        "Public build29 welcome is separate from current-source DebugLocal rehearsal and Today. No claim that public build29 completed this first-value flow.",
+        "The interrupted first rehearsal process changed during CUA active-target errors; park-and-return completion was not established, and no crash cause was inferred.",
+        "Current-source Today entry creation is observed; full restart persistence, account sync, notifications and physical/device acceptance remain unqualified."
+      ],
+      "download": {
+        "status": 200,
+        "bytes": 21875504,
+        "sha256": "f6dc33ac9b7c6d5bb96ed08cb9709aa44732f3067ffa595a1634f778bbb6acd8",
+        "artifactPath": ".fleet-local/native-continuity/mac/anchor/download.dmg",
+        "mount": "read-only; no Applications installation"
+      },
+      "currentNativeSourceSHA": "ecd1838e14e77d66e8d50f70c3b69ce2d701db2e",
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Public welcome and fresh current local app both show charcoal surfaces, ivory controls and neutral geometry, supporting corrected charcoal/ivory landing."
+        },
+        "identity": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Current welcome doodle and native clock/schedule forms maintain an authored time-product identity. Platform density differs from roomy landing folio."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Plan the day, Today, habits, focus, rehearsal, locally kept distraction notes and optional account are consistent."
+        },
+        "productTruth": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Actual current isolated Today creation demonstrates placing a synthetic block. Labelled rehearsal states no session/history saved. Public welcome versus current local first use kept distinct."
+        },
+        "handoff": {
+          "status": "pass",
+          "scope": "landing artwork and currently applicable access path",
+          "observation": "Public DMG \u2192 actual public welcome; separately current DebugLocal native fixture with verified scoped DB \u2192 optional-account/onboarding rehearsal render and Today Save \u2192 visible synthetic block. No public-build first-value completion claimed."
+        }
+      },
+      "status": "pass",
+      "nativeReleaseAcceptance": false
+    },
+    "kith": {
+      "status": "pass",
+      "evidence": [
+        "../ios/kith-onboarding.jpg",
+        "../ios/kith-note.jpg",
+        "../ios/kith-first-value.jpg",
+        "../ios/kith-value-state.json",
+        "../ios/kith-open.json"
+      ],
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "observation": "Current actual iPhone welcome and note surfaces retain warm ivory, clay actions, brown text and rounded hierarchy; landing expands this into paper narrative."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Lantern/person constellation is actual current native identity; coastal photo is separately illustrative and does not replace proof."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "observation": "Person, closeness, one thing to keep, chronological log and constellation agree across both surfaces."
+        },
+        "productTruth": {
+          "status": "pass",
+          "observation": "Recorded synthetic Demo Friend and note reached the native Your constellation has begun state. Runtime text explicitly separates on-device use from optional private Cloudflare copy."
+        },
+        "handoff": {
+          "status": "pass",
+          "observation": "Actual public CTA reaches honest internal-TestFlight status; no public invitation exists. Separate current --onboarding-demo native flow traversed person \u2192 note \u2192 constellation \u2192 Open Kith."
+        }
+      },
+      "currentNativeSourceSHA": "8b85d555839f125237f3e00af79c49c2da775280",
+      "limits": [
+        "Root-operated current simulator flow, independently inspected screenshots/runtime snapshots; in-memory demo does not prove persistence or public beta install."
+      ],
+      "nativeReleaseAcceptance": false
+    },
+    "setline": {
+      "status": "pass",
+      "evidence": [
+        "../ios/setline-onboarding.jpg",
+        "../ios/setline-first-value.jpg",
+        "../ios/setline-first-value-state.json",
+        "../ios/setline-record-set.json"
+      ],
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "observation": "Native chalk/ink hierarchy and lime rest state match landing; native blue support controls do not replace the shared lime execution signal."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Training bench material story remains clearly separate from native targets, session rail and prominent timing numerals."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "observation": "Authored target, recorded actual, authored order and rest retain consistent meanings."
+        },
+        "productTruth": {
+          "status": "pass",
+          "observation": "Native first useful state shows1/9 recorded, authored60-second rest and next working set60kg/5reps; root-recorded8reps40kg are actual fixture inputs, not target achievement marketing claims."
+        },
+        "handoff": {
+          "status": "pass",
+          "observation": "Public CTA stops at honest internal-TestFlight status. Separate current persistent-UI fixture reviewed onboarding/programme and recorded one set into authored rest."
+        }
+      },
+      "currentNativeSourceSHA": "ccc3815df4640e72a77e41b707364c9d2157bdfb",
+      "limits": [
+        "No anonymous public invitation or physical workout acceptance; current simulator fixture only."
+      ],
+      "nativeReleaseAcceptance": false
+    },
+    "calorie": {
+      "status": "pass",
+      "evidence": [
+        "../ios/calorie-onboarding.jpg",
+        "../ios/calorie-today-first-value.jpg",
+        "../ios/calorie-no-target.json",
+        "../ios/calorie-today.json"
+      ],
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "observation": "Current native moss/leaf actions, pale journal surfaces and rounded hierarchy match landing."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Ordinary meal artwork and actual food journal communicate food logging; artwork is neither measured nutrition nor health-outcome proof."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "observation": "Food journal, kcal, grams, optional targets and first useful log have consistent meanings."
+        },
+        "productTruth": {
+          "status": "pass",
+          "observation": "Today visibly contains one Synthetic test meal with300kcal and score unavailable. No account, weight or goal requirement was inferred. Inputs are synthetic."
+        },
+        "handoff": {
+          "status": "pass",
+          "observation": "Public CTA reaches truthful private-native-beta status. Separate scoped current fixture left targets unset, saved synthetic food and reached Today."
+        }
+      },
+      "currentNativeSourceSHA": "1651e689472b500b89edebbc49175c1ffac7cae8",
+      "limits": [
+        "Root-operated simulator flow, independently inspected evidence; nutrition measurement, medical outcomes, public invite and physical-device release not qualified."
+      ],
+      "nativeReleaseAcceptance": false
+    },
+    "motion": {
+      "status": "pass",
+      "evidence": [
+        "../ios/motion-running-game.jpg",
+        "../ios/motion-close.json",
+        "../ios/motion-start-game.json"
+      ],
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "observation": "Current native game uses dark arcade surfaces and teal score/replay actions, agreeing with landing."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Material trajectory/obstacle scene is abstract gameplay explanation; landing labels retained Motion Maker image as internal build."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "observation": "Synthetic test pose, Tracking you, Start and gameplay have observed native meanings; native setup snapshot includes upper-body label."
+        },
+        "productTruth": {
+          "status": "pass",
+          "observation": "Actual default bundled slicing game rendered a results state. Source retains Motion Maker; internal capture is not claimed as default game. Synthetic score is not marketing proof."
+        },
+        "handoff": {
+          "status": "pass",
+          "observation": "Public CTA reaches honest beta status. Separate current --synthetic-pose run closed game, observed setup in runtime snapshot, tapped Start and returned to bundled game."
+        }
+      },
+      "currentNativeSourceSHA": "9e18903e0f5b6388019899a2f2160f2ef3a38b73",
+      "limits": [
+        "motion-setup.jpg and motion-first-value.jpg show subsequent game, not setup; setup is supported by motion-close.json only. Physical camera tracking/control feel, recording and TV mirroring remain unqualified."
+      ],
+      "nativeReleaseAcceptance": false
+    },
+    "indulge": {
+      "status": "pass",
+      "evidence": [
+        "../../independent-rendered/indulge-hero-1440.png",
+        "anchor-onboarding-current-local.png",
+        "anchor-today-first-value-current-local.png"
+      ],
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "observation": "Neutral graphite outer folio now belongs to maintained Anchor family; red inner/historical capture remains explicitly legacy."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Historical Indulge identity is retained as history, while successor Anchor current native welcome and Today carry the neutral current identity."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "observation": "Continue with Anchor and historical capture labels describe a successor path rather than a current Indulge release."
+        },
+        "productTruth": {
+          "status": "pass",
+          "observation": "Held/retired native product is not presented as currently installable. Current Anchor counterpart renders and accepts a scoped synthetic scheduled entry."
+        },
+        "handoff": {
+          "status": "pass",
+          "observation": "Observed successor Anchor public page GET200 exposes the same public1.0 DMG URL; those bytes and public welcome inspected. Current Anchor fixture first-use evidence is separate and explicit."
+        }
+      },
+      "limits": [
+        "No current Indulge app launch or release claimed; successor/current counterpart is Anchor. Public Anchor first-value acceptance remains distinct from current DebugLocal fixture."
+      ],
+      "nativeReleaseAcceptance": false
+    }
+  },
+  "unresolvedP0P1AtLandingArtworkScope": 0,
+  "newLandingCraftScore": null,
+  "ownerTasteAcceptance": "unknown",
+  "nativeReleaseAcceptance": false,
+  "limitations": [
+    "Pass does not claim public access to private betas.",
+    "ContextDaddy and Anchor use separate current-source native fixture hosts for first useful mechanism; public downloaded artifacts are distinct evidence.",
+    "Motion simulator synthetic game cannot qualify physical tracking/control feel, recording or TV mirroring.",
+    "Failed Anchor native UI runner is explicitly retained as failed, with zero tests executed; actual isolated native CUA Today result supplies replacement evidence, not a test pass.",
+    "Historical retained foreground captures remain honest historical/internal captures. Current render does not silently relabel them as current public app screenshots."
+  ],
+  "reports": [
+    "review.md",
+    "review.json",
+    "../ios/review.md",
+    "../../independent-review.md"
+  ]
+}

@@ -1,0 +1,1811 @@
+{
+  "views": [
+    {
+      "product": "kith",
+      "width": 390,
+      "overflow": false,
+      "heading": "Kith:\nRemember the people you want to stay close to.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/story/paper.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/story/book-stage.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/story/coastal-walk-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/constellation.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "kith",
+      "width": 768,
+      "overflow": false,
+      "heading": "Kith:\nRemember the people you want to stay close to.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/story/paper.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/story/book-stage.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/story/coastal-walk-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/constellation.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "kith",
+      "width": 1440,
+      "overflow": false,
+      "heading": "Kith:\nRemember the people you want to stay close to.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/story/paper.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/story/book-stage.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/story/coastal-walk-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/constellation.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "setline",
+      "width": 390,
+      "overflow": false,
+      "heading": "Setline:\nRun the workout\nyou already wrote.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/training-bench-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/workout-player.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "setline",
+      "width": 768,
+      "overflow": false,
+      "heading": "Setline:\nRun the workout\nyou already wrote.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/training-bench-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/workout-player.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "setline",
+      "width": 1440,
+      "overflow": false,
+      "heading": "Setline:\nRun the workout\nyou already wrote.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/training-bench-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/workout-player.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "anchor",
+      "width": 390,
+      "overflow": false,
+      "heading": "Anchor:\nPlan the day.\nLearn what moved it.",
+      "primary": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/anchor-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/brand/day-doodle.svg",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/today.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "anchor",
+      "width": 768,
+      "overflow": false,
+      "heading": "Anchor:\nPlan the day.\nLearn what moved it.",
+      "primary": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/anchor-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/brand/day-doodle.svg",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/today.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "anchor",
+      "width": 1440,
+      "overflow": false,
+      "heading": "Anchor:\nPlan the day.\nLearn what moved it.",
+      "primary": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/anchor-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/brand/day-doodle.svg",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/today.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "motion",
+      "width": 390,
+      "overflow": false,
+      "heading": "Motion:\nMove.\nPlay.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/motion-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/motion-maker-clean.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "motion",
+      "width": 768,
+      "overflow": false,
+      "heading": "Motion:\nMove.\nPlay.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/motion-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/motion-maker-clean.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "motion",
+      "width": 1440,
+      "overflow": false,
+      "heading": "Motion:\nMove.\nPlay.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/motion-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/motion-maker-clean.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "indulge",
+      "width": 390,
+      "overflow": false,
+      "heading": "Indulge:\nIndulge became\npart of Anchor.",
+      "primary": "https://anchor.significanthobbies.com",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/indulge-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/onboarding.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "indulge",
+      "width": 768,
+      "overflow": false,
+      "heading": "Indulge:\nIndulge became\npart of Anchor.",
+      "primary": "https://anchor.significanthobbies.com",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/indulge-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/onboarding.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "indulge",
+      "width": 1440,
+      "overflow": false,
+      "heading": "Indulge:\nIndulge became\npart of Anchor.",
+      "primary": "https://anchor.significanthobbies.com",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/indulge-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/onboarding.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "calorie",
+      "width": 390,
+      "overflow": false,
+      "heading": "Calorie:\nA private food journal for weight loss\nwith math you can inspect.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/calorie-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/today.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "calorie",
+      "width": 768,
+      "overflow": false,
+      "heading": "Calorie:\nA private food journal for weight loss\nwith math you can inspect.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/calorie-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/today.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "calorie",
+      "width": 1440,
+      "overflow": false,
+      "heading": "Calorie:\nA private food journal for weight loss\nwith math you can inspect.",
+      "primary": "/testflight/",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/calorie-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/today.webp",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "storagedaddy",
+      "width": 390,
+      "overflow": false,
+      "heading": "StorageDaddy:\nMake room.\nKeep building.",
+      "primary": "https://storage.daddyrad.com/download",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/storagedaddy-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/storage-explorer.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "storagedaddy",
+      "width": 768,
+      "overflow": false,
+      "heading": "StorageDaddy:\nMake room.\nKeep building.",
+      "primary": "https://storage.daddyrad.com/download",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/storagedaddy-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/storage-explorer.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "storagedaddy",
+      "width": 1440,
+      "overflow": false,
+      "heading": "StorageDaddy:\nMake room.\nKeep building.",
+      "primary": "https://storage.daddyrad.com/download",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/storagedaddy-scene-v1.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/storage-explorer.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "performancedaddy",
+      "width": 390,
+      "overflow": false,
+      "heading": "PerformanceDaddy:\nA slow Mac.\nA clearer picture.",
+      "primary": "https://performance.daddyrad.com/download",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/performancedaddy-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/ports.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "performancedaddy",
+      "width": 768,
+      "overflow": false,
+      "heading": "PerformanceDaddy:\nA slow Mac.\nA clearer picture.",
+      "primary": "https://performance.daddyrad.com/download",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/performancedaddy-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/ports.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "performancedaddy",
+      "width": 1440,
+      "overflow": false,
+      "heading": "PerformanceDaddy:\nA slow Mac.\nA clearer picture.",
+      "primary": "https://performance.daddyrad.com/download",
+      "scene": true,
+      "backdrop": true,
+      "heroImages": [
+        {
+          "src": "/images/story/performancedaddy-scene-v2.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/ports.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "browserdaddy",
+      "width": 390,
+      "overflow": false,
+      "heading": "BrowserDaddy:\nYour browsing history.\nYour attention, explained.",
+      "primary": "https://browser.daddyrad.com/download",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/browserdaddy-scout-v1.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "browserdaddy",
+      "width": 768,
+      "overflow": false,
+      "heading": "BrowserDaddy:\nYour browsing history.\nYour attention, explained.",
+      "primary": "https://browser.daddyrad.com/download",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/browserdaddy-scout-v1.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "browserdaddy",
+      "width": 1440,
+      "overflow": false,
+      "heading": "BrowserDaddy:\nYour browsing history.\nYour attention, explained.",
+      "primary": "https://browser.daddyrad.com/download",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/browserdaddy-scout-v1.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "contextdaddy",
+      "width": 390,
+      "overflow": false,
+      "heading": "ContextDaddy:\nYour agents' context.\nMade visible.",
+      "primary": "https://context.daddyrad.com/download",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/context-cart.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "contextdaddy",
+      "width": 768,
+      "overflow": false,
+      "heading": "ContextDaddy:\nYour agents' context.\nMade visible.",
+      "primary": "https://context.daddyrad.com/download",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/context-cart.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    },
+    {
+      "product": "contextdaddy",
+      "width": 1440,
+      "overflow": false,
+      "heading": "ContextDaddy:\nYour agents' context.\nMade visible.",
+      "primary": "https://context.daddyrad.com/download",
+      "scene": true,
+      "backdrop": false,
+      "heroImages": [
+        {
+          "src": "/images/context-cart.png",
+          "loaded": true
+        }
+      ],
+      "brokenAnchors": []
+    }
+  ],
+  "interactions": [
+    {
+      "product": "kith",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 683.609375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 290.609375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 356.609375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "kith",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 926.796875,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 176.234375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 281.796875,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 347.796875,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "kith",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 307.515625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 413.078125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 479.078125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "kith",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "kith",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "kith",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "setline",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 658.59375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 265.59375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 331.59375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "setline",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 855.53125,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 132.15625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 210.53125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 276.53125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "setline",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 321.109375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 399.484375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 465.484375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "setline",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "setline",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "setline",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "anchor",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 698.609375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 290.609375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 356.609375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "anchor",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 926.796875,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 176.234375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 281.796875,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 347.796875,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "anchor",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 307.515625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 413.078125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 479.078125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "anchor",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "anchor",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "anchor",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "motion",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 609.40625,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 142.375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 216.40625,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 282.40625,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "motion",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 855.53125,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 132.15625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 210.53125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 276.53125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "motion",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 286.015625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 364.390625,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 430.390625,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "motion",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "motion",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "motion",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "indulge",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 658.59375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 265.59375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 331.59375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "indulge",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 899.609375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 176.234375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 254.609375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 320.609375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "indulge",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 321.109375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 399.484375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 465.484375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "indulge",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "indulge",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "indulge",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "calorie",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 658.59375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 265.59375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 331.59375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "calorie",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 899.609375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 176.234375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 254.609375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 320.609375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "calorie",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 321.109375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 399.484375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 465.484375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "calorie",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "calorie",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "calorie",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "storagedaddy",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 649.421875,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 142.375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 241.421875,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 307.421875,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "storagedaddy",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 855.53125,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 132.15625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 210.53125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 276.53125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "storagedaddy",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 286.015625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 364.390625,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 430.390625,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "storagedaddy",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "storagedaddy",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "storagedaddy",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "performancedaddy",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 683.609375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 290.609375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 356.609375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "performancedaddy",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 926.796875,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 176.234375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 281.796875,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 347.796875,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "performancedaddy",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 640,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 307.515625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 413.078125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 479.078125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "performancedaddy",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "performancedaddy",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "performancedaddy",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "browserdaddy",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 798.671875,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 390.671875,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 456.671875,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "browserdaddy",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 991.46875,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 132.15625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 346.46875,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 412.46875,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "browserdaddy",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 746.921875,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 306.609375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 520.921875,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 586.921875,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "browserdaddy",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "browserdaddy",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "browserdaddy",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    },
+    {
+      "product": "contextdaddy",
+      "width": 390,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 390,
+        "height": 758.65625,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 14,
+            "right": 376,
+            "bottom": 191.5625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 14,
+            "right": 347.78125,
+            "bottom": 365.65625,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 14,
+            "right": 156.75,
+            "bottom": 431.65625,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "contextdaddy",
+      "width": 768,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 768,
+        "height": 964.28125,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 20,
+            "right": 458.65625,
+            "bottom": 132.15625,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 20,
+            "right": 382.8125,
+            "bottom": 319.28125,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 20,
+            "right": 162.75,
+            "bottom": 385.28125,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "contextdaddy",
+      "width": 1440,
+      "check": "scene-readable",
+      "pass": true,
+      "geometry": {
+        "width": 1440,
+        "height": 719.734375,
+        "copy": [
+          {
+            "tag": "H2",
+            "left": 245.1875,
+            "right": 768.9375,
+            "bottom": 306.609375,
+            "clipped": false
+          },
+          {
+            "tag": "P",
+            "left": 245.1875,
+            "right": 608,
+            "bottom": 493.734375,
+            "clipped": false
+          },
+          {
+            "tag": "A",
+            "left": 245.1875,
+            "right": 387.9375,
+            "bottom": 559.734375,
+            "clipped": false
+          }
+        ],
+        "imageLoaded": true
+      }
+    },
+    {
+      "product": "contextdaddy",
+      "check": "keyboard-faq",
+      "pass": true
+    },
+    {
+      "product": "contextdaddy",
+      "check": "reduced-motion",
+      "pass": true
+    },
+    {
+      "product": "contextdaddy",
+      "check": "200-percent-scene-text",
+      "pass": true,
+      "overflow": false,
+      "clipped": false
+    }
+  ],
+  "failures": [],
+  "pageErrors": [],
+  "externalServicesQualified": false
+}

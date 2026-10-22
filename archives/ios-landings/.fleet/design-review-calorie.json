@@ -1,0 +1,103 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Calorie native-product landing within the shared Significant Hobbies template",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Calorie native Today and quick-log screens",
+      "Current Significant Hobbies editorial landing system",
+      "The owner's weight-loss journal purpose and privacy boundary"
+    ],
+    "probes": [],
+    "selected": "botanical-editorial-journal",
+    "approval": "agent-selected",
+    "before": "artifacts/design/calorie-before-1440.png",
+    "contract": {
+      "purpose": "Explain Calorie as a private native food and body journal built for personal weight loss, show how its visible-input estimates work, and state the honest internal-TestFlight access boundary.",
+      "purposeSource": "Calorie PRODUCT.md, PROJECT_STATUS.md, and site-health project dossier",
+      "canonicalPurpose": "Calorie helps its owner pursue weight loss through fast private logging of food, four nutrients, water, routines, weight, and transparent timing estimates.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "A person pursuing weight loss who wants a fast, private iPhone or iPad journal instead of a social or prescriptive diet app.",
+      "job": "Understand what can be logged, how estimates are derived, where data lives, what the product does not claim, and whether access is currently available.",
+      "thesis": "A calm botanical editorial system can make personal health logging feel humane while real app screens and explicit rules keep the page concrete.",
+      "system": "Warm paper, botanical green fields, restrained yellow and coral signals, real native captures, generous editorial type, fine rules, and compact responsive proof chapters.",
+      "signature": "A first-viewport real Today screen leads into the same log, estimate, and trend loop the native app uses.",
+      "risk": "A generic wellness tone could hide the weight-loss audience or imply medical authority, so the hero and lifecycle copy must remain explicit."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/calorie-after-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/calorie-after-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/calorie-after-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "PRODUCT=calorie pnpm check:one && pnpm check",
+      "status": "pass",
+      "note": "Calorie builds with zero Astro diagnostics and passes 12 required public-surface checks. The complete shared factory also builds and validates all eight configured products, protecting product-specific cases from shared-template regressions. Fresh 390, 768, and 1440 renders were reviewed after the purpose correction."
+    },
+    "critique": {
+      "score": 36,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Independent review initially found one P1: the weight-loss audience appeared too late. The corrected hero resolved it and raised purpose comprehension from 96 to 99.",
+        "Residual P2: the long editorial proof sequence asks more scrolling than a minimal utility landing, but each chapter adds distinct product evidence."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "Independent fresh-visitor review by Harvey, repeated after correcting the hero audience statement",
+      "answers": {
+        "product": "Calorie is a private native food and body journal for iPhone and iPad.",
+        "audience": "It is for a person pursuing weight loss who wants fast personal logging without a social feed or hidden scoring rules.",
+        "value": "It makes meals, four nutrients, water, routines, weight, and longer trends easier to record and inspect.",
+        "mechanism": "Food timestamps and personal targets produce fasting, exercise, and sleep estimates whose inputs and rules remain visible.",
+        "proof": "Real native screens, explicit local-first storage, optional Apple-authenticated sync, fit boundaries, and non-medical language substantiate the page.",
+        "nextAction": "Check the beta-status page while understanding that access is internal TestFlight only, with no public invitation, App Store listing, paid plan, or checkout."
+      },
+      "purposeScore": {
+        "product": 25,
+        "audience": 15,
+        "value": 15,
+        "mechanism": 15,
+        "proof": 14,
+        "nextAction": 15,
+        "total": 99
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "agent-selected",
+    "note": "The operator authorized end-to-end portfolio landing work without repeated feedback loops; this receipt records qualification, not deployment approval."
+  }
+}

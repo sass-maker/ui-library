@@ -1,0 +1,11 @@
+{
+  "tool": "built-in image_gen",
+  "mode": "edit",
+  "referencedImages": [
+    "originals/anchor-v1.png",
+    "originals/indulge-v1.png"
+  ],
+  "prompt": "Edit both supplied editorial images, preserving their landscape 1536x1024 composition, realistic cloth/paper materials, calm empty left text zones, object scale and soft lighting. Image 1 is Anchor: replace all navy/blue surfaces, blue folio cloth, blue bookmark and blue pen/clip with neutral charcoal #151515, near-black #0B0B0C and graphite. The empty LEFT background must be near-flat neutral #0B0B0C, without a navy tint. Warm ivory papers #F2F0EA; the current block/bookmark is warm paper, not blue. Retain only the small coral and amber loose strips as causal accents, remove blue from loose strips. Image 2 is Indulge's successor scene: preserve the vivid red inner notebook and ribbon, warm ivory negative space, tiny film strip and composition; change the entire blue-grey OUTER folio to warm neutral graphite-grey cloth, to represent Anchor's ink-and-paper world. Keep each scene coherent. No new objects, text, people, mock UI or layout elements. Produce the two separate edited landscape artworks, not a combined board.",
+  "output": "originals/anchor-v2.png",
+  "note": "Tool returned one edited Anchor image. Indulge is edited separately. Neutral native Theme.swift authority supersedes the old landing cobalt palette."
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "xcodebuildmcp.output.launch-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842",
+      "bundleId": "com.significanthobbies.setline",
+      "processId": 86098,
+      "runtimeLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.significanthobbies.setline_2026-10-02T17-49-02-942Z_helperpid86083_ownerpid85779_912d45f0.log",
+      "osLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.significanthobbies.setline_oslog_2026-10-02T17-49-03-718Z_helperpid86223_ownerpid85779_b714915e.log"
+    },
+    "diagnostics": {
+      "warnings": [],
+      "errors": []
+    }
+  },
+  "nextSteps": [
+    "Open Simulator app to see it: xcodebuildmcp simulator open",
+    "Stop app in simulator: xcodebuildmcp simulator stop --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --bundle-id com.significanthobbies.setline"
+  ]
+}

@@ -1,0 +1,18 @@
+✔ missing or escaping screenshot sources fail the build (0.660125ms)
+ℹ tests 23
+ℹ pass 23
+ℹ fail 0
+- 0 errors
+- 0 warnings
+Checked kith: 22 public surfaces and 13 internal links.
+Checked setline: 22 public surfaces and 15 internal links.
+Checked anchor: 22 public surfaces and 14 internal links.
+Checked motion: 22 public surfaces and 9 internal links.
+Checked indulge: 22 public surfaces and 10 internal links.
+Checked calorie: 22 public surfaces and 15 internal links.
+Checked journal: 22 public surfaces and 11 internal links.
+Checked habits: 22 public surfaces and 10 internal links.
+Checked storagedaddy: 22 public surfaces and 9 internal links.
+Checked performancedaddy: 22 public surfaces and 11 internal links.
+Checked browserdaddy: 22 public surfaces and 7 internal links.
+Checked contextdaddy: 22 public surfaces and 7 internal links.

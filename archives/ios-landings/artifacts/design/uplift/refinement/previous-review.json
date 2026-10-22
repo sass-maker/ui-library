@@ -1,0 +1,193 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Shared landing factory uplift; Kith first showcase",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Existing project-native Astro components and authentic Kith screenshots",
+      "artifacts/design/uplift/directions.md"
+    ],
+    "probes": [
+      {
+        "id": "a-tactile",
+        "path": "artifacts/design/uplift/a-tactile.png"
+      },
+      {
+        "id": "b-constellation",
+        "path": "artifacts/design/uplift/b-constellation.png"
+      },
+      {
+        "id": "c-memory",
+        "path": "artifacts/design/uplift/c-memory.png"
+      }
+    ],
+    "selected": "c-memory",
+    "approval": "approved",
+    "before": "artifacts/design/uplift/before-1440.png",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Preserve healthy project-native navigation, action gates, disclosure and consent patterns; proposals concern imagery and composition."
+      }
+    },
+    "contract": {
+      "purpose": "Kith helps iPhone users who care about a small set of relationships retain meaningful context through explicitly chosen closeness, standing notes and a dated memory log.",
+      "purposeSource": "products/kith/site.config.ts; PRODUCT.md; ../site-health/apps/backend/config/projects.json publicDirectory.projects.kith.purposeContract",
+      "canonicalPurpose": "Kith helps a person remember the people they genuinely want to stay close to and act with more thoughtfulness.",
+      "purposeAlignment": "repository-override",
+      "driftNote": "Canonical Kith purpose agrees with relationship memory. Its owner-validation nextAction and broader attention outcome differ from the current public internal-beta status and explicitly chosen closeness. This local marketing receipt follows repository evidence; the user prohibits production-config edits, so the canonical provider config is untouched.",
+      "audience": "iPhone users tending a small set of relationships; per-product audience preserved throughout the factory.",
+      "job": "Understand one native app, inspect authentic evidence and take its honest available next action.",
+      "thesis": "A living memory book: human moments and physical keepsakes frame exact native app evidence and a clear available action.",
+      "system": "Ivory paper, coral cloth, indigo semantic ink and rust actions; confident rounded sans; asymmetric desktop spread, action-first phone stack, alternating screenshot chapters. Product tokens and device classes remain independent.",
+      "signature": "Product-owned bookcloth stage, overlapping illustrative photograph and semantic paper sheet with handwritten margin note.",
+      "risk": "Art can overpower product comprehension or loading; retain visible action and evidence, optimized art and reduced-motion fallback."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "product": "kith",
+        "path": "artifacts/design/uplift/kith-390.png"
+      },
+      {
+        "width": 768,
+        "product": "kith",
+        "path": "artifacts/design/uplift/kith-768.png"
+      },
+      {
+        "width": 1440,
+        "product": "kith",
+        "path": "artifacts/design/uplift/kith-1440.png"
+      },
+      {
+        "width": 390,
+        "product": "performance",
+        "path": "artifacts/design/uplift/performance-390.png"
+      },
+      {
+        "width": 768,
+        "product": "performance",
+        "path": "artifacts/design/uplift/performance-768.png"
+      },
+      {
+        "width": 1440,
+        "product": "performance",
+        "path": "artifacts/design/uplift/performance-1440.png"
+      },
+      {
+        "width": 390,
+        "product": "browser",
+        "path": "artifacts/design/uplift/browser-390.png"
+      },
+      {
+        "width": 768,
+        "product": "browser",
+        "path": "artifacts/design/uplift/browser-768.png"
+      },
+      {
+        "width": 1440,
+        "product": "browser",
+        "path": "artifacts/design/uplift/browser-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm check",
+      "status": "pass",
+      "note": "23 regression tests; Astro 0 errors/0 warnings (one existing unused-variable hint); all12 product builds and22 surfaces per product. pnpm10.33.2 executed through installed Homebrew binary. Source local; no publication."
+    },
+    "critique": {
+      "score": 34,
+      "maximum": 40,
+      "path": "artifacts/design/uplift/design-review.md",
+      "reviewer": "/root/design_finish_review"
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20,
+      "path": "artifacts/design/uplift/technical-audit.md",
+      "reviewer": "/root/technical_design_audit"
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [],
+      "runs": 1,
+      "path": "artifacts/design/uplift/detector.json"
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "/root/design_finish_review",
+      "answers": {
+        "product": "Kith, a private relationship-memory app for iPhone.",
+        "audience": "People remembering context about family, friends and meaningful relationships.",
+        "value": "Remember how you met, what matters now and dated moments to show up thoughtfully.",
+        "mechanism": "Per-person context and moments organized by manually chosen closeness.",
+        "proof": "Labeled actual app screen/full-size access distinct from illustrative photography.",
+        "nextAction": "Honest internal TestFlight status or inspect real app; no public invite/App Store availability promised."
+      },
+      "purposeScore": {
+        "product": 24,
+        "audience": 12,
+        "value": 14,
+        "mechanism": 13,
+        "proof": 14,
+        "nextAction": 15,
+        "total": 92
+      },
+      "mismatches": []
+    },
+    "browser": {
+      "path": "artifacts/design/uplift/browser-evidence.json",
+      "views": 9,
+      "interactions": 15,
+      "failures": 0,
+      "pageErrors": 0,
+      "note": "Normal-scroll lazy screens decoded; third-party services intentionally isolated and unqualified. Text enlargement independently inspected at320/390/768/1440."
+    },
+    "assets": {
+      "manifest": "artifacts/design/uplift/asset-manifest.json",
+      "productionBytes": 850108,
+      "newRuntimeDependencies": 0,
+      "newLandingJavascript": 0
+    },
+    "slopScore": {
+      "posture": "advisory",
+      "path": "artifacts/design/uplift/slop-score.json",
+      "status": "scanned",
+      "score": 7,
+      "definitionsVersion": "2026.09",
+      "preset": "marketing",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "sourcePin": "cdd58e1d249ae39616d94950d6ea232ec7b0b378",
+      "triggered": [
+        "cream_default_bg"
+      ],
+      "decision": "Retain intentional ivory paper from approved C. Before state exists as archived screenshot, not a running scan target; no before/after numeric comparison claimed."
+    }
+  },
+  "ownerFeedback": {
+    "decision": "keep",
+    "note": "Owner explicitly selected the third system: C — The Living Memory Book, built end-to-end in the shared factory with Kith first. Publication was not requested."
+  }
+}

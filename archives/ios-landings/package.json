@@ -1,0 +1,57 @@
+{
+  "name": "ios-landings",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:kith": "PRODUCT=kith astro dev",
+    "dev:setline": "PRODUCT=setline astro dev",
+    "dev:anchor": "PRODUCT=anchor astro dev",
+    "dev:motion": "PRODUCT=motion astro dev",
+    "dev:calorie": "PRODUCT=calorie astro dev",
+    "dev:journal": "PRODUCT=journal astro dev",
+    "dev:habits": "PRODUCT=habits astro dev",
+    "build": "node scripts/build-all.mjs",
+    "build:one": "astro build",
+    "check": "node --test scripts/image-delivery.test.mjs scripts/screenshots.test.mjs scripts/blog.test.mjs scripts/contrast.test.mjs scripts/middleware.test.mjs scripts/deploy.test.mjs scripts/app-health.test.mjs scripts/worker-sites.test.mjs && astro check && node scripts/build-all.mjs && node scripts/check-all.mjs && node scripts/check-worker-sites.mjs",
+    "check:one": "node --test scripts/image-delivery.test.mjs scripts/screenshots.test.mjs scripts/blog.test.mjs scripts/contrast.test.mjs scripts/middleware.test.mjs scripts/deploy.test.mjs scripts/app-health.test.mjs scripts/worker-sites.test.mjs && astro check && astro build && node scripts/check-site.mjs",
+    "preview": "astro preview",
+    "deploy": "node scripts/deploy.mjs",
+    "deploy:kith": "node scripts/deploy.mjs kith",
+    "deploy:setline": "node scripts/deploy.mjs setline",
+    "deploy:anchor": "node scripts/deploy.mjs anchor",
+    "deploy:motion": "node scripts/deploy.mjs motion",
+    "deploy:journal": "node scripts/deploy.mjs journal",
+    "deploy:habits": "node scripts/deploy.mjs habits",
+    "check:worker-sites": "node scripts/check-worker-sites.mjs",
+    "deploy:daddyrad": "node scripts/deploy-worker-site.mjs daddyrad"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "astro": "7.2.0",
+    "lightningcss": "1.33.0",
+    "sharp": "0.35.3",
+    "typescript": "6.0.3",
+    "wrangler": "4.125.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ]
+  },
+  "dependencies": {
+    "@astrojs/react": "7.0.0",
+    "@saas-maker/motion": "github:sass-maker/ui-library#v0.1.20&path:/packages/motion",
+    "@saas-maker/templates": "github:sass-maker/ui-library#v0.1.20&path:/packages/templates",
+    "@saas-maker/ui": "github:sass-maker/ui-library#v0.1.20&path:/packages/ui",
+    "@tailwindcss/vite": "4.3.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tailwindcss": "4.3.3"
+  }
+}

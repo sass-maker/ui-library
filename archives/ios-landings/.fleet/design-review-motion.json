@@ -1,0 +1,114 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Motion landing within the shared Significant Hobbies template",
+  "surfaceMode": "persuade",
+  "mode": "preserve",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Existing Significant Hobbies shared landing system",
+      "Motion internal iPhone build",
+      "Motion canonical project dossier"
+    ],
+    "probes": [],
+    "selected": "existing-project-system",
+    "approval": "agent-selected",
+    "before": "artifacts/design/motion-audit/current-1440.png",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "The healthy shared system already exceeds the P2 visual bar; this pass corrected truth, responsive behavior, and payload without replacing it."
+      }
+    },
+    "contract": {
+      "purpose": "Explain Motion as a held iPhone-hosted body-control game prototype, show the working build, state what remains unproven, and offer an honest status path rather than public access.",
+      "purposeSource": "site-health Motion project dossier plus the Motion repository PROJECT_STATUS.md",
+      "canonicalPurpose": "Motion turns body movement seen by an iPhone into the controls for playful games on a larger screen.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "iPhone owners interested in active, social play on a larger display without buying a dedicated motion-console system.",
+      "job": "Understand the body-to-game mechanism, local camera boundary, prototype evidence, held lifecycle, and absence of public TestFlight or App Store access.",
+      "thesis": "A dark motion-stage presentation can make the body-controlled mechanic legible while real build captures and explicit limitations keep the promise honest.",
+      "system": "Existing shared dark editorial field, high-contrast display type, teal motion signals, real iPhone frames, sparse rules, and responsive proof chapters.",
+      "signature": "The real Motion build is paired with a glowing tracked figure and a repeated room-stays-local privacy motif.",
+      "risk": "A cinematic prototype page could imply a finished public game, so held status, unproven control feel, and unavailable distribution must remain explicit in the hero and fit sections."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/motion-audit/current-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/motion-audit/current-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/motion-audit/current-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm check",
+      "status": "pass",
+      "note": "The shared factory builds and validates all eight products. Final Motion renders were inspected at 390, 768, and 1440 pixels after fixing the tablet fit collision and replacing the 116 KB hero JPEG with a visually equivalent 20 KB WebP."
+    },
+    "critique": {
+      "score": 36,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Independent review found no P0 or P1 defect after the 768-pixel fit layout was corrected.",
+        "Residual P2: desktop uses deliberate large voids and the available visual proof repeats one static internal game screen because the prototype has only one substantiated control loop."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "Independent fresh-visitor review by Harvey after the lifecycle and responsive corrections",
+      "answers": {
+        "product": "Motion is a held body-controlled iPhone game prototype.",
+        "audience": "It is for iPhone owners seeking active, social larger-screen play without a dedicated motion console.",
+        "value": "It turns body movement into private, physical play that can appear on a television.",
+        "mechanism": "The iPhone extracts pose on-device, drives the game locally, and mirrors only the rendered game screen.",
+        "proof": "The page shows the working internal build and explicitly says physical control feel, fun, and distribution remain unproven.",
+        "nextAction": "Inspect beta status while understanding that work is held and there is no public TestFlight invitation or App Store listing."
+      },
+      "purposeScore": {
+        "product": 25,
+        "audience": 15,
+        "value": 14,
+        "mechanism": 15,
+        "proof": 15,
+        "nextAction": 15,
+        "total": 99
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "agent-selected",
+    "note": "The operator delegated end-to-end portfolio landing qualification without repeated feedback loops; this receipt does not authorize deployment."
+  }
+}

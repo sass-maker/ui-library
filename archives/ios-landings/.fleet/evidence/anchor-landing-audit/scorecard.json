@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.landing-audit.v1",
+  "project": "anchor",
+  "priority": "P2",
+  "decision": "Active",
+  "auditedAt": "2026-08-29",
+  "candidateUrl": "http://127.0.0.1:4400/",
+  "productionUrl": "https://anchor.significanthobbies.com/",
+  "releaseState": "Local candidate qualified against the current Build 17 release baseline; the purpose-copy and audit-evidence changes are not deployed by this audit.",
+  "gates": {
+    "contentPurpose": {
+      "score": 99,
+      "status": "pass",
+      "evidence": "Independent fresh-visitor re-review: product 25/25, audience 15/15, value 15/15, mechanism 15/15, proof 14/15, and honest next action and lifecycle 15/15."
+    },
+    "designQuality": {
+      "score": 92,
+      "status": "pass",
+      "evidence": "Independent three-viewport re-review verified all four baseline P1 findings as resolved and found zero remaining P0/P1 defects. The long complete mobile proof loop and small screenshot captions remain P2 observations."
+    },
+    "seo": {
+      "score": 98,
+      "status": "pass",
+      "evidence": "The local candidate passes title, description, canonical, Open Graph, Twitter, heading, image-alt, content-depth, SSR-leak, and link checks. The only generic tool flag asks for aggregateRating or review data; no rating was fabricated."
+    },
+    "geo": {
+      "score": 100,
+      "status": "pass",
+      "evidence": "The production agent-index audit is S-tier 100 with llms.txt, API/AI, Markdown homepage, robots AI rules, sitemap, and JSON-LD. Candidate source retains the same generated surfaces."
+    },
+    "performance": {
+      "score": 98,
+      "status": "pass",
+      "evidence": "Runtime-pinned serial PSI Swarm completed 20/20 audits. Coverage-weighted LCP is 0.977 s with CLS 0.000 and TBT 0 ms; mobile-mid p75 LCP is 1.205 s, mobile-fast 0.530 s, desktop 0.363 s, and the intentionally harsh low-end Slow 3G profile is 3.305 s. Lighthouse found no actionable opportunities in any profile.",
+      "report": ".fleet/evidence/anchor-landing-audit/psi-swarm.html"
+    }
+  },
+  "nonCompensating": true,
+  "minimumGate": 90,
+  "minimumObserved": 92
+}

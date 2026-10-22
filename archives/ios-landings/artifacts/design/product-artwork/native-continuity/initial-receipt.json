@@ -1,0 +1,228 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "ios-landings",
+  "target": "Product-owned artwork across current landing configurations",
+  "surfaceMode": "persuade",
+  "mode": "preserve",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "source": "existing",
+    "references": [
+      "DESIGN.md selected C",
+      "artifacts/design/uplift/c-memory.png"
+    ],
+    "probes": [],
+    "selected": "c-memory",
+    "approval": "not-required",
+    "ownerEvidence": {
+      "path": "artifacts/design/product-artwork/owner-direction.md",
+      "quote": "Can we add the bespoke artwork on every landing page also?"
+    },
+    "supplied": "",
+    "before": "artifacts/design/product-artwork/before-setline-1440.png",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Reuse existing semantic story composition, native FAQ, actions and device frames. Only optional product-owned illustrations are added."
+      }
+    },
+    "contract": {
+      "purpose": "The landing factory helps visitors evaluate one focused native app through product-specific language, original app evidence, plain privacy and an honest available next action.",
+      "purposeSource": "PRODUCT.md; products/*/site.config.ts; site-health/apps/backend/config/projects.json owning-project lookup (no ios-landings purposeContract present)",
+      "canonicalPurpose": "The landing factory helps visitors evaluate one focused native app through product-specific language, original app evidence, plain privacy and an honest available next action.",
+      "purposeAlignment": "match",
+      "driftNote": "The owning-project canonical provider record has no purposeContract. Repository PRODUCT.md and per-product configuration supply the current purpose; no provider or production configuration is changed.",
+      "audience": "Visitors evaluating one of the ten current configured native-product or successor landings.",
+      "job": "Understand the product, identify real evidence and reach the honest beta, release or successor action.",
+      "thesis": "Extend the owner-selected Living Memory Book with a distinct tactile editorial scene drawn from each product's own work.",
+      "system": "Retain system sans hierarchy, semantic product tokens, existing first-viewport composition, real screenshots and product-owned mascots. Landscape material scenes use stable text zones and compact stacked copy.",
+      "signature": "A training log for Setline, day-planning folio for Anchor, tangible arcade movement for Motion, transferred notebook for Indulge, meal journal for Calorie, archive inspection for StorageDaddy, diagnostic bench for PerformanceDaddy, tab index/compass for BrowserDaddy, context-file folio for ContextDaddy.",
+      "risk": "New raster scenes can weaken proof and loading. Keep app evidence and action first, disclose imagery as illustration, optimize WebP, lazy-load scenes and preserve reduced motion.",
+      "qualityBar": "Make every new scene specific and coherent with its existing product world; reject posed faces, fake UI, boilerplate stock photos and mismatched materials. Preserve existing heading/action hierarchy and authentic native imagery. Text must remain semantic, unclipped, high contrast and outside busy art at 390/768/1440px and enlarged text."
+    },
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Ten current products in products/*/site.config.ts; local rendered surfaces http://127.0.0.1:8840 through :8849; canonical URLs unchanged.",
+      "app": "Sibling native repositories ../kith, ../setline, ../anchor, ../motion, ../calorie, ../storagedaddy, ../performancedaddy, ../browserdaddy, ../contextdaddy. Indulge is the retired predecessor of Anchor. Native design authorities and onboarding/core screen inventory recorded in product-continuity.md."
+    }
+  },
+  "evidence": {
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "",
+      "checkpoints": [
+        {
+          "stage": "iteration",
+          "status": "scanned",
+          "report": ".fleet-local/slop/artwork-iteration.json",
+          "command": "node ../saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:8841 --preset marketing --json",
+          "findingsReview": "Setline score4: gradient_backgrounds on six inherited small component/device surfaces; no conic gradients or new CSS gradient wallpaper. Retain established instrument/material treatment; actual render clear text zone reviewed."
+        },
+        {
+          "stage": "final",
+          "status": "scanned",
+          "report": ".fleet-local/slop/artwork-final-v3.json",
+          "command": "node ../saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:8840 http://127.0.0.1:8841 http://127.0.0.1:8842 http://127.0.0.1:8843 http://127.0.0.1:8844 http://127.0.0.1:8845 http://127.0.0.1:8846 http://127.0.0.1:8847 http://127.0.0.1:8848 http://127.0.0.1:8849 --preset marketing --json",
+          "findingsReview": "Kith and Indulge score7: intentional warm paper identity. Setline and Calorie score4: inherited device/component gradient count. Six dark products score4: perma_dark_mode is intentional native night/black utility identity, not a newly imposed default; paired native renders remain unqualified. No sampled low-contrast-text flag. Root and independent reviewers checked real text/image geometry; scores do not establish taste, native continuity or owner acceptance."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "pass",
+      "reviewer": "independent finish reviewer /root/design_finish_review",
+      "direction": "c-memory",
+      "report": "artifacts/design/product-artwork/independent-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pass",
+          "observation": "Promise/action precede setting. Original capture or explicitly labelled artwork has its own plane. Lifecycle status stays by CTA; lengthy compact heroes postpone screen evidence."
+        },
+        "typography": {
+          "status": "pass",
+          "observation": "System sans hierarchy is legible at real content lengths and 200% scene font. Calorie and Context have long headline/paragraph stacks. Native rounded/monospaced operation controls need not become marketing display type."
+        },
+        "composition": {
+          "status": "pass",
+          "observation": "Art has a usable calm live-copy region. Compact copy then complete image preserves scale. Screenshot planes are distinct. Kith scene carries its photo world; other scenes repeat a shared side-table grammar more than bespoke full-page composition."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Setline and Storage strongest subject-specific signatures. Motion relies on logo/copy for body input. Context blank files are comparatively generic. Daddy family similarities are owner-directed; source/current-native alignment remains bounded."
+        },
+        "interaction": {
+          "status": "pass",
+          "observation": "Independent 320px reduced-motion sessions: scene anchors resolve and FAQ disclosures open in all ten; visible skip-link focus. Kith skip moves reading start to main and next Tab enters hero action. Full-size original images are linked for screenshot/historical heroes. Actual native CTA handoff remains unobserved."
+        },
+        "responsive": {
+          "status": "pass",
+          "observation": "Observed 320/390/768/1440 hierarchy retained; 200% desktop scene text remains readable without horizontal overflow. No observed scene text/object collision in current independent captures. 768 root screenshots are rendered evidence, not root findings."
+        }
+      }
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/product-artwork/rendered/setline-hero-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/product-artwork/rendered/setline-hero-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/product-artwork/rendered/setline-hero-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm check",
+      "status": "pass",
+      "report": "artifacts/design/product-artwork/checks.md"
+    },
+    "critique": {
+      "score": 33,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 7,
+        "typography": 6,
+        "composition": 7,
+        "identity": 6,
+        "interaction": 3,
+        "responsive": 4
+      },
+      "report": "artifacts/design/product-artwork/independent-review.md"
+    },
+    "audit": {
+      "score": 17,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 4,
+        "accessibility": 4,
+        "behavior": 4,
+        "responsive": 3,
+        "performance": 2
+      },
+      "report": "artifacts/design/product-artwork/audit.md"
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Direct independent review used; no fresh Impeccable invocation is claimed.",
+        "Pinned browser slop findings are recorded separately; no native scan or owner acceptance inferred."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "independent finish reviewer /root/design_finish_review",
+      "report": "artifacts/design/product-artwork/independent-review.json",
+      "scoringBasis": "Conservative weakest current landing case (BrowserDaddy, tied with Motion). Each of ten products is individually >=85; this is not an average or native acceptance.",
+      "answers": {
+        "product": "A native Mac browsing-history and attention tool.",
+        "audience": "Mac users wanting to inspect their own browsing across browsers.",
+        "value": "Bring history together, separate visits from measured attention and revisit useful patterns.",
+        "mechanism": "Separate local history archive plus measured foreground/idle-aware attention; access determines evidence.",
+        "proof": "Explicit Tab Scout product artwork, not a native screen or history screenshot. No interface proof in the opening.",
+        "nextAction": "Download macOS15+ early-access build or read how it works."
+      },
+      "purposeScore": {
+        "product": 24,
+        "audience": 13,
+        "value": 13,
+        "mechanism": 14,
+        "proof": 7,
+        "nextAction": 15,
+        "total": 86
+      },
+      "mismatches": []
+    },
+    "productContinuity": {
+      "status": "blocked",
+      "reviewer": "Codex root and independent design_finish_review",
+      "report": "artifacts/design/product-artwork/product-continuity.md",
+      "surfaces": {
+        "landing": "artifacts/design/product-artwork/rendered/browser-evidence.json",
+        "app": "artifacts/design/product-artwork/native-evidence.json"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pending",
+          "observation": "Native authoritative themes and existing captures compared; Anchor neutral tokens corrected. Fresh current rendered native pairs are incomplete."
+        },
+        "identity": {
+          "status": "pending",
+          "observation": "Product scenes and canonical mascots reviewed; hardware metaphor and mascot collage fixed. Current native rendering not qualified across all products."
+        },
+        "vocabulary": {
+          "status": "pending",
+          "observation": "Scoped current source onboarding and landing task/action labels compared; historical Indulge labels corrected. No fresh all-app walkthrough claimed."
+        },
+        "productTruth": {
+          "status": "pending",
+          "observation": "Concept/history/access labels remain honest; download HEAD responses prove endpoint availability only. Native current artifact/use verification remains incomplete."
+        },
+        "handoff": {
+          "status": "blocked",
+          "observation": "Four actual CTA clicks reach invite-only beta pages. Five public Mac download endpoints return200. No fresh installation/onboarding to first useful native state observed; Browser fixture built/launched but native UI selection failed."
+        }
+      }
+    }
+  },
+  "ownerFeedback": {
+    "decision": "not-required",
+    "note": "Preserve work follows the existing direction; this is not owner acceptance of the result."
+  }
+}

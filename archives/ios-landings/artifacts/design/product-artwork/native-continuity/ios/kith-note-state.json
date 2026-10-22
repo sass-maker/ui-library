@@ -1,0 +1,56 @@
+{
+  "schema": "xcodebuildmcp.output.capture-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "0hnqas2",
+      "seq": 8,
+      "count": 69,
+      "targets": [
+        "e51|typeText|text-field||A few words|",
+        "e39|tap|button|Kind||text.alignleft",
+        "e46|tap|button|Date Picker|2 Oct 2026|"
+      ],
+      "scroll": [
+        "e2|swipe|other|||",
+        "e3|swipe|other|||",
+        "e4|swipe|other|||",
+        "e5|swipe|other|||",
+        "e6|swipe|other|||",
+        "e7|swipe|other|||",
+        "e10|swipe|other|||",
+        "e11|swipe|other|||",
+        "e12|swipe|other|||",
+        "e13|swipe|other|||",
+        "e14|swipe|other|||"
+      ],
+      "text": [
+        "e26|text|text|DF, Demo Friend, Friends · closeness 3||",
+        "e28|text|text|Demo Friend||",
+        "e27|text|text|DF||",
+        "e29|text|text|Friends · closeness 3||",
+        "e40|text|text|Note||",
+        "e38|text|text|Kind||",
+        "e44|text|text|When||",
+        "e59|text|text|This becomes a real dated entry in their chronological log. You can edit the person or add more entries later.||"
+      ],
+      "udid": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    }
+  },
+  "nextSteps": [
+    "Refresh after layout changes: xcodebuildmcp simulator snapshot-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842",
+    "Wait for UI to settle: xcodebuildmcp ui-automation wait-for-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --predicate settled",
+    "Batch same-screen taps: xcodebuildmcp ui-automation batch --json '{\"simulatorId\":\"28E413D9-B587-41D3-9D7C-3D903BC6F842\",\"steps\":[{\"action\":\"tap\",\"elementRef\":\"e39\"},{\"action\":\"tap\",\"elementRef\":\"e46\"}]}'",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --element-ref e39"
+  ]
+}

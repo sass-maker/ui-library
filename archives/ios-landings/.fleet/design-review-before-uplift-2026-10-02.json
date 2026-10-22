@@ -1,0 +1,114 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Anchor landing within the shared Significant Hobbies template",
+  "surfaceMode": "persuade",
+  "mode": "preserve",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Existing Significant Hobbies shared landing system",
+      "Anchor build 17 release evidence and current native product captures",
+      "Anchor canonical project dossier"
+    ],
+    "probes": [],
+    "selected": "existing-project-system",
+    "approval": "agent-selected",
+    "before": "artifacts/design/anchor-final-390.png",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "The established shared system already met the product's interaction and component needs; this pass corrected product truth, action hierarchy, responsive proof, and section resolution without replacing it."
+      }
+    },
+    "contract": {
+      "purpose": "Explain Anchor as a private cross-device day planner and focus timer, prove its plan-to-review loop with the current build, state its data boundary, and lead to the truthful available distribution path.",
+      "purposeSource": "Anchor repository PROJECT_STATUS.md and the canonical Site Health project dossier",
+      "canonicalPurpose": "Anchor helps a person plan a realistic day, follow the current intention, and learn why the day lived differed from the day planned.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "People moving between Mac, iPhone, and Apple Watch who want a deliberate day and useful evidence about why reality diverged from the plan.",
+      "job": "Understand the plan, focus, interruption-capture, and planned-versus-lived loop; verify the privacy boundary; and download the public notarized Mac beta without mistaking invite-only TestFlight for public enrollment.",
+      "thesis": "A quiet dark editorial system can make Anchor's real plan-to-review loop feel deliberate while current product captures and explicit lifecycle evidence keep the promise honest.",
+      "system": "Dark paper and charcoal fields, cobalt actions, cyan annotations, real native captures, rounded display type, fine rules, and one hand-drawn planning scene.",
+      "signature": "A day-planning doodle frames the real Anchor screen, followed by the same Plan, Focus, Capture, and History sequence used by the app.",
+      "risk": "The complete proof loop makes the mobile page long, so each chapter needs legible product evidence and the lower trust sections need distinct visual roles."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/anchor-audit/final-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/anchor-audit/final-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/anchor-audit/final-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm check",
+      "status": "pass",
+      "note": "The shared factory builds and validates all eight products with 0 Astro diagnostics; each retains 19 required public surfaces and its expected internal links. Final Anchor renders were inspected at 390, 768, and 1440 pixels."
+    },
+    "critique": {
+      "score": 37,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Independent re-review verified that all four baseline P1 findings were resolved and scored the final design 92/100.",
+        "Residual P2: the complete mobile proof sequence remains long and some screenshot captions are necessarily small."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "Independent fresh-visitor re-review by Harvey after audience, CTA, mobile-proof, lifecycle, and lower-hierarchy corrections",
+      "answers": {
+        "product": "Anchor is a private day planner and focus timer for Mac, iPhone, and Apple Watch.",
+        "audience": "It is for people moving between Apple devices who want a deliberate day and want to understand why reality differed from the plan.",
+        "value": "It protects the current block and turns divergence into useful evidence for tomorrow rather than a score.",
+        "mechanism": "The page demonstrates planning, focus, immediate interruption capture, and planned-versus-lived review.",
+        "proof": "Current native captures, verified Build 17 release evidence, explicit privacy boundaries, current lifecycle copy, and honest fit exclusions substantiate the product.",
+        "nextAction": "Download the public notarized Mac beta; inspect iPhone and Watch beta status as a secondary invite-only path."
+      },
+      "purposeScore": {
+        "product": 25,
+        "audience": 15,
+        "value": 15,
+        "mechanism": 15,
+        "proof": 14,
+        "nextAction": 15,
+        "total": 99
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "agent-selected",
+    "note": "The operator delegated local qualification without repeated feedback loops; this receipt does not authorize commit, push, deployment, or release."
+  }
+}

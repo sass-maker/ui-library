@@ -1,0 +1,55 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "action": {
+      "type": "tap",
+      "elementRef": "e28",
+      "x": 201,
+      "y": 644
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "1qnwt2b",
+      "seq": 14,
+      "count": 35,
+      "targets": [
+        "e15|tap|button|Back||",
+        "e29|tap|button|Return to Setline||"
+      ],
+      "scroll": [
+        "e12|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e14|text|text|SETLINE||",
+        "e16|text|text|REVIEW BEFORE YOU START||",
+        "e17|text|text|Lower||",
+        "e18|text|text|Week 1 · Lower||",
+        "e19|text|text|Easy treadmill, bike or rower||",
+        "e20|text|text|1 set||",
+        "e21|text|text|Knee-to-wall ankle rocks||",
+        "e22|text|text|1 set||",
+        "e23|text|text|Supported squat repetitions||",
+        "e24|text|text|1 set||",
+        "e25|text|text|Goblet squat||",
+        "e26|text|text|1 set||",
+        "e27|text|text|+ 9 more exercises in authored order||",
+        "e28|text|text|The first screen shows the target. Enter your actual result, then Setline starts the authored rest. Notification permission is requested only when that first rest needs an alert.||"
+      ],
+      "udid": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    }
+  },
+  "nextSteps": [
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --within-element-ref e12 --direction up --distance 0.5",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --element-ref e29"
+  ]
+}

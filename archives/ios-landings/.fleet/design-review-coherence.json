@@ -1,0 +1,251 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "ios-landings",
+  "target": "Kith photograph and memory-book coherence correction",
+  "surfaceMode": "persuade",
+  "mode": "preserve",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "source": "existing",
+    "references": [
+      "DESIGN.md approved C",
+      "artifacts/design/uplift/c-memory.png"
+    ],
+    "probes": [],
+    "selected": "c-memory",
+    "approval": "not-required",
+    "ownerEvidence": {
+      "path": "artifacts/design/uplift/refinement/owner-feedback.md",
+      "quote": "See, firstly we are trying to build a template but if I have to pick I really like the third option."
+    },
+    "supplied": "",
+    "before": "artifacts/design/uplift/kith-1440.png",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Preserve healthy project-native navigation, action gates, disclosure and consent patterns; proposals concern imagery and composition."
+      }
+    },
+    "contract": {
+      "purpose": "Kith helps iPhone users who care about a small set of relationships retain meaningful context through explicitly chosen closeness, standing notes and a dated memory log.",
+      "purposeSource": "products/kith/site.config.ts; PRODUCT.md; ../site-health/apps/backend/config/projects.json publicDirectory.projects.kith.purposeContract",
+      "canonicalPurpose": "Kith helps a person remember the people they genuinely want to stay close to and act with more thoughtfulness.",
+      "purposeAlignment": "repository-override",
+      "driftNote": "Canonical Kith purpose agrees with relationship memory. Its owner-validation nextAction and broader attention outcome differ from the current public internal-beta status and explicitly chosen closeness. This local marketing receipt follows repository evidence; the user prohibits production-config edits, so the canonical provider config is untouched.",
+      "audience": "iPhone users tending a small set of relationships; per-product audience preserved throughout the factory.",
+      "job": "Understand one native app, inspect authentic evidence and take its honest available next action.",
+      "thesis": "A living memory book: human moments and physical keepsakes frame exact native app evidence and a clear available action.",
+      "system": "Ivory paper, coral cloth, indigo semantic ink and rust actions; confident rounded sans; asymmetric desktop spread, action-first phone stack, alternating screenshot chapters. Product tokens and device classes remain independent.",
+      "signature": "Product-owned bookcloth stage, overlapping illustrative photograph and semantic paper sheet with handwritten margin note.",
+      "risk": "Art can overpower product comprehension or loading; retain visible action and evidence, optimized art and reduced-motion fallback.",
+      "qualityBar": "Retain approved C while making photograph, paper, cloth and notebook read as one restrained physical world. Replace stock-like posed faces, inconsistent print scale, loud grain and copy patches. Keep real app unobscured at narrow phone widths, readable notebook copy at intermediate widths and enlargement, natural3-phrase title pacing, stable reduced motion. Owner taste is not inferred from scores or checks."
+    }
+  },
+  "evidence": {
+    "visualReview": {
+      "status": "pass",
+      "reviewer": "/root direct rendered review; independent /root/design_finish_review and /root/technical_design_audit",
+      "direction": "c-memory",
+      "report": "artifacts/design/uplift/refinement/final-review.md",
+      "checks": {
+        "hierarchy": {
+          "status": "pass",
+          "observation": "The product promise, honest status and primary action precede artwork. The smaller print stays subordinate to the actual app."
+        },
+        "typography": {
+          "status": "pass",
+          "observation": "The notebook title retains its three distinct phrases. Artwork labels remain12px; facts remain readable sans text. Decorative note lettering is unchanged."
+        },
+        "composition": {
+          "status": "pass",
+          "observation": "The coastal setting connects the print and notebook. Thin landscape framing,4degree rotation, quieter paper and one smaller cup reduce competing scale. Desktop copy now sits wholly on the page, clear of its spine, upper edge and lower cloth."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Selected C coral cloth, ivory paper and indigo writing remain product-owned. Kith actual captures and relationship context lead; generated coastal imagery is disclosed and is not customer proof."
+        },
+        "interaction": {
+          "status": "pass",
+          "observation": "Root browser verification exercised keyboard skip, FAQ open/close, reduced motion and local beta/legal/support/blog routes. Existing external newsletter and analytics service delivery was intentionally isolated and is unqualified."
+        },
+        "responsive": {
+          "status": "pass",
+          "observation": "Nine widths320/375/384/390/768/900/1024/1200/1440 clear the app screen. Below390px prints enter normal flow;900\u20131199px uses a smaller print. Notebook copy stacks through1199px; desktop insets preserve clear paper. Independent100/200percent text diagnostics and reduced motion pass."
+        }
+      }
+    },
+    "screenshots": [
+      {
+        "width": 320,
+        "path": "artifacts/design/uplift/refinement/kith-320.png"
+      },
+      {
+        "width": 375,
+        "path": "artifacts/design/uplift/refinement/kith-375.png"
+      },
+      {
+        "width": 384,
+        "path": "artifacts/design/uplift/refinement/kith-384.png"
+      },
+      {
+        "width": 390,
+        "path": "artifacts/design/uplift/refinement/kith-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/uplift/refinement/kith-768.png"
+      },
+      {
+        "width": 900,
+        "path": "artifacts/design/uplift/refinement/kith-900.png"
+      },
+      {
+        "width": 1024,
+        "path": "artifacts/design/uplift/refinement/kith-1024.png"
+      },
+      {
+        "width": 1200,
+        "path": "artifacts/design/uplift/refinement/kith-1200.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/uplift/refinement/kith-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm check",
+      "status": "pass",
+      "note": "Final source:23 tests, Astro0errors/0warnings and all12 product builds/public-surface checks. Existing unused-variable hint remains. No publication."
+    },
+    "critique": {
+      "score": 33,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 7,
+        "typography": 6,
+        "composition": 7,
+        "identity": 6,
+        "interaction": 3,
+        "responsive": 4
+      },
+      "reviewer": "/root/design_finish_review",
+      "path": "artifacts/design/uplift/refinement/design-review.md",
+      "note": "Independent v2 rubric after owner objection; not a comparable score trend or owner acceptance."
+    },
+    "audit": {
+      "score": 17,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 4,
+        "accessibility": 5,
+        "behavior": 3,
+        "responsive": 3,
+        "performance": 2
+      },
+      "reviewer": "/root/technical_design_audit",
+      "path": "artifacts/design/uplift/refinement/technical-audit.md"
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [],
+      "historicalRuns": 1,
+      "newRuns": 0,
+      "path": "artifacts/design/uplift/detector.json",
+      "note": "Historical overhaul scan retained; no second mechanical detector run and no claim this refinement was mechanically rescanned."
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "/root/design_finish_review",
+      "answers": {
+        "product": "Private relationship-memory app for iPhone.",
+        "audience": "People remembering family/friends and meaningful relationship context.",
+        "value": "Recall how you met, what matters now and dated moments.",
+        "mechanism": "Per-person notes/moments and manually chosen closeness.",
+        "proof": "Actual labeled app screens separate from illustrative images.",
+        "nextAction": "Honest internal TestFlight status or inspect actual app."
+      },
+      "purposeScore": {
+        "product": 24,
+        "audience": 12,
+        "value": 14,
+        "mechanism": 13,
+        "proof": 14,
+        "nextAction": 15,
+        "total": 92
+      },
+      "mismatches": []
+    },
+    "browser": {
+      "path": "artifacts/design/uplift/refinement/browser-evidence.json",
+      "views": 9,
+      "interactions": 12,
+      "failures": 0,
+      "pageErrors": 0,
+      "independentDiagnostic": "artifacts/design/uplift/refinement/independent-measurements.json"
+    },
+    "assets": {
+      "path": "artifacts/design/uplift/refinement/asset-manifest.json",
+      "promptSet": "artifacts/design/uplift/refinement/asset-prompts.md",
+      "tool": "built-in image_gen",
+      "activeBytes": 858888,
+      "originalsRetained": true
+    },
+    "slopScore": {
+      "posture": "advisory",
+      "path": "artifacts/design/uplift/refinement/slop-score.json",
+      "status": "scanned",
+      "sourcePin": "cdd58e1d249ae39616d94950d6ea232ec7b0b378",
+      "definitionsVersion": "2026.09",
+      "preset": "marketing",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "score": 7,
+      "triggered": [
+        "cream_default_bg"
+      ],
+      "note": "Intentional ivory paper retained. Scan predates final text inset only; no design-quality or owner-acceptance inference."
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "checkpoints": [
+        {
+          "stage": "iteration",
+          "status": "scanned",
+          "command": "node ../saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:8770 --preset marketing --json",
+          "report": ".fleet-local/slop/iteration.json",
+          "findingsReview": "Archived refinement scan before the final desktop text inset. The checkpoint requirement arrived during release preparation, so this is the earliest available refinement scan, not a retroactive claim of first-working-render timing. cream_default_bg is intentional ivory paper specified in selected C. The photo scale, grain, mobile overlap and notebook inset were reviewed and corrected through rendered evidence."
+        },
+        {
+          "stage": "final",
+          "status": "scanned",
+          "command": "node ../saas-maker/tooling/scripts/slop-score.mjs http://127.0.0.1:8770 --preset marketing --json",
+          "report": ".fleet-local/slop/final.json",
+          "findingsReview": "Fresh corrected Kith render: cream_default_bg is the only triggered pattern, retained as intentional ivory paper in selected C. All other rules are untriggered. Responsive and comprehension judgments remain separate from the advisory score."
+        }
+      ],
+      "timingNote": "Direction previews were static bitmap systems selected before this checkpoint contract existed. No computed-style direction scan or numeric direction score is claimed. Historical receipt is preserved."
+    }
+  },
+  "ownerFeedback": {
+    "decision": "not-required",
+    "note": "The owner selected C, then rejected first-pass photograph and coherence. This bounded preserve correction follows that selected direction. The corrected render has not received owner acceptance. The subsequent request to start pushing and releasing explicitly authorizes publication; it does not manufacture visual acceptance."
+  },
+  "preflightTiming": "New v2 instructions arrived during implementation. This preflight gates remaining UI corrections; earlier edits followed the prior workflow. Historical v1 evidence retained."
+}

@@ -1,0 +1,93 @@
+{
+  "schema": "xcodebuildmcp.output.capture-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "17gj8zt",
+      "seq": 22,
+      "count": 152,
+      "targets": [
+        "e31|tap|button|Resume workout||",
+        "e61|tap|tab|Today|1|scope",
+        "e63|tap|tab|Plan|0|list.bullet.rectangle",
+        "e65|tap|tab|History|0|clock.arrow.circlepath",
+        "e67|tap|tab|You|0|person.crop.circle",
+        "e69|tap|tab|Exercises|0|chart.line.uptrend.xyaxis",
+        "e96|tap|button|Return to Today||chevron.down",
+        "e100|tap|button|Finish||",
+        "e105|tap|button|−15 sec||",
+        "e106|tap|button|+15 sec||",
+        "e107|tap|button|+30 sec||",
+        "e111|tap|button|Start next early||"
+      ],
+      "scroll": [
+        "e18|swipe|scroll-view|||",
+        "e101|swipe|scroll-view|||",
+        "e119|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e97|text|text|Lower strength||",
+        "e99|text|text|Workout elapsed time||",
+        "e24|text|text|Friday, 2 Oct||",
+        "e23|text|text|SETLINE||",
+        "e98|text|text|1 / 9 recorded||",
+        "e25|text|text|Follow the plan. Record the truth.||",
+        "e103|text|text|REST · WALL CLOCK||",
+        "e104|text|text|37 seconds remaining||",
+        "e26|text|text|WORKOUT IN PROGRESS||",
+        "e27|text|text|Lower strength||",
+        "e30|text|text|1 of 9 steps recorded||",
+        "e108|text|text|NEXT IN AUTHORED ORDER||",
+        "e109|text|text|Front squat||",
+        "e110|text|text|Working 1 · 60 kg · 5 reps||",
+        "e32|text|text|THIS WEEK||",
+        "e33|text|text|S: Lower strength||",
+        "e34|text|text|M: Lower strength||",
+        "e35|text|text|T: Lower strength||",
+        "e36|text|text|W: Lower strength||",
+        "e37|text|text|T: Lower strength||",
+        "e38|text|text|F: Lower strength||",
+        "e39|text|text|S: Lower strength||",
+        "e40|text|text|S: Lower strength||",
+        "e41|text|text|M: Lower strength||",
+        "e42|text|text|T: Lower strength||",
+        "e43|text|text|W: Lower strength||",
+        "e44|text|text|T: Lower strength||",
+        "e45|text|text|F: Lower strength||",
+        "e46|text|text|S: Lower strength||",
+        "e112|text|text|Authored 60s · adjusted 60s · actual 23s||",
+        "e47|text|text|RECORDED EVIDENCE||",
+        "e48|text|text|Your first completed workout will establish the record—not an estimate.||",
+        "e117|text|text|SESSION RAIL||",
+        "e118|text|text|Authored position retained||",
+        "e121|text|text|1||",
+        "e122|text|text|2||",
+        "e123|text|text|3||",
+        "e130|text|text|Front squat||",
+        "e131|text|text|Front squat||",
+        "e132|text|text|Front squat||",
+        "e139|text|text|COMPLETE||",
+        "e140|text|text|ACTIVE||",
+        "e141|text|text|PLANNED||"
+      ],
+      "udid": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    }
+  },
+  "nextSteps": [
+    "Refresh after layout changes: xcodebuildmcp simulator snapshot-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842",
+    "Wait for UI to settle: xcodebuildmcp ui-automation wait-for-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --predicate settled",
+    "Batch same-screen taps: xcodebuildmcp ui-automation batch --json '{\"simulatorId\":\"28E413D9-B587-41D3-9D7C-3D903BC6F842\",\"steps\":[{\"action\":\"tap\",\"elementRef\":\"e31\"},{\"action\":\"tap\",\"elementRef\":\"e96\"}]}'",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --element-ref e31",
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --within-element-ref e18 --direction up --distance 0.5"
+  ]
+}

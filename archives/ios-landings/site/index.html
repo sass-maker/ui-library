@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The landing-site factory for Significant Hobbies apps — one focused page per product.">
+<meta name="theme-color" content="#fff6ea">
+<title>Significant Hobbies — App landings</title>
+<style>
+  :root {
+    --paper:#fff6ea; --field:#f4e6d4; --field-2:#efdcc6; --ink:#3a2418; --ink-soft:#6a4a38; --ink-faint:rgba(58,36,24,.14);
+    --accent:#c46a4a; --accent-dark:#9a3f2a;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,monospace;
+  }
+  * { margin:0; box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+  body { font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  ul { list-style:none; padding:0; }
+  img { display:block; max-width:100%; height:auto; }
+  a { color:inherit; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
+  .wrap { width:min(1200px, calc(100% - 64px)); margin-inline:auto; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-dark); }
+
+  /* top bar */
+  .top { border-bottom:1px solid var(--ink-faint); }
+  .top .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px; }
+  .wordmark { font-weight:700; letter-spacing:-.02em; font-size:16px; text-decoration:none; }
+  .wordmark span { color:var(--ink-soft); font-weight:500; }
+  .top nav { display:flex; gap:24px; font-size:14px; color:var(--ink-soft); }
+  .top nav a { text-decoration:none; } .top nav a:hover { color:var(--ink); }
+
+  /* hero */
+  .hero { padding:88px 0 40px; overflow:hidden; }
+  .hero .wrap { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:56px; align-items:center; }
+  h1 { font-size:clamp(3rem,6vw,5.2rem); line-height:.95; letter-spacing:-.04em; font-weight:740; margin:22px 0 26px; text-wrap:balance; }
+  h1 em { font-style:normal; color:var(--accent); }
+  .lede { font-size:clamp(1.05rem,1.4vw,1.22rem); color:var(--ink-soft); max-width:32em; margin-bottom:34px; }
+  .actions { display:flex; flex-wrap:wrap; gap:14px 24px; align-items:center; }
+  .btn { display:inline-flex; align-items:center; gap:10px; min-height:50px; padding:0 24px; border-radius:999px; background:var(--ink); color:var(--paper); text-decoration:none; font-weight:650; font-size:15px; box-shadow:0 1px 0 rgba(255,255,255,.2) inset, 0 10px 24px -14px rgba(58,36,24,.7); transition:transform .15s ease, background .15s ease; }
+  .btn:hover { background:var(--accent-dark); transform:translateY(-1px); }
+  .note { font-size:14px; color:var(--ink-soft); }
+  .stage { position:relative; height:560px; }
+  .stage .phone { position:absolute; top:50%; left:50%; width:210px; }
+  .stage .p1 { transform:translate(-118%,-46%) rotate(-6deg); }
+  .stage .p2 { transform:translate(-50%,-52%); z-index:2; width:240px; }
+  .stage .p3 { transform:translate(18%,-44%) rotate(6deg); }
+  .stage-cap { text-align:center; margin-top:8px; font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
+
+  /* phone frame */
+  .phone { border-radius:38px; padding:8px; background:#1c1612; box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 30px 60px -28px rgba(58,36,24,.55), 0 8px 18px -10px rgba(58,36,24,.35); }
+  .phone img { border-radius:30px; width:100%; }
+
+  /* section heads */
+  .section { padding:96px 0 0; }
+  .sec-head { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,26em); gap:32px; align-items:end; padding-bottom:28px; border-bottom:1px solid var(--ink-faint); margin-bottom:32px; }
+  h2 { font-size:clamp(2.1rem,4vw,3.3rem); line-height:1; letter-spacing:-.035em; font-weight:720; margin-top:14px; }
+  .sec-head p { color:var(--ink-soft); }
+
+  /* tiles */
+  .grid { display:grid; gap:24px; list-style:none; padding:0; }
+  .grid.phones { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .grid.macs { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .tile { --t-bg:var(--field); --t-ink:var(--ink); --t-soft:var(--ink-soft); --t-line:var(--ink-faint); --t-accent:var(--accent);
+    position:relative; display:flex; flex-direction:column; height:100%; border-radius:28px; overflow:hidden; background:var(--t-bg); color:var(--t-ink); text-decoration:none;
+    box-shadow:0 0 0 1px var(--t-line) inset; transition:transform .25s ease, box-shadow .25s ease; }
+  .tile:hover { transform:translateY(-3px); box-shadow:0 0 0 1px var(--t-line) inset, 0 28px 50px -30px rgba(58,36,24,.55); }
+  .tile-stage { position:relative; height:340px; overflow:hidden; display:flex; justify-content:center; padding-top:40px; }
+  .tile-stage .phone { width:220px; flex:none; transition:transform .35s ease; }
+  .tile:hover .tile-stage .phone { transform:translateY(-8px); }
+  .tile-body { display:grid; grid-template-columns:56px minmax(0,1fr); gap:6px 16px; padding:26px 28px 28px; border-top:1px solid var(--t-line); margin-top:auto; }
+  .icon { width:56px; height:56px; border-radius:14px; grid-row:span 2; box-shadow:0 0 0 1px rgba(0,0,0,.08), 0 6px 14px -8px rgba(0,0,0,.45); }
+  .name-row { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .name { font-size:22px; font-weight:700; letter-spacing:-.02em; }
+  .platforms { font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--t-soft); }
+  .promise { font-size:clamp(1.25rem,1.9vw,1.5rem); line-height:1.2; letter-spacing:-.02em; font-weight:600; }
+  .meta { grid-column:2; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; margin-top:10px; font-size:13px; color:var(--t-soft); }
+  .go { font-weight:650; color:var(--t-accent); white-space:nowrap; }
+  .caption { position:absolute; left:16px; bottom:12px; font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; color:var(--t-soft); background:color-mix(in srgb, var(--t-bg) 82%, transparent); padding:3px 8px; border-radius:999px; }
+
+  /* product palettes from each products/<id>/site.config.ts */
+  .t-anchor { --t-bg:#151515; --t-ink:#f2f0ea; --t-soft:#aaa8a2; --t-line:rgba(255,255,255,.1); --t-accent:#e1ad4a; }
+  .t-kith { --t-bg:#f4e6d4; --t-ink:#20243d; --t-soft:#4e5269; --t-line:rgba(32,36,61,.14); --t-accent:#9a3f2a; }
+  .t-setline { --t-bg:#f7f6f0; --t-ink:#18262e; --t-soft:rgba(24,38,46,.72); --t-line:rgba(24,38,46,.12); --t-accent:#18262e; }
+  .t-setline .tile-stage { background:linear-gradient(180deg,#e8f6c4,#f7f6f0 85%); }
+  .t-motion { --t-bg:#0c111a; --t-ink:#e8eef7; --t-soft:#8b97a8; --t-line:rgba(255,255,255,.09); --t-accent:#2dd4bf; }
+  .t-motion .tile-stage { background:radial-gradient(60% 70% at 50% 30%,rgba(45,212,191,.16),transparent 70%); }
+  .t-anchor .tile-stage { background:radial-gradient(60% 70% at 50% 30%,rgba(225,173,74,.12),transparent 70%); }
+  .t-kith .tile-stage { background:radial-gradient(60% 70% at 50% 30%,rgba(232,160,106,.28),transparent 70%); }
+  .t-mac { --t-bg:#09120e; --t-ink:#f2f7f4; --t-soft:#afc1b7; --t-line:#24392e; --t-accent:#74d4a6; }
+  .t-mac .tile-stage { height:250px; padding:28px 28px 0; align-items:flex-start; background:radial-gradient(70% 80% at 50% 20%,rgba(116,212,166,.14),transparent 70%); }
+  .t-mac .tile-stage img.art { width:auto; max-height:210px; margin-inline:auto; border-radius:14px; }
+  .t-mac .tile-stage .window { width:100%; border-radius:12px; overflow:hidden; box-shadow:0 0 0 1px #24392e, 0 20px 40px -20px rgba(0,0,0,.8); background:#000; }
+  .window-bar { display:flex; gap:6px; padding:9px 12px; background:#111a15; }
+  .window-bar i { width:9px; height:9px; border-radius:50%; background:#2c4237; }
+  .t-mac .tile-body { grid-template-columns:48px minmax(0,1fr); padding:22px 24px 24px; }
+  .t-mac .icon { width:48px; height:48px; border-radius:12px; }
+  .t-mac .promise { font-size:1.2rem; }
+
+  /* archive */
+  .archive { margin-top:16px; display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:20px; align-items:center; padding:22px 0; border-top:1px solid var(--ink-faint); border-bottom:1px solid var(--ink-faint); text-decoration:none; }
+  .archive .icon { width:48px; height:48px; border-radius:12px; grid-row:auto; }
+  .archive strong { font-size:18px; letter-spacing:-.015em; }
+  .archive p { color:var(--ink-soft); font-size:15px; }
+  .archive .go { color:var(--accent-dark); }
+  .archive:hover strong { color:var(--accent-dark); }
+  .closing { padding:72px 0 96px; }
+  .closing p { font-size:clamp(1.3rem,2.4vw,1.9rem); line-height:1.25; letter-spacing:-.02em; font-weight:600; max-width:28em; }
+  .closing p span { color:var(--ink-soft); font-weight:500; }
+
+  /* The library footer owns its own styling: page rules (.grid, h2, a, img...) must not leak into it. */
+  studio-footer[product] * { all: revert-layer; }
+  /* Library gap: the subscribe input collapses to ~0 height in the stacked mobile layout. */
+  @media (max-width:639px) { studio-footer[product] form[data-subscribe] input[type="email"] { flex:none; min-height:2.75rem; } }
+
+  @media (max-width:1020px) {
+    .hero .wrap { grid-template-columns:1fr; gap:24px; }
+    .stage { height:480px; }
+    .grid.macs { grid-template-columns:1fr; }
+    .t-mac .tile-stage { height:300px; }
+    .t-mac .tile-stage img.art { max-height:260px; }
+  }
+  @media (max-width:760px) {
+    .wrap { width:calc(100% - 32px); }
+    .top nav a:not(:first-child) { display:none; }
+    .hero { padding:52px 0 16px; }
+    .stage { height:400px; margin-top:8px; }
+    .stage .phone { width:130px; border-radius:24px; padding:5px; }
+    .stage .phone img { border-radius:20px; }
+    .stage .p1 { transform:translate(-115%,-46%) rotate(-6deg); }
+    .stage .p3 { transform:translate(15%,-44%) rotate(6deg); }
+    .stage .p2 { width:164px; border-radius:28px; padding:6px; }
+    .stage .p2 img { border-radius:23px; }
+    .stage { height:380px; }
+    .section { padding-top:64px; }
+    .sec-head { grid-template-columns:1fr; gap:12px; }
+    .grid.phones { grid-template-columns:1fr; }
+    .tile { border-radius:22px; }
+    .tile-stage { height:300px; padding-top:32px; }
+    .tile-stage .phone { width:196px; }
+    .tile-body { grid-template-columns:48px minmax(0,1fr); padding:22px 20px 22px; gap:6px 14px; }
+    .icon { width:48px; height:48px; border-radius:12px; }
+    .meta { grid-column:1 / -1; }
+    .t-mac .tile-stage { height:230px; padding:22px 20px 0; }
+    .t-mac .tile-stage img.art { max-height:190px; }
+    .archive { grid-template-columns:auto minmax(0,1fr); }
+    .archive .go { grid-column:2; }
+    .closing { padding:56px 0 72px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    html { scroll-behavior:auto; }
+    .tile, .tile-stage .phone, .btn { transition:none; }
+    .tile:hover, .tile:hover .tile-stage .phone { transform:none; }
+  }
+</style>
+<link rel="stylesheet" href="/footer.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="wordmark" href="/">Significant Hobbies <span>· Apps</span></a>
+    <nav aria-label="Page">
+      <a href="#iphone">Apps</a>
+      <a href="#mac">Mac tools</a>
+      <a href="#archive">Archive</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Significant Hobbies · App family</p>
+        <h1 id="hero-title">Small apps.<br><em>One job</em> each.</h1>
+        <p class="lede">Native apps for iPhone, Apple Watch and Mac. Every app keeps its own focused page, with what it does, what is real today, and how to try it.</p>
+        <div class="actions">
+          <a class="btn" href="#iphone">Meet the apps <span aria-hidden="true">↓</span></a>
+          <span class="note">7 apps · 1 archived</span>
+        </div>
+      </div>
+      <div>
+        <div class="stage" aria-hidden="true">
+          <div class="phone p1"><img src="/previews/anchor-today.webp" width="402" height="874" alt=""></div>
+          <div class="phone p2"><img src="/previews/kith-constellation.webp" width="520" height="1131" alt=""></div>
+          <div class="phone p3"><img src="/previews/setline-player.webp" width="520" height="1130" alt=""></div>
+        </div>
+        <p class="stage-cap">Real captures · Anchor, Kith, Setline</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="iphone" aria-labelledby="iphone-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">For iPhone</p><h2 id="iphone-title">Pocket apps for the day you're living.</h2></div>
+        <p>Private betas and prototypes. Each page states its real availability. None of these apps is on the App Store yet.</p>
+      </div>
+      <ul class="grid phones">
+        <li><a class="tile t-anchor" href="https://anchor.significanthobbies.com">
+          <div class="tile-stage"><div class="phone"><img src="/previews/anchor-today.webp" width="402" height="874" alt="Anchor Today showing a chronological day plan" loading="lazy"></div></div>
+          <div class="tile-body">
+            <img class="icon" src="/previews/anchor-icon.webp" width="160" height="160" alt="" loading="lazy">
+            <div class="name-row"><span class="name">Anchor</span><span class="platforms">iPhone · Mac · Watch</span></div>
+            <p class="promise">Plan the day. Protect the present. Learn what moved it.</p>
+            <div class="meta"><span>Invite-only TestFlight and notarized Mac beta</span><span class="go">anchor.significanthobbies.com →</span></div>
+          </div>
+        </a></li>
+        <li><a class="tile t-kith" href="https://kith.significanthobbies.com">
+          <div class="tile-stage"><div class="phone"><img src="/previews/kith-constellation.webp" width="520" height="1131" alt="Kith constellation of people sized by chosen closeness" loading="lazy"></div></div>
+          <div class="tile-body">
+            <img class="icon" src="/previews/kith-icon.webp" width="160" height="160" alt="" loading="lazy">
+            <div class="name-row"><span class="name">Kith</span><span class="platforms">iPhone</span></div>
+            <p class="promise">Private notes for people you keep close.</p>
+            <div class="meta"><span>Internal TestFlight only</span><span class="go">kith.significanthobbies.com →</span></div>
+          </div>
+        </a></li>
+        <li><a class="tile t-setline" href="https://setline.significanthobbies.com">
+          <div class="tile-stage"><div class="phone"><img src="/previews/setline-player.webp" width="520" height="1130" alt="Setline workout player showing the current set" loading="lazy"></div></div>
+          <div class="tile-body">
+            <img class="icon" src="/previews/setline-icon.webp" width="160" height="160" alt="" loading="lazy">
+            <div class="name-row"><span class="name">Setline</span><span class="platforms">iPhone</span></div>
+            <p class="promise">Run every workout exactly as written.</p>
+            <div class="meta"><span>Internal TestFlight only</span><span class="go">setline.significanthobbies.com →</span></div>
+          </div>
+        </a></li>
+        <li><a class="tile t-motion" href="https://motion.significanthobbies.com">
+          <div class="tile-stage"><div class="phone"><img src="/previews/motion-maker.webp" width="520" height="1130" alt="Motion Maker running in the internal iPhone build" loading="lazy"></div><span class="caption">Internal build capture</span></div>
+          <div class="tile-body">
+            <img class="icon" src="/previews/motion-icon.webp" width="160" height="160" alt="" loading="lazy">
+            <div class="name-row"><span class="name">Motion</span><span class="platforms">iPhone</span></div>
+            <p class="promise">Your body is the controller.</p>
+            <div class="meta"><span>Held internal prototype</span><span class="go">motion.significanthobbies.com →</span></div>
+          </div>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="mac" aria-labelledby="mac-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">For Mac</p><h2 id="mac-title">Tools that show what your Mac is doing.</h2></div>
+        <p>Native Mac apps in public early-access beta, free to download from each app's own page.</p>
+      </div>
+      <ul class="grid macs">
+        <li><a class="tile t-mac" href="https://browser.daddyrad.com">
+          <div class="tile-stage"><img class="art" src="/previews/browserdaddy-scout.webp" width="720" height="720" alt="BrowserDaddy's Tab Scout mascot carrying browser tabs and an attention compass" loading="lazy"><span class="caption">Product artwork</span></div>
+          <div class="tile-body">
+            <img class="icon" src="/previews/browserdaddy-icon.webp" width="160" height="160" alt="" loading="lazy">
+            <div class="name-row"><span class="name">BrowserDaddy</span></div>
+            <p class="promise">See where your browsing time goes.</p>
+            <div class="meta"><span>Early-access beta · macOS 15+</span><span class="go">browser.daddyrad.com →</span></div>
+          </div>
+        </a></li>
+        <li><a class="tile t-mac" href="https://context.daddyrad.com">
+          <div class="tile-stage"><img class="art" src="/previews/contextdaddy-cart.webp" width="700" height="466" alt="ContextDaddy's bean mascot hauling skill and context documents in a cart" loading="lazy"><span class="caption">Product artwork</span></div>
+          <div class="tile-body">
+            <img class="icon" src="/previews/contextdaddy-icon.webp" width="160" height="160" alt="" loading="lazy">
+            <div class="name-row"><span class="name">ContextDaddy</span></div>
+            <p class="promise">See what your agents can see.</p>
+            <div class="meta"><span>Early-access beta · macOS 14+</span><span class="go">context.daddyrad.com →</span></div>
+          </div>
+        </a></li>
+        <li><a class="tile t-mac" href="https://performance.daddyrad.com">
+          <div class="tile-stage"><div class="window"><div class="window-bar"><i></i><i></i><i></i></div><img src="/previews/performancedaddy-ports.webp" width="1200" height="753" alt="PerformanceDaddy Ports view identifying the process that owns port 5000" loading="lazy"></div><span class="caption">Real local capture</span></div>
+          <div class="tile-body">
+            <img class="icon" src="/previews/performancedaddy-icon.webp" width="160" height="160" alt="" loading="lazy">
+            <div class="name-row"><span class="name">PerformanceDaddy</span></div>
+            <p class="promise">See what is slowing your Mac.</p>
+            <div class="meta"><span>Early-access beta · macOS 14+</span><span class="go">performance.daddyrad.com →</span></div>
+          </div>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap">
+      <p>One focused page per app. <span>No shared homepage, no invented App Store badges. Each page tells you exactly what's available today.</span></p>
+    </div>
+  </section>
+</main>
+<studio-footer product="iOS Landings" url="https://apps.significanthobbies.com" catalog-id="ios-landings" capture="newsletter" variant="studio">
+  <script type="application/json">
+{
+  "summary": "The landing-site factory for Significant Hobbies apps. One focused page per app. Occasional notes when the factory adds a product landing or shared capability; no update schedule is promised.",
+  "groups": [
+    {
+      "title": "Focused apps",
+      "links": [
+        {
+          "label": "Anchor",
+          "href": "https://anchor.significanthobbies.com"
+        },
+        {
+          "label": "Kith",
+          "href": "https://kith.significanthobbies.com"
+        },
+        {
+          "label": "Setline",
+          "href": "https://setline.significanthobbies.com"
+        },
+        {
+          "label": "Motion",
+          "href": "https://motion.significanthobbies.com"
+        }
+      ]
+    },
+    {
+      "title": "Mac tools",
+      "links": [
+        {
+          "label": "BrowserDaddy",
+          "href": "https://browser.daddyrad.com"
+        },
+        {
+          "label": "ContextDaddy",
+          "href": "https://context.daddyrad.com"
+        },
+        {
+          "label": "PerformanceDaddy",
+          "href": "https://performance.daddyrad.com"
+        }
+      ]
+    }
+  ],
+  "art": {
+    "src": "/footer-art/ios-landings.webp",
+    "alt": "A pixel-print workshop with one shared page frame and a row of distinct blank product folios, illustrating the landing factory.",
+    "position": "50% 50%"
+  },
+  "legal": "A Significant Hobbies project."
+}
+  </script>
+</studio-footer>
+<script type="module" src="/footer.js"></script>
+</body>
+</html>

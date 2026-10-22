@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Reusable native-app landings and per-product blogs",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": { "product": "PRODUCT.md", "design": "DESIGN.md" },
+  "direction": {
+    "references": ["Existing project-native landing components and tokens", "Actual PerformanceDaddy app captures"],
+    "probes": [{"id":"editorial","path":"artifacts/design/directions/a-editorial.png"},{"id":"showcase","path":"artifacts/design/directions/b-showcase.png"},{"id":"fieldguide","path":"artifacts/design/directions/c-fieldguide.png"}],
+    "selected": "editorial",
+    "approval": "approved",
+    "before": "artifacts/design/daddy/performance-1440.png",
+    "library": {
+      "strategy": "upstream-first", "primary": "existing-project-system", "sources": [],
+      "runtime": "existing",
+      "customReplacement": { "used": false, "authorization": "not-required", "reason": "Composition studies use existing project navigation, links, real captures, section and reading patterns. No new UI library or production dependency." }
+    },
+    "contract": {
+      "purpose": "Help visitors understand one native app, inspect real product evidence, read product guidance and take the honest next available action.",
+      "purposeSource": "PRODUCT.md and owner requests in issue 16",
+      "canonicalPurpose": "Render separate native-app landing sites from product config and real screenshots.",
+      "purposeAlignment": "repository-override",
+      "driftNote": "Owner added per-product blogs, now implemented locally. BrowserDaddy qualification remains separate and pending; this receipt covers the ten configured products and shared article layouts, not native apps or deployment.",
+      "audience": "Visitors evaluating one Significant Hobbies native app, with product-specific audiences retained.",
+      "job": "Understand the product, inspect credible proof, verify availability and read guidance without broken or distorted imagery.",
+      "thesis": "Approved Editorial uses compact split storytelling, quiet typography and real uncropped evidence with captions below images.",
+      "system": "Product-owned semantic tokens; real aspect ratios; system fonts; 44px controls; reduced-motion fallback; candidate-specific composition and reading hierarchy.",
+      "signature": "Product evidence remains central, with original-size access and explicit measurement/lifecycle limits.",
+      "risk": "Sparse development captures provide modest proof. Mobile article contents delay the first paragraph; accepted non-blocking tradeoffs."
+    },
+    "candidates": [
+      { "id": "editorial", "thesis": "Quiet split spread", "system": "Compact sans-serif copy and proof columns; fine rules; understated article list", "interaction": "Direct anchors, original-image access and brief entrance motion", "risk": "Desktop proof is smaller beside the copy" },
+      { "id": "showcase", "thesis": "Large product stage", "system": "Centered rounded sans headline; full-width mint product field; magazine-style article feature", "interaction": "One-time image entrance, subtle action feedback and direct section anchors", "risk": "Headline can delay first-screen evidence; spacing tightened after review" },
+      { "id": "fieldguide", "thesis": "Navigable evidence manual", "system": "Persistent chapter rail; serif title and reading copy; denser ruled evidence rows", "interaction": "Persistent anchor navigation and captioned evidence spreads", "risk": "Documentation density may be less inviting for simple consumer apps" }
+    ]
+  },
+  "evidence": {
+    "screenshots": [{"width":390,"path":"artifacts/design/editorial/performance-390.png"},{"width":768,"path":"artifacts/design/editorial/performance-768.png"},{"width":1440,"path":"artifacts/design/editorial/performance-1440.png"},{"width":390,"path":"artifacts/design/editorial/kith-390.png"},{"width":768,"path":"artifacts/design/editorial/kith-768.png"},{"width":1440,"path":"artifacts/design/editorial/kith-1440.png"},{"width":390,"path":"artifacts/design/editorial/article-390.png"},{"width":768,"path":"artifacts/design/editorial/article-768.png"},{"width":1440,"path":"artifacts/design/editorial/article-1440.png"}],
+    "projectCheck": { "command": "pnpm check; node scripts/check-all.mjs; node --test scripts/deploy.test.mjs", "status": "pass", "note": "Ten builds/site checks, zero Astro diagnostics, nine regression tests, five deploy-guard tests. Browser viewport checks at 390/768/1440 show no horizontal overflow, including release and beta pages after shared-chrome consolidation. Reduced motion checked in source; no full assistive-technology or measured performance certification." },
+    "preserveFollowup": {"scope":"Consolidate approved header, wordmark and buttons into global.css; match legal and release pages; document config-only reuse.","before":"artifacts/design/editorial/release-before.png","screenshots":["artifacts/design/editorial/release-390.png","artifacts/design/editorial/release-768.png","artifacts/design/editorial/release-1440.png","artifacts/design/editorial/kith-status-390.png","artifacts/design/editorial/kith-status-768.png","artifacts/design/editorial/kith-status-1440.png"],"review":"Independent release-page critique 38/40, no P0/P1. Preserve lane; no direction change. Native release is not a template-readiness gate."},
+    "critique": { "score": 37, "maximum": 40 },
+    "audit": { "score": 18, "maximum": 20 },
+    "unresolved": { "p0": 0, "p1": 0 },
+    "detector": { "posture": "advisory", "findings": ["Independent critique: PerformanceDaddy 38/40, Kith 37/40, article 38/40. No P0/P1 in final nine captures. Technical audit 18/20 after normal/hover contrast correction.", "Historical direction PNGs are proposal evidence only. Final evidence is under editorial/. Sparse PerformanceDaddy proof and mobile article contents length remain P2 tradeoffs."] },
+    "comprehension": { "status": "pass", "reviewer": "Independent process_design_assessment agent using final captures and previously reviewed source; not a visitor study", "answers": {"product":"PerformanceDaddy is a local-preview Mac process and performance inspection app.","audience":"Mac users and developers investigating background work and occupied ports.","value":"Understand resource readings and inspect targets before stopping work.","mechanism":"Real process/port captures and bounded diagnostic explanations.","proof":"Real native screenshots; no customer or benchmark claims.","nextAction":"Inspect release status; public download is not yet available."}, "purposeScore": { "product": 25, "audience": 13, "value": 14, "mechanism": 14, "proof": 11, "nextAction": 14, "total": 91 }, "mismatches": [] }
+  },
+  "ownerFeedback": { "decision": "keep", "note": "Owner explicitly selected A — Editorial: compact split layout, quiet typography. Implementation authorized; no deployment." }
+}

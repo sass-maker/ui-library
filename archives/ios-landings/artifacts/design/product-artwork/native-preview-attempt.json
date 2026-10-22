@@ -1,0 +1,22 @@
+{
+  "product": "browserdaddy",
+  "date": "2026-10-02",
+  "currentSourceBuildRun": "succeeded",
+  "tool": "XcodeBuildMCP swift_package_run",
+  "packagePath": "/Users/sarthak/Desktop/fleet/browserdaddy",
+  "arguments": [
+    "--preview-fixture"
+  ],
+  "spawnedPid": 19377,
+  "appPath": "/Users/sarthak/Desktop/fleet/browserdaddy/.build/out/Products/Debug/BrowserDaddy",
+  "fixtureBoundary": "Temporary synthetic archive, startCollection empty override; no personal browser capture.",
+  "renderedInspection": "blocked",
+  "cuaErrors": [
+    "Computer Use server error -10005: timeoutReached selecting BrowserDaddy",
+    "Invalid app selecting returned SwiftPM executable path"
+  ],
+  "stoppedVia": "XcodeBuildMCP swift_package_stop",
+  "nativeRenderCapture": null,
+  "handoff": "blocked: public CTA-to-install-to-first-value not exercised",
+  "sourceOrPackageEdits": false
+}

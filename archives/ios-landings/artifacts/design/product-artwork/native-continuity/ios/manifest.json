@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-02",
+  "tool": "XcodeBuildMCP CLI 2.7.0; native simulator UI via XcodeBuildMCP and CUA",
+  "nativeSource": {
+    "kith": {
+      "sha": "8b85d555839f125237f3e00af79c49c2da775280",
+      "worktreeClean": true
+    },
+    "setline": {
+      "sha": "ccc3815df4640e72a77e41b707364c9d2157bdfb",
+      "worktreeClean": true
+    },
+    "calorie": {
+      "sha": "1651e689472b500b89edebbc49175c1ffac7cae8",
+      "worktreeClean": true
+    },
+    "motion": {
+      "sha": "9e18903e0f5b6388019899a2f2160f2ef3a38b73",
+      "worktreeClean": true
+    }
+  },
+  "captures": [
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/calorie-current.jpg",
+      "bytes": 41716,
+      "sha256": "79440542d1d3e1d6cbdce1239fc306ebc471490a21d0a4358ed6d31ac6f05391"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/calorie-first-value.jpg",
+      "bytes": 30629,
+      "sha256": "2c81536733487e7668c9a0d1c525bea246cafbf75df38b239416e06a16d108e5"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/calorie-onboarding.jpg",
+      "bytes": 46583,
+      "sha256": "ee99cfef89242ea6a2a12de2e87c5dc6613b07052dc329da96d452aa69f7191b"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/calorie-today-first-value.jpg",
+      "bytes": 41795,
+      "sha256": "ddb71c61ea31746e67784bd33a83f86648a56e9a903576e2de26212322edd154"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/calorie-today.jpg",
+      "bytes": 41810,
+      "sha256": "a0d185e889784c850c2f6f0157c0187da5c035ddd1704b4b45ad3c87d2ba9e98"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/kith-first-value.jpg",
+      "bytes": 33316,
+      "sha256": "bebc61cb9f7309692b06da1551ae1665411e9c96c6e45fca2b9a3ba8cd8366e8"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/kith-note.jpg",
+      "bytes": 35561,
+      "sha256": "551ecca5341a749033cf0d7fe1f17d75e6c98dbf89a19bc3c43f78eb3f377b5f"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/kith-onboarding.jpg",
+      "bytes": 39426,
+      "sha256": "866a8a949abf675ac2f57e63acdcd7317df5ca36a524e1485e02710c59e82c87"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/motion-first-value.jpg",
+      "bytes": 17178,
+      "sha256": "fa815b2af17efdd9aa7a6c89fb19f423e7879d3234dfba7ececf941aef02f103"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/motion-running-game.jpg",
+      "bytes": 17409,
+      "sha256": "fb28094aad07a066fe643e221bf02fed01fe99f9e58374576ece65808a2ba18a"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/motion-setup.jpg",
+      "bytes": 17178,
+      "sha256": "fa815b2af17efdd9aa7a6c89fb19f423e7879d3234dfba7ececf941aef02f103"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/setline-current.jpg",
+      "bytes": 48596,
+      "sha256": "0e773f3a315d50bda6c6d5bc1d865991d044465aad24d1a6b58c82989db092c0"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/setline-first-value.jpg",
+      "bytes": 46555,
+      "sha256": "426b69fe514144ffb376724cc0572cbd08cf7704b3d1a62196fff304caea0cbf"
+    },
+    {
+      "path": "artifacts/design/product-artwork/native-continuity/ios/setline-onboarding.jpg",
+      "bytes": 50266,
+      "sha256": "ba763bd951237e61bca23e5437790ba0f6eb1ddca2779bdd8ea1096226399b2c"
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "status": "partial",
+  "method": "Direct original capture and scoped native design/theme/onboarding source comparison; no app source edits",
+  "products": [
+    {
+      "product": "kith",
+      "authority": "../kith/DESIGN.md",
+      "capture": "products/kith/public/images/screens/constellation.webp",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../kith/ios/Sources/Kith/KithOnboardingView.swift",
+      "sourceSha256": "4b23fc22897403499f576fb9ad8764fd5c97d49758a029d7ef3d6ee885490d43"
+    },
+    {
+      "product": "setline",
+      "authority": "../setline/DESIGN.md",
+      "capture": "products/setline/public/images/screens/workout-player.webp",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../setline/ios/Sources/Setline/SetlineOnboardingView.swift",
+      "sourceSha256": "bf046dce4e73fec8c41e99f73394fba52a5b7b36774da15e011a44c183d51844"
+    },
+    {
+      "product": "anchor",
+      "authority": "../anchor/DESIGN.md",
+      "capture": "../anchor/artifacts/design/build25-verification-20260926/onboarding-phone.png",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../anchor/Sources/AnchorUI/Onboarding/AnchorOnboardingView.swift",
+      "sourceSha256": "3dc16c73b2abbf5680fe5c576dddc5036d12ed4b6da60987660f64ea5a8b21a4"
+    },
+    {
+      "product": "motion",
+      "authority": "../motion/DESIGN.md",
+      "capture": "products/motion/public/images/screens/motion-maker-clean.webp",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../motion/ios/Sources/Motion/Views/ContentView.swift",
+      "sourceSha256": "e8f45e3f757160ff5a406c53a714550476b48860f33b3085393a8db99f6eadc3"
+    },
+    {
+      "product": "indulge",
+      "authority": "../anchor/DESIGN.md",
+      "capture": "products/indulge/public/images/screens/onboarding.webp",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../anchor/Sources/AnchorUI/Onboarding/AnchorOnboardingView.swift",
+      "sourceSha256": "3dc16c73b2abbf5680fe5c576dddc5036d12ed4b6da60987660f64ea5a8b21a4"
+    },
+    {
+      "product": "calorie",
+      "authority": "../calorie/DESIGN.md",
+      "capture": "products/calorie/public/images/screens/today.webp",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../calorie/ios/Sources/Calorie/CalorieOnboardingView.swift",
+      "sourceSha256": "a3d6b858444b04dfe622f18a59517fff9c20321c84208c3b84229bd2c559e9fe"
+    },
+    {
+      "product": "storagedaddy",
+      "authority": "../storagedaddy/DESIGN.md",
+      "capture": "products/storagedaddy/public/images/storage-explorer.png",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": null
+    },
+    {
+      "product": "performancedaddy",
+      "authority": "../performancedaddy/DESIGN.md",
+      "capture": "products/performancedaddy/public/images/ports.png",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../performancedaddy/Sources/PerformanceDaddy/Theme.swift",
+      "sourceSha256": "f0e1af7cdaf3e34c4b21e2a058b354a232bf1890fa35cd76b0887d279fd1b59b"
+    },
+    {
+      "product": "browserdaddy",
+      "authority": "../browserdaddy/DESIGN.md",
+      "capture": null,
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "No current native capture: preview fixture built and launched, CUA inspection unavailable",
+      "source": "../browserdaddy/Sources/BrowserDaddy/OnboardingView.swift",
+      "sourceSha256": "46547b1e0ea826f8e59acd0308f07bc570a66b5d3efe8e7f25fbd7e311c98d6c"
+    },
+    {
+      "product": "contextdaddy",
+      "authority": "../contextdaddy/DESIGN.md",
+      "capture": "../contextdaddy/artifacts/design/complete-workflows/memory-1440.png",
+      "currentNativeRenderVerified": false,
+      "freshNativeHandoffVerified": false,
+      "captureProvenance": "Existing real native capture; not a fresh install or current-build qualification",
+      "source": "../contextdaddy/Sources/ContextDaddy/Theme.swift",
+      "sourceSha256": "7087218202be97f5aace9d9ccc1f941445084fa3a34d622979b083a2028d3daf"
+    }
+  ]
+}

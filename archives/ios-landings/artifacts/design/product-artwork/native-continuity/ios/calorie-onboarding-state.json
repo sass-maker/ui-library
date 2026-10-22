@@ -1,0 +1,44 @@
+{
+  "schema": "xcodebuildmcp.output.capture-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "artifacts": {
+      "simulatorId": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "1o1xoqf",
+      "seq": 1,
+      "count": 21,
+      "targets": [
+        "e16|tap|button|Set up my first log||",
+        "e17|tap|button|Explore Calorie first||"
+      ],
+      "scroll": [
+        "e7|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e9|text|text|CALORIE||",
+        "e10|text|text|Your first useful log||",
+        "e12|text|text|Log food, see what changed.||",
+        "e13|text|text|Start with one honest entry. No account, weight, body measurements, or goal is required.||",
+        "e14|text|text|The journal works offline||",
+        "e15|text|text|Nutrition uses kcal and grams. Optional profile measurements use kilograms, and water uses millilitres throughout Calorie.||"
+      ],
+      "udid": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    }
+  },
+  "nextSteps": [
+    "Refresh after layout changes: xcodebuildmcp simulator snapshot-ui --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E",
+    "Wait for UI to settle: xcodebuildmcp ui-automation wait-for-ui --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --predicate settled",
+    "Batch same-screen taps: xcodebuildmcp ui-automation batch --json '{\"simulatorId\":\"2D964895-251F-4FF5-A7BA-A3B1CE104C1E\",\"steps\":[{\"action\":\"tap\",\"elementRef\":\"e16\"},{\"action\":\"tap\",\"elementRef\":\"e17\"}]}'",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --element-ref e16",
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --within-element-ref e7 --direction up --distance 0.5"
+  ]
+}

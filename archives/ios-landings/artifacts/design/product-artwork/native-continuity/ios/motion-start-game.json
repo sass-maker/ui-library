@@ -1,0 +1,39 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "action": {
+      "type": "tap",
+      "elementRef": "e15",
+      "x": 201,
+      "y": 779
+    },
+    "artifacts": {
+      "simulatorId": "127D7C7E-7BE8-4E38-BA9B-778770E01577"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "08n8og8",
+      "seq": 4,
+      "count": 23,
+      "targets": [
+        "e20|tap|button|Screen Recording||record.circle",
+        "e19|tap|button|Close||xmark.circle.fill"
+      ],
+      "scroll": [
+        "e8|swipe|scroll-view|||"
+      ],
+      "udid": "127D7C7E-7BE8-4E38-BA9B-778770E01577"
+    }
+  },
+  "nextSteps": [
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 127D7C7E-7BE8-4E38-BA9B-778770E01577 --within-element-ref e8 --direction up --distance 0.5",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 127D7C7E-7BE8-4E38-BA9B-778770E01577 --element-ref e20"
+  ]
+}

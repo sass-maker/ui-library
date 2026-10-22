@@ -1,0 +1,8 @@
+---
+// The home page renderer is chosen per product at config time (astro.config.mjs):
+// products with `products/<id>/content.json` render the SaaS Maker UI-library
+// template; the rest keep the Editorial factory page. Only one is ever in the
+// module graph, so neither page carries the other's styles.
+import Home from "@factory/home";
+---
+<Home />

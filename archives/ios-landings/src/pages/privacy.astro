@@ -1,0 +1,37 @@
+---
+import LegalPage from "../components/LegalPage.astro";
+import { clarityProjectIdFor } from "../lib/clarity";
+import { site } from "../site.config";
+import { productId } from "../site.config";
+const page = site.legal.privacy;
+const clarityProjectId = clarityProjectIdFor(productId);
+const description = productId === "anchor"
+  ? "Anchor keeps plans and distraction notes on your device or in your private iCloud. The website uses limited analytics; the native app has none."
+  : page.lede;
+---
+<LegalPage title={page.title} lede={page.lede} description={description} path="/privacy/">
+  {clarityProjectId ? (
+    <section>
+      <h2>Marketing-site analytics</h2>
+      <p>
+        This static marketing site uses Microsoft Clarity to understand aggregate page use,
+        heatmaps, and session replays. Clarity may process interaction and device data under
+        Microsoft's privacy terms; sensitive page content is masked. This tracking is limited
+        to the website and is not included in the native app.
+      </p>
+    </section>
+  ) : null}
+  {page.sections.map((section) => (
+    <section>
+      <h2>{section.title}</h2>
+      <p>{section.body}</p>
+      {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+    </section>
+  ))}
+  {productId === "setline" ? (
+    <section>
+      <h2>Newsletter service privacy</h2>
+      <p>The shared form is operated by SaaS Maker. See the <a href="https://sassmaker.com/privacy">SaaS Maker privacy policy</a> for details.</p>
+    </section>
+  ) : null}
+</LegalPage>
