@@ -446,6 +446,10 @@ Demo: `/demo/data/` (Nomad Atlas places snapshot, Nomads.com data; pick up
 to three rows to compare) and `/demo/data/claims/` (a verbatim sample of
 High Signal Podcasts claims from its public API, read 9 Oct 2026).
 
+`DataTable` columns can set `group` to render consecutive columns under a
+shared header. Sorting, visibility and row data continue to use each leaf
+column's `id`.
+
 ## Loading states
 
 Show a same-shape placeholder within 300 ms; delay it about 150 ms to avoid
