@@ -1,0 +1,172 @@
+[
+  {
+    "product": "kith",
+    "url": "http://127.0.0.1:8840",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "A private relationship-memory app for iPhone\n\nKith\n\nKith:\nRemember the people you want to stay close to.\n\nKith gives each person a place for how you met, what matters now, and the dated moments you do not want to forget—without turning care into a CRM.\n\nSee TestFlight status\n→\nSee the real app\n↓\n\nInternal TestFlight only. No public invite or App Store listing.\niPhone\n\nA small thing worth remembering."
+  },
+  {
+    "product": "setline",
+    "url": "http://127.0.0.1:8841",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "Native workout execution for iPhone\n\nSetline:\nRun the workout\nyou already wrote.\n\nKeep strength, cardio, and mobility sessions in authored order. Setline puts the current set and rest clock in front of you, then records every explicit change.\n\nSee TestFlight status\n→\nSee the real app\n↓\n\nInternal TestFlight only. No public invite or App Store listing.\niPhone"
+  },
+  {
+    "product": "anchor",
+    "url": "http://127.0.0.1:8842",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "Plan. Focus. Adapt.\n\nAnchor:\nPlan the day.\nLearn what moved it.\n\nA private day planner and focus timer for people moving between Mac, iPhone and Apple Watch who want to learn why the day they lived differed from the plan.\n\nDownload notarized Mac beta\n↓\nSee iPhone and Watch beta status\n→\n\nInvite-only TestFlight and notarized Mac beta\niPhone · Mac · Apple Watch"
+  },
+  {
+    "product": "motion",
+    "url": "http://127.0.0.1:8843",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "A held body-controlled game prototype.\n\nMotion:\nMove.\nPlay.\n\nA held iPhone prototype reads movement on-device and turns it into game input. Camera frames stay on the phone.\n\nSee TestFlight status\n→\nSee the real app\n↓\n\nHeld internal prototype. No public TestFlight invite or App Store listing.\niPhone"
+  },
+  {
+    "product": "indulge",
+    "url": "http://127.0.0.1:8844",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "A retired predecessor.\n\nIndulge:\nIndulge became\npart of Anchor.\n\nThe useful idea survives: keep intentional pleasure, notice automatic time, and make room for what matters inside the schedule you actually follow.\n\nContinue with Anchor\n↗\nExplore the product history\n↓\n\nMerged into Anchor on 24 August 2026.\nMac · iPhone · Apple Watch"
+  },
+  {
+    "product": "calorie",
+    "url": "http://127.0.0.1:8845",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "Native food & body journal\n\nCalorie:\nA private food journal for weight loss\nwith math you can inspect.\n\nLog meals, four nutrients, water, weight, and routines in seconds. See transparent fasting, exercise, and sleep estimates from your timestamps and targets.\n\nSee TestFlight status\n→\nSee the real app\n↓\n\nInternal TestFlight only. No public invite or App Store listing.\niPhone · iPad"
+  },
+  {
+    "product": "storagedaddy",
+    "url": "http://127.0.0.1:8846",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "Your disk, explained\n\nStorageDaddy:\nMake room.\nKeep building.\n\nA Mac storage analyzer for developers. Find the caches, builds and AI files taking up space, inspect what matters, then review every cleanup before anything moves to Trash.\n\nDownload for Mac\n↓\nSee the real app\n→\n\nPublic early-access beta · free to download\nmacOS 14+ · Apple silicon"
+  },
+  {
+    "product": "performancedaddy",
+    "url": "http://127.0.0.1:8847",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "Processes. Ports. Evidence.\n\nPerformanceDaddy:\nA slow Mac.\nA clearer picture.\n\nSee what is running behind the scenes on your Mac. Inspect background apps and helpers, find the process holding a port, watch RAM and local coding agents, and record evidence while a slowdown is happening.\n\nDownload for Mac\n↓\nSee the real app\n→\n\nPublic early-access beta · free to download\nmacOS 14+ · Native Mac app"
+  },
+  {
+    "product": "browserdaddy",
+    "url": "http://127.0.0.1:8848",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "Browser history. Real attention.\n\nBrowserDaddy:\nYour browsing history.\nYour attention, explained.\n\nBring browser history together on your Mac. Compare visits with measured foreground attention, find patterns across browsers, and revisit what mattered.\n\nDownload for Mac\n↓\nRead how it works\n→\n\nPublic early-access beta · free to download\nmacOS 15+ · Native Mac app"
+  },
+  {
+    "product": "contextdaddy",
+    "url": "http://127.0.0.1:8849",
+    "views": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "pageErrors": []
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": "Skills. Context. Usage.\n\nContextDaddy:\nYour agents' context.\nMade visible.\n\nContextDaddy shows what the coding agents on your Mac can discover, invoke and consume. Review skill access, project context, local usage history and verified OpenTelemetry signals. Supported local skill and context-file changes require a preview and your explicit apply action.\n\nDownload for Mac\n↓\nRead how it works\n→\n\nPublic early-access beta · free to download\nmacOS 14+ · Apple silicon"
+  }
+]

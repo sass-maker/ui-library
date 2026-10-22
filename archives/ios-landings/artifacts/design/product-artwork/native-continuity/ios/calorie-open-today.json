@@ -1,0 +1,24 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": true,
+  "error": "The runtime UI snapshot for this simulator has expired.",
+  "data": {
+    "summary": {
+      "status": "FAILED"
+    },
+    "action": {
+      "type": "tap",
+      "elementRef": "e30"
+    },
+    "artifacts": {
+      "simulatorId": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    },
+    "uiError": {
+      "code": "SNAPSHOT_EXPIRED",
+      "message": "The runtime UI snapshot for this simulator has expired.",
+      "recoveryHint": "Run snapshot_ui again and retry with a current elementRef.",
+      "snapshotAgeMs": 98386
+    }
+  }
+}

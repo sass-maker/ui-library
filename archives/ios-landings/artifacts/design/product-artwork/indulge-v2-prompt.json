@@ -1,0 +1,10 @@
+{
+  "tool": "built-in image_gen",
+  "mode": "edit",
+  "referencedImages": [
+    "originals/indulge-v1.png"
+  ],
+  "prompt": "Edit the single supplied Indulge editorial artwork. Preserve the complete 1536x1024 landscape composition, calm warm-ivory left 58% semantic text zone, red inner notebook and flowing red ribbon, tiny film-strip element, flowers, soft daylight, realistic woven cloth and premium photographic paper materials. Change ONLY the entire blue-grey OUTER notebook folio to warm neutral graphite-grey cloth (#77746d), removing every blue hue from that folio. It represents Anchor's current neutral ink-and-paper world carrying forward Indulge's red notebook. Preserve the scale, placement, proportions and lighting of all objects. No text, people, fake UI, new layout elements or extra images. Return ONE landscape artwork, full image, not a collage. Opaque background.",
+  "output": "originals/indulge-v2.png",
+  "reason": "Match the maintained Anchor successor's graphite and paper identity; preserve Indulge's red notebook."
+}

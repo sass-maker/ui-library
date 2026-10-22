@@ -1,0 +1,62 @@
+{
+  "schema": "xcodebuildmcp.output.build-run-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "request": {
+      "scheme": "Motion",
+      "workspacePath": "/Users/sarthak/Desktop/fleet/motion/ios/Motion.xcworkspace",
+      "derivedDataPath": "/Users/sarthak/Desktop/fleet/ios-landings/.fleet-local/native-continuity/motion-build",
+      "configuration": "Debug",
+      "platform": "iOS Simulator",
+      "simulatorId": "127D7C7E-7BE8-4E38-BA9B-778770E01577"
+    },
+    "summary": {
+      "status": "SUCCEEDED",
+      "durationMs": 29140,
+      "target": "simulator"
+    },
+    "artifacts": {
+      "appPath": "/Users/sarthak/Desktop/fleet/ios-landings/.fleet-local/native-continuity/motion-build/Build/Products/Debug-iphonesimulator/Motion.app",
+      "bundleId": "com.motion.controller",
+      "processId": 64419,
+      "simulatorId": "127D7C7E-7BE8-4E38-BA9B-778770E01577",
+      "buildLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/build_run_sim_2026-10-02T17-54-11-412Z_pid58589_ac00e98a.log",
+      "runtimeLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.motion.controller_2026-10-02T17-54-38-649Z_helperpid64040_ownerpid58589_84ac5fef.log",
+      "osLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.motion.controller_oslog_2026-10-02T17-54-39-992Z_helperpid64630_ownerpid58589_d58bf2c6.log"
+    },
+    "diagnostics": {
+      "warnings": [
+        {
+          "message": "capture of 'layer' with non-Sendable type 'AVCaptureVideoPreviewLayer' in a '@Sendable' closure [#SendableClosureCaptures]",
+          "location": "/Users/sarthak/Desktop/fleet/motion/ios/Sources/Motion/Vision/CameraController.swift:298"
+        },
+        {
+          "message": "capture of 'pixelBuffer' with non-Sendable type 'CVPixelBuffer' (aka 'CVBuffer') in a '@Sendable' closure [#SendableClosureCaptures]",
+          "location": "/Users/sarthak/Desktop/fleet/motion/ios/Sources/Motion/Vision/PoseEstimator.swift:160"
+        },
+        {
+          "message": "capture of 'retained' with non-Sendable type 'CMSampleBuffer' in a '@Sendable' closure [#SendableClosureCaptures]",
+          "location": "/Users/sarthak/Desktop/fleet/motion/ios/Sources/Motion/Recording/ScreenRecorder.swift:257"
+        },
+        {
+          "message": "capture of 'writer' with non-Sendable type 'AVAssetWriter' in a '@Sendable' closure [#SendableClosureCaptures]",
+          "location": "/Users/sarthak/Desktop/fleet/motion/ios/Sources/Motion/Recording/ScreenRecorder.swift:291"
+        },
+        {
+          "message": "capture of 'writer' with non-Sendable type 'AVAssetWriter' in a '@Sendable' closure [#SendableClosureCaptures]",
+          "location": "/Users/sarthak/Desktop/fleet/motion/ios/Sources/Motion/Recording/CameraRecorder.swift:133"
+        },
+        {
+          "message": "capture of 'retained' with non-Sendable type 'CMSampleBuffer' in a '@Sendable' closure [#SendableClosureCaptures]",
+          "location": "/Users/sarthak/Desktop/fleet/motion/ios/Sources/Motion/Recording/CameraRecorder.swift:178"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "nextSteps": [
+    "Stop app in simulator: xcodebuildmcp simulator stop --simulator-id 127D7C7E-7BE8-4E38-BA9B-778770E01577 --bundle-id com.motion.controller"
+  ]
+}

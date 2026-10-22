@@ -1,0 +1,576 @@
+{
+  "$schema": "fleet.design-review.v2",
+  "version": 2,
+  "project": "ios-landings",
+  "target": "Precise C closing footer across the iOS/Mac landing factory; existing Pages targets only",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "productSurfaces": {
+      "scope": "paired",
+      "landing": "Factory public homepage and shared legal/support/release reading routes for each product",
+      "app": "Independent native apps paired by product identity and truthful gated install/release links; operating native footer UI is outside this web-only release",
+      "reason": "This repository is only the marketing factory. Native apps remain independently built and their operating UI is untouched; truthful CTA, install/release status and native product palettes remain coherent."
+    },
+    "pairedPreview": {
+      "landing": ".fleet-local/footer180-typography-study/Atlas-font-study.html",
+      "app": ".fleet-local/footer180-typography-study/Atlas-app-font-study.html"
+    },
+    "source": "comparison",
+    "references": [
+      "https://www.footer.design/sites/leedlime",
+      "https://leedlime.com/",
+      "https://vercel.com/geist/typography"
+    ],
+    "probes": [
+      {
+        "id": "a",
+        "name": "Quiet editorial",
+        "path": ".fleet-local/footer180-typography-study/a-Atlas-font-study.html",
+        "thesis": "Uniform regular directory links and real monospace editorial labels make the existing split feel quieter; medium sans utility headings and a Newsreader Atlas signature give deliberate contrast.",
+        "layout": "Existing product-left/services-right split, personalized full-width scene and distributed final strip; type hierarchy changes emphasis and density without replacing owner-specified section architecture.",
+        "typography": "Inter14px routes/18px medium services/16px controls; Geist Mono12px tracked caps; Newsreader Atlas signature.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-typography-study/a-Atlas-font-study.html",
+          "app": ".fleet-local/footer180-typography-study/a-Atlas-app-font-study.html"
+        },
+        "contract": ".fleet-local/footer180-typography-study/direction-a.json"
+      },
+      {
+        "id": "b",
+        "name": "Studio",
+        "path": ".fleet-local/footer180-typography-study/b-Atlas-font-study.html",
+        "thesis": "Instrument Sans makes the existing split more human and open; larger primary destinations, natural-case labels and lighter service emphasis establish an editorial studio hierarchy.",
+        "layout": "Existing product-left/services-right split, personalized full-width scene and distributed final strip; type hierarchy changes emphasis and density without replacing owner-specified section architecture.",
+        "typography": "Instrument Sans18px primary/15px secondary/20px medium services/16px controls/13px natural-case labels; Newsreader Atlas signature.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-typography-study/b-Atlas-font-study.html",
+          "app": ".fleet-local/footer180-typography-study/b-Atlas-app-font-study.html"
+        },
+        "contract": ".fleet-local/footer180-typography-study/direction-b.json"
+      },
+      {
+        "id": "c",
+        "name": "Precise",
+        "path": ".fleet-local/footer180-typography-study/c-Atlas-font-study.html",
+        "thesis": "A compact Geist hierarchy gives technical product navigation a measured primary emphasis; monospace labels and smaller semibold utility headings favor functional precision.",
+        "layout": "Existing product-left/services-right split, personalized full-width scene and distributed final strip; type hierarchy changes emphasis and density without replacing owner-specified section architecture.",
+        "typography": "Geist15px primary/14px secondary/16px semibold services/16px controls; Geist Mono12px tracked caps; Newsreader Atlas signature.",
+        "surfaces": {
+          "landing": ".fleet-local/footer180-typography-study/c-Atlas-font-study.html",
+          "app": ".fleet-local/footer180-typography-study/c-Atlas-app-font-study.html"
+        },
+        "contract": ".fleet-local/footer180-typography-study/direction-c.json"
+      }
+    ],
+    "selected": "c",
+    "approval": "approved",
+    "ownerEvidence": {
+      "path": ".fleet-local/footer180-precise-release/owner-selection.md",
+      "quote": "Okay let's go with precise. Release it for every project. I guess we have done improving things. Now we have deprecating returns."
+    },
+    "supplied": "",
+    "before": ".fleet-local/footer180-precise-release/initial-source/src/layouts/SiteLayout.astro",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [
+        "https://vercel.com/geist/typography"
+      ],
+      "runtime": "none",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Native project-owned controls and routes preserved. Fonts are OFL preview assets, not new runtime dependencies or proprietary reference code."
+      }
+    },
+    "contract": {
+      "purpose": "Render a product-specific finished marketing closing that helps visitors reach support, privacy and the truthful install or release path, with explicit optional updates and assistant handoff.",
+      "purposeSource": "PRODUCT.md",
+      "canonicalPurpose": "The iOS landing factory helps prospective app users understand one focused app and reach its real support, privacy and gated install path through product-owned content, screenshots and status.",
+      "purposeAlignment": "match",
+      "driftNote": "",
+      "audience": "Prospective users of one focused Significant Hobbies iOS/macOS app.",
+      "job": "Use the original CTA and native product routes on the left; editable AI and actual updates on the right; personalized art followed by one studio line.",
+      "thesis": "Implement selected Precise: compact Geist navigation, Geist Mono category labels, open AI and updates, product-native signature bleeding into original art, final full-width studio line.",
+      "system": "Precise applies only to the closing footer; Living Memory Book remains the landing composition. Geist UI and Mono role labels inherit native semantic colors.",
+      "signature": "Each product keeps its native name and colors; an original product-specific panoramic scene follows the readable closing, with a smoothly faded native wordmark.",
+      "risk": "Factory production publication and anonymous candidate-route/browser verification remain pending. Explicit three script modules use stable precise-b0adaa67 cache revision; Anchor adds module definition only for existing catalog auto-capture. Actual previous HTTP renders use identical immutable52 runtime bytes. Native operating UI remains outside this release.",
+      "qualityBar": "Actual licensed font assets; readable14\u201318px links,16px controls,12px+ labels, real supported weights, coherent paired typography and product identity. Reference inspiration without copied brand/art/claims."
+    }
+  },
+  "evidence": {
+    "platform": "web",
+    "productContinuity": {
+      "status": "pass",
+      "reason": "Actual HTTP homepage/privacy contexts captured at390/768/1440 for all8 maintained factory targets. Original native identity, semantic colors, screenshots, support/privacy and lifecycle install/release actions are preserved. Native application operating UI remains outside this web-only task; independent root review verdict pending.",
+      "reviewer": "root",
+      "report": ".fleet-local/footer180-precise-release/root-craft-review.json",
+      "surfaces": {
+        "landing": ".fleet-local/footer180-precise-release/browser/kith-landing-1440-closing.jpg",
+        "app": ".fleet-local/footer180-precise-release/browser/kith-app-768-closing.jpg"
+      },
+      "checks": {
+        "designSystem": {
+          "status": "pass",
+          "observation": "Public homepage and privacy reading contexts share selectedC footer type, groups, open services, native color bleed and final studio strip. Native operating apps excluded."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Product names, product palettes and original personalized artwork retain each real native identity. Performance long wordmark corrected."
+        },
+        "vocabulary": {
+          "status": "pass",
+          "observation": "Original CTA/status/support vocabulary retained across home/privacy."
+        },
+        "productTruth": {
+          "status": "pass",
+          "observation": "Existing publicbeta/internalprototype/TestFlight/merged successor distinctions preserved; no fakeinstall/AppStore status or new Indulge newsletter."
+        },
+        "handoff": {
+          "status": "pass",
+          "observation": "Original gated install/release/support links and editable assistant handoff retained; no public submission or native app operation performed."
+        }
+      }
+    },
+    "slopScale": {
+      "platform": "web",
+      "posture": "advisory",
+      "reason": "No browser/scanner render or score invented; native letterform specimen is separate evidence.",
+      "checkpoints": [
+        {
+          "stage": "directions",
+          "direction": "a",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: browser-policy limitation",
+          "report": ".fleet-local/footer180-typography-study/direction-a-scan-blocked.json",
+          "reason": "Prior native browser action rejected file:// preview URLs by security policy and explicitly forbade browser/CDP/alternate-surface workarounds. No such workaround or browser/scanner launch attempted in this font-study round.",
+          "findingsReview": "Actual glyph specimen and source/asset guards reviewed; integrated rendered hierarchy and mobile behavior remain unknown."
+        },
+        {
+          "stage": "directions",
+          "direction": "b",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: browser-policy limitation",
+          "report": ".fleet-local/footer180-typography-study/direction-b-scan-blocked.json",
+          "reason": "Prior native browser action rejected file:// preview URLs by security policy and explicitly forbade browser/CDP/alternate-surface workarounds. No such workaround or browser/scanner launch attempted in this font-study round.",
+          "findingsReview": "Actual glyph specimen and source/asset guards reviewed; integrated rendered hierarchy and mobile behavior remain unknown."
+        },
+        {
+          "stage": "directions",
+          "direction": "c",
+          "status": "blocked",
+          "command": "Pinned slop-score not executed: browser-policy limitation",
+          "report": ".fleet-local/footer180-typography-study/direction-c-scan-blocked.json",
+          "reason": "Prior native browser action rejected file:// preview URLs by security policy and explicitly forbade browser/CDP/alternate-surface workarounds. No such workaround or browser/scanner launch attempted in this font-study round.",
+          "findingsReview": "Actual glyph specimen and source/asset guards reviewed; integrated rendered hierarchy and mobile behavior remain unknown."
+        },
+        {
+          "stage": "iteration",
+          "status": "blocked",
+          "command": "Not executed: retained browser-policy block",
+          "report": ".fleet-local/footer180-precise-release/iteration-scan-blocked.json",
+          "reason": "Existing policy block forbids a preview workaround. Source/build checks are separate evidence.",
+          "findingsReview": "Actual built HTTP AgentTab matrix retained; pinned scanner remains unexecuted under prior policy restriction. No scanner score invented. Concrete Performance wordmark wrap was fixed and recaptured at320/390."
+        },
+        {
+          "stage": "final",
+          "status": "blocked",
+          "command": "Not executed: retained browser-policy block",
+          "report": ".fleet-local/footer180-precise-release/final-scan-blocked.json",
+          "reason": "Existing policy block forbids a preview workaround. Source/build checks are separate evidence.",
+          "findingsReview": "Actual built HTTP AgentTab matrix retained; pinned scanner remains unexecuted under prior policy restriction. No scanner score invented. Concrete Performance wordmark wrap was fixed and recaptured at320/390."
+        }
+      ]
+    },
+    "visualReview": {
+      "status": "pass",
+      "reviewer": "root",
+      "direction": "c",
+      "report": ".fleet-local/footer180-precise-release/root-craft-review.json",
+      "checks": {
+        "hierarchy": {
+          "status": "pass",
+          "observation": "Clear native-left / AI+capture-right hierarchy and readable compact grouped route columns."
+        },
+        "typography": {
+          "status": "pass",
+          "observation": "Actual native identity plus scoped Geist controls; corrected long PerformanceDaddy signature stays whole at320/390."
+        },
+        "composition": {
+          "status": "pass",
+          "observation": "Meaningful native product illustration bleeds from the signature; simple full-width studio line is last."
+        },
+        "identity": {
+          "status": "pass",
+          "observation": "Native lifecycle CTA distinctions and original product palettes/content preserved; Indulge continues with Anchor and preserves historical identity."
+        },
+        "interaction": {
+          "status": "pass",
+          "observation": "51 actual metrics checks validate editable five-provider handoff, always-open16px email and unchecked required consent where enabled; no submissions. Indulge disabled services are correct N/A."
+        },
+        "responsive": {
+          "status": "pass",
+          "observation": "Actual390/768/1440 cases and supplemental320 corrected signature pass; fixed skip-link clip artifact is not a source defect."
+        }
+      }
+    },
+    "screenshots": [
+      {
+        "width": 390,
+        "product": "browserdaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/browserdaddy-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "browserdaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/browserdaddy-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "browserdaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/browserdaddy-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "browserdaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/browserdaddy-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "browserdaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/browserdaddy-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "browserdaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/browserdaddy-app-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "contextdaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/contextdaddy-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "contextdaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/contextdaddy-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "contextdaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/contextdaddy-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "contextdaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/contextdaddy-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "contextdaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/contextdaddy-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "contextdaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/contextdaddy-app-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "performancedaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/performancedaddy-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "performancedaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/performancedaddy-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "performancedaddy",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/performancedaddy-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "performancedaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/performancedaddy-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "performancedaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/performancedaddy-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "performancedaddy",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/performancedaddy-app-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "kith",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/kith-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "kith",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/kith-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "kith",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/kith-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "kith",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/kith-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "kith",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/kith-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "kith",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/kith-app-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "setline",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/setline-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "setline",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/setline-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "setline",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/setline-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "setline",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/setline-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "setline",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/setline-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "setline",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/setline-app-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "anchor",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/anchor-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "anchor",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/anchor-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "anchor",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/anchor-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "anchor",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/anchor-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "anchor",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/anchor-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "anchor",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/anchor-app-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "motion",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/motion-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "motion",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/motion-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "motion",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/motion-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "motion",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/motion-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "motion",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/motion-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "motion",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/motion-app-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "indulge",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/indulge-landing-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "indulge",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/indulge-landing-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "indulge",
+        "surface": "landing",
+        "path": ".fleet-local/footer180-precise-release/browser/indulge-landing-1440-closing.jpg"
+      },
+      {
+        "width": 390,
+        "product": "indulge",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/indulge-app-390-closing.jpg"
+      },
+      {
+        "width": 768,
+        "product": "indulge",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/indulge-app-768-closing.jpg"
+      },
+      {
+        "width": 1440,
+        "product": "indulge",
+        "surface": "app",
+        "path": ".fleet-local/footer180-precise-release/browser/indulge-app-1440-closing.jpg"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm run check via normal fleet-workspace run --id footer-ios-factory-20261003 at final versioned source;23tests+12builds+264surfaces",
+      "status": "pass",
+      "report": ".fleet-local/footer180-precise-release/built-contract-result.json"
+    },
+    "critique": {
+      "score": 34,
+      "maximum": 40,
+      "dimensions": {
+        "hierarchy": 7,
+        "typography": 7,
+        "composition": 7,
+        "identity": 7,
+        "interaction": 3,
+        "responsive": 3
+      }
+    },
+    "audit": {
+      "score": 17,
+      "maximum": 20,
+      "dimensions": {
+        "purpose": 4,
+        "accessibility": 5,
+        "behavior": 4,
+        "responsive": 3,
+        "performance": 1
+      }
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": []
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "root",
+      "answers": {
+        "product": "Focused native utility and iPhone products, each with its actual bounded function.",
+        "audience": "Prospective native utility and iPhone users deciding whether the product fits and what is actually available.",
+        "value": "Understand the product-specific value, limitations and current distribution state before taking the real next step.",
+        "mechanism": "Original product-owned content and screenshots explain bounded functions; the selected closing adds relevant product artwork and native routes without changing operating UI.",
+        "proof": "Original native screenshots and owned release/journal evidence remain technical proof; new illustration is explicitly illustrative, not an operational claim.",
+        "nextAction": "Use the real status/download/support CTA with honest internal TestFlight, held prototype or merged-successor distinctions; no promised App Store link where absent."
+      },
+      "purposeScore": {
+        "product": 23,
+        "audience": 14,
+        "value": 13,
+        "mechanism": 13,
+        "proof": 13,
+        "nextAction": 14,
+        "total": 90
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "keep",
+    "note": "Okay let's go with precise. Release it for every project. I guess we have done improving things. Now we have deprecating returns."
+  }
+}

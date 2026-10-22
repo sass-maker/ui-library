@@ -1,0 +1,47 @@
+---
+import LegalPage from "../components/LegalPage.astro";
+import { site } from "../site.config";
+
+import { verifiedWebAppUrl } from "../lib/distribution";
+
+const configuredBetaUrl = import.meta.env.PUBLIC_TESTFLIGHT_URL?.trim();
+const hasVerifiedBetaUrl = configuredBetaUrl?.startsWith("https://testflight.apple.com/");
+const webApp = verifiedWebAppUrl();
+const page = site.legal.testflight;
+---
+<LegalPage title={page.title} lede={page.lede} path="/testflight/">
+  {site.device === "desktop" ? (
+    <section>
+      <h2>Mac distribution</h2>
+      <p>{site.betaNote} <a href="/release/">See release status</a>.</p>
+    </section>
+  ) : site.availability === "successor" && webApp ? (
+    <section>
+      <h2>{site.appCtaLabel ?? "Continue with the maintained product"}</h2>
+      <p>This product is no longer released separately. <a href={webApp}>Open its maintained successor</a>.</p>
+    </section>
+  ) : site.availability === "web-app" && webApp ? (
+    <section>
+      <h2>{site.appCtaLabel ?? "Open the app"}</h2>
+      <p>The live product is available on the web. <a href={webApp}>{site.appCtaLabel ?? "Open the app"}</a>.</p>
+    </section>
+  ) : hasVerifiedBetaUrl ? (
+    <section>
+      <h2>Join through Apple</h2>
+      <p>The verified enrollment link is ready. <a href={configuredBetaUrl}>Open {site.name} in TestFlight</a>.</p>
+    </section>
+  ) : (
+    <section>
+      <h2>Invite-only for now</h2>
+      <p>There is no public enrollment link yet. This page will not pretend otherwise.</p>
+    </section>
+  )}
+  <section>
+    <h2>What you will test</h2>
+    <p>{page.testing}</p>
+  </section>
+  <section>
+    <h2>What is not in this beta</h2>
+    <p>{page.notIncluded}</p>
+  </section>
+</LegalPage>

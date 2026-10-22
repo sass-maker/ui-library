@@ -1,0 +1,87 @@
+{
+  "status": "blocked-for-native-first-value",
+  "results": [
+    {
+      "product": "kith",
+      "href": "/testflight/",
+      "label": "See TestFlight status\n→",
+      "firstUsefulNativeStateObserved": false,
+      "destination": "http://127.0.0.1:8840/testflight/",
+      "heading": "Internal TestFlight is active.",
+      "inviteOnly": true,
+      "observation": "Actual click reaches honest invite-only beta status; public install/onboarding is unavailable."
+    },
+    {
+      "product": "setline",
+      "href": "/testflight/",
+      "label": "See TestFlight status\n→",
+      "firstUsefulNativeStateObserved": false,
+      "destination": "http://127.0.0.1:8841/testflight/",
+      "heading": "Internal TestFlight is active.",
+      "inviteOnly": true,
+      "observation": "Actual click reaches honest invite-only beta status; public install/onboarding is unavailable."
+    },
+    {
+      "product": "anchor",
+      "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg",
+      "label": "Download notarized Mac beta\n↓",
+      "firstUsefulNativeStateObserved": false,
+      "observation": "Actual CTA is external download or maintained successor; endpoint checks recorded separately. No fresh installation or native onboarding claimed."
+    },
+    {
+      "product": "motion",
+      "href": "/testflight/",
+      "label": "See TestFlight status\n→",
+      "firstUsefulNativeStateObserved": false,
+      "destination": "http://127.0.0.1:8843/testflight/",
+      "heading": "The beta is taking shape.",
+      "inviteOnly": true,
+      "observation": "Actual click reaches honest invite-only beta status; public install/onboarding is unavailable."
+    },
+    {
+      "product": "indulge",
+      "href": "https://anchor.significanthobbies.com",
+      "label": "Continue with Anchor\n↗",
+      "firstUsefulNativeStateObserved": false,
+      "observation": "Actual CTA is external download or maintained successor; endpoint checks recorded separately. No fresh installation or native onboarding claimed."
+    },
+    {
+      "product": "calorie",
+      "href": "/testflight/",
+      "label": "See TestFlight status\n→",
+      "firstUsefulNativeStateObserved": false,
+      "destination": "http://127.0.0.1:8845/testflight/",
+      "heading": "The native beta is private.",
+      "inviteOnly": true,
+      "observation": "Actual click reaches honest invite-only beta status; public install/onboarding is unavailable."
+    },
+    {
+      "product": "storagedaddy",
+      "href": "https://storage.daddyrad.com/download",
+      "label": "Download for Mac\n↓",
+      "firstUsefulNativeStateObserved": false,
+      "observation": "Actual CTA is external download or maintained successor; endpoint checks recorded separately. No fresh installation or native onboarding claimed."
+    },
+    {
+      "product": "performancedaddy",
+      "href": "https://performance.daddyrad.com/download",
+      "label": "Download for Mac\n↓",
+      "firstUsefulNativeStateObserved": false,
+      "observation": "Actual CTA is external download or maintained successor; endpoint checks recorded separately. No fresh installation or native onboarding claimed."
+    },
+    {
+      "product": "browserdaddy",
+      "href": "https://browser.daddyrad.com/download",
+      "label": "Download for Mac\n↓",
+      "firstUsefulNativeStateObserved": false,
+      "observation": "Actual CTA is external download or maintained successor; endpoint checks recorded separately. No fresh installation or native onboarding claimed."
+    },
+    {
+      "product": "contextdaddy",
+      "href": "https://context.daddyrad.com/download",
+      "label": "Download for Mac\n↓",
+      "firstUsefulNativeStateObserved": false,
+      "observation": "Actual CTA is external download or maintained successor; endpoint checks recorded separately. No fresh installation or native onboarding claimed."
+    }
+  ]
+}

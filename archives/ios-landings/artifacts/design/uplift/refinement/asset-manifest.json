@@ -1,0 +1,26 @@
+{
+  "generatedWith": "built-in image_gen",
+  "prompts": "artifacts/design/uplift/refinement/asset-prompts.md",
+  "assets": [
+    {
+      "path": "products/kith/public/images/story/paper.webp",
+      "bytes": 20284
+    },
+    {
+      "path": "products/kith/public/images/story/book-stage.webp",
+      "bytes": 535264
+    },
+    {
+      "path": "products/kith/public/images/story/coastal-walk-v2.webp",
+      "bytes": 78642
+    },
+    {
+      "path": "products/kith/public/images/story/memory-table-v2.webp",
+      "bytes": 224698
+    }
+  ],
+  "totalProductionBytes": 858888,
+  "ownerAcceptance": "not-given",
+  "archivedPreviousManifest": "artifacts/design/uplift/asset-manifest.json",
+  "qa": "Final generated assets inspected directly and in nine rendered widths. Independent review records residual coastal stock-like specificity; owner acceptance remains unknown."
+}

@@ -1,0 +1,79 @@
+{
+  "assessment": "B",
+  "reviewer": "/root/technical_design_audit",
+  "independent": true,
+  "status": "complete",
+  "detector": {
+    "runs": 1,
+    "raw": "artifacts/design/uplift/detector.json",
+    "findings": [],
+    "rerun_after_fixes": false
+  },
+  "dimensions": {
+    "accessibility": 3,
+    "performance": 3,
+    "responsive_design": 4,
+    "theming": 4,
+    "implementation_integrity": 4
+  },
+  "total": 18,
+  "maximum": 20,
+  "rating": "Excellent",
+  "open_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 1,
+    "P3": 0
+  },
+  "findings": [
+    {
+      "priority": "P1",
+      "id": "text_enlargement",
+      "status": "fixed_and_verified",
+      "evidence": "After source correction, 200% root-text diagnostic has zero horizontal overflow or clipped text ranges at 320,390,768,1440px."
+    },
+    {
+      "priority": "P2",
+      "id": "responsive_texture",
+      "status": "open",
+      "evidence": "535264-byte 1024x1536 decorative texture has no smaller srcset rendition."
+    },
+    {
+      "priority": "P1",
+      "id": "scene_contrast",
+      "status": "fixed_and_verified",
+      "evidence": "Solid paper-backed paragraph and link now yield 14.21:1; photographic backgrounds previously yielded approximately 1.20-2.32:1."
+    }
+  ],
+  "contrast": {
+    "story_ink_paper": 14.21,
+    "soft_ink_paper": 7.17,
+    "soft_ink_field": 6.26,
+    "paper_texture_ink_minimum": 9.99,
+    "paper_texture_soft_minimum": 5.04,
+    "action_normal_hover": 6.29
+  },
+  "production_story_bytes": 850108,
+  "new_runtime_dependencies": 0,
+  "new_landing_javascript": 0,
+  "limits": [
+    "No WCAG certification",
+    "No production Lighthouse/performance claim",
+    "External newsletter and analytics are unqualified",
+    "Existing external script requests were deliberately aborted in local UI checks; their delivery and behavior are unqualified."
+  ],
+  "browser_interactions": {
+    "passed": 12,
+    "page_errors": 0
+  },
+  "tablet_photo_bounds": {
+    "before_settled_overlap_px": 0.636,
+    "reduced_motion_clearance_px": 11.953,
+    "source_fix": "tablet left:-34px",
+    "after_settled_clearance_px": 14.415
+  },
+  "browser_views": {
+    "passed": 9,
+    "failures": 0
+  }
+}

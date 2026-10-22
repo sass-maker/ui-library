@@ -1,0 +1,1590 @@
+[
+  {
+    "width": 320,
+    "sceneHeight": 711.140625,
+    "imageHeight": 213.328125,
+    "imageTop": 462.8125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": -129.8514175415039,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 375,
+    "sceneHeight": 673.609375,
+    "imageHeight": 250,
+    "imageTop": 388.609375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": -102.3514175415039,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 384,
+    "sceneHeight": 679.609375,
+    "imageHeight": 256,
+    "imageTop": 388.609375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": -97.8514175415039,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 390,
+    "sceneHeight": 683.609375,
+    "imageHeight": 260,
+    "imageTop": 388.609375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": 6.740388870239258,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 768,
+    "sceneHeight": 926.796875,
+    "imageHeight": 512,
+    "imageTop": 379.796875,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": 20.579071044921875,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 900,
+    "sceneHeight": 1014.796875,
+    "imageHeight": 600,
+    "imageTop": 379.796875,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": 16.47259521484375,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1024,
+    "sceneHeight": 1114.984375,
+    "imageHeight": 682.65625,
+    "imageTop": 397.328125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": 45.08197021484375,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1200,
+    "sceneHeight": 640,
+    "imageHeight": 640,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": 19.9984130859375,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": []
+  },
+  {
+    "width": 1440,
+    "sceneHeight": 640,
+    "imageHeight": 640,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": false,
+    "photoScreenClearance": 24.6077880859375,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": []
+  },
+  {
+    "width": 320,
+    "sceneHeight": 1542.390625,
+    "imageHeight": 213.328125,
+    "imageTop": 1253.0625,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": -133.06018829345703,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 375,
+    "sceneHeight": 1430.671875,
+    "imageHeight": 250,
+    "imageTop": 1104.671875,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": -105.56018829345703,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 384,
+    "sceneHeight": 1338.3125,
+    "imageHeight": 256,
+    "imageTop": 1006.3125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": -101.06018829345703,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 390,
+    "sceneHeight": 1342.3125,
+    "imageHeight": 260,
+    "imageTop": 1006.3125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": 3.591541290283203,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 768,
+    "sceneHeight": 1153.734375,
+    "imageHeight": 512,
+    "imageTop": 593.734375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": 17.3392333984375,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 900,
+    "sceneHeight": 1241.734375,
+    "imageHeight": 600,
+    "imageTop": 593.734375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": 13.08233642578125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1024,
+    "sceneHeight": 1324.390625,
+    "imageHeight": 682.65625,
+    "imageTop": 593.734375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": 41.69171142578125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1200,
+    "sceneHeight": 884.3125,
+    "imageHeight": 884.3125,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": 16.3819580078125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": []
+  },
+  {
+    "width": 1440,
+    "sceneHeight": 884.3125,
+    "imageHeight": 884.3125,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": false,
+    "photoScreenClearance": 20.9913330078125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "keepsake-settle",
+        "transform": "matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "artifact-arrive",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "matrix(0.999848, -0.0174524, 0.0174524, 0.999848, 0, 0)",
+        "visible": true
+      }
+    ],
+    "contrast": []
+  },
+  {
+    "width": 320,
+    "sceneHeight": 711.140625,
+    "imageHeight": 213.328125,
+    "imageTop": 462.8125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": -125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 375,
+    "sceneHeight": 673.609375,
+    "imageHeight": 250,
+    "imageTop": 388.609375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": -97.5,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 384,
+    "sceneHeight": 679.609375,
+    "imageHeight": 256,
+    "imageTop": 388.609375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": -93,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 390,
+    "sceneHeight": 683.609375,
+    "imageHeight": 260,
+    "imageTop": 388.609375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 12,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 768,
+    "sceneHeight": 926.796875,
+    "imageHeight": 512,
+    "imageTop": 379.796875,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 25.953125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 900,
+    "sceneHeight": 1014.796875,
+    "imageHeight": 600,
+    "imageTop": 379.796875,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 21.921875,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1024,
+    "sceneHeight": 1114.984375,
+    "imageHeight": 682.65625,
+    "imageTop": 397.328125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 50.53125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1200,
+    "sceneHeight": 640,
+    "imageHeight": 640,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 26.15625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 5.19,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 4.529,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 5.021,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "sceneHeight": 640,
+    "imageHeight": 640,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 1,
+    "reduced": true,
+    "photoScreenClearance": 30.765625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 7.607,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 8.592,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 11.098,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      }
+    ]
+  },
+  {
+    "width": 320,
+    "sceneHeight": 1542.390625,
+    "imageHeight": 213.328125,
+    "imageTop": 1253.0625,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": -125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 375,
+    "sceneHeight": 1430.671875,
+    "imageHeight": 250,
+    "imageTop": 1104.671875,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": -97.5,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 384,
+    "sceneHeight": 1338.3125,
+    "imageHeight": 256,
+    "imageTop": 1006.3125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": -93,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 390,
+    "sceneHeight": 1342.3125,
+    "imageHeight": 260,
+    "imageTop": 1006.3125,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 12,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 768,
+    "sceneHeight": 1153.734375,
+    "imageHeight": 512,
+    "imageTop": 593.734375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 25.953125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 900,
+    "sceneHeight": 1241.734375,
+    "imageHeight": 600,
+    "imageTop": 593.734375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 21.921875,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1024,
+    "sceneHeight": 1324.390625,
+    "imageHeight": 682.65625,
+    "imageTop": 593.734375,
+    "imagePosition": "static",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 50.53125,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": "Copy is stacked on opaque paper, 14.21:1, independent of image."
+  },
+  {
+    "width": 1200,
+    "sceneHeight": 884.3125,
+    "imageHeight": 884.3125,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 26.15625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 4.246,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 3.703,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 3
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 2.977,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 1
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "sceneHeight": 884.3125,
+    "imageHeight": 884.3125,
+    "imageTop": 0,
+    "imagePosition": "absolute",
+    "imageObjectPosition": "0% 0%",
+    "imageTransform": "none",
+    "scale": 2,
+    "reduced": true,
+    "photoScreenClearance": 30.765625,
+    "photoOverlap": false,
+    "overflow": false,
+    "clipped": [],
+    "motion": [
+      {
+        "class": "moment-photo",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "device device--hero",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "scene-image",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      },
+      {
+        "class": "shell",
+        "animation": "none",
+        "transform": "none",
+        "visible": true
+      }
+    ],
+    "contrast": [
+      {
+        "tag": "H2",
+        "minimumGlyphRegionMedian": 7.473,
+        "minimumRequirement": 3,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "P",
+        "minimumGlyphRegionMedian": 11.129,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      },
+      {
+        "tag": "A",
+        "minimumGlyphRegionMedian": 11.084,
+        "minimumRequirement": 4.5,
+        "failingGlyphs": 0
+      }
+    ]
+  }
+]

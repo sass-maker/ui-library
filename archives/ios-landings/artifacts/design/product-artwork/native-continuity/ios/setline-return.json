@@ -1,0 +1,80 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "action": {
+      "type": "tap",
+      "elementRef": "e29",
+      "x": 201,
+      "y": 757
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "16szf9d",
+      "seq": 15,
+      "count": 108,
+      "targets": [
+        "e50|tap|button|Review the session first||",
+        "e47|tap|button|Start workout||",
+        "e82|tap|tab|Today|1|scope",
+        "e84|tap|tab|Plan|0|list.bullet.rectangle",
+        "e86|tap|tab|History|0|clock.arrow.circlepath",
+        "e88|tap|tab|You|0|person.crop.circle",
+        "e90|tap|tab|Exercises|0|chart.line.uptrend.xyaxis"
+      ],
+      "scroll": [
+        "e18|swipe|scroll-view|||",
+        "e43|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e31|text|text|Friday, 2 Oct||",
+        "e30|text|text|SETLINE||",
+        "e32|text|text|Follow the plan. Record the truth.||",
+        "e33|text|text|TODAY · AUTHORED PLAN||",
+        "e35|text|text|Lower strength||",
+        "e36|text|text|Squat · hinge · carry||",
+        "e37|text|text|3||",
+        "e38|text|text|8||",
+        "e39|text|text|—||",
+        "e40|text|text|EXERCISES||",
+        "e41|text|text|WORKING||",
+        "e42|text|text|MINUTES||",
+        "e45|text|text|STRENGTH||",
+        "e46|text|text|STAMINA||",
+        "e49|text|text|Start workout||",
+        "e52|text|text|Review the session first||",
+        "e53|text|text|THIS WEEK||",
+        "e54|text|text|S: Lower strength||",
+        "e55|text|text|M: Lower strength||",
+        "e56|text|text|T: Lower strength||",
+        "e57|text|text|W: Lower strength||",
+        "e58|text|text|T: Lower strength||",
+        "e59|text|text|F: Lower strength||",
+        "e60|text|text|S: Lower strength||",
+        "e61|text|text|S: Lower strength||",
+        "e62|text|text|M: Lower strength||",
+        "e63|text|text|T: Lower strength||",
+        "e64|text|text|W: Lower strength||",
+        "e65|text|text|T: Lower strength||",
+        "e66|text|text|F: Lower strength||",
+        "e67|text|text|S: Lower strength||",
+        "e68|text|text|RECORDED EVIDENCE||",
+        "e69|text|text|Your first completed workout will establish the record—not an estimate.||"
+      ],
+      "udid": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    }
+  },
+  "nextSteps": [
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --element-ref e50",
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --within-element-ref e43 --direction up --distance 0.5"
+  ]
+}

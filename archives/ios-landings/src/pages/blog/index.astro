@@ -1,0 +1,22 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getPublishedPosts, blogPath } from "../../lib/blog";
+import { site } from "../../site.config";
+import "../../styles/blog.css";
+const posts = await getPublishedPosts();
+---
+<SiteLayout title={`Journal — ${site.name}`} description={`Product notes and practical guides from ${site.name}.`} canonicalPath="/blog/" robots={posts.length ? "index,follow" : "noindex,follow"} includeStructuredData={false}>
+  <div class="shell blog-index">
+    <p class="blog-kicker">{site.name} / Journal</p>
+    <h1>Notes from<br />the product.</h1>
+    <p class="blog-intro">Practical guides, observations and updates. Written around what the app actually does.</p>
+    <div class="blog-list">
+      {posts.map(post => <article class="blog-row">
+        <div class="blog-meta"><time datetime={post.data.published}>{post.data.published}</time><span>{post.data.tags.join(" · ")}</span></div>
+        <div><h2><a href={blogPath(post)}>{post.data.title}<span aria-hidden="true"> ↗</span></a></h2><p>{post.data.description}</p></div>
+      </article>)}
+      {!posts.length && <p class="blog-empty">No published notes yet. <a href="/">Explore {site.name}</a>.</p>}
+    </div>
+    {posts.length > 0 && <a class="blog-feed" href="/blog/rss.xml">Subscribe via RSS ↗</a>}
+  </div>
+</SiteLayout>

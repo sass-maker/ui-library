@@ -1,0 +1,182 @@
+[
+  {
+    "product": "kith",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/screens/constellation.webp",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "setline",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/screens/workout-player.webp",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "anchor",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/screens/today.webp",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "motion",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/screens/motion-maker-clean.webp",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "indulge",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/screens/onboarding.webp",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "calorie",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/screens/today.webp",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "storagedaddy",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/storage-explorer.png",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "performancedaddy",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": "/images/ports.png",
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "browserdaddy",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": null,
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  },
+  {
+    "product": "contextdaddy",
+    "width": 320,
+    "reducedMotion": "reduce",
+    "focus": {
+      "text": "Skip to content",
+      "outline": "solid"
+    },
+    "anchor": {
+      "hash": "#how-it-works",
+      "target": "DIV"
+    },
+    "faqOpen": true,
+    "fullsizeHref": null,
+    "overflow": false,
+    "activeElementBecameMAIN": false,
+    "skipMeasurementLimit": "This condition is not the behavior contract: native hash navigation need not focus MAIN. Separate Kith follow-up observed #content, main top0, next Tab entering primary hero action."
+  }
+]

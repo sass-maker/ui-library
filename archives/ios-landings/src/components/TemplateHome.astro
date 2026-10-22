@@ -1,0 +1,26 @@
+---
+// Home page rendered from the product's SaaS Maker UI-library content file.
+// Head tags (canonical, Open Graph, JSON-LD, Clarity, App Health) come from the
+// factory's SiteHead so they match every other route; the template supplies
+// layout, the StudioFooter and its sign-up, feedback and Ask AI.
+import Base from "@saas-maker/templates/Base.astro";
+import { baseProps } from "@saas-maker/templates/page";
+import SiteHead from "./SiteHead.astro";
+import { defaultTitle } from "../lib/page-title";
+import { loadTemplateContent } from "../lib/template-content";
+
+const content = await loadTemplateContent();
+// Each page imports its own Tailwind entry; load only the selected family.
+// Vite must eliminate the unused import before collecting CSS for this build.
+const workbench = import.meta.env.PRODUCT === "browserdaddy" || import.meta.env.PRODUCT === "performancedaddy";
+const GalleryPage = !workbench
+  ? (await import("@saas-maker/templates/gallery-page")).GalleryPage : undefined;
+const WorkbenchPage = workbench
+  ? (await import("@saas-maker/templates/workbench-page")).WorkbenchPage : undefined;
+const { theme, mode, tokens, motion, fonts, surface, fromApp } = baseProps(content);
+---
+<Base title={defaultTitle()} theme={theme} mode={mode} fonts={fonts} surface={surface} fromApp={fromApp} tokens={tokens} motion={motion}>
+  <SiteHead slot="head" studioFooter />
+  {content.template === "gallery" && GalleryPage && <GalleryPage content={content} />}
+  {content.template === "workbench" && WorkbenchPage && <WorkbenchPage content={content} />}
+</Base>

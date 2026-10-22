@@ -1,0 +1,219 @@
+---
+import Cta from "./Cta.astro";
+import Phone from "./Phone.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { verifiedMacDownloadUrl } from "../lib/distribution";
+import { productId, site } from "../site.config";
+import { heroCtaTrackingScript } from "../lib/hero-cta-tracking";
+import { screenshotMetadata } from "../lib/screenshot-metadata.mjs";
+import "../styles/landing.css";
+
+const illustration = site.illustration;
+const macDownload = verifiedMacDownloadUrl();
+const artworkHero = site.hero.kind === "artwork";
+const historicalHero = site.hero.kind === "historical";
+const stageScene = artworkHero ? undefined : site.sceneArtwork;
+const hasGallery = site.gallery.length > 0;
+const overviewHref = hasGallery ? "#look-inside" : "/#how-it-works";
+const overviewLabel = hasGallery ? (historicalHero ? "Explore the product history" : artworkHero ? "Explore the app" : "See the real app") : "Read how it works";
+const heroMetadata = artworkHero ? await screenshotMetadata(productId, site.hero.image) : undefined;
+const privacyMetadata = await screenshotMetadata(productId, site.artwork ?? site.mark);
+const story = site.story;
+const sceneArtwork = story?.scene ?? site.sceneArtwork;
+const sceneCaption = site.sceneArtwork?.caption ?? "Illustrative artwork · real product screens below";
+const scenePhrases = site.chaptersTitle.match(/[^.!?]+[.!?]*/g)?.map((phrase) => phrase.trim()) ?? [site.chaptersTitle];
+// Each capture earns one explanatory home. Keep the gallery for additional evidence.
+const galleryShots = site.gallery.filter((shot) => !site.chapters.some((chapter) => chapter.image === shot.src));
+---
+<!--
+THESIS: Owner-selected C: a living memory book composed around authentic product evidence.
+OWN-WORLD: Product-owned paper, cloth, ink, photographic keepsakes and confident sans type.
+STORY: Understand one native app, inspect real screens, then take its honest available action.
+FIRST VIEWPORT: Promise and action left; exact screen on a material stage right, with one margin photograph.
+FORM: Asymmetric physical spread followed by a wide notebook scene and alternating evidence chapters.
+-->
+<SiteLayout>
+  <div class:list={["landing-book", story && "has-story"]} style={story ? `--story-ink:${story.ink}` : undefined}>
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        {story?.paper && <img class="paper-sheet" src={story.paper.src} alt="" width={story.paper.width} height={story.paper.height} decoding="async" />}
+        <p class="hero-kicker">{site.kicker}</p>
+        <p class="hero-brand" aria-hidden="true">{site.name}</p>
+        <h1><span class="sr-only">{site.name}: </span><span>{site.headline[0]}</span> <span>{site.headline[1]}</span></h1>
+        <p class="hero-lede">{site.lede}</p>
+        <div class="hero-actions">
+          {macDownload ? (
+            <>
+              <a class="button" href={macDownload}>{site.macDownloadLabel ?? "Download for Mac"} <span aria-hidden="true">↓</span></a>
+              <a class="text-link" href={site.device === "desktop" ? overviewHref : "/testflight/"}>{site.device === "desktop" ? overviewLabel : "See iPhone and Watch beta status"} <span aria-hidden="true">→</span></a>
+            </>
+          ) : (
+            <>
+              <Cta event={site.heroCtaEvents?.primary} />
+              <a class="text-link" data-cta={site.heroCtaEvents?.overview} href={overviewHref}>{overviewLabel} <span aria-hidden="true">↓</span></a>
+            </>
+          )}
+        </div>
+        <p class="hero-meta">{site.status}<span>{site.platforms.join(" · ")}</span></p>
+        {story && <p class="hero-margin" aria-hidden="true">{story.note}</p>}
+      </div>
+      <div class:list={["hero-stage", illustration && "has-illustration"]}>
+        <div class:list={["artifact-stage", stageScene && "has-scene"]}>
+        {story && <img class="bookcloth" src={story.cover.src} alt="" width={story.cover.width} height={story.cover.height} fetchpriority="high" />}
+        {stageScene && <img class="stage-scene" src={stageScene.src} alt="" width={stageScene.width} height={stageScene.height} decoding="async" />}
+        {story && <figure class="moment-photo">
+          <img src={story.moment.src} alt={story.moment.alt} width={story.moment.width} height={story.moment.height} decoding="async" />
+          <figcaption>{story.moment.caption}<small>Illustrative artwork</small></figcaption>
+        </figure>}
+        {!story && illustration && <img class="hero-illustration" src={illustration.src} alt={illustration.alt} />}
+        <span class="stage-label">{historicalHero ? "Historical capture" : artworkHero ? "App artwork" : "The actual app"}</span>
+        {artworkHero ? <img class="hero-artwork" src={site.hero.image} alt={site.hero.alt} width={heroMetadata!.width} height={heroMetadata!.height} fetchpriority="high" /> : <Phone
+          src={site.hero.image}
+          alt={site.hero.alt}
+          width={site.hero.width}
+          height={site.hero.height}
+          size="hero"
+          tilt="none"
+          priority
+        />}
+        </div>
+        <p class="stage-note">{site.hero.caption}{stageScene && <small>Illustrative setting · {historicalHero ? "historical capture" : "original app capture"}</small>}</p>
+      </div>
+    </div>
+    {site.chapters.length > 0 && <div class="shell proof-rail" aria-label="Product overview">
+      {site.chapters.slice(0, 3).map((chapter, index) => (
+        <div class="proof-item">
+          <span aria-hidden="true">{index + 1}</span>
+          <p><strong>{chapter.name}</strong>{chapter.title}</p>
+        </div>
+      ))}
+    </div>}
+  </section>
+
+  {sceneArtwork && <section class="memory-scene" aria-labelledby="scene-title">
+    <img class="scene-image" src={sceneArtwork.src} alt={sceneArtwork.alt} width={sceneArtwork.width} height={sceneArtwork.height} loading="lazy" decoding="async" />
+    <div class="shell scene-copy">
+      <h2 id="scene-title">{scenePhrases.map((phrase, index) => <><span>{phrase}</span>{index < scenePhrases.length - 1 && " "}</>)}</h2>
+      <p>{site.chaptersLede}</p>
+      <a class="text-link" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a>
+    </div>
+    <span class="scene-caption">{sceneCaption}</span>
+  </section>}
+
+  {galleryShots.length > 0 && <section id="look-inside" class="gallery" aria-labelledby="gallery-title">
+    <div class="shell gallery-head">
+      <p class="chapter-kicker">Look inside {site.name}</p>
+      <h2 id="gallery-title">{site.galleryTitle?.[0] ?? "No mockups."}<br />{site.galleryTitle?.[1] ?? "The real product."}</h2>
+      <p>{site.betaNote}</p>
+    </div>
+    <div class="shell gallery-grid">
+      {galleryShots.map((shot) => (
+        <Phone src={shot.src} alt={shot.alt} caption={shot.alt} width={shot.width} height={shot.height} size="gallery" artwork={artworkHero} />
+      ))}
+    </div>
+  </section>}
+
+  <section class="tension shell" aria-labelledby="tension-title">
+    <p class="statement"><span>{site.tension.statement}</span></p>
+    <div class="tension-copy">
+      <h2 id="tension-title">{site.tension.title}</h2>
+      <p>{site.tension.copy}</p>
+    </div>
+  </section>
+
+  <section id={galleryShots.length === 0 ? "look-inside" : undefined} class="chapters" aria-labelledby="chapters-title">
+    <div id="how-it-works" class="shell chapter-intro">
+      <div>
+        <p class="chapter-kicker">{site.chaptersKicker}</p>
+        <h2 id="chapters-title">{site.chaptersTitle}</h2>
+      </div>
+      <p>{site.chaptersLede}</p>
+    </div>
+    {site.chapters.map((chapter, index) => (
+      <article class:list={["chapter", index % 2 === 1 && "chapter-reverse"]}>
+        <div class="shell chapter-grid">
+          <div class="chapter-copy">
+            <p class="chapter-name">{chapter.name}</p>
+            <h3>{chapter.title}</h3>
+            <p>{chapter.copy}</p>
+          </div>
+          <Phone
+            src={chapter.image}
+            alt={chapter.alt}
+            width={chapter.width}
+            height={chapter.height}
+            size="chapter"
+            tilt="none"
+            artwork={artworkHero}
+          />
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="fit-section">
+    <div class="shell fit-grid">
+      <div>
+        <p class="chapter-kicker">{site.fit.kicker}</p>
+        <h2>{site.fit.title}</h2>
+      </div>
+      <div class="fit-copy">
+        <p><strong class="fit-label">A fit</strong> {site.fit.yes}</p>
+        <p><strong class="fit-label">Not a fit</strong> {site.fit.no}</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+    <div class="shell privacy-grid">
+      <div class="privacy-mark" aria-hidden="true">
+        <img src={site.artwork ?? site.mark} width={privacyMetadata.width} height={privacyMetadata.height} style="height:auto;align-self:start" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div>
+        <p class="chapter-kicker">{site.privacy.kicker}</p>
+        <h2 id="privacy-title">{site.privacy.title}</h2>
+        <p>{site.privacy.copy}</p>
+        <a class="text-link" href="/privacy/">Read the plain-language privacy policy <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq shell" aria-labelledby="faq-title">
+    <h2 id="faq-title">A few honest answers.</h2>
+    <div class="faq-list">
+      {site.faqs.map((faq) => (
+        <details>
+          <summary>{faq.question}</summary>
+          <p>{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="founder-note">
+    <div class="shell founder-grid">
+      <blockquote>“{site.founder.quote}”</blockquote>
+      <div>
+        <p class="founder-credit">{site.founder.credit}</p>
+        <p>{site.founder.note}</p>
+      </div>
+    </div>
+  </section>
+  </div>
+  <section slot="footer-cta" class="closing">
+    {story && <img class="closing-cloth" src={story.cover.src} alt="" width={story.cover.width} height={story.cover.height} loading="lazy" decoding="async" />}
+    <div class="shell">
+      <p class="chapter-kicker">{site.name} · {site.platforms.join(" / ")}</p>
+      <h2>{site.closingTitle.join(" ")}</h2>
+      {macDownload ? (
+        <>
+          <a class="button" href={macDownload}>{site.macDownloadLabel ?? "Download for Mac"} <span aria-hidden="true">↓</span></a>
+          <a class="text-link closing-download" href={site.device === "desktop" ? "/release/" : "/testflight/"}>{site.device === "desktop" ? "Release details" : "See iPhone and Watch beta status"} <span aria-hidden="true">→</span></a>
+        </>
+      ) : <Cta />}
+      <p class="closing-status">{site.status}</p>
+    </div>
+  </section>
+  {site.heroCtaEvents && <script slot="body-end" is:inline set:html={heroCtaTrackingScript} />}
+</SiteLayout>

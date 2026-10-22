@@ -1,0 +1,67 @@
+import type { SiteConfig } from "../../src/lib/types";
+import { site as storage } from "../storagedaddy/site.config";
+
+export const site: SiteConfig = {
+  name: "BrowserDaddy",
+  url: "https://browser.daddyrad.com",
+  tagline: "See where your browsing time goes.",
+  headline: ["Your browsing history.", "Your attention, explained."],
+  lede: "Bring browser history together on your Mac. Compare visits with measured foreground attention, find patterns across browsers, and revisit what mattered.",
+  kicker: "Browser history. Real attention.",
+  summary: "BrowserDaddy is a native Mac browsing-intelligence app that archives readable browser history and compares visits with measured foreground attention. Optional external topic tagging requires consent.",
+  status: "Public early-access beta · free to download",
+  platforms: ["macOS 15+", "Native Mac app"],
+  themeColor: "#000000",
+  mark: "/images/browserdaddy-icon-v1.png",
+  artwork: "/images/browserdaddy-scout-v1.png",
+  socialImage: "/images/browserdaddy-scout-v1.png",
+  tokens: storage.tokens,
+  sceneArtwork: { src: "/images/story/browserdaddy-scene-v1.webp", alt: "Blank browser-tab index cards beside a separate mint-and-brass attention compass", width: 1536, height: 1024, caption: "Illustrative artwork · a browsing trail and attention are different evidence" },
+  colorScheme: "dark",
+  device: "desktop",
+  newsletterCapture: true,
+  hero: { kind: "artwork", image: "/images/browserdaddy-scout-v1.png", alt: "BrowserDaddy's Tab Scout carrying browser tabs and an attention compass", caption: "Meet Tab Scout, BrowserDaddy's guide to your browsing day. Product artwork, not a screenshot. Browsing-history captures stay out of this preview." },
+  gallery: [],
+  galleryTitle: ["History and attention.", "Two different signals."],
+  applicationCategory: "UtilitiesApplication",
+  availability: "unreleased",
+  macDownloadUrl: "https://browser.daddyrad.com/download",
+  macDownloadLabel: "Download for Mac",
+  betaNote: "The public beta is a signed and notarized universal build for macOS 15 or later, free during early access. Browser access and active-tab evidence depend on macOS permissions and browser support. Private-window filtering is not yet release-qualified.",
+  tension: { statement: "A visit is not a minute of attention.", title: "Separate what opened from what held your focus.", copy: "History records where you went. Foreground and idle measurements add a different signal: when an app was active. BrowserDaddy keeps the two distinct instead of turning visit counts into guessed screen time." },
+  chaptersKicker: "Know what the app can see",
+  chaptersTitle: "Start with access. Keep the limits visible.",
+  chaptersLede: "Search a separate local archive of browser visits, filter by browser or date, and compare trends with foreground attention. History reads do not change the browser's records. Active-tab evidence needs supported browser scripting and Automation access. Missing access is reported, not turned into a zero.",
+  chapters: [],
+  fit: { kicker: "Made for your own Mac", title: "Understand your browsing, not someone else's.", yes: "People who use several browsers, want a searchable local archive and want to distinguish browsing activity from measured foreground attention.", no: "Employee surveillance, browser cleanup, recovering private browsing, or reconstructing attention before the watcher started." },
+  privacy: { kicker: "Know what leaves the Mac", title: "Local archive. Optional external tagging.", copy: "History and focus records are stored on your Mac. Optional topic tagging sends domain names, selected URL paths and page titles to classifier.dev. Leave tagging off to avoid that enrichment request. Private-window filtering is not yet release-qualified; do not treat the preview as a privacy guarantee." },
+  faqs: [
+    { question: "Can I download BrowserDaddy?", answer: "Yes. The beta is a free, signed and notarized universal Mac build, distributed directly — no account, checkout, App Store or TestFlight listing. Read the private-window caveat below before relying on the beta for sensitive browsing." },
+    { question: "Which browsers can it read?", answer: "History discovery covers Chromium-family browsers and profiles, Firefox and Safari where their local stores are readable. Active-tab support is narrower and depends on browser scripting and per-browser Automation permission." },
+    { question: "Are visits the same as time spent?", answer: "No. Browser history records visits. The attention watcher measures foreground activity and input-idle state from when it starts. It cannot reconstruct past attention or measure a tab merely because it is visible on another monitor." },
+    { question: "Does it modify my browser history?", answer: "No. Collection reads browser stores into a separate local archive. BrowserDaddy is not a history cleaner and does not delete visits from your browser." },
+    { question: "Does it send data to a service?", answer: "Optional tagging uses classifier.dev. When enabled and run, domain classification includes domain names and selected page titles; page classification includes hostnames, URL paths and titles. These can contain sensitive information. The rest of the browsing archive is local; the website's own hosting and footer behavior is described in Privacy." },
+    { question: "What about private browsing?", answer: "BrowserDaddy is not intended to recover private browsing. Private-window exclusion in the live attention watcher has not completed release qualification. Avoid using the preview for sensitive private browsing until that protection is verified." }
+  ],
+  founder: { quote: "Keep visits and attention separate.", credit: "The BrowserDaddy evidence rule", note: "Show what was measured, what was unavailable and when collection began." },
+  closingTitle: ["See the pattern.", "Understand your attention."],
+  footerFinePrint: "An independent Mac app from Significant Hobbies. Free during early access.",
+  capabilities: ["Read-only browser-history collection into a local archive", "Chromium-profile, Firefox and Safari history discovery", "Search and browser filters", "Foreground and idle-aware attention measurements", "Browsing trends and source/date filters", "Permission visibility", "Consent-gated external topic tagging"],
+  boundaries: ["Requires macOS 15 or later", "Visits are not attention and past focus cannot be reconstructed", "Active-tab visibility depends on browser support and Automation permission", "Private-window filtering is not release-qualified", "Optional tagging transmits domain names, selected URL paths and page titles to classifier.dev", "No browser-history deletion, remote surveillance or device sync"],
+  lastUpdated: "2026-09-28",
+  legal: {
+    privacy: { title: "Privacy", lede: "Understand local collection and optional external tagging before using the preview.", sections: [
+      { title: "Local history and focus archive", body: "BrowserDaddy reads available browser history stores and keeps a separate archive on your Mac. Records can include visited URLs, page titles, visit times, browser/profile identity, searches and foreground focus segments. It does not modify the source browser history. Browser and macOS permissions determine what is readable." },
+      { title: "Attention and private windows", body: "Foreground attention uses the frontmost app, input-idle state and, where permitted, active-tab metadata. Collection starts with the watcher; it is not a reconstruction of past attention. Private-window exclusion is not yet release-qualified. The development preview should not be relied on to exclude sensitive private-tab activity." },
+      { title: "Optional classifier.dev requests", body: "When you enable and run topic tagging, classification requests send domain names with selected page titles, and page hostnames with URL paths and titles, to classifier.dev. These values can reveal sensitive browsing information. This optional external processing is distinct from local archiving. Do not enable it unless you are comfortable transmitting that information." },
+      { title: "Email updates", body: "Email updates are optional and sent through SaaS Maker. Signing up sends your email address and explicit consent, which SaaS Maker stores as subscription records to manage occasional BrowserDaddy product updates. The form does not send browser history, archive content or native app data. You can unsubscribe at any time." },
+      { title: "This website", body: "The landing page does not access your browser history or the native archive. App Health collects website page views and named clicks on the Mac download and release-status links, with basic referral and campaign information. It receives no browser history or archive data. Hosting requests include ordinary connection data. AI-assistant links open a question about the public product when clicked and do not attach your browsing archive. The download button serves the app bundle directly; no account creation is offered." }
+    ] },
+    support: { title: "Support", lede: "Report problems with version, macOS release, and whether the issue concerns history or attention.", sections: [{ title: "Report an issue", body: "Use https://github.com/sarthakagrawal927/browserdaddy/issues/new. Include your app version, macOS version and the browser involved. Remove visited URLs, titles, searches, profile identifiers and personal file paths before sharing logs or screenshots." }] },
+    terms: { title: "Terms", lede: "BrowserDaddy is early-access software. Use it only with browsing data you are authorized to inspect.", sections: [{ title: "Your own browsing", body: "Use BrowserDaddy only with browser data you are authorized to inspect. Measurements may be incomplete. Visit counts do not establish productivity, intent or time spent, and must not be used as proof about another person." }, { title: "Sensitive data", body: "Browsing records and topic-classification inputs can be sensitive. Review permission and tagging choices carefully. Private-window filtering is not yet release-qualified; no blanket privacy guarantee is made." }] },
+    accessibility: { title: "Accessibility", lede: "Browsing evidence should be readable and its limits explicit.", sections: [{ title: "Website", body: "This site uses semantic headings, keyboard-operable links, visible focus, image descriptions and reduced-motion support." }, { title: "Native app", body: "Native VoiceOver, keyboard and minimum-window qualification remains incomplete. This page does not claim that native accessibility acceptance is finished." }] },
+    testflight: { title: "Release status", lede: "BrowserDaddy is distributed directly for Mac, not through TestFlight.", sections: [], testing: "Browser-history archiving, search, trends, foreground attention and permission visibility. Optional topic tagging sends selected browsing metadata to classifier.dev.", notIncluded: "Verified private-window exclusion, reconstructed historical attention, browser-history cleanup, device sync or remote monitoring." }
+  },
+  requiredHomeCopy: ["BrowserDaddy", "free to download", "classifier.dev", "URL paths", "attention"],
+  prohibitedClaims: ["nothing leaves this Mac", "Private browsing stays private"]
+};

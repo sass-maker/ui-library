@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 330" role="img" aria-labelledby="title desc">
+  <title id="title">Drawing the day</title>
+  <desc id="desc">A hand-drawn character arranges blocks for the day while distractions wait in a basket.</desc>
+  <g fill="none" stroke="#edf1f7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M44 281c139 5 275 1 468 0" opacity=".32"/>
+    <path d="M111 275c17-19 26-45 31-73M174 274c-12-23-17-48-17-75"/>
+    <path d="M103 143c3-39 25-68 59-68 37 0 59 31 57 72-2 40-23 70-61 69-37 0-58-32-55-73Z" fill="#090a0d"/>
+    <circle cx="143" cy="137" r="6" fill="#edf1f7" stroke="none"/>
+    <circle cx="178" cy="137" r="6" fill="#edf1f7" stroke="none"/>
+    <path d="M198 171c36-4 42-15 72-37M196 185c32 5 45 0 78-14"/>
+    <path d="M284 50h156v49H284z"/>
+    <path d="M284 110h156v49H284z" fill="#3b82f6" stroke="#3b82f6"/>
+    <path d="M284 170h156v49H284z"/>
+    <path d="M284 230h156v49H284z" fill="#f5b849" stroke="#f5b849"/>
+    <path d="M272 35v258" opacity=".42"/>
+    <path d="m457 224 69 6-12 54h-49z"/>
+    <path d="M467 239h48M465 252h47M463 265h47M480 231l-4 51M497 232l-2 51" opacity=".55"/>
+    <path d="M482 221c-7-20 7-29 17-17 9-19 30-8 21 10-4 8-14 13-28 16" fill="#fb7185" stroke="#fb7185"/>
+    <path d="M458 205c-13-10-14-22-4-28M470 197c-5-12 0-21 10-25" opacity=".5"/>
+    <path d="M292 73c12-8 25-8 38 0M348 73h68" opacity=".32"/>
+  </g>
+</svg>

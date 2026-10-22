@@ -1,0 +1,149 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "BrowserDaddy artwork-only landing",
+  "surfaceMode": "persuade",
+  "mode": "preserve",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Existing project-native landing components and tokens",
+      "Actual PerformanceDaddy app captures"
+    ],
+    "probes": [
+      {
+        "id": "editorial",
+        "path": "artifacts/design/directions/a-editorial.png"
+      },
+      {
+        "id": "showcase",
+        "path": "artifacts/design/directions/b-showcase.png"
+      },
+      {
+        "id": "fieldguide",
+        "path": "artifacts/design/directions/c-fieldguide.png"
+      }
+    ],
+    "selected": "editorial",
+    "approval": "approved",
+    "before": "artifacts/design/editorial/performance-1440.png",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": "Composition studies use existing project navigation, links, real captures, section and reading patterns. No new UI library or production dependency."
+      }
+    },
+    "contract": {
+      "purpose": "Explain BrowserDaddy history and measured attention honestly, with app artwork only.",
+      "purposeSource": "products/browserdaddy/site.config.ts and native BrowserDaddy source; owner artwork-only instruction",
+      "canonicalPurpose": "BrowserDaddy helps Mac users understand browsing history and measured foreground attention through a local history archive and opt-in categorization.",
+      "purposeAlignment": "match",
+      "driftNote": "Native private-window protection is not claimed as qualified; optional external classifier transmission is explicitly disclosed.",
+      "audience": "Mac users investigating their browsing history and measured attention.",
+      "job": "Understand history versus measured attention and inspect development availability.",
+      "thesis": "Approved Editorial uses compact split storytelling, quiet typography and real uncropped evidence with captions below images.",
+      "system": "Product-owned semantic tokens; real aspect ratios; system fonts; 44px controls; reduced-motion fallback; candidate-specific composition and reading hierarchy.",
+      "signature": "Actual app mascot, explicitly labelled artwork rather than UI evidence.",
+      "risk": "Artwork provides less capability proof than screenshots; owner explicitly chose privacy-safe artwork only."
+    },
+    "candidates": [
+      {
+        "id": "editorial",
+        "thesis": "Quiet split spread",
+        "system": "Compact sans-serif copy and proof columns; fine rules; understated article list",
+        "interaction": "Direct anchors, original-image access and brief entrance motion",
+        "risk": "Desktop proof is smaller beside the copy"
+      },
+      {
+        "id": "showcase",
+        "thesis": "Large product stage",
+        "system": "Centered rounded sans headline; full-width mint product field; magazine-style article feature",
+        "interaction": "One-time image entrance, subtle action feedback and direct section anchors",
+        "risk": "Headline can delay first-screen evidence; spacing tightened after review"
+      },
+      {
+        "id": "fieldguide",
+        "thesis": "Navigable evidence manual",
+        "system": "Persistent chapter rail; serif title and reading copy; denser ruled evidence rows",
+        "interaction": "Persistent anchor navigation and captioned evidence spreads",
+        "risk": "Documentation density may be less inviting for simple consumer apps"
+      }
+    ]
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/editorial/browserdaddy-390.png"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/editorial/browserdaddy-768.png"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/editorial/browserdaddy-1440.png"
+      }
+    ],
+    "projectCheck": {
+      "command": "pnpm check; pnpm exec astro check; provider HTTP/HEAD checks",
+      "status": "pass",
+      "note": "20 tests, 11 product builds/site checks, zero Astro diagnostics. Local link graph clean. Provider home/OpenAPI byte-matched local output; HTML, Markdown, sitemap, robots, agent catalog, IndexNow key and genuine 404 verified. Custom DNS pending; previews noindex. No CWV or assistive-technology certification."
+    },
+    "critique": {
+      "score": 37,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Independent visual review found no P0/P1. Technical audit 18/20; contrast/overflow/image checks root-reported.",
+        "Artwork-only proof is limited by owner's explicit choice. No private app screenshot published."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "Independent process_design_assessment agent; not a visitor study",
+      "answers": {
+        "product": "BrowserDaddy is a Mac browsing-history and measured-attention app.",
+        "audience": "Mac users who want to understand where browsing time goes.",
+        "value": "Separate historical browsing records from measured attention.",
+        "mechanism": "Local history archive and foreground/idle measurement, with optional external classification.",
+        "proof": "Actual app artwork only, explicitly not a screenshot.",
+        "nextAction": "Check development status; no public app download."
+      },
+      "purposeScore": {
+        "product": 24,
+        "audience": 14,
+        "value": 14,
+        "mechanism": 14,
+        "proof": 8,
+        "nextAction": 14,
+        "total": 88
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "keep",
+    "note": "Owner selected A Editorial for the shared template and explicitly instructed app artwork only for BrowserDaddy. Deployment authorized for BrowserDaddy and PerformanceDaddy websites only."
+  }
+}

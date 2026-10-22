@@ -1,0 +1,37 @@
+{
+  "schema": "xcodebuildmcp.output.build-run-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "request": {
+      "scheme": "Kith",
+      "projectPath": "/Users/sarthak/Desktop/fleet/kith/ios/Kith.xcodeproj",
+      "derivedDataPath": "/Users/sarthak/Desktop/fleet/ios-landings/.fleet-local/native-continuity/kith-build",
+      "configuration": "Debug",
+      "platform": "iOS Simulator",
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "summary": {
+      "status": "SUCCEEDED",
+      "durationMs": 35223,
+      "target": "simulator"
+    },
+    "artifacts": {
+      "appPath": "/Users/sarthak/Desktop/fleet/ios-landings/.fleet-local/native-continuity/kith-build/Build/Products/Debug-iphonesimulator/Kith.app",
+      "bundleId": "com.significanthobbies.kith",
+      "processId": 89051,
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842",
+      "buildLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/build_run_sim_2026-10-02T17-40-10-437Z_pid82055_f5e6ec60.log",
+      "runtimeLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.significanthobbies.kith_2026-10-02T17-40-44-241Z_helperpid89005_ownerpid82055_fd876947.log",
+      "osLogPath": "/Users/sarthak/Library/Developer/XcodeBuildMCP/workspaces/ios-landings-0fe86a166d2d/logs/com.significanthobbies.kith_oslog_2026-10-02T17-40-45-653Z_helperpid89116_ownerpid82055_44015e96.log"
+    },
+    "diagnostics": {
+      "warnings": [],
+      "errors": []
+    }
+  },
+  "nextSteps": [
+    "Stop app in simulator: xcodebuildmcp simulator stop --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --bundle-id com.significanthobbies.kith"
+  ]
+}

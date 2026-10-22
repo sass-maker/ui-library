@@ -1,0 +1,20 @@
+{
+  "schema": "xcodebuildmcp.output.capture-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842",
+      "screenshotPath": "/var/folders/9_/1109_2dd1qz6zyvmxb5zp8pc0000gn/T/screenshot_optimized_d13a83f1-99e1-476a-a6d9-fbe2a3ba42d8.jpg"
+    },
+    "capture": {
+      "format": "image/jpeg",
+      "width": 368,
+      "height": 800
+    }
+  }
+}

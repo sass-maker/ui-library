@@ -1,0 +1,139 @@
+{
+  "posture": "advisory",
+  "rawReports": "Unmodified runner reports are local ignored evidence; hashes preserve provenance. Scores are not owner acceptance or native continuity.",
+  "checkpoints": [
+    {
+      "stage": "iteration",
+      "report": ".fleet-local/slop/artwork-iteration.json",
+      "sha256": "cc7364d34e2c115c0d0fdecb9830c2d416b747bc8cd71968df37e38465e1de99",
+      "tool": {
+        "name": "slop-detect",
+        "version": "0.8.0",
+        "revision": "cdd58e1d249ae39616d94950d6ea232ec7b0b378"
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "measuredAt": "2026-10-02T16:10:38.330Z",
+      "scores": [
+        {
+          "url": "http://127.0.0.1:8841",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "gradient_backgrounds"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "final",
+      "report": ".fleet-local/slop/artwork-final-v3.json",
+      "sha256": "03fde67f00fc4b6213954c74b07d5af223403a54c789f6a8b4ec68c47cf7da6a",
+      "tool": {
+        "name": "slop-detect",
+        "version": "0.8.0",
+        "revision": "cdd58e1d249ae39616d94950d6ea232ec7b0b378"
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "measuredAt": "2026-10-02T16:52:30.366Z",
+      "scores": [
+        {
+          "url": "http://127.0.0.1:8840",
+          "score": 7,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "cream_default_bg"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8841",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "gradient_backgrounds"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8842",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "perma_dark_mode"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8843",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "perma_dark_mode"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8844",
+          "score": 7,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "cream_default_bg"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8845",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "gradient_backgrounds"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8846",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "perma_dark_mode"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8847",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "perma_dark_mode"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8848",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "perma_dark_mode"
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8849",
+          "score": 4,
+          "definitionsVersion": "2026.09",
+          "preset": "marketing",
+          "findings": [
+            "perma_dark_mode"
+          ]
+        }
+      ]
+    }
+  ]
+}

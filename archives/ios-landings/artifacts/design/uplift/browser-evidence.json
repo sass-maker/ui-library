@@ -1,0 +1,267 @@
+{
+  "views": [
+    {
+      "name": "kith",
+      "width": 390,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 768,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 1440,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "performance",
+      "width": 390,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "https://performance.daddyrad.com/download",
+      "frame": "desktop",
+      "artwork": false
+    },
+    {
+      "name": "performance",
+      "width": 768,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "https://performance.daddyrad.com/download",
+      "frame": "desktop",
+      "artwork": false
+    },
+    {
+      "name": "performance",
+      "width": 1440,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "https://performance.daddyrad.com/download",
+      "frame": "desktop",
+      "artwork": false
+    },
+    {
+      "name": "browser",
+      "width": 390,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "https://browser.daddyrad.com/download",
+      "artwork": true
+    },
+    {
+      "name": "browser",
+      "width": 768,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "https://browser.daddyrad.com/download",
+      "artwork": true
+    },
+    {
+      "name": "browser",
+      "width": 1440,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "https://browser.daddyrad.com/download",
+      "artwork": true
+    }
+  ],
+  "interactions": [
+    {
+      "name": "kith-normal-scroll-images",
+      "pass": true,
+      "details": [
+        {
+          "src": "/images/screens/constellation.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/person.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/onboarding.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "performance-normal-scroll-images",
+      "pass": true,
+      "details": [
+        {
+          "src": "/images/ports.png",
+          "loaded": true
+        },
+        {
+          "src": "/images/diagnose.png",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "browser-normal-scroll-images",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "keyboard-skip",
+      "pass": true
+    },
+    {
+      "name": "skip-target",
+      "pass": true
+    },
+    {
+      "name": "keyboard-faq-open",
+      "pass": true
+    },
+    {
+      "name": "keyboard-faq-close",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion",
+      "pass": true,
+      "details": [
+        {
+          "class": "moment-photo",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        },
+        {
+          "class": "device device--hero",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        },
+        {
+          "class": "scene-image",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        },
+        {
+          "class": "shell",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "route-/testflight/",
+      "pass": true
+    },
+    {
+      "name": "route-/privacy/",
+      "pass": true
+    },
+    {
+      "name": "route-/support/",
+      "pass": true
+    },
+    {
+      "name": "route-/terms/",
+      "pass": true
+    },
+    {
+      "name": "route-/accessibility/",
+      "pass": true
+    },
+    {
+      "name": "route-/blog/",
+      "pass": true
+    },
+    {
+      "name": "desktop-release",
+      "pass": true
+    }
+  ],
+  "performance": {
+    "navigation": [
+      {
+        "domContentLoaded": 41.29999998211861,
+        "load": 47.599999994039536
+      }
+    ],
+    "resources": [
+      {
+        "name": "paper.webp",
+        "bytes": 20584,
+        "duration": 29.5
+      },
+      {
+        "name": "book-stage.webp",
+        "bytes": 535564,
+        "duration": 33
+      },
+      {
+        "name": "coffee-friends.webp",
+        "bytes": 61916,
+        "duration": 31.099999994039536
+      },
+      {
+        "name": "memory-table.webp",
+        "bytes": 233244,
+        "duration": 22.599999994039536
+      }
+    ],
+    "addedLandingJavascript": 0
+  },
+  "failures": [],
+  "externalRequests": [
+    {
+      "url": "https://sassmaker.com/newsletter-capture.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://health.sassmaker.com/tracker.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://sassmaker.com/project-strip.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://sassmaker.com/ai-chat-footer.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://www.clarity.ms/tag/y6bus3owf7",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://www.clarity.ms/tag/ymdspsyir7",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://www.clarity.ms/tag/ymdsbwwko3",
+      "error": "net::ERR_FAILED"
+    }
+  ],
+  "pageErrors": []
+}

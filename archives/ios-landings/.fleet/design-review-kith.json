@@ -1,0 +1,103 @@
+{
+  "$schema": "fleet.design-review.v1",
+  "version": 1,
+  "project": "ios-landings",
+  "target": "Kith native-product landing within the shared Significant Hobbies template",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "product",
+  "context": {
+    "product": "PRODUCT.md",
+    "design": "DESIGN.md"
+  },
+  "direction": {
+    "references": [
+      "Kith's real current constellation, person record, and first-run onboarding",
+      "The native lantern-on-linen visual system and explicit 1–5 closeness model",
+      "The owner's relationship-memory purpose and current local, CloudKit, and Hub boundaries"
+    ],
+    "probes": [],
+    "selected": "warm-relationship-constellation",
+    "approval": "agent-selected",
+    "before": "artifacts/design/kith-before-live-1440.jpg",
+    "contract": {
+      "purpose": "Explain Kith as a private native iPhone memory app for people, explicit closeness, standing context, and dated moments, while stating its real storage, sync, availability, and product boundaries.",
+      "purposeSource": "Kith PROJECT_STATUS.md, PRODUCT.md, DESIGN.md, current native source and build settings, and Site Health dossier",
+      "canonicalPurpose": "Kith helps a person remember the people they genuinely want to stay close to and act with more thoughtfulness through a chosen-closeness constellation, standing notes, and chronological memories.",
+      "purposeAlignment": "match",
+      "driftNote": "The previous live page said there was no account, described only local and iCloud storage, called internal testing preparation, and omitted current source build 7. Current source now distinguishes optional Apple or Google Significant Hobbies authentication, successful Hub sync, the transition CloudKit mirror, verified internal build 3, and the absence of public access.",
+      "audience": "An iPhone user who values a small set of relationships and dislikes treating them as a contact database, pipeline, or social graph.",
+      "job": "Understand how explicit closeness shapes the constellation, what each person record can retain, how the three private data copies differ, what Kith deliberately does not automate, and whether the app is publicly available.",
+      "thesis": "The landing should feel like opening the native constellation: warm, spacious, personal, and specific enough to make relationship memory concrete without becoming a CRM.",
+      "system": "Linen paper, espresso type, clay, apricot, honey, rose, and sage lanterns, rounded native forms, generous fields, and real higher-resolution iPhone screens.",
+      "signature": "The chosen-closeness constellation leads the page, followed by the same person-context and first-real-memory sequence used in the native app.",
+      "risk": "Generic relationship-management copy could imply contacts, reminders, inferred scores, a social graph, or a mandatory account, while vague cloud language could collapse the local document, CloudKit mirror, and optional Hub copy into one false promise."
+    }
+  },
+  "evidence": {
+    "screenshots": [
+      {
+        "width": 390,
+        "path": "artifacts/design/kith-after-390.jpg"
+      },
+      {
+        "width": 768,
+        "path": "artifacts/design/kith-after-768.jpg"
+      },
+      {
+        "width": 1440,
+        "path": "artifacts/design/kith-after-1440.jpg"
+      }
+    ],
+    "projectCheck": {
+      "command": "PRODUCT=kith pnpm check:one; ./ios/scripts/check.sh in the native Kith repository",
+      "status": "pass",
+      "note": "Kith builds with zero Astro diagnostics and validates 19 public surfaces. Browser inspection at 390, 768, and 1440 found no overflow or failed images. The native gate passed 20 tests and a release-simulator build."
+    },
+    "critique": {
+      "score": 37,
+      "maximum": 40
+    },
+    "audit": {
+      "score": 18,
+      "maximum": 20
+    },
+    "unresolved": {
+      "p0": 0,
+      "p1": 0
+    },
+    "detector": {
+      "posture": "advisory",
+      "findings": [
+        "Independent review found no purpose, lifecycle, visual, responsive, data-boundary, or commercial-state P0/P1 issue.",
+        "Current source deliberately avoids contact import, inferred closeness, attention scoring, reminders, social graph, public access, and payment claims."
+      ]
+    },
+    "comprehension": {
+      "status": "pass",
+      "reviewer": "Independent fresh-visitor review by Harvey",
+      "answers": {
+        "product": "Kith is a private, device-first iPhone app for remembering people and relationship context.",
+        "audience": "It is for someone who wants to remain thoughtful about a few meaningful relationships without using a CRM, contact manager, or social network.",
+        "value": "Kith preserves the small facts and dated moments that help someone show up with useful personal context.",
+        "mechanism": "The user explicitly assigns 1–5 closeness, which sizes a warm constellation, while each person receives standing fields and a chronological dated log; closeness is never inferred.",
+        "proof": "Real current screens show the constellation, person record, onboarding, and logs, supported by exact release evidence that build 1.0.0 (3) is processed and internally assigned while source is build 7.",
+        "nextAction": "Inspect the app and internal TestFlight status while understanding there is no public invitation, App Store listing, paid plan, subscription, or checkout."
+      },
+      "purposeScore": {
+        "product": 25,
+        "audience": 15,
+        "value": 15,
+        "mechanism": 15,
+        "proof": 15,
+        "nextAction": 15,
+        "total": 100
+      },
+      "mismatches": []
+    }
+  },
+  "ownerFeedback": {
+    "decision": "agent-selected",
+    "note": "The operator authorized end-to-end portfolio landing work without repeated feedback loops; this receipt records local qualification, not deployment approval."
+  }
+}

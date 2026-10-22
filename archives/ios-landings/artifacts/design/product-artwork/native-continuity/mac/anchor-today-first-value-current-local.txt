@@ -1,0 +1,44 @@
+Window: "Anchor", App: Anchor Local.
+0 standard window Anchor, ID: main, Secondary Actions: Raise
+	1 container
+		2 text Anchor
+		3 button Description: Focus, ID: anchor.mac.nav.focus
+		4 button (selected) Description: Today, Value: Selected, ID: anchor.mac.nav.today
+		5 button Description: Habits, ID: anchor.mac.nav.habits
+		6 button Description: History, ID: anchor.mac.nav.history
+		7 scroll area Secondary Actions: Scroll Up, Scroll Down
+			8 text FRIDAY, 2 OCT, Draw the day, Everything this day asks of you, laid out on the clock.
+			9 date time area (settable, date) Day, Value: 02/10/26
+				10 stepper Value: 0.5, Secondary Actions: Increment, Decrement
+					11 increment arrow button
+					12 decrement arrow button
+			13 button Go to today
+			14 button Description: Copy day, ID: anchor.today.copy-day
+			15 button Description: Log time, ID: anchor.today.log-time
+			16 button Description: Customize, ID: anchor.today.customize
+			17 text Value: 0 finished · 0 now · 1 ahead, ID: anchor.today.completion
+			18 container anchor.today.block.F13AA897-308C-4CF6-9C91-636415A8A463
+				19 text Synthetic landing review
+				20 button Description: Actions for Synthetic landing review, ID: anchor.today.block-actions
+			21 scroll bar (settable, float) 0.4535686876438987
+				22 value indicator (settable, float) 0.4535686876438987
+				23 increment arrow button
+				24 decrement arrow button
+				25 increment page button
+				26 decrement page button
+		27 button Settings
+		28 button Add an entry
+	29 close button
+	30 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	31 minimize button
+	32 text Anchor
+33 menu bar
+	34 Anchor Local
+	35 Edit
+	36 View
+	37 Navigate
+	38 Focus
+	39 Window
+	40 Help
+
+The focused UI element is 0 standard window Anchor, ID: main, Secondary Actions: Raise

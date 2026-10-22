@@ -1,0 +1,46 @@
+{
+  "schema": "xcodebuildmcp.output.capture-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "artifacts": {
+      "simulatorId": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "0cx7jpn",
+      "seq": 12,
+      "count": 36,
+      "targets": [],
+      "scroll": [
+        "e12|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e14|text|text|SETLINE||",
+        "e16|text|text|YOUR PLAN, IN ORDER||",
+        "e17|text|text|Follow the plan. Record the truth.||",
+        "e18|text|text|Setline keeps the authored target in view, records only what you enter, and runs entirely on this device during a workout.||",
+        "e19|text|text|Authored target, What the programme asks for.||",
+        "e20|text|text|Authored target||",
+        "e21|text|text|What the programme asks for.||",
+        "e22|text|text|Recorded actual, What you really completed.||",
+        "e23|text|text|Recorded actual||",
+        "e24|text|text|What you really completed.||",
+        "e25|text|text|Set timer and rest, Work time is recorded separately; rest starts only after a set.||",
+        "e26|text|text|Set timer and rest||",
+        "e27|text|text|Work time is recorded separately; rest starts only after a set.||"
+      ],
+      "udid": "28E413D9-B587-41D3-9D7C-3D903BC6F842"
+    }
+  },
+  "nextSteps": [
+    "Refresh after layout changes: xcodebuildmcp simulator snapshot-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842",
+    "Wait for UI to settle: xcodebuildmcp ui-automation wait-for-ui --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --predicate settled",
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 28E413D9-B587-41D3-9D7C-3D903BC6F842 --within-element-ref e12 --direction up --distance 0.5"
+  ]
+}

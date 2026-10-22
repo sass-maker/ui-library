@@ -1,0 +1,72 @@
+[
+  {
+    "product": "kith",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 916.3125
+  },
+  {
+    "product": "setline",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 861.921875
+  },
+  {
+    "product": "anchor",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 773.734375
+  },
+  {
+    "product": "motion",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 773.734375
+  },
+  {
+    "product": "indulge",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 773.734375
+  },
+  {
+    "product": "calorie",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 861.921875
+  },
+  {
+    "product": "storagedaddy",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 773.734375
+  },
+  {
+    "product": "performancedaddy",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 828.125
+  },
+  {
+    "product": "browserdaddy",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 1188.265625
+  },
+  {
+    "product": "contextdaddy",
+    "width": 1440,
+    "textScale": 200,
+    "overflow": false,
+    "sceneHeight": 1045.6875
+  }
+]

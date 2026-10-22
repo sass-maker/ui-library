@@ -1,0 +1,66 @@
+import type { SiteConfig } from "../../src/lib/types";
+import { site as storage } from "../storagedaddy/site.config";
+
+export const site: SiteConfig = {
+  name: "ContextDaddy",
+  url: "https://context.daddyrad.com",
+  tagline: "Coding-agent skills, context and usage",
+  seoDescription: "A Mac app for reviewing coding-agent skills, project context, usage history and verified OpenTelemetry signals, with previewed local changes you explicitly apply. Signed and notarized for Apple silicon.",
+  headline: ["Your agents' context.", "Made visible."],
+  lede: "ContextDaddy shows what the coding agents on your Mac can discover, invoke and consume. Review skill access, project context, local usage history and verified OpenTelemetry signals. Supported local skill and context-file changes require a preview and your explicit apply action.",
+  kicker: "Skills. Context. Usage.",
+  summary: "A native Mac app for reviewing skills and context files available to coding agents, local usage history, provider allowances and verified OpenTelemetry signals, with explicit preview and apply for supported local changes.",
+  status: "Public early-access beta · free to download",
+  platforms: ["macOS 14+", "Apple silicon"],
+  themeColor: "#000000",
+  mark: "/images/icon.png",
+  artwork: "/images/context-cart.png",
+  socialImage: "/images/context-cart.png",
+  tokens: storage.tokens,
+  sceneArtwork: { src: "/images/story/contextdaddy-scene-v1.webp", alt: "A context-file folio with tabbed sheets and a separate translucent preview overlay", width: 1536, height: 1024, caption: "Illustrative artwork · review the files, preview the change" },
+  colorScheme: "dark",
+  device: "desktop",
+  newsletterCapture: true,
+  hero: { kind: "artwork", image: "/images/context-cart.png", alt: "ContextDaddy's context cart artwork: the bean mascot hauling skill and context documents", caption: "Meet the ContextDaddy cart: every skill and context file your agents can reach, gathered in one place. Product artwork, not a screenshot.", width: 700, height: 466 },
+  gallery: [],
+  galleryTitle: ["Discovery is not invocation.", "Keep the difference visible."],
+  applicationCategory: "UtilitiesApplication",
+  availability: "unreleased",
+  macDownloadUrl: "https://context.daddyrad.com/download",
+  macDownloadLabel: "Download for Mac",
+  betaNote: "The public beta is a signed and notarized build for Apple silicon Macs on macOS 14 or later, free during early access. Discovery is read-only; supported local skill and context-file changes require an explicit preview and apply action.",
+  tension: { statement: "A discovered file is not a loaded prompt.", title: "Separate exposure from use.", copy: "ContextDaddy distinguishes what an agent could see from what it actually consumed. Installed cache evidence never masquerades as active runtime exposure, and context-size estimates stay visibly approximate." },
+  chaptersKicker: "Four ledgers, one view",
+  chaptersTitle: "Usage, skills, projects, telemetry.",
+  chaptersLede: "Usage reads local agent-log history and provider allowance through installed CLIs. Skills explains per-runtime discovery and invocation policy. Projects shows discovered context files. OpenTelemetry shows only verified signals from a compatible local collector.",
+  chapters: [],
+  fit: { kicker: "An honest fit", title: "For developers running several agents.", yes: "People who run Codex, Claude, Cursor, Devin or Grok on a Mac and want to review skill access, context exposure and consumption, then explicitly preview supported local file changes.", no: "Live prompt inspection, automatic installation or activation, plugin-cache edits, cloud telemetry collection, or reconstructing usage that was never recorded." },
+  privacy: { kicker: "Bounded by design", title: "Reads metadata. Leaves prompts alone.", copy: "ContextDaddy reads bounded local metadata and configuration structure. It does not copy prompt bodies, tool arguments or credential values into its dashboards. The bundled ccusage helper reads local history offline; provider allowance checks run only on request or after opt-in." },
+  faqs: [
+    { question: "Can I download ContextDaddy?", answer: "Yes. The beta is a free, signed and notarized Apple-silicon Mac build, distributed directly — no account, checkout, App Store or TestFlight listing. Updates are manual downloads for now." },
+    { question: "Does it change my agent setup?", answer: "Discovery stays read-only. For supported local skill and context-file changes, ContextDaddy shows a preview and waits for your explicit apply action; it does not install skills automatically, edit managed plugin sources or activate skills in an agent runtime." },
+    { question: "Which agents does it cover?", answer: "Discovery and policy models cover the major coding-agent runtimes, including Codex, Claude, Cursor, Devin and Grok. Non-auto skills show how to invoke them; policy is labelled explicit or derived." },
+    { question: "What does the usage view measure?", answer: "Local agent-log history via the bundled ccusage helper, provider allowance through installed provider CLIs when you ask, and OpenTelemetry signals from a compatible local collector. Missing sources are shown as unavailable, not zero activity." },
+    { question: "Does anything leave my Mac?", answer: "Provider allowance checks use installed CLIs and OpenTelemetry reads a loopback collector. The app has no account, sync or telemetry upload of its own." }
+  ],
+  founder: { quote: "Show what was measured, not what was assumed.", credit: "The ContextDaddy evidence rule", note: "Unavailable sources stay unavailable. Estimates stay labelled." },
+  closingTitle: ["Audit the access.", "Trust the boundary."],
+  footerFinePrint: "An independent Mac app from Significant Hobbies. Free during early access.",
+  capabilities: ["Per-runtime skill discovery and invocation policy", "Project context inventory with global, inherited and local provenance", "Local agent usage history via bundled ccusage", "Opt-in provider allowance checks", "Verified local OpenTelemetry signals", "Agent-ready review briefs and re-scan verification"],
+  boundaries: ["Requires macOS 14 or later on Apple silicon; no Intel build", "Discovery is read-only; supported local skill and context-file changes require explicit preview and apply", "No automatic skill installation or runtime activation; managed plugin sources are not edited", "Context-size estimates are approximate, not live prompt measurements", "Discovered context is not proof it entered a prompt", "No automatic updater; new builds are manual downloads", "Provider allowance requires installed CLIs and is opt-in"],
+  lastUpdated: "2026-09-28",
+  legal: {
+    privacy: { title: "Privacy", lede: "ContextDaddy inspects local agent metadata. It does not read prompt bodies or credentials.", sections: [
+      { title: "Local inspection and changes", body: "Discovery reads bounded local metadata and configuration structure for supported coding agents. The app does not copy prompt bodies, tool arguments or credential values into its dashboards. Supported local skill and context-file changes are shown in a preview and happen only after you explicitly apply them; recovery evidence is retained. Managed plugin sources are not edited, and changes do not install or activate a skill in an agent runtime." },
+      { title: "Helpers and telemetry", body: "The bundled ccusage helper reads local history offline. Provider allowance checks run through installed provider CLIs only when requested or after you opt in to automatic checks. OpenTelemetry signals come only from a compatible local loopback collector." },
+      { title: "Email updates", body: "Email updates are optional and sent through SaaS Maker. Signing up sends your email address and explicit consent, which SaaS Maker stores as subscription records to manage occasional ContextDaddy product updates. The form does not send agent metadata, local usage history or native app data. You can unsubscribe at any time." },
+      { title: "This website", body: "The landing page does not access your agent data. App Health collects website page views and named clicks on the Mac download link, with basic referral and campaign information; it does not receive agent data. Hosting requests include ordinary connection data. AI-assistant links open a question about the public product when clicked. The download button serves the app bundle directly; no account creation is offered." }
+    ] },
+    support: { title: "Support", lede: "Report problems with version, macOS release and the agent runtime involved.", sections: [{ title: "Report an issue", body: "Use https://github.com/sarthakagrawal927/contextdaddy/issues/new. Include your app version, macOS version and which view or source was wrong. Remove skill contents, prompt text and personal paths before sharing screenshots." }] },
+    terms: { title: "Terms", lede: "ContextDaddy is early-access software. Its findings are evidence, not guarantees about agent behaviour.", sections: [{ title: "Evidence limits", body: "Skill discovery shows what a runtime could reach, not what it invoked. Usage and allowance values state their provenance and may be incomplete. Redundancy and review findings carry explicit confidence and evidence." }, { title: "Bundled components", body: "ContextDaddy bundles ccusage under the MIT license; its acknowledgement is included in the app. Third-party components retain their own terms." }] },
+    accessibility: { title: "Accessibility", lede: "Evidence should be readable and its limits explicit.", sections: [{ title: "Website", body: "This site uses semantic headings, keyboard-operable links, visible focus, image descriptions and reduced-motion support." }, { title: "Native app", body: "Native VoiceOver, keyboard and minimum-window qualification remains incomplete. This page does not claim that native accessibility acceptance is finished." }] },
+    testflight: { title: "Release status", lede: "ContextDaddy is distributed directly for Mac, not through TestFlight.", sections: [], testing: "Skill discovery and policy, project context inventory, local usage history, opt-in provider allowance and verified OpenTelemetry signals.", notIncluded: "Intel builds, automatic updates, live prompt inspection, agent configuration editing and cloud telemetry." }
+  },
+  requiredHomeCopy: ["ContextDaddy", "free to download", "macOS 14+", "preview", "apply"],
+  prohibitedClaims: ["measures live prompt contents", "guarantees what an agent saw", "supports Intel Macs"]
+};

@@ -1,0 +1,10 @@
+{
+  "tool": "built-in image_gen",
+  "useCase": "ads-marketing",
+  "mode": "generate",
+  "product": "performancedaddy",
+  "prompt": "Create one landscape 1536x1024 bespoke premium tactile editorial still life for PerformanceDaddy, a native macOS SOFTWARE process/ports/memory investigation app. Absolutely no circuit boards, exposed electronics, screws, tools, repair apparatus, laptop repair, cables, chips or hardware. A quiet dark forest-black paper work surface (#07110c), left 58 percent completely empty calm evenly colored negative space for cream HTML text. On the right 42 percent, a structured stack of matte ivory evidence cards with mint green blank indexing tabs, a translucent tracing-paper overlay bearing a few elegant abstract branching process-tree lines and disconnected rounded nodes (no text or numbers), one simple round glass magnifier resting on a paper node, and a restrained black document folio. Objects convey following observations, recording evidence and inspecting relationships. Real soft paper texture, believable glass, gentle studio shadows, deliberate authored composition. Native app palette: black, forest, cream and mint #70d3a8. Premium editorial photographic material study extending a paper memory-book design language. No readable words, fake UI, metrics, people, branding, charts claiming results. Strong quiet negative space on left, modest subject scale on right, no clutter. Opaque background.",
+  "original": "originals/performancedaddy-v2.png",
+  "supersedes": "originals/performancedaddy-v1.png",
+  "reason": "Independent review found hardware-repair imagery contradicted the software investigation task."
+}

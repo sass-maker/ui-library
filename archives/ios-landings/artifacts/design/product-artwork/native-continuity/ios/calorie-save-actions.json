@@ -1,0 +1,78 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "action": {
+      "type": "swipe",
+      "withinElementRef": "e7",
+      "direction": "up",
+      "from": {
+        "x": 201,
+        "y": 651
+      },
+      "to": {
+        "x": 201,
+        "y": 223
+      }
+    },
+    "artifacts": {
+      "simulatorId": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "0hy5dvn",
+      "seq": 8,
+      "count": 73,
+      "targets": [
+        "e37|tap|switch|Save this as a reusable food|1|",
+        "e14|typeText|text-field|Food name|Synthetic test meal|",
+        "e16|typeText|text-field|Serving description|1 serving|",
+        "e18|typeText|text-field|Amount|1|",
+        "e21|typeText|text-field|Calories|0|",
+        "e24|typeText|text-field|Protein|0|",
+        "e27|typeText|text-field|Carbohydrates|0|",
+        "e30|typeText|text-field|Fibre|0|",
+        "e32|tap|tab|||",
+        "e33|tap|tab|Breakfast|1|",
+        "e34|tap|tab|Lunch|0|",
+        "e35|tap|tab|Dinner|0|",
+        "e36|tap|tab|Snack|0|",
+        "e39|tap|switch||1|",
+        "e42|tap|button|Back||"
+      ],
+      "scroll": [
+        "e7|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e11|text|text|What did you just eat?||",
+        "e12|text|text|Use the values you know from a label, recipe, or your own estimate. You can edit the entry later.||",
+        "e13|text|text|Food name||",
+        "e15|text|text|Serving description||",
+        "e17|text|text|Amount||",
+        "e20|text|text|Calories||",
+        "e23|text|text|Protein||",
+        "e22|text|text|kcal||",
+        "e25|text|text|g||",
+        "e26|text|text|Carbohydrates||",
+        "e29|text|text|Fibre||",
+        "e28|text|text|g||",
+        "e31|text|text|g||",
+        "e38|text|text|Save this as a reusable food||",
+        "e41|text|text|Calorie stores this entry on this device first. If you connect an account later, your journal can also sync privately.||",
+        "e44|text|text|Back||"
+      ],
+      "udid": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    }
+  },
+  "nextSteps": [
+    "Batch visible switch toggles: xcodebuildmcp ui-automation batch --json '{\"simulatorId\":\"2D964895-251F-4FF5-A7BA-A3B1CE104C1E\",\"steps\":[{\"action\":\"tap\",\"elementRef\":\"e37\"},{\"action\":\"tap\",\"elementRef\":\"e39\"}]}'",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --element-ref e32",
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --within-element-ref e7 --direction up --distance 0.5"
+  ]
+}

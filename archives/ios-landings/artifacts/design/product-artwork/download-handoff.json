@@ -1,0 +1,35 @@
+{
+  "method": "HEAD follows actual current landing download URLs, without reinstalling apps or accepting permissions",
+  "results": [
+    {
+      "url": "https://storage.daddyrad.com/download",
+      "response": "200\thttps://storage.daddyrad.com/download\tapplication/x-apple-diskimage",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "url": "https://performance.daddyrad.com/download",
+      "response": "200\thttps://performance.daddyrad.com/download\tapplication/x-apple-diskimage",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "url": "https://browser.daddyrad.com/download",
+      "response": "200\thttps://browser.daddyrad.com/download\tapplication/x-apple-diskimage",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "url": "https://context.daddyrad.com/download",
+      "response": "200\thttps://context.daddyrad.com/download\tapplication/x-apple-diskimage",
+      "exitCode": 0,
+      "error": ""
+    },
+    {
+      "url": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg",
+      "response": "200\thttps://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg\tapplication/octet-stream",
+      "exitCode": 0,
+      "error": ""
+    }
+  ]
+}

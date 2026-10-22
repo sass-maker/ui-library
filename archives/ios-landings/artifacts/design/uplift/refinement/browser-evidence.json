@@ -1,0 +1,239 @@
+{
+  "views": [
+    {
+      "name": "kith",
+      "width": 320,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 375,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 384,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 390,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 768,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 900,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 1024,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 1200,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    },
+    {
+      "name": "kith",
+      "width": 1440,
+      "overflow": false,
+      "photoOverlapsScreen": false,
+      "heroImagesLoaded": true,
+      "primary": "/testflight/",
+      "frame": "phone",
+      "artwork": false
+    }
+  ],
+  "interactions": [
+    {
+      "name": "kith-normal-scroll-images",
+      "pass": true,
+      "details": [
+        {
+          "src": "/images/screens/constellation.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/person.webp",
+          "loaded": true
+        },
+        {
+          "src": "/images/screens/onboarding.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "keyboard-skip",
+      "pass": true
+    },
+    {
+      "name": "skip-target",
+      "pass": true
+    },
+    {
+      "name": "keyboard-faq-open",
+      "pass": true
+    },
+    {
+      "name": "keyboard-faq-close",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion",
+      "pass": true,
+      "details": [
+        {
+          "class": "moment-photo",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        },
+        {
+          "class": "device device--hero",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        },
+        {
+          "class": "scene-image",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        },
+        {
+          "class": "shell",
+          "animation": "none",
+          "transform": "none",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "route-/testflight/",
+      "pass": true
+    },
+    {
+      "name": "route-/privacy/",
+      "pass": true
+    },
+    {
+      "name": "route-/support/",
+      "pass": true
+    },
+    {
+      "name": "route-/terms/",
+      "pass": true
+    },
+    {
+      "name": "route-/accessibility/",
+      "pass": true
+    },
+    {
+      "name": "route-/blog/",
+      "pass": true
+    }
+  ],
+  "performance": {
+    "navigation": [
+      {
+        "domContentLoaded": 19.700000017881393,
+        "load": 19.80000001192093
+      }
+    ],
+    "resources": [
+      {
+        "name": "paper.webp",
+        "bytes": 20584,
+        "duration": 13.199999988079071
+      },
+      {
+        "name": "book-stage.webp",
+        "bytes": 535564,
+        "duration": 13.899999976158142
+      },
+      {
+        "name": "coastal-walk-v2.webp",
+        "bytes": 78942,
+        "duration": 13.299999982118607
+      },
+      {
+        "name": "memory-table-v2.webp",
+        "bytes": 224998,
+        "duration": 4.5
+      }
+    ],
+    "addedLandingJavascript": 0
+  },
+  "failures": [],
+  "externalRequests": [
+    {
+      "url": "https://sassmaker.com/newsletter-capture.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://health.sassmaker.com/tracker.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://sassmaker.com/project-strip.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://sassmaker.com/ai-chat-footer.js",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://www.clarity.ms/tag/y6bus3owf7",
+      "error": "net::ERR_FAILED"
+    }
+  ],
+  "pageErrors": []
+}

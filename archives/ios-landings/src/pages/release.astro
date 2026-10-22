@@ -1,0 +1,16 @@
+---
+import LegalPage from "../components/LegalPage.astro";
+import Cta from "../components/Cta.astro";
+import { verifiedMacDownloadUrl } from "../lib/distribution";
+import { site } from "../site.config";
+const download = verifiedMacDownloadUrl();
+---
+<LegalPage title="Release status" lede={site.status} path="/release/">
+  <section>
+    <h2>{download ? "Available for Mac" : "Availability"}</h2>
+    <p>{site.betaNote}</p>
+    {download ? <a class="button" href={download}>{site.macDownloadLabel ?? "Download for Mac"}</a> : site.device !== "desktop" ? <Cta /> : null}
+  </section>
+  <section><h2>What is included</h2><p>{site.legal.testflight.testing}</p></section>
+  <section><h2>What is not included</h2><p>{site.legal.testflight.notIncluded}</p></section>
+</LegalPage>

@@ -1,0 +1,115 @@
+{
+  "tool": "built-in image_gen",
+  "prompts": "artifacts/design/product-artwork/prompts.json",
+  "optimizedWith": "cwebp -q 80 -m 6; original dimensions preserved",
+  "totalNewProductionBytes": 595708,
+  "assets": [
+    {
+      "product": "setline",
+      "asset": "products/setline/public/images/story/training-bench-v1.webp",
+      "original": "artifacts/design/product-artwork/originals/setline-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 93410,
+      "sha256": "8a657c9c91d9153761d0e3c4e1d1dd6771bbf64d5d111a602b502ed9fd1b4832",
+      "inspection": "Product-owned subject/palette; clear text zone; no faces, fake native UI or customer data. Used as illustrative stage and semantic story scene."
+    },
+    {
+      "product": "anchor",
+      "asset": "products/anchor/public/images/story/anchor-scene-v2.webp",
+      "original": "artifacts/design/product-artwork/originals/anchor-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 48824,
+      "sha256": "ffb6af1bcef6c845f457388bb4a88152161f96b8145d6b2927599464191c46eb",
+      "inspection": "Product-owned subject/palette; clear text zone; no faces, fake native UI or customer data. Used as illustrative stage and semantic story scene.",
+      "prompt": "artifacts/design/product-artwork/anchor-v2-prompt.json"
+    },
+    {
+      "product": "motion",
+      "asset": "products/motion/public/images/story/motion-scene-v1.webp",
+      "original": "artifacts/design/product-artwork/originals/motion-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 41176,
+      "sha256": "e014757da2c33375f5240461551abd1c98e9f4516b8a8340f8a0118055c2e734",
+      "inspection": "Product-owned subject/palette; clear text zone; no faces, fake native UI or customer data. Used as illustrative stage and semantic story scene."
+    },
+    {
+      "product": "indulge",
+      "asset": "products/indulge/public/images/story/indulge-scene-v2.webp",
+      "original": "artifacts/design/product-artwork/originals/indulge-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 95228,
+      "sha256": "e34f93a8ea65186c38628ebbd3132351899673137f8314dcbcff9be8fcaaccb3",
+      "inspection": "Product-owned subject/palette; clear text zone; no faces, fake native UI or customer data. Used as illustrative stage and semantic story scene.",
+      "prompt": "artifacts/design/product-artwork/indulge-v2-prompt.json"
+    },
+    {
+      "product": "calorie",
+      "asset": "products/calorie/public/images/story/calorie-scene-v1.webp",
+      "original": "artifacts/design/product-artwork/originals/calorie-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 75432,
+      "sha256": "be95672362a2e16d6d5352d1313e720b2fc93cfb7c561773ef4c67bbaa66a782",
+      "inspection": "Product-owned subject/palette; clear text zone; no faces, fake native UI or customer data. Used as illustrative stage and semantic story scene."
+    },
+    {
+      "product": "storagedaddy",
+      "asset": "products/storagedaddy/public/images/story/storagedaddy-scene-v1.webp",
+      "original": "artifacts/design/product-artwork/originals/storagedaddy-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 57912,
+      "sha256": "036e5a69004b486cc2d663ebe29a22d622a36974c588acaa44fe5f172b87f883",
+      "inspection": "Product-owned subject/palette; clear text zone; no faces, fake native UI or customer data. Used as illustrative stage and semantic story scene."
+    },
+    {
+      "product": "performancedaddy",
+      "asset": "products/performancedaddy/public/images/story/performancedaddy-scene-v2.webp",
+      "original": "artifacts/design/product-artwork/originals/performancedaddy-v2.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 54616,
+      "sha256": "a25db81b5d63f27bf5ea43d4695d8ff1ff0203bc5cdb679cf3b5e2bae54143b2",
+      "inspection": "Product-owned subject/palette; clear text zone; no faces, fake native UI or customer data. Used as illustrative stage and semantic story scene.",
+      "prompt": "artifacts/design/product-artwork/performancedaddy-v2-prompt.json"
+    },
+    {
+      "product": "browserdaddy",
+      "asset": "products/browserdaddy/public/images/story/browserdaddy-scene-v1.webp",
+      "original": "artifacts/design/product-artwork/originals/browserdaddy-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 67870,
+      "sha256": "d09cd3ffde4b717ea0f5eac95e81ff7bfad39c8c8a5cfbc76274170c48f24a22",
+      "inspection": "Product-owned palette and material concept; clear semantic text zone. Used in the story section; original mascot retains its clean hero presentation. No private data, fake UI or claims."
+    },
+    {
+      "product": "contextdaddy",
+      "asset": "products/contextdaddy/public/images/story/contextdaddy-scene-v1.webp",
+      "original": "artifacts/design/product-artwork/originals/contextdaddy-v1.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 61240,
+      "sha256": "6f387456a7c6f299c5bc9bb0be3923a0a5088143911dbddc7c4dd0a515150de8",
+      "inspection": "Product-owned palette and material concept; clear semantic text zone. Used in the story section; original mascot retains its clean hero presentation. No private data, fake UI or claims."
+    }
+  ],
+  "rejectedOriginals": [
+    {
+      "path": "artifacts/design/product-artwork/originals/performancedaddy-v1.png",
+      "reason": "Hardware-repair implication; superseded by paper process-evidence artwork. Not deployed."
+    },
+    {
+      "path": "artifacts/design/product-artwork/originals/anchor-v1.png",
+      "reason": "Superseded by neutral native identity alignment. Not deployed."
+    },
+    {
+      "path": "artifacts/design/product-artwork/originals/indulge-v1.png",
+      "reason": "Superseded by neutral native identity alignment. Not deployed."
+    }
+  ]
+}

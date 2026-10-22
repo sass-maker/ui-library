@@ -1,0 +1,55 @@
+{
+  "schema": "xcodebuildmcp.output.ui-action-result",
+  "schemaVersion": "2",
+  "didError": false,
+  "error": null,
+  "data": {
+    "summary": {
+      "status": "SUCCEEDED"
+    },
+    "action": {
+      "type": "tap",
+      "elementRef": "e16",
+      "x": 201,
+      "y": 783
+    },
+    "artifacts": {
+      "simulatorId": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    },
+    "capture": {
+      "type": "runtime-snapshot",
+      "rs": "1",
+      "screenHash": "0m7hukv",
+      "seq": 2,
+      "count": 34,
+      "targets": [
+        "e18|tap|button|Explore an estimate later||",
+        "e13|tap|button|Enter my own targets||",
+        "e23|tap|button|No targets for now||",
+        "e28|tap|button|Back||"
+      ],
+      "scroll": [
+        "e7|swipe|scroll-view|||"
+      ],
+      "text": [
+        "e9|text|text|CALORIE||",
+        "e10|text|text|Your first useful log||",
+        "e11|text|text|Targets are optional.||",
+        "e12|text|text|Calorie can use numbers you enter, explain an estimate later, or leave targets unset. Logging works in every path.||",
+        "e15|text|text|Enter my own targets||",
+        "e16|text|text|Use exact calories, protein, carbohydrates, and fibre you already chose.||",
+        "e20|text|text|Explore an estimate later||",
+        "e21|text|text|The profile screen explains the Mifflin–St Jeor inputs and limitations before estimating anything.||",
+        "e25|text|text|No targets for now||",
+        "e26|text|text|Today's totals remain useful and Calorie will not invent a target.||",
+        "e30|text|text|Back||"
+      ],
+      "udid": "2D964895-251F-4FF5-A7BA-A3B1CE104C1E"
+    }
+  },
+  "nextSteps": [
+    "Batch same-screen taps: xcodebuildmcp ui-automation batch --json '{\"simulatorId\":\"2D964895-251F-4FF5-A7BA-A3B1CE104C1E\",\"steps\":[{\"action\":\"tap\",\"elementRef\":\"e13\"},{\"action\":\"tap\",\"elementRef\":\"e23\"}]}'",
+    "Tap an elementRef: xcodebuildmcp ui-automation tap --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --element-ref e18",
+    "Scroll visible content: xcodebuildmcp ui-automation swipe --simulator-id 2D964895-251F-4FF5-A7BA-A3B1CE104C1E --within-element-ref e7 --direction up --distance 0.5"
+  ]
+}

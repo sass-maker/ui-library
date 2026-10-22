@@ -1,0 +1,37 @@
+name: Retained iOS Landings
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'archives/ios-landings/**'
+      - '.github/workflows/ios-landings.yml'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'archives/ios-landings/**'
+      - '.github/workflows/ios-landings.yml'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: archives/ios-landings
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: archives/ios-landings/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check

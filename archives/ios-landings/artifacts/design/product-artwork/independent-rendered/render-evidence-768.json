@@ -1,0 +1,122 @@
+[
+  {
+    "product": "kith",
+    "url": "http://127.0.0.1:8840",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "setline",
+    "url": "http://127.0.0.1:8841",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "anchor",
+    "url": "http://127.0.0.1:8842",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "motion",
+    "url": "http://127.0.0.1:8843",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "indulge",
+    "url": "http://127.0.0.1:8844",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "calorie",
+    "url": "http://127.0.0.1:8845",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "storagedaddy",
+    "url": "http://127.0.0.1:8846",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "performancedaddy",
+    "url": "http://127.0.0.1:8847",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "browserdaddy",
+    "url": "http://127.0.0.1:8848",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  },
+  {
+    "product": "contextdaddy",
+    "url": "http://127.0.0.1:8849",
+    "views": [
+      {
+        "width": 768,
+        "overflow": false,
+        "pageErrors": []
+      }
+    ],
+    "firstViewText": null
+  }
+]

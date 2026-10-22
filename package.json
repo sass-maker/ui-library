@@ -13,7 +13,13 @@
     "typecheck": "tsc -p tsconfig.json",
     "tokens:build": "node packages/tokens/build.mjs",
     "footer:build": "pnpm --filter @saas-maker/ui footer:build",
-    "test": "pnpm --filter @saas-maker/ui test"
+    "test": "pnpm --filter @saas-maker/ui test",
+    "landings:dev": "pnpm --dir archives/ios-landings run dev",
+    "landings:build": "pnpm --dir archives/ios-landings run build",
+    "landings:check": "pnpm --dir archives/ios-landings run check",
+    "landings:check:one": "pnpm --dir archives/ios-landings run check:one",
+    "landings:deploy": "pnpm --dir archives/ios-landings run deploy",
+    "landings:deploy:daddyrad": "pnpm --dir archives/ios-landings run deploy:daddyrad"
   },
   "devDependencies": {
     "@types/react": "19.3.0",
