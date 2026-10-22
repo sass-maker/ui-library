@@ -14,6 +14,16 @@ export function bindFooter(root) {
   const projectKey = createProjectKey();
   const dialog = () => root.querySelector("[data-feedback-dialog]");
   let anchor = null;
+  const feedbackIntents = new WeakMap();
+  function submissionId(form, feedback, shot, key) {
+    const signature = JSON.stringify([key, feedback]);
+    let intent = feedbackIntents.get(form);
+    if (!intent || intent.signature !== signature || intent.shot !== shot) {
+      intent = { signature, shot, id: crypto.randomUUID() };
+      feedbackIntents.set(form, intent);
+    }
+    return intent.id;
+  }
 
   // Point at something: pick an element on the page, then reopen the form.
   function showAnchor() {
@@ -153,6 +163,7 @@ export function bindFooter(root) {
   async function send(form, statusSel, request, ok) {
     const status = form.querySelector(statusSel);
     const button = form.querySelector("button[type=submit]");
+    if (button.disabled) return false;
     const say = (text) => (status.textContent = text);
     button.disabled = true;
     say("Sending…");
@@ -170,7 +181,7 @@ export function bindFooter(root) {
       say(
         err instanceof Unreachable
           ? "Couldn't reach SaaS Maker, so nothing was sent. Please try again in a moment."
-          : "That did not send. Please try again in a moment.",
+          : "Couldn't confirm delivery. Please try again in a moment.",
       );
     } finally {
       button.disabled = false;
@@ -186,7 +197,17 @@ export function bindFooter(root) {
       e.stopPropagation();
       const data = new FormData(form);
       const email = String(data.get("email") || "").trim();
-      const shot = data.get("screenshot");
+      // Keep the selected File's identity across FormData snapshots on retry.
+      const shot = form.elements.namedItem("screenshot")?.files?.[0];
+      const feedback = {
+        type: data.get("type") || "feedback",
+        title: String(data.get("title") || "").trim(),
+        description: String(data.get("message") || "").trim(),
+        ...(email && { submitter_email: email }),
+        page: { url: pageUrl(), title: document.title },
+        ...(anchor && { anchor }),
+        source: "studio-footer",
+      };
       const sent = await send(
         form,
         "[data-feedback-status]",
@@ -197,13 +218,8 @@ export function bindFooter(root) {
           body.set(
             "feedback",
             JSON.stringify({
-              type: data.get("type") || "feedback",
-              title: String(data.get("title") || "").trim(),
-              description: String(data.get("message") || "").trim(),
-              ...(email && { submitter_email: email }),
-              page: { url: pageUrl(), title: document.title },
-              ...(anchor && { anchor }),
-              source: "studio-footer",
+              ...feedback,
+              submission_id: submissionId(form, feedback, shot, key),
             }),
           );
           if (shot && shot.size) body.set("screenshot", shot);
@@ -219,6 +235,7 @@ export function bindFooter(root) {
           ".",
       );
       if (sent) {
+        feedbackIntents.delete(form);
         anchor = null;
         showAnchor();
         form.querySelector("[data-feedback-file-label]").textContent =
