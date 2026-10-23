@@ -9,6 +9,7 @@ import { Skeleton } from "../components/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../components/dialog";
 import { SearchField } from "../molecules/search-field";
 import { FileCard, type LibraryFile } from "../molecules/file-card";
+import { TransitionPanel } from "../recipes/transition-panel";
 import { motionTiming } from "../lib/motion";
 import { useReducedMotion } from "../lib/use-reduced-motion";
 import { cn } from "../lib/utils";
@@ -70,21 +71,23 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
         {selectedFiles.length > 0 && <motion.div initial={{ opacity: 0, height: reduced ? undefined : 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: reduced ? undefined : 0 }} transition={motionTiming.content} className="overflow-hidden">
           <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2">
             <span className="mr-auto text-sm font-medium" role="status">{selectedFiles.length} selected</span>
-            {onRemove && <Button variant="ghost" size="sm" onClick={() => { onRemove(selectedFiles.map(file => file.id)); setSelected(new Set()); }}>Remove selected</Button>}
-            <Button variant="ghost" size="icon-sm" aria-label="Clear selection" onClick={() => setSelected(new Set())}><X /></Button>
+            {onRemove && <Button variant="ghost" size="sm" onClick={() => { heading.current?.focus({ preventScroll: true }); onRemove(selectedFiles.map(file => file.id)); setSelected(new Set()); }}>Remove selected</Button>}
+            <Button variant="ghost" size="icon-sm" aria-label="Clear selection" onClick={() => { heading.current?.focus({ preventScroll: true }); setSelected(new Set()); }}><X /></Button>
           </div>
         </motion.div>}
       </AnimatePresence>
-      {state.kind === "loading" ? <div role="status" aria-label="Loading files" className="grid grid-cols-2 gap-4 lg:grid-cols-3">{Array.from({ length: 6 }, (_, i) => <div key={i} className="overflow-hidden rounded-xl border border-border"><Skeleton className="aspect-[4/3] rounded-none" /><div className="space-y-2 p-4"><Skeleton className="h-3 w-3/4" /><Skeleton className="h-2.5 w-1/2" /></div></div>)}</div>
-        : state.kind === "error" ? <div className="flex min-h-72 flex-col items-center justify-center gap-3 text-center" role="alert"><FolderOpen aria-hidden className="mb-2 size-9 stroke-1 text-muted-foreground" /><h3 className="font-medium">Files couldn’t be loaded</h3><p className="max-w-sm text-sm leading-relaxed text-muted-foreground">{state.message}</p><Button variant="outline" onClick={state.onRetry}>Try again</Button></div>
-        : visible.length === 0 ? <div className="flex min-h-72 flex-col items-center justify-center gap-3 text-center"><SearchX aria-hidden className="mb-2 size-9 stroke-1 text-muted-foreground" /><h3 className="font-medium">{query ? "No matching files" : "Room for your next idea"}</h3><p className="max-w-sm text-sm leading-relaxed text-muted-foreground">{query ? `No files match “${query}”. Try another name or collection.` : "Add your first file to start building a shared library."}</p>{(query || collection !== "All files") && <Button variant="outline" onClick={() => { setQuery(""); setCollection("All files"); }}>Clear filters</Button>}</div>
-        : <LayoutGroup><motion.div layout={!reduced} className={view === "grid" ? "grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 lg:grid-cols-3" : "grid gap-2"}>
+      <TransitionPanel activeIndex={state.kind === "loading" ? 0 : state.kind === "error" ? 1 : visible.length === 0 ? 2 : 3}>{[
+        <div role="status" aria-label="Loading files" className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 lg:grid-cols-3">{Array.from({ length: 6 }, (_, i) => <div key={i} className="overflow-hidden rounded-xl border border-border"><Skeleton className="aspect-[4/3] rounded-none" /><div className="space-y-2 p-4"><Skeleton className="h-3 w-3/4" /><Skeleton className="h-2.5 w-1/2" /></div></div>)}</div>,
+        state.kind === "error" ? <div className="flex min-h-72 flex-col items-center justify-center gap-3 text-center" role="alert"><FolderOpen aria-hidden className="mb-2 size-9 stroke-1 text-muted-foreground" /><h3 className="font-medium">Files couldn’t be loaded</h3><p className="max-w-sm text-sm leading-relaxed text-muted-foreground">{state.message}</p><Button variant="outline" onClick={() => { heading.current?.focus({ preventScroll: true }); state.onRetry(); }}>Try again</Button></div> : null,
+        <div className="flex min-h-72 flex-col items-center justify-center gap-3 text-center"><SearchX aria-hidden className="mb-2 size-9 stroke-1 text-muted-foreground" /><h3 className="font-medium">{query ? "No matching files" : "Room for your next idea"}</h3><p className="max-w-sm text-sm leading-relaxed text-muted-foreground">{query ? `No files match “${query}”. Try another name or collection.` : "Add your first file to start building a shared library."}</p>{(query || collection !== "All files") && <Button variant="outline" onClick={() => { heading.current?.focus({ preventScroll: true }); setQuery(""); setCollection("All files"); }}>Clear filters</Button>}</div>,
+        <LayoutGroup><motion.div layout={!reduced} className={view === "grid" ? "grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 lg:grid-cols-3" : "grid gap-2"}>
           <AnimatePresence initial={false} mode="popLayout">
             {visible.map(file => <motion.div key={file.id} layout={!reduced ? "position" : false} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={motionTiming.feedback}>
               <FileCard file={file} selected={selected.has(file.id)} onSelectedChange={value => select(file.id, value)} onOpen={trigger => { opener.current = trigger; setPreview(file.id); }} onRemove={onRemove ? () => onRemove([file.id]) : undefined} view={view} />
             </motion.div>)}
           </AnimatePresence>
-        </motion.div></LayoutGroup>}
+        </motion.div></LayoutGroup>,
+      ]}</TransitionPanel>
       {state.kind === "ready" && <p className="mt-5 text-xs text-muted-foreground" role="status">{visible.length} of {files.length} files</p>}
     </div>
     <Dialog open={!!previewFile} onOpenChange={open => { if (!open) setPreview(null); }}>

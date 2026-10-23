@@ -1,6 +1,7 @@
 /** Adapted from ibelick/motion-primitives. MIT; see THIRD_PARTY_NOTICES.md. */
 "use client";
-import { AnimatePresence, motion, type MotionProps, type Transition, type Variant } from "motion/react";
+import { forwardRef } from "react";
+import { AnimatePresence, motion, useIsPresent, type HTMLMotionProps, type MotionProps, type Transition, type Variant } from "motion/react";
 import useMeasure from "react-use-measure";
 import { useReducedMotion } from "../lib/use-reduced-motion";
 import { motionTiming } from "../lib/motion";
@@ -14,6 +15,11 @@ export type TransitionPanelProps = {
   variants?: { enter: Variant; center: Variant; exit: Variant };
 } & MotionProps;
 
+const Panel = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(function Panel(props, ref) {
+  const present = useIsPresent();
+  return <motion.div {...props} ref={ref} data-slot="transition-panel-content" inert={!present} aria-hidden={present ? undefined : true} />;
+});
+
 /** Resizes with its content; rapid changes retarget the current spring. */
 export function TransitionPanel({ children, className, transition, variants, activeIndex, ...motionProps }: TransitionPanelProps) {
   const reduced = useReducedMotion();
@@ -23,13 +29,13 @@ export function TransitionPanel({ children, className, transition, variants, act
     center: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: reduced ? 0 : -4 },
   };
-  return <motion.div initial={false} animate={{ height: bounds.height || "auto" }}
+  return <motion.div data-slot="transition-panel" initial={false} animate={{ height: bounds.height || "auto" }}
     transition={reduced ? { duration: 0 } : motionTiming.layout} className={cn("relative", className)}>
     <AnimatePresence initial={false} mode="popLayout" custom={motionProps.custom}>
-      <motion.div key={activeIndex} ref={measure} variants={states} initial="enter" animate="center" exit="exit"
+      <Panel key={activeIndex} ref={measure} variants={states} initial="enter" animate="center" exit="exit"
         transition={reduced ? motionTiming.feedback : transition ?? motionTiming.content} {...motionProps}>
         {children[activeIndex]}
-      </motion.div>
+      </Panel>
     </AnimatePresence>
   </motion.div>;
 }

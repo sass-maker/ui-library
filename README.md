@@ -109,7 +109,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.22"
+G="github:sass-maker/ui-library#v0.1.23"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -119,9 +119,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.22&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.22&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.22&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.23&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.23&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.23&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -606,7 +606,7 @@ Framework references: [Astro server islands](https://docs.astro.build/en/guides/
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.22")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.23")
 // ...
 ContentView().smTheme(.gallery.dark.brand(Color("Brand")))
 ```
@@ -658,7 +658,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.22&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.23&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```
