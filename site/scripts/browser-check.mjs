@@ -56,7 +56,7 @@ const js = async (expression) => {
   if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description ?? expression);
   return r.result?.result?.value;
 };
-const KEYS = { Enter: [13, "\r"], " ": [32, " "], ArrowDown: [40], ArrowUp: [38], Escape: [27], Tab: [9] };
+const KEYS = { Enter: [13, "\r"], " ": [32, " "], ArrowDown: [40], ArrowUp: [38], ArrowRight: [39], ArrowLeft: [37], Escape: [27], Tab: [9] };
 async function press(key) {
   const [code, text] = KEYS[key];
   const name = key === " " ? "Space" : key;
@@ -156,6 +156,36 @@ if (explorer) {
       check("motion: reduced mode stops loops in " + id, await js("document.getAnimations().every(animation => animation.playState !== 'running' || animation.effect?.getTiming().iterations !== Infinity)"));
     }
     await cdp("Emulation.setEmulatedMedia", { features: [] });
+
+    await open("/iframe.html?id=effects-code-comparison--playground&viewMode=story", 820);
+    check("code: scroll region renders", await waitFor("!!document.querySelector('[aria-label^=\"before code:\"]')"));
+    await js("document.querySelector('[aria-label^=\"before code:\"]').focus()");
+    await press("ArrowRight");
+    check("code: keyboard scrolls long lines", await waitFor("document.activeElement?.getAttribute('aria-label')?.startsWith('before code:') && document.activeElement.scrollLeft > 0"));
+    await press("Tab");
+    check("code: both panels are reachable by Tab", await waitFor("document.activeElement?.getAttribute('aria-label')?.startsWith('after code:')"));
+
+
+    for (const theme of ["paper", "hearth", "gallery"]) {
+      await open("/iframe.html?id=navigation-tabs--playground&viewMode=story&globals=theme:" + theme + ";mode:light", 820);
+      const tabContrast = await js(`(() => {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 1;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        const luminance = rgb => rgb.map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4).reduce((sum, value, index) => sum + value * [.2126,.7152,.0722][index], 0);
+        return [...document.querySelectorAll('[data-slot=tabs-trigger][data-state=inactive]')].map(tab => {
+          context.clearRect(0,0,1,1);
+          context.fillStyle = getComputedStyle(tab.closest('[data-slot=tabs-list]')).backgroundColor;
+          context.fillRect(0,0,1,1);
+          const background = luminance([...context.getImageData(0,0,1,1).data].slice(0,3));
+          context.fillStyle = getComputedStyle(tab).color;
+          context.fillRect(0,0,1,1);
+          const foreground = luminance([...context.getImageData(0,0,1,1).data].slice(0,3));
+          return (Math.max(background,foreground)+.05)/(Math.min(background,foreground)+.05);
+        });
+      })()`);
+      check("tabs: inactive labels have AA contrast in " + theme, tabContrast.length > 0 && tabContrast.every(ratio => ratio >= 4.5), tabContrast.join(", "));
+    }
 
     await open("/iframe.html?id=templates-console--gallery&viewMode=story", 1440);
     check("motion: template initializes offscreen reveals", await waitFor("[...document.querySelectorAll('.motion-reveal,.motion-stagger > *')].some(element => element.style.opacity === '0')"));

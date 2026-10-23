@@ -24,18 +24,19 @@ async function resolveImport(file, specifier) {
   }
 }
 const counts = { atoms: 0, molecules: 0, organisms: 0 };
-for (const category of ["components", "recipes", "effects", "molecules", "organisms", "blocks"]) {
+for (const category of ["components", "recipes", "effects", "molecules", "organisms", "blocks", "lib"]) {
   for (const filename of await readdir(path.join(sourceRoot, category))) {
-    if (!filename.endsWith(".tsx") || filename === "upload-types.tsx") continue;
+    if (!(/\.tsx?$/.test(filename)) || filename === "upload-types.tsx") continue;
     const file = path.join(sourceRoot, category, filename);
     const level = levelOf(file);
-    counts[["", "atoms", "molecules", "organisms"][level]]++;
+    if (level > 0) counts[["", "atoms", "molecules", "organisms"][level]]++;
     const source = await readFile(file, "utf8");
     for (const node of ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true).statements) {
       if ((!ts.isImportDeclaration(node) && !ts.isExportDeclaration(node)) || !node.moduleSpecifier || !ts.isStringLiteral(node.moduleSpecifier)) continue;
       const specifier = node.moduleSpecifier.text;
       if (!specifier.startsWith(".")) continue;
       const target = await resolveImport(file, specifier);
+      if (target && !target.startsWith(sourceRoot + path.sep)) throw new Error("UI source imports outside its package: " + specifier);
       if (target && levelOf(target) > level) throw new Error(`Upward atomic dependency: ${path.relative(sourceRoot,file)} → ${path.relative(sourceRoot,target)}`);
     }
   }
