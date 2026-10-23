@@ -45,3 +45,8 @@ body { background: var(--background); color: var(--foreground); }
  .example-shell[data-level="organisms"] { padding: 24px 12px; }
  .example-shell[data-level="organisms"] .example-stage { border: 0; padding: 0; background: transparent; }
 }
+
+@keyframes material-light-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(22px, -16px); }
+}

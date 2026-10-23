@@ -26,3 +26,19 @@ if(process.argv.includes('--built')){
  if(count<storyFiles.length)throw new Error('Built story index lost examples.');
  console.log(`${count} built stories; ${entries.filter(entry=>entry.type==='docs').length} guides.`);
 }
+
+const catalog = JSON.parse(await readFile(path.join(root, 'packages/ui/visual-sources.json'), 'utf8'));
+const ids = new Set();
+for (const source of catalog.sources) {
+  if (ids.has(source.id)) throw new Error(`Duplicate visual source: ${source.id}`);
+  ids.add(source.id);
+  for (const field of ['id', 'name', 'formats', 'license', 'bestFor', 'notes', 'reviewedOn']) {
+    if (typeof source[field] !== 'string' || !source[field].trim()) throw new Error(`Missing ${field}: ${source.id}`);
+  }
+  if (!catalog.rightsLabels[source.rights]) throw new Error(`Unknown reuse category: ${source.id}`);
+  if (!source.categories?.length) throw new Error(`Missing medium: ${source.id}`);
+  for (const field of ['url', 'licenseUrl']) {
+    if (new URL(source[field]).protocol !== 'https:') throw new Error(`Invalid ${field}: ${source.id}`);
+  }
+}
+console.log(`${ids.size} visual sources with original and reuse links.`);

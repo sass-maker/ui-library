@@ -6,3 +6,7 @@ dist/
 .swiftpm/
 .claude/
 storybook-static/
+
+test-results/
+playwright-report/
+explorer/browser/baselines/darwin/

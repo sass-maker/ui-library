@@ -1,0 +1,590 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-24",
+  "scope": "Curated source directory; links and research notes, not a redistributed asset pack. Exact downloaded items still need provenance.",
+  "rightsLabels": {
+    "redistributable": "Open reuse with license obligations",
+    "end-product": "Use in a product; raw redistribution restricted",
+    "mixed": "Free and premium terms differ",
+    "per-asset": "Check the individual asset",
+    "review": "Terms need verification"
+  },
+  "sources": [
+    {
+      "id": "gradients",
+      "name": "gradients.sh",
+      "categories": [
+        "Gradients",
+        "Animation"
+      ],
+      "url": "https://gradients.sh/presets",
+      "formats": "React \u00b7 WebGL \u00b7 PNG \u00b7 MP4",
+      "rights": "mixed",
+      "license": "MIT free / commercial Pro",
+      "licenseUrl": "https://gradients.sh/license",
+      "bestFor": "Moving light, dithered gradients and a focused hero.",
+      "notes": "Free components and presets allow commercial use with notices. Pro cannot be redistributed as a library, template or UI kit.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "paper",
+      "name": "Paper Shaders",
+      "categories": [
+        "Gradients",
+        "Animation"
+      ],
+      "url": "https://shaders.paper.design/",
+      "formats": "React \u00b7 WebGL",
+      "rights": "redistributable",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://github.com/paper-design/shaders/blob/main/LICENSE",
+      "bestFor": "Grain, mesh, liquid metal and material studies.",
+      "notes": "Keep the license and applicable notices; mark modified files. Use a static fallback and pause offscreen.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "vanta",
+      "name": "Vanta",
+      "categories": [
+        "Gradients",
+        "Animation"
+      ],
+      "url": "https://www.vantajs.com/",
+      "formats": "JavaScript \u00b7 WebGL",
+      "rights": "redistributable",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/tengbao/vanta/blob/master/LICENSE.md",
+      "bestFor": "Atmospheric animated backgrounds.",
+      "notes": "Retain copyright and permission notices. Load only the selected effect and test GPU cost on phones.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "particles",
+      "name": "tsParticles",
+      "categories": [
+        "Animation"
+      ],
+      "url": "https://particles.js.org/",
+      "formats": "JavaScript \u00b7 Canvas",
+      "rights": "redistributable",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/tsparticles/tsparticles/blob/main/LICENSE",
+      "bestFor": "Particle fields, confetti and occasional celebrations.",
+      "notes": "Choose a small engine preset, cap particle count and stop for reduced motion. Retain license notices.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "unsplash",
+      "name": "Unsplash",
+      "categories": [
+        "Photography"
+      ],
+      "url": "https://unsplash.com/",
+      "formats": "JPEG \u00b7 raster",
+      "rights": "end-product",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "bestFor": "Editorial, lifestyle and landscape photography.",
+      "notes": "Free collection has commercial use terms; Unsplash+ is separate. No unchanged resale or competing image service. API use has separate rules.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "pexels",
+      "name": "Pexels",
+      "categories": [
+        "Photography",
+        "Video"
+      ],
+      "url": "https://www.pexels.com/",
+      "formats": "JPEG \u00b7 MP4",
+      "rights": "end-product",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/",
+      "bestFor": "Human photography and short atmospheric footage.",
+      "notes": "No implied endorsement, unchanged resale, stock-platform redistribution or trademark use. API attribution requirements are separate.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "pixabay",
+      "name": "Pixabay",
+      "categories": [
+        "Photography",
+        "Video",
+        "Audio"
+      ],
+      "url": "https://pixabay.com/",
+      "formats": "Raster \u00b7 video \u00b7 audio",
+      "rights": "end-product",
+      "license": "Pixabay Content License",
+      "licenseUrl": "https://pixabay.com/service/license-summary/",
+      "bestFor": "A broad fallback for images, clips and sound.",
+      "notes": "No standalone redistribution. Recognizable brands and people can carry additional rights; preserve the individual item record.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "mixkit",
+      "name": "Mixkit",
+      "categories": [
+        "Video",
+        "Audio"
+      ],
+      "url": "https://mixkit.co/",
+      "formats": "MP4 \u00b7 audio",
+      "rights": "per-asset",
+      "license": "Varies by item type",
+      "licenseUrl": "https://mixkit.co/license/",
+      "bestFor": "Short footage, music and sound effects.",
+      "notes": "Video has both Free and Restricted licenses. Open the item license before commercial use; do not assume every free download has identical terms.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "coverr",
+      "name": "Coverr",
+      "categories": [
+        "Video"
+      ],
+      "url": "https://coverr.co/",
+      "formats": "MP4",
+      "rights": "end-product",
+      "license": "Coverr License",
+      "licenseUrl": "https://coverr.co/license",
+      "bestFor": "Ambient video and cinematic loops.",
+      "notes": "Commercial product use is allowed. No stock redistribution, competing services or AI datasets. Brands and property may need separate permission; API terms are separate.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "peeps",
+      "name": "Open Peeps",
+      "categories": [
+        "Illustration"
+      ],
+      "url": "https://www.openpeeps.com/",
+      "formats": "SVG \u00b7 PNG \u00b7 design files",
+      "rights": "redistributable",
+      "license": "CC0",
+      "licenseUrl": "https://www.openpeeps.com/",
+      "bestFor": "Expressive hand-drawn people for onboarding.",
+      "notes": "Commercial use and modification allowed. Credit Pablo Stanley when practical; the linked Blush service has its own terms.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "humaaans",
+      "name": "Humaaans",
+      "categories": [
+        "Illustration"
+      ],
+      "url": "https://www.humaaans.com/",
+      "formats": "SVG \u00b7 design files",
+      "rights": "redistributable",
+      "license": "CC0",
+      "licenseUrl": "https://www.humaaans.com/",
+      "bestFor": "Mix-and-match people and friendly scenes.",
+      "notes": "The original illustration library is CC0. Match the product palette and keep one illustration family per flow.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "doodles",
+      "name": "Open Doodles",
+      "categories": [
+        "Illustration"
+      ],
+      "url": "https://www.opendoodles.com/",
+      "formats": "SVG \u00b7 PNG \u00b7 GIF",
+      "rights": "redistributable",
+      "license": "CC0",
+      "licenseUrl": "https://www.opendoodles.com/",
+      "bestFor": "Loose, warm illustrations for empty and success states.",
+      "notes": "The original set is free for commercial and personal use. Check any separately linked service or commissioned work independently.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "undraw",
+      "name": "unDraw",
+      "categories": [
+        "Illustration"
+      ],
+      "url": "https://undraw.co/illustrations",
+      "formats": "SVG \u00b7 PNG",
+      "rights": "end-product",
+      "license": "unDraw License",
+      "licenseUrl": "https://undraw.co/license",
+      "bestFor": "Simple recolorable product illustrations.",
+      "notes": "Commercial product use is allowed. No asset packs, competing service, integrations or AI training; link out rather than bundling a catalog.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "kenney",
+      "name": "Kenney",
+      "categories": [
+        "Pixel art",
+        "3D",
+        "Icons",
+        "Audio"
+      ],
+      "url": "https://kenney.nl/assets",
+      "formats": "PNG \u00b7 spritesheets \u00b7 3D \u00b7 audio",
+      "rights": "redistributable",
+      "license": "CC0 asset pages",
+      "licenseUrl": "https://kenney.nl/support",
+      "bestFor": "Cohesive pixel worlds, playful UI and game assets.",
+      "notes": "Game assets on the asset pages are CC0. Keep each pack license; the Kenney logo and separately sold tools are not part of that grant.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "0x72",
+      "name": "0x72 DungeonTileset II",
+      "categories": [
+        "Pixel art"
+      ],
+      "url": "https://0x72.itch.io/dungeontileset-ii",
+      "formats": "PNG \u00b7 16px spritesheets",
+      "rights": "redistributable",
+      "license": "CC0 for this pack",
+      "licenseUrl": "https://0x72.itch.io/dungeontileset-ii",
+      "bestFor": "Tiny animated characters and a coherent dungeon palette.",
+      "notes": "The original pack explicitly allows reuse. Community extensions listed on its page have their own licenses.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "itch",
+      "name": "itch.io pixel art",
+      "categories": [
+        "Pixel art"
+      ],
+      "url": "https://itch.io/game-assets/tag-pixel-art",
+      "formats": "Sprites \u00b7 tilesets \u00b7 animation",
+      "rights": "per-asset",
+      "license": "Creator-specific",
+      "licenseUrl": "https://itch.io/game-assets/tag-pixel-art",
+      "bestFor": "Distinctive small-creator art packs.",
+      "notes": "Free price is not a reuse license. Read the specific creator terms for commercial use, modifications and redistribution.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "oga",
+      "name": "OpenGameArt",
+      "categories": [
+        "Pixel art",
+        "3D",
+        "Audio"
+      ],
+      "url": "https://opengameart.org/",
+      "formats": "Raster \u00b7 vector \u00b7 3D \u00b7 audio",
+      "rights": "per-asset",
+      "license": "CC0 / CC BY / CC BY-SA and others",
+      "licenseUrl": "https://opengameart.org/content/faq",
+      "bestFor": "Open game art, sprites and sound with explicit licenses.",
+      "notes": "Record the exact submission, author, selected license and attribution. Share-alike assets need a deliberate compatibility review.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "lospec",
+      "name": "Lospec",
+      "categories": [
+        "Pixel art"
+      ],
+      "url": "https://lospec.com/palette-list",
+      "formats": "Palettes \u00b7 pixel-art tools",
+      "rights": "review",
+      "license": "Palette / artwork terms vary",
+      "licenseUrl": "https://lospec.com/terms-and-conditions",
+      "bestFor": "Palette discovery and pixel-art technique.",
+      "notes": "Use as a palette and technique reference. Gallery artwork is not a reusable asset pack; obtain its separate permission.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "polyhaven",
+      "name": "Poly Haven",
+      "categories": [
+        "3D",
+        "Textures"
+      ],
+      "url": "https://polyhaven.com/",
+      "formats": "HDRI \u00b7 PBR textures \u00b7 3D",
+      "rights": "redistributable",
+      "license": "CC0 assets",
+      "licenseUrl": "https://polyhaven.com/license",
+      "bestFor": "Natural lighting, tactile materials and rendered scenes.",
+      "notes": "Downloadable assets are CC0. Website example renders and branding are separate. Optimize materials and meshes before web delivery.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "ambientcg",
+      "name": "ambientCG",
+      "categories": [
+        "3D",
+        "Textures"
+      ],
+      "url": "https://ambientcg.com/",
+      "formats": "PBR textures \u00b7 HDRI \u00b7 3D",
+      "rights": "redistributable",
+      "license": "CC0",
+      "licenseUrl": "https://docs.ambientcg.com/license/",
+      "bestFor": "Paper, fabric, stone and physically based materials.",
+      "notes": "The asset files and material previews are CC0. Prefer small texture resolutions for a web composition.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "quaternius",
+      "name": "Quaternius",
+      "categories": [
+        "3D"
+      ],
+      "url": "https://quaternius.com/",
+      "formats": "FBX \u00b7 OBJ \u00b7 Blender",
+      "rights": "redistributable",
+      "license": "CC0 models",
+      "licenseUrl": "https://quaternius.com/faq.html",
+      "bestFor": "Low-poly characters, props and animated scenes.",
+      "notes": "Models allow commercial use and modification without attribution. Verify the specific pack contents and keep a lightweight static render fallback.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "heropatterns",
+      "name": "Hero Patterns",
+      "categories": [
+        "Patterns"
+      ],
+      "url": "https://heropatterns.com/",
+      "formats": "SVG \u00b7 CSS",
+      "rights": "redistributable",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://heropatterns.com/",
+      "bestFor": "Small repeatable patterns with configurable color.",
+      "notes": "Credit Steve Schoger, link the license and indicate changes. Use low contrast behind content.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "svgbackgrounds",
+      "name": "SVG Backgrounds",
+      "categories": [
+        "Patterns",
+        "Gradients"
+      ],
+      "url": "https://www.svgbackgrounds.com/",
+      "formats": "SVG \u00b7 CSS",
+      "rights": "end-product",
+      "license": "Custom free / premium",
+      "licenseUrl": "https://www.svgbackgrounds.com/license/",
+      "bestFor": "Geometric surfaces, textures and section dividers.",
+      "notes": "Free use requires attribution; subscription terms differ. No standalone redistribution or graphic-generation templates.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "haikei",
+      "name": "Haikei",
+      "categories": [
+        "Patterns",
+        "Gradients"
+      ],
+      "url": "https://haikei.app/",
+      "formats": "SVG \u00b7 PNG",
+      "rights": "end-product",
+      "license": "Custom output terms",
+      "licenseUrl": "https://haikei.app/pricing/",
+      "bestFor": "Generated waves, layers, blobs and compositions.",
+      "notes": "Generated designs may be downloaded, edited and used for personal or client commercial work. No credit required; do not use them to offer a similar design generator.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "lucide",
+      "name": "Lucide",
+      "categories": [
+        "Icons"
+      ],
+      "url": "https://lucide.dev/icons/",
+      "formats": "SVG \u00b7 React",
+      "rights": "redistributable",
+      "license": "ISC / MIT-derived icons",
+      "licenseUrl": "https://lucide.dev/license",
+      "bestFor": "Consistent interface icons; already used by Fleet UI.",
+      "notes": "Keep the applicable copyright and permission notices, including Feather-derived icons. Prefer this existing set before adding another.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "phosphor",
+      "name": "Phosphor",
+      "categories": [
+        "Icons"
+      ],
+      "url": "https://phosphoricons.com/",
+      "formats": "SVG \u00b7 React \u00b7 multiple weights",
+      "rights": "redistributable",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/phosphor-icons/core/blob/main/LICENSE",
+      "bestFor": "A coherent icon family with multiple visual weights.",
+      "notes": "Retain notices. Choose one weight family per surface rather than mixing styles accidentally.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "tabler",
+      "name": "Tabler Icons",
+      "categories": [
+        "Icons"
+      ],
+      "url": "https://tabler.io/icons",
+      "formats": "SVG \u00b7 React",
+      "rights": "redistributable",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/tabler/tabler-icons/blob/main/LICENSE",
+      "bestFor": "An extensive outline and filled icon set.",
+      "notes": "Retain notices. Import only the icons used; keep stroke widths and optical size consistent.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "iconify",
+      "name": "Iconify",
+      "categories": [
+        "Icons"
+      ],
+      "url": "https://icon-sets.iconify.design/",
+      "formats": "SVG \u00b7 multiple frameworks",
+      "rights": "per-asset",
+      "license": "Varies by icon collection",
+      "licenseUrl": "https://iconify.design/docs/icons/icon-basics.html",
+      "bestFor": "Finding a missing symbol across many icon families.",
+      "notes": "Iconify software licensing does not replace each collection license. Brand marks also retain trademark constraints.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "googlefonts",
+      "name": "Google Fonts",
+      "categories": [
+        "Typography"
+      ],
+      "url": "https://fonts.google.com/",
+      "formats": "WOFF2 \u00b7 variable fonts",
+      "rights": "per-asset",
+      "license": "Per-family open font license",
+      "licenseUrl": "https://github.com/google/fonts",
+      "bestFor": "Display and text families with broad script support.",
+      "notes": "Read the family license file and reserved font names. Self-host subset WOFF2 files and avoid adding more families without a clear purpose.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "bunny",
+      "name": "Bunny Fonts",
+      "categories": [
+        "Typography"
+      ],
+      "url": "https://fonts.bunny.net/",
+      "formats": "Hosted web fonts",
+      "rights": "per-asset",
+      "license": "Per-family license",
+      "licenseUrl": "https://fonts.bunny.net/about",
+      "bestFor": "An alternative delivery service for open web fonts.",
+      "notes": "The hosting service is separate from font licensing. Keep the selected family license; self-hosting avoids a runtime network dependency.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "lottie",
+      "name": "LottieFiles",
+      "categories": [
+        "Animation"
+      ],
+      "url": "https://lottiefiles.com/free-animations",
+      "formats": "Lottie JSON \u00b7 dotLottie",
+      "rights": "mixed",
+      "license": "Lottie Simple License / premium terms",
+      "licenseUrl": "https://lottiefiles.com/page/license",
+      "bestFor": "Short vector feedback and onboarding animations.",
+      "notes": "Public files under the Simple License retain those terms, including derivatives. Premium files differ. Do not compile a competing animation library.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "rive",
+      "name": "Rive Marketplace",
+      "categories": [
+        "Animation"
+      ],
+      "url": "https://rive.app/marketplace/",
+      "formats": "Rive state machines",
+      "rights": "per-asset",
+      "license": "Check listing and export terms",
+      "licenseUrl": "https://rive.app/marketplace/",
+      "bestFor": "Interactive vector characters and responsive diagrams.",
+      "notes": "Runtime software licenses do not grant rights to marketplace artwork. Verify each listing, editor plan and redistribution conditions.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "motion",
+      "name": "Motion",
+      "categories": [
+        "Animation"
+      ],
+      "url": "https://motion.dev/",
+      "formats": "React \u00b7 JavaScript",
+      "rights": "redistributable",
+      "license": "MIT core / separate paid assets",
+      "licenseUrl": "https://github.com/motiondivision/motion/blob/main/LICENSE.md",
+      "bestFor": "Gesture, layout and state transitions; already in Fleet UI.",
+      "notes": "Core library is MIT. Retain notices and use Fleet motion tokens; paid examples and courses have separate terms.",
+      "featured": true,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "gsap",
+      "name": "GSAP",
+      "categories": [
+        "Animation"
+      ],
+      "url": "https://gsap.com/",
+      "formats": "JavaScript \u00b7 SVG \u00b7 scroll",
+      "rights": "review",
+      "license": "Custom license; recheck current terms",
+      "licenseUrl": "https://gsap.com/",
+      "bestFor": "Complex timelines and scroll choreography.",
+      "notes": "License URL was temporarily unavailable during review. Do not label it MIT or assume demos and third-party assets share runtime terms.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    },
+    {
+      "id": "freesound",
+      "name": "Freesound",
+      "categories": [
+        "Audio"
+      ],
+      "url": "https://freesound.org/",
+      "formats": "WAV \u00b7 OGG \u00b7 MP3",
+      "rights": "per-asset",
+      "license": "CC0 / CC BY / CC BY-NC and others",
+      "licenseUrl": "https://freesound.org/help/faq/",
+      "bestFor": "Subtle, optional interaction sounds.",
+      "notes": "Filter for a compatible commercial license and retain attribution. Never autoplay sound; keep a mute control and a silent default.",
+      "featured": false,
+      "reviewedOn": "2026-10-24"
+    }
+  ]
+}

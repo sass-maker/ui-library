@@ -1,0 +1,25 @@
+[
+  {
+    "file": "tiny-town-tiles.png",
+    "creator": "Kenney",
+    "item": "https://kenney.nl/assets/tiny-town",
+    "download": "https://kenney.nl/media/pages/assets/tiny-town/a415fbeb49-1735736916/kenney_tiny-town.zip",
+    "archivePath": "Tilemap/tilemap_packed.png",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "changes": "None",
+    "downloadedOn": "2026-10-24",
+    "sha256": "3a54d99ecde790d4fdea207a3644cf130fc56fa838f1beb1507c185a95b8e902"
+  },
+  {
+    "file": "peep-92.svg",
+    "creator": "Pablo Stanley",
+    "item": "https://www.openpeeps.com/",
+    "download": "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535c5dc67e79290b963f98_peep-92.svg",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://www.openpeeps.com/",
+    "changes": "None",
+    "downloadedOn": "2026-10-24",
+    "sha256": "9c74f3ca77d9e113a0d0c75d0c45b45a2d6f21c98582026423fb36b48a76841b"
+  }
+]

@@ -109,7 +109,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.23"
+G="github:sass-maker/ui-library#v0.1.24"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -119,9 +119,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.23&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.23&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.23&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.24&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.24&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.24&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -606,7 +606,7 @@ Framework references: [Astro server islands](https://docs.astro.build/en/guides/
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.23")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.24")
 // ...
 ContentView().smTheme(.gallery.dark.brand(Color("Brand")))
 ```
@@ -658,7 +658,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.23&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.24&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```
@@ -736,3 +736,29 @@ The parity test sorts attributes and drops React comment nodes only. It preserve
 text whitespace, entity spelling, attribute casing, void-element syntax, child
 order, classes, and inline styles. Text-only ReactNode props are the sole
 intentional prop limitation; raw React elements cannot be passed to JSON.
+
+
+### Visual materials and browser checks
+
+The [visual source shelf](https://sass-maker.github.io/ui-library/?path=/story/start-here-visual-sources--source-shelf)
+contains curated original sources, formats and reuse notes. Consume the same
+machine-readable data with `@saas-maker/ui/visual-sources.json`. It is a source
+directory, not an asset redistribution pack. Preserve exact item provenance
+when importing an asset; library source-code terms and artwork terms can differ.
+Original dependency-free CSS studies are exported from
+`@saas-maker/ui/lib/visual-materials`.
+
+After `pnpm storybook:build`, install test engines with
+`pnpm exec playwright install chromium firefox webkit`, then run
+`pnpm test:browser`. Interaction checks cover all three engines at phone and
+desktop widths. `pnpm test:visual` compares forms, compositions, recovery states
+and the source shelf at 390, 820 and 1440px in paper/light and ink/dark.
+These are browser-engine and viewport checks; they do not establish physical
+phone or installed Safari qualification.
+
+CI compares committed Linux baselines and never updates them on pull requests.
+To propose a visual change, dispatch the explorer workflow on the candidate
+branch with `updateVisuals: true`, inspect the `browser-review` artifact, and
+commit only the reviewed `baselines/linux` images. macOS candidates remain
+local because font rasterization differs by OS. Keep Playwright pinned so its
+browser builds and comparisons stay reproducible.
