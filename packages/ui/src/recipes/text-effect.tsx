@@ -5,6 +5,8 @@
  */
 'use client';
 import { cn } from '../lib/utils';
+import { useReducedMotion } from '../lib/use-reduced-motion';
+import { motionTiming } from '../lib/motion';
 import {
   AnimatePresence,
   motion
@@ -229,9 +231,11 @@ export function TextEffect({
   segmentTransition,
   style,
 }: TextEffectProps) {
+  const reduced = useReducedMotion();
   const segments = splitText(children, per);
   const MotionTag = motion[as as keyof typeof motion] as typeof motion.div;
 
+  if (reduced) return <AnimatePresence initial={false}>{trigger && <MotionTag className={className} style={style} initial={false} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={motionTiming.feedback} onAnimationComplete={onAnimationComplete} onAnimationStart={onAnimationStart}>{children}</MotionTag>}</AnimatePresence>;
   const baseVariants = preset
     ? presetVariants[preset]
     : { container: defaultContainerVariants, item: defaultItemVariants };

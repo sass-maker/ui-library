@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/input";
 
-const meta = { title: "Inputs/Input", component: C.Input, parameters: {"docs": {"description": {"component": "Default, validation, read-only, and disabled input states.\n\nImport from `@saas-maker/ui/components/input`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-input", title: "Atoms/Inputs/Input", component: C.Input, parameters: {"docs": {"description": {"component": "A single-line field with native editing, validation, read-only, and disabled states.\n\nImport from `@saas-maker/ui/atoms/input`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

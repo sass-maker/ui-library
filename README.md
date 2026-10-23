@@ -12,6 +12,37 @@ one theme.
 | `SaaSMakerUI` (Swift) | palette, type, components and motion for Mac/iOS |
 
 
+## Atomic architecture
+
+The explorer follows the same dependency direction as the source:
+
+- **Atoms** — 19 primitives: inputs, actions, type-level labels and feedback.
+  Import from `@saas-maker/ui/atoms/button` (and the other named atom exports).
+- **Molecules** — 76 focused compositions and effects, including labeled fields,
+  search, file cards, settings rows and existing interaction recipes.
+  New compositions live under `@saas-maker/ui/molecules/*`; existing
+  `components/*` and `recipes/*` imports keep working.
+- **Organisms** — 26 complete sections and patterns. New exported workspace
+  organisms are `asset-library`, `workspace-settings`, `notification-inbox`
+  and `project-overview`. Applications own data and persistence callbacks.
+- **Templates** place these sections into a complete Gallery, Workbench or
+  Console page.
+
+`pnpm check:architecture` rejects upward dependencies. The explorer includes
+a working composition walkthrough, every recipe both isolated and in context,
+editable molecule controls, and explicit loading, empty and failure examples.
+
+Shared transitions are exported from `@saas-maker/ui/lib/motion`: 140 ms
+feedback, 220 ms content and a 280 ms layout spring without bounce.
+Scroll motion starts with `initMotion()` from `@saas-maker/motion`; its returned
+cleanup function removes observers, stops animations and restores inline styles.
+Repeated initialization and live OS reduced-motion changes are supported.
+React components use the shared reduced-motion hook; application save/upload
+callbacks remain responsible for real completion.
+
+`pnpm registry:sync` builds registry items from their actual transitive imports;
+`pnpm registry:check` catches stale copied dependencies before publication.
+
 ## Explore the library
 
 The deployed [Fleet UI explorer](https://sass-maker.github.io/ui-library/) runs
@@ -78,7 +109,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.21"
+G="github:sass-maker/ui-library#v0.1.22"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -88,9 +119,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.21&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.21&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.21&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.22&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.22&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.22&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -575,7 +606,7 @@ Framework references: [Astro server islands](https://docs.astro.build/en/guides/
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.20")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.22")
 // ...
 ContentView().smTheme(.gallery.dark.brand(Color("Brand")))
 ```
@@ -627,7 +658,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.21&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.22&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

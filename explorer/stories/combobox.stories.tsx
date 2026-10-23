@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/combobox";
 
-const meta = { title: "Inputs/Combobox", component: C.Combobox, parameters: {"docs": {"description": {"component": "Search, keyboard selection, and empty results using the upstream accessible primitive.\n\nImport from `@saas-maker/ui/components/combobox`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-combobox", title: "Molecules/Inputs/Combobox", component: C.Combobox, parameters: {"docs": {"description": {"component": "Search a longer set of choices without losing the selected value or keyboard position.\n\nImport from `@saas-maker/ui/molecules/combobox`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

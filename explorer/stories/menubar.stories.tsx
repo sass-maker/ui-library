@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/menubar";
 
-const meta = { title: "Navigation/Menubar", component: C.Menubar, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/menubar`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "navigation-menubar", title: "Molecules/Navigation/Menubar", component: C.Menubar, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/menubar`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

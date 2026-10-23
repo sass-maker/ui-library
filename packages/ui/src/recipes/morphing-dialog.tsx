@@ -26,7 +26,7 @@ export function MorphingDialogContainer({children}:Part) {
 }
 export function MorphingDialogContent({children,className}:Part) {
   const context=useContext(Context);
-  return <Primitive.Content asChild><motion.div layoutId={`${context.id}-surface`} className={cn("fixed top-1/2 left-1/2 z-50 max-h-[85dvh] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-border bg-card p-6 text-card-foreground shadow-xl outline-none",className)}><Context.Provider value={{...context,inside:true}}>{children}</Context.Provider></motion.div></Primitive.Content>;
+  return <Primitive.Content asChild><motion.div layoutId={`${context.id}-surface`} className={cn("fixed top-1/2 left-1/2 z-50 max-h-[85dvh] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-xl border border-border bg-card p-6 text-card-foreground shadow-xl outline-none",className)}><Context.Provider value={{...context,inside:true}}>{children}</Context.Provider></motion.div></Primitive.Content>;
 }
 export function MorphingDialogTitle({children,className}:Part) {
   const {id,inside}=useContext(Context);

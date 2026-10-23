@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/calendar";
 
-const meta = { title: "Inputs/Calendar", component: C.Calendar, parameters: {"docs": {"description": {"component": "Single-date keyboard selection; the same component supports ranges and multiple dates.\n\nImport from `@saas-maker/ui/components/calendar`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-calendar", title: "Molecules/Inputs/Calendar", component: C.Calendar, parameters: {"docs": {"description": {"component": "Choose a date with a readable grid, keyboard navigation, and complete day names.\n\nImport from `@saas-maker/ui/molecules/calendar`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

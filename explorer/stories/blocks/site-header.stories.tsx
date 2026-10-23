@@ -5,7 +5,7 @@ import { Input } from '@saas-maker/ui/components/input';
 import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
 import * as C from '@saas-maker/ui/blocks/site-header';
 import {comparisonAfter,comparisonBefore} from '../fixtures';
-const meta={title:"Blocks/Site header",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/site-header`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+const meta={id: "blocks-site-header", title: "Organisms/Blocks/Site header",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/site-header`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <C.SiteHeader brand={{name:"Fleet UI",href:"#"}} links={[{label:"Components",href:"#components"},{label:"Source",href:"https://github.com/sass-maker/ui-library"}]} actions={<Button asChild><a href="https://github.com/sass-maker/ui-library">GitHub</a></Button>}/>;}};

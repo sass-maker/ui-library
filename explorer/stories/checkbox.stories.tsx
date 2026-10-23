@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/checkbox";
 
-const meta = { title: "Inputs/Checkbox", component: C.Checkbox, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/checkbox`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-checkbox", title: "Atoms/Inputs/Checkbox", component: C.Checkbox, parameters: {"docs": {"description": {"component": "A small selection control with visible checked, mixed, focus, and disabled states.\n\nImport from `@saas-maker/ui/atoms/checkbox`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/data-table";
 
-const meta = { title: "Data/Data table", component: C.DataTable, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/data-table`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "data-data-table", title: "Organisms/Data/Data table", component: C.DataTable, parameters: {"docs": {"description": {"component": "A working data collection with sorting, filtering, selection, column visibility, and pagination.\n\nImport from `@saas-maker/ui/organisms/data-table`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

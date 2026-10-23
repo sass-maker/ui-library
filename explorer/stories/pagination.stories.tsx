@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/pagination";
 
-const meta = { title: "Navigation/Pagination", component: C.Pagination, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/pagination`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "navigation-pagination", title: "Molecules/Navigation/Pagination", component: C.Pagination, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/pagination`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/radio-group";
 
-const meta = { title: "Inputs/Radio group", component: C.RadioGroup, parameters: {"docs": {"description": {"component": "Arrow keys move within the group; Tab moves out.\n\nImport from `@saas-maker/ui/components/radio-group`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-radio-group", title: "Atoms/Inputs/Radio group", component: C.RadioGroup, parameters: {"docs": {"description": {"component": "Arrow keys move within the group; Tab moves out.\n\nImport from `@saas-maker/ui/components/radio-group`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

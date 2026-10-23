@@ -91,8 +91,8 @@ if (explorer) {
     await open("/?path=/story/start-here-overview--explore");
     check("explorer: manager renders its preview under the base path", await waitFor("document.querySelector('#storybook-preview-iframe')?.contentDocument?.querySelector('#storybook-root')?.childElementCount > 0"));
     const checkedAssets = new Set();
-    for (const width of [390, 1440]) {
-      for (const id of ["start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
+    for (const width of [390, 820, 1440]) {
+      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "motion-morphing-dialog--in-context", "start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
         await open(`/iframe.html?id=${id}&viewMode=story`, width);
         const ready = await waitFor("document.querySelector('#storybook-root')?.childElementCount > 0");
         check(`explorer: ${id} renders at ${width}`, ready);
@@ -108,6 +108,45 @@ if (explorer) {
         }
       }
     }
+
+    const index = await (await fetch(base + "/index.json")).json();
+    for (const layer of ["Atoms", "Molecules", "Organisms", "Templates"]) {
+      check("architecture: " + layer + " is discoverable", Object.values(index.entries).some(entry => entry.title.startsWith(layer + "/")));
+    }
+    await open("/iframe.html?id=organisms-workspaces-workspace-settings--settings&viewMode=story", 390);
+    check("settings: form renders", await waitFor("!!document.querySelector('input[name=workspaceName]')"));
+    await js("document.querySelector('input[name=workspaceName]').focus(); document.querySelector('input[name=workspaceName]').select()");
+    await cdp("Input.insertText", { text: "  Kith, considered  " });
+    await js("[...document.querySelectorAll('label')].find(label => label.textContent.includes('Make the next save fail')).querySelector('input').click(); [...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'save changes').click()");
+    check("settings: failed save retains edits", await waitFor("document.body.innerText.includes('Your changes are still here.') && document.querySelector('input[name=workspaceName]').value === '  Kith, considered  '"));
+    await js("[...document.querySelectorAll('label')].find(label => label.textContent.includes('Make the next save fail')).querySelector('input').click(); [...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'try again').click()");
+    check("settings: retry saves normalized values", await waitFor("document.body.innerText.includes('All changes saved.') && document.querySelector('input[name=workspaceName]').value === 'Kith, considered'"));
+
+    await open("/iframe.html?id=feedback-notification-bell--in-context&viewMode=story", 390);
+    await js("document.querySelector('button[aria-label^=Notifications]').click()");
+    check("notifications: anchored panel opens", await waitFor("!!document.querySelector('[role=region][aria-label=Notifications]')"));
+    check("notifications: panel stays in the phone viewport", await js("(() => {const r=document.querySelector('[role=region][aria-label=Notifications]').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && document.documentElement.scrollWidth <= innerWidth + 1})()"));
+    await press("Escape");
+    check("notifications: Escape closes and restores focus", await waitFor("!document.querySelector('[role=region][aria-label=Notifications]') && document.activeElement?.getAttribute('aria-label')?.startsWith('Notifications')"));
+
+    await open("/iframe.html?id=organisms-workspaces-asset-library--files&viewMode=story", 390);
+    check("files: search renders", await waitFor("!!document.querySelector('input[aria-label=\"Search files\"]')"));
+    await js("document.querySelector('input[aria-label=\"Search files\"]').focus()");
+    await cdp("Input.insertText", { text: "no-such-file" });
+    check("files: search exposes an empty result", await waitFor("document.body.innerText.includes('No matching files')"));
+    await js("document.querySelector('button[aria-label=\"Clear search files\"]').click()");
+    check("files: clearing restores results and focus", await waitFor("!!document.querySelector('button[aria-label^=\"Preview \"]') && document.activeElement?.getAttribute('aria-label') === 'Search files'"));
+    await js("document.querySelector('button[aria-label^=\"Preview \"]').click()");
+    check("files: preview opens", await waitFor("!!document.querySelector('[role=dialog]')"));
+    await press("Escape");
+    check("files: preview returns focus", await waitFor("!document.querySelector('[role=dialog]') && document.activeElement?.getAttribute('aria-label')?.startsWith('Preview ')"));
+
+    await open("/iframe.html?id=templates-console--gallery&viewMode=story", 1440);
+    check("motion: template initializes offscreen reveals", await waitFor("[...document.querySelectorAll('.motion-reveal,.motion-stagger > *')].some(element => element.style.opacity === '0')"));
+    await cdp("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+    check("motion: live reduced preference restores hidden content", await waitFor("[...document.querySelectorAll('.motion-reveal,.motion-stagger > *')].every(element => element.style.opacity !== '0')"));
+    await cdp("Emulation.setEmulatedMedia", { features: [] });
+
   } finally {
     ws.close();
     chrome.kill();

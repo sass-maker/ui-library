@@ -6,6 +6,7 @@
 "use client"
 
 import { useRef } from "react"
+import { useReducedMotion } from "../lib/use-reduced-motion"
 import {
   AnimatePresence,
   motion,
@@ -49,9 +50,11 @@ export function BlurFade({
   blur = "6px",
   ...props
 }: BlurFadeProps) {
+  const reduced = useReducedMotion();
   const ref = useRef(null)
   const inViewResult = useInView(ref, { once: true, margin: inViewMargin })
   const isInView = !inView || inViewResult
+  if (reduced) return <motion.div {...props} ref={ref} className={className} initial={false} animate={{ opacity: 1 }} transition={{ duration: 0 }}>{children}</motion.div>;
   const defaultVariants: Variants = {
     hidden: {
       [direction === "left" || direction === "right" ? "x" : "y"]:

@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/slider";
 
-const meta = { title: "Inputs/Slider", component: C.Slider, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/slider`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-slider", title: "Atoms/Inputs/Slider", component: C.Slider, parameters: {"docs": {"description": {"component": "Direct manipulation with native keyboard behavior and an accessible name on every thumb.\n\nImport from `@saas-maker/ui/atoms/slider`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

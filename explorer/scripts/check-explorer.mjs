@@ -6,7 +6,7 @@ async function files(dir){return (await Promise.all((await readdir(dir,{withFile
 const storyFiles=(await files(path.join(root,'explorer/stories'))).filter(file=>file.endsWith('.stories.tsx'));
 const stories=(await Promise.all(storyFiles.map(file=>readFile(file,'utf8')))).join('\n');
 const missing=[];let modules=0;
-for(const category of ['components','recipes','effects','blocks']){
+for(const category of ['components','recipes','effects','blocks','molecules','organisms']){
  for(const file of await readdir(path.join(root,'packages/ui/src',category))){
   if(!file.endsWith('.tsx')||file==='upload-types.tsx')continue;
   modules++;

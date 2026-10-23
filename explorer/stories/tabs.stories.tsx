@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/tabs";
 
-const meta = { title: "Navigation/Tabs", component: C.Tabs, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/tabs`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "navigation-tabs", title: "Molecules/Navigation/Tabs", component: C.Tabs, parameters: {"docs": {"description": {"component": "Switch between related sections with native tab semantics and immediate selected feedback.\n\nImport from `@saas-maker/ui/molecules/tabs`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

@@ -8,6 +8,7 @@
 import React, { useEffect, useId, useRef, useState } from "react"
 import { motion } from "motion/react"
 
+import { useReducedMotion } from "../lib/use-reduced-motion";
 import { cn } from "../lib/utils"
 
 /**
@@ -78,6 +79,7 @@ export function DotPattern({
   glow = false,
   ...props
 }: DotPatternProps) {
+  const reduced = useReducedMotion();
   const id = useId()
   const containerRef = useRef<SVGSVGElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
@@ -107,8 +109,8 @@ export function DotPattern({
       return {
         x: col * width + cx + x,
         y: row * height + cy + y,
-        delay: Math.random() * 5,
-        duration: Math.random() * 3 + 2,
+        delay: ((col * 7 + row * 11) % 50) / 10,
+        duration: 2 + ((col * 13 + row * 3) % 30) / 10,
       }
     }
   )
@@ -138,7 +140,7 @@ export function DotPattern({
           fill={glow ? `url(#${id}-gradient)` : "currentColor"}
           initial={glow ? { opacity: 0.4, scale: 1 } : {}}
           animate={
-            glow
+            glow && !reduced
               ? {
                   opacity: [0.4, 1, 0.4],
                   scale: [1, 1.5, 1],
@@ -146,7 +148,7 @@ export function DotPattern({
               : {}
           }
           transition={
-            glow
+            glow && !reduced
               ? {
                   duration: dot.duration,
                   repeat: Infinity,

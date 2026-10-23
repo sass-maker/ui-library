@@ -10,6 +10,8 @@ import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 
 import { cn } from "../lib/utils";
+import { Popover } from "radix-ui";
+import { useReducedMotion } from "../lib/use-reduced-motion";
 
 export type BellNotification = {
     id: string;
@@ -48,6 +50,7 @@ export function NotificationBell({ notifications, defaultReadId, ignoreOutside, 
     ignoreOutside?: React.RefObject<HTMLElement | null>;
     className?: string;
 }) {
+    const reduced = useReducedMotion();
     const [open, setOpen] = useState(false);
     // One marker is all the state needed: everything newer is unread.
     const [readId, setReadId] = useState(defaultReadId);
@@ -76,34 +79,20 @@ export function NotificationBell({ notifications, defaultReadId, ignoreOutside, 
         if (liveRef.current)
             liveRef.current.textContent = `New notification: ${newest.title}`;
         const icon = iconRef.current;
-        if (!icon || matchMedia("(prefers-reduced-motion: reduce)").matches)
+        if (!icon || reduced)
             return;
         const ring = icon.animate(RING, { duration: 500, easing: "ease-in-out" });
         return () => ring.cancel();
-    }, [notifications]);
-    useEffect(() => {
-        if (!open)
-            return;
-        const onDown = (e: PointerEvent) => {
-            const target = e.target as Node;
-            if (rootRef.current?.contains(target))
-                return;
-            if (ignoreOutside?.current?.contains(target))
-                return;
-            setOpen(false);
-            setReadId(newestId.current);
-        };
-        document.addEventListener("pointerdown", onDown);
-        return () => document.removeEventListener("pointerdown", onDown);
-    }, [open, ignoreOutside]);
-    return (<MotionConfig reducedMotion="user">
+    }, [notifications, reduced]);
+    return (<MotionConfig reducedMotion={reduced ? "always" : "user"}>
+      <Popover.Root open={open} onOpenChange={next => next ? setOpen(true) : close()}>
       <div ref={rootRef} className={cn("relative inline-flex", className)} onKeyDown={(e) => {
             if (e.key !== "Escape" || !open)
                 return;
             close();
             bellRef.current?.focus();
         }}>
-        <button ref={bellRef} type="button" aria-label={badge > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"} aria-expanded={open} aria-controls={panelId} onClick={() => (open ? close() : setOpen(true))} className="relative flex size-11 touch-manipulation items-center justify-center rounded-full bg-surface text-foreground shadow-md outline-hidden transition-[scale] duration-150 ease-out select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground active:scale-[0.96] motion-reduce:transition-none">
+        <Popover.Trigger asChild><button ref={bellRef} type="button" aria-label={badge > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"} aria-expanded={open} aria-controls={panelId} className="relative flex size-11 touch-manipulation items-center justify-center rounded-full bg-surface text-foreground shadow-md outline-hidden transition-[scale] duration-150 ease-out select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground active:scale-[0.96] motion-reduce:transition-none">
           <svg ref={iconRef} viewBox="0 0 16 16" 
     // Swings from where a bell hangs, not from its middle.
     className="size-[22px] origin-[50%_12%]" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -122,13 +111,12 @@ export function NotificationBell({ notifications, defaultReadId, ignoreOutside, 
                 </AnimatePresence>
               </motion.span>)}
           </AnimatePresence>
-        </button>
+        </button></Popover.Trigger>
 
-        {/* Out of flow and hanging from the bell, so opening it moves nothing
-            else. Enters in 150ms and leaves in 100ms. */}
-        <div id={panelId} role="region" aria-label="Notifications" inert={!open} className={cn("absolute top-full left-0 z-10 mt-2.5 w-[340px] max-w-[calc(100vw-2rem)] origin-top-left rounded-[20px] bg-background p-2 shadow-md", "transition-[opacity,scale,translate,visibility] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-[opacity,visibility]", open
-            ? "visible translate-y-0 scale-100 opacity-100 duration-150"
-            : "invisible -translate-y-1 scale-[0.97] opacity-0 duration-100 motion-reduce:translate-y-0 motion-reduce:scale-100")}>
+        <Popover.Portal><Popover.Content id={panelId} role="region" aria-label="Notifications" align="end" sideOffset={10} collisionPadding={16}
+          onOpenAutoFocus={event => event.preventDefault()}
+          onInteractOutside={event => { const target = event.detail.originalEvent.target; if (target instanceof Node && ignoreOutside?.current?.contains(target)) event.preventDefault(); }}
+          className="z-50 w-[340px] max-w-[calc(100vw-2rem)] origin-(--radix-popover-content-transform-origin) rounded-[20px] border border-border bg-background p-2 shadow-lg outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-150">
           <p className="px-3 pt-2 pb-1.5 text-[13px] font-medium text-muted-foreground">
             Notifications
           </p>
@@ -156,10 +144,11 @@ export function NotificationBell({ notifications, defaultReadId, ignoreOutside, 
               </AnimatePresence>
             </ul>
           </SmoothHeight>
-        </div>
+        </Popover.Content></Popover.Portal>
 
         <span ref={liveRef} className="sr-only" aria-live="polite"/>
       </div>
+      </Popover.Root>
     </MotionConfig>);
 }
 
@@ -174,7 +163,7 @@ function SmoothHeight({ children }: {
         const el = inner.current;
         if (!el)
             return;
-        const observer = new ResizeObserver(([entry]) => setHeight(entry.borderBoxSize[0].blockSize));
+        const observer = new ResizeObserver(([entry]) => setHeight(entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height));
         observer.observe(el);
         return () => observer.disconnect();
     }, []);

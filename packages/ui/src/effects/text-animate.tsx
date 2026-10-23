@@ -14,6 +14,7 @@ import {
   type Variants,
 } from "motion/react"
 
+import { useReducedMotion } from "../lib/use-reduced-motion";
 import { cn } from "../lib/utils"
 
 type AnimationType = "text" | "word" | "character" | "line"
@@ -348,7 +349,10 @@ const TextAnimateBase = ({
   accessible = true,
   ...props
 }: TextAnimateProps) => {
+  const reduced = useReducedMotion();
   const MotionComponent = motionElements[Component]
+
+  if (reduced) return <MotionComponent {...props} initial={false} animate={{ opacity: 1 }} transition={{ duration: 0 }} className={cn("whitespace-pre-wrap", className)}>{children}</MotionComponent>;
 
   let segments: string[] = []
   switch (by) {

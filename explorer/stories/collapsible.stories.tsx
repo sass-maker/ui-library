@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/collapsible";
 
-const meta = { title: "Navigation/Collapsible", component: C.Collapsible, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/collapsible`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "navigation-collapsible", title: "Molecules/Disclosure/Collapsible", component: C.Collapsible, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/collapsible`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

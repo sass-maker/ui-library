@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/badge";
 
-const meta = { title: "Foundations/Badge", component: C.Badge, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/badge`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "foundations-badge", title: "Atoms/Foundations/Badge", component: C.Badge, parameters: {"docs": {"description": {"component": "A compact label for status or metadata, with semantic variants and consistent icon alignment.\n\nImport from `@saas-maker/ui/atoms/badge`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

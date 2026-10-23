@@ -5,6 +5,8 @@
  */
 'use client';
 import { cn } from '../lib/utils';
+import { useReducedMotion } from '../lib/use-reduced-motion';
+import { motionTiming } from '../lib/motion';
 import { AnimatePresence, motion, Transition, Variants } from 'motion/react';
 import { useMemo, useId } from 'react';
 
@@ -26,6 +28,7 @@ export function TextMorph({
   transition,
 }: TextMorphProps) {
   const uniqueId = useId();
+  const reduced = useReducedMotion();
 
   const characters = useMemo(() => {
     const charCounts: Record<string, number> = {};
@@ -61,14 +64,14 @@ export function TextMorph({
         {characters.map((character) => (
           <motion.span
             key={character.id}
-            layoutId={character.id}
+            layoutId={reduced ? undefined : character.id}
             className='inline-block'
             aria-hidden='true'
             initial='initial'
             animate='animate'
             exit='exit'
-            variants={variants || defaultVariants}
-            transition={transition || defaultTransition}
+            variants={reduced ? defaultVariants : variants || defaultVariants}
+            transition={reduced ? motionTiming.feedback : transition || defaultTransition}
           >
             {character.label}
           </motion.span>

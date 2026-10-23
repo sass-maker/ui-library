@@ -5,7 +5,7 @@ import { Input } from '@saas-maker/ui/components/input';
 import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
 import * as C from '@saas-maker/ui/blocks/mobile-nav';
 import {comparisonAfter,comparisonBefore} from '../fixtures';
-const meta={title:"Blocks/Mobile nav",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/mobile-nav`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+const meta={id: "blocks-mobile-nav", title: "Organisms/Blocks/Mobile nav",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/mobile-nav`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-stack"><p className="story-caption">Resize to phone width to inspect the navigation disclosure.</p><C.MobileNav brand="Fleet UI" links={[{label:"Components",href:"#components"},{label:"Tokens",href:"#tokens"}]}/></div>;}};

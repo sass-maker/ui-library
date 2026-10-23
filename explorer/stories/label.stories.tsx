@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/label";
 
-const meta = { title: "Inputs/Label", component: C.Label, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/label`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-label", title: "Atoms/Inputs/Label", component: C.Label, parameters: {"docs": {"description": {"component": "The accessible name that connects a visible label to its control.\n\nImport from `@saas-maker/ui/atoms/label`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

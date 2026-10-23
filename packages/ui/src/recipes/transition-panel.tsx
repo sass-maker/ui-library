@@ -1,17 +1,10 @@
-/** Adapted from ibelick/motion-primitives (120f64f6ca60348e251f929e9c81f11ccbe45eda).
- * https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/transition-panel.tsx
- * MIT; original copyright and permission notice in THIRD_PARTY_NOTICES.md.
- * Fleet changes: semantic tokens, framework-independent imports, and isolated demos.
- */
-'use client';
-import {
-  AnimatePresence,
-  Transition,
-  Variant,
-  motion,
-  MotionProps,
-} from 'motion/react';
-import { cn } from '../lib/utils';
+/** Adapted from ibelick/motion-primitives. MIT; see THIRD_PARTY_NOTICES.md. */
+"use client";
+import { AnimatePresence, motion, type MotionProps, type Transition, type Variant } from "motion/react";
+import useMeasure from "react-use-measure";
+import { useReducedMotion } from "../lib/use-reduced-motion";
+import { motionTiming } from "../lib/motion";
+import { cn } from "../lib/utils";
 
 export type TransitionPanelProps = {
   children: React.ReactNode[];
@@ -21,33 +14,22 @@ export type TransitionPanelProps = {
   variants?: { enter: Variant; center: Variant; exit: Variant };
 } & MotionProps;
 
-export function TransitionPanel({
-  children,
-  className,
-  transition,
-  variants,
-  activeIndex,
-  ...motionProps
-}: TransitionPanelProps) {
-  return (
-    <div className={cn('relative', className)}>
-      <AnimatePresence
-        initial={false}
-        mode='popLayout'
-        custom={motionProps.custom}
-      >
-        <motion.div
-          key={activeIndex}
-          variants={variants}
-          transition={transition}
-          initial='enter'
-          animate='center'
-          exit='exit'
-          {...motionProps}
-        >
-          {children[activeIndex]}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
+/** Resizes with its content; rapid changes retarget the current spring. */
+export function TransitionPanel({ children, className, transition, variants, activeIndex, ...motionProps }: TransitionPanelProps) {
+  const reduced = useReducedMotion();
+  const [measure, bounds] = useMeasure();
+  const states = variants ?? {
+    enter: { opacity: 0, y: reduced ? 0 : 6 },
+    center: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: reduced ? 0 : -4 },
+  };
+  return <motion.div initial={false} animate={{ height: bounds.height || "auto" }}
+    transition={reduced ? { duration: 0 } : motionTiming.layout} className={cn("relative", className)}>
+    <AnimatePresence initial={false} mode="popLayout" custom={motionProps.custom}>
+      <motion.div key={activeIndex} ref={measure} variants={states} initial="enter" animate="center" exit="exit"
+        transition={reduced ? motionTiming.feedback : transition ?? motionTiming.content} {...motionProps}>
+        {children[activeIndex]}
+      </motion.div>
+    </AnimatePresence>
+  </motion.div>;
 }
