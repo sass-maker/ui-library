@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import {useState,useRef} from 'react';
+import { Button } from '@saas-maker/ui/components/button';
+import { Input } from '@saas-maker/ui/components/input';
+import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
+import * as C from '@saas-maker/ui/blocks/search-palette';
+import {comparisonAfter,comparisonBefore} from '../fixtures';
+const meta={title:"Blocks/Search palette",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/search-palette`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+export default meta;
+type Story=StoryObj;
+export const Playground:Story={render:function Render(){const [selection,setSelection]=useState("");return <div className="story-stack"><C.SearchTrigger label="Search components"/><C.SearchPalette hotkey={null} sources={[{id:"components",label:"Components",search:query=>["Button","Dialog","Combobox","Calendar"].filter(title=>title.toLowerCase().includes(query.toLowerCase())).map(title=>({id:title,title,subtitle:"@saas-maker/ui"}))}]} onSelect={item=>setSelection(item.title)}/><output>{selection?`Selected: ${selection}`:"Search local examples; no network request."}</output></div>;}};

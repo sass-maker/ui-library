@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "fleet-ui",
-  "homepage": "https://github.com/",
+  "homepage": "https://sass-maker.github.io/ui-library/",
   "items": [
     {
       "name": "theme",
@@ -21,6 +21,11 @@
           "path": "packages/ui/src/styles/fonts.css",
           "type": "registry:file",
           "target": "src/styles/fonts.css"
+        },
+        {
+          "path": "packages/ui/src/styles/effects.css",
+          "type": "registry:file",
+          "target": "src/styles/effects.css"
         }
       ]
     },
@@ -645,6 +650,2817 @@
           "path": "packages/ui/src/lib/use-delayed-flag.ts",
           "type": "registry:hook"
         }
+      ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert Dialog",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/alert-dialog.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/alert-dialog.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/alert-dialog.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/tabs.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/tabs.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/tabs.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/card.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/card.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/card.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/input-group.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/input-group.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/input-group.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/input.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/input.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/textarea.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/textarea.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/progress.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/progress.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/progress.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "title": "Input Otp",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/input-otp.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "input-otp@1.5.0",
+        "lucide-react@1.48.0",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/input-otp.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/input-otp.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "title": "Hover Card",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/hover-card.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/hover-card.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/hover-card.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/sheet.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/sheet.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/sheet.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "title": "Scroll Area",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/scroll-area.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/scroll-area.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/scroll-area.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "resizable",
+      "type": "registry:ui",
+      "title": "Resizable",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/resizable.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "react-resizable-panels@4.14.8",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/resizable.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/resizable.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/label.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/label.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/label.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui",
+      "title": "Sonner",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/sonner.",
+      "dependencies": [
+        "lucide-react@1.48.0",
+        "sonner@2.0.8"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/sonner.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/sonner.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "title": "Navigation Menu",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/navigation-menu.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/navigation-menu.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/navigation-menu.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/accordion.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/accordion.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/accordion.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/drawer.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0",
+        "vaul@1.1.2"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/drawer.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/drawer.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/tooltip.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/tooltip.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/tooltip.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/alert.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/alert.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/alert.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/combobox.",
+      "dependencies": [
+        "@base-ui/react@1.9.0",
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/combobox.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/combobox.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/input-group.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/input-group.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/input.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/input.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/textarea.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/textarea.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/switch.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/switch.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/switch.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/calendar.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "react-day-picker@10.0.2",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/calendar.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/calendar.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/radio-group.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/radio-group.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/radio-group.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Toggle Group",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/toggle-group.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/toggle-group.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/toggle-group.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/toggle.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/toggle.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/avatar.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/avatar.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/avatar.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "title": "Menubar",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/menubar.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/menubar.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/menubar.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/kbd.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/kbd.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/kbd.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/dialog.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/dialog.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/dialog.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/badge.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/badge.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/badge.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/table.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/table.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/table.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/separator.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/separator.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/separator.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/button.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/toggle.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/toggle.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/toggle.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/checkbox.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/checkbox.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/checkbox.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/collapsible.",
+      "dependencies": [
+        "radix-ui@1.6.7"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/collapsible.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/collapsible.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/dropdown-menu.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/dropdown-menu.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/dropdown-menu.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/select.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/select.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/select.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/textarea.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/textarea.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/textarea.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/input.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/input.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/input.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "Context Menu",
+      "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/context-menu.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/components/context-menu.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/context-menu.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "autosave-status",
+      "type": "registry:ui",
+      "title": "Autosave Status",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/autosave-status.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/autosave-status.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/autosave-status.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "animated-number",
+      "type": "registry:ui",
+      "title": "Animated Number",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/animated-number.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/animated-number.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/animated-number.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "inline-edit",
+      "type": "registry:ui",
+      "title": "Inline Edit",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/inline-edit.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/inline-edit.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/inline-edit.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "storage-meter",
+      "type": "registry:ui",
+      "title": "Storage Meter",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/storage-meter.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/storage-meter.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/storage-meter.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "multi-step-form",
+      "type": "registry:ui",
+      "title": "Multi Step Form",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/multi-step-form.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/multi-step-form.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/multi-step-form.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "morphing-popover",
+      "type": "registry:ui",
+      "title": "Morphing Popover",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/morphing-popover.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/morphing-popover.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/morphing-popover.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "image-comparison",
+      "type": "registry:ui",
+      "title": "Image Comparison",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/image-comparison.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/image-comparison.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/image-comparison.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "notification-bell",
+      "type": "registry:ui",
+      "title": "Notification Bell",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/notification-bell.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/notification-bell.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/notification-bell.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "tree-view",
+      "type": "registry:ui",
+      "title": "Tree View",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/tree-view.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/tree-view.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/tree-view.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Copy Button",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/copy-button.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/copy-button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/copy-button.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "morphing-dialog",
+      "type": "registry:ui",
+      "title": "Morphing Dialog",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/morphing-dialog.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "motion@13.4.3",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/morphing-dialog.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/morphing-dialog.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "disclosure",
+      "type": "registry:ui",
+      "title": "Disclosure",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/disclosure.",
+      "dependencies": [
+        "motion@13.4.3",
+        "radix-ui@1.6.7"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/disclosure.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/disclosure.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "progress-stepper",
+      "type": "registry:ui",
+      "title": "Progress Stepper",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/progress-stepper.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/progress-stepper.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/progress-stepper.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "morphing-button",
+      "type": "registry:ui",
+      "title": "Morphing Button",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/morphing-button.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/morphing-button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/morphing-button.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "kanban-board",
+      "type": "registry:ui",
+      "title": "Kanban Board",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/kanban-board.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/kanban-board.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/kanban-board.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "pricing-calculator",
+      "type": "registry:ui",
+      "title": "Pricing Calculator",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/pricing-calculator.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/pricing-calculator.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/pricing-calculator.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "toolbar-dynamic",
+      "type": "registry:ui",
+      "title": "Toolbar Dynamic",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/toolbar-dynamic.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "motion@13.4.3",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/use-click-outside.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-click-outside.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/toolbar-dynamic.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/toolbar-dynamic.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "animated-background",
+      "type": "registry:ui",
+      "title": "Animated Background",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/animated-background.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/animated-background.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/animated-background.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "text-effect",
+      "type": "registry:ui",
+      "title": "Text Effect",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/text-effect.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/text-effect.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/text-effect.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "transition-panel",
+      "type": "registry:ui",
+      "title": "Transition Panel",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/transition-panel.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/transition-panel.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/transition-panel.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/segmented-control.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/segmented-control.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/segmented-control.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "sortable-grid",
+      "type": "registry:ui",
+      "title": "Sortable Grid",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/sortable-grid.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/sortable-grid.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/sortable-grid.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "reorder-list",
+      "type": "registry:ui",
+      "title": "Reorder List",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/reorder-list.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/reorder-list.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/reorder-list.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:ui",
+      "title": "Tag Input",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/tag-input.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/tag-input.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/tag-input.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "text-morph",
+      "type": "registry:ui",
+      "title": "Text Morph",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/text-morph.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/text-morph.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/text-morph.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "hold-to-delete",
+      "type": "registry:ui",
+      "title": "Hold To Delete",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/hold-to-delete.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/hold-to-delete.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/hold-to-delete.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "file-dropzone",
+      "type": "registry:ui",
+      "title": "File Dropzone",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/file-dropzone.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "motion@13.4.3",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/file-dropzone.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/file-dropzone.tsx"
+        },
+        {
+          "path": "packages/ui/src/recipes/upload-types.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/upload-types.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "sliding-number",
+      "type": "registry:ui",
+      "title": "Sliding Number",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/sliding-number.",
+      "dependencies": [
+        "motion@13.4.3",
+        "react-use-measure@2.1.7"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/sliding-number.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/sliding-number.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "avatar-stack",
+      "type": "registry:ui",
+      "title": "Avatar Stack",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/avatar-stack.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/avatar-stack.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/avatar-stack.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "title": "Carousel",
+      "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/carousel.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/recipes/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/recipes/carousel.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/carousel.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "animated-beam",
+      "type": "registry:ui",
+      "title": "Animated Beam",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/animated-beam.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/animated-beam.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/animated-beam.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "file-tree",
+      "type": "registry:ui",
+      "title": "File Tree",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/file-tree.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/../components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/effects/../components/scroll-area.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/scroll-area.tsx"
+        },
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/file-tree.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/file-tree.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "interactive-hover-button",
+      "type": "registry:ui",
+      "title": "Interactive Hover Button",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/interactive-hover-button.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/interactive-hover-button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/interactive-hover-button.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "shimmer-button",
+      "type": "registry:ui",
+      "title": "Shimmer Button",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/shimmer-button.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/shimmer-button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/shimmer-button.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "border-beam",
+      "type": "registry:ui",
+      "title": "Border Beam",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/border-beam.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/border-beam.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/border-beam.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "dot-pattern",
+      "type": "registry:ui",
+      "title": "Dot Pattern",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/dot-pattern.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/dot-pattern.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/dot-pattern.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "code-comparison",
+      "type": "registry:ui",
+      "title": "Code Comparison",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/code-comparison.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/code-comparison.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/code-comparison.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "marquee",
+      "type": "registry:ui",
+      "title": "Marquee",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/marquee.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/marquee.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/marquee.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "number-ticker",
+      "type": "registry:ui",
+      "title": "Number Ticker",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/number-ticker.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/number-ticker.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/number-ticker.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "globe",
+      "type": "registry:ui",
+      "title": "Globe",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/globe.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "cobe@2.0.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/globe.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/globe.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "orbiting-circles",
+      "type": "registry:ui",
+      "title": "Orbiting Circles",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/orbiting-circles.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/orbiting-circles.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/orbiting-circles.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "text-animate",
+      "type": "registry:ui",
+      "title": "Text Animate",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/text-animate.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "motion@13.4.3",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/text-animate.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/text-animate.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "bento-grid",
+      "type": "registry:ui",
+      "title": "Bento Grid",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/bento-grid.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/../components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/bento-grid.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/bento-grid.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "blur-fade",
+      "type": "registry:ui",
+      "title": "Blur Fade",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/blur-fade.",
+      "dependencies": [
+        "motion@13.4.3"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/blur-fade.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/blur-fade.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "hero-video-dialog",
+      "type": "registry:ui",
+      "title": "Hero Video Dialog",
+      "description": "Effects module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/effects/hero-video-dialog.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/effects/../components/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/../components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/effects/../components/dialog.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../components/dialog.tsx"
+        },
+        {
+          "path": "packages/ui/src/effects/../lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/../lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/effects/hero-video-dialog.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/effects/hero-video-dialog.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.md"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
       ]
     }
   ]

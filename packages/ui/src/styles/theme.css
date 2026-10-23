@@ -3,6 +3,7 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tw-animate-css";
 @import "./fonts.css";
+@import "./effects.css";
 
 @custom-variant dark (&:is([data-mode="dark"] *, [data-mode="dark"]));
 
@@ -59,9 +60,9 @@
   --muted-foreground: oklch(0.47 0.008 270);
   --accent: oklch(0.955 0.003 270);
   --accent-foreground: var(--foreground);
-  --destructive: oklch(0.58 0.22 27);
-  --success: oklch(0.6 0.15 155);
-  --warning: oklch(0.75 0.15 75);
+  --destructive: oklch(0.52 0.21 27);
+  --success: oklch(0.48 0.13 155);
+  --warning: oklch(0.48 0.11 65);
   --border: oklch(0.91 0.003 270);
   --hairline: oklch(0.94 0.002 270);
   --input: oklch(0.89 0.004 270);
@@ -156,6 +157,9 @@
   --sidebar-accent: oklch(0.21 0.01 265);
   --sidebar-accent-foreground: var(--foreground);
   color-scheme: dark;
+  --destructive: #ff8585;
+  --success: #75d6a3;
+  --warning: #edc76a;
 }
 
 /* Hearth: warm, personal, tactile. Consumer iPhone and life apps. */
@@ -181,7 +185,7 @@
   --border: oklch(0.88 0.025 65);
   --hairline: oklch(0.915 0.02 68);
   --input: oklch(0.86 0.03 60);
-  --brand: oklch(0.56 0.15 35);
+  --brand: oklch(0.5 0.15 35);
   --brand-soft: oklch(0.92 0.045 45);
   --shadow-color: 25 40% 25%;
 }
@@ -213,6 +217,7 @@
   --tone-ink: oklch(0.2 0.02 265);
   --brand-soft: oklch(0.95 0.06 90);
   --border: oklch(0.88 0.01 80);
+  --brand-ink: oklch(0.48 0.13 55);
 }
 
 /* Gallery: monumental sans, serif text, image-led and quiet. Consumer apps.
@@ -241,7 +246,7 @@
   --border: rgb(29 22 17 / 0.12);
   --hairline: rgb(29 22 17 / 0.08);
   --input: rgb(29 22 17 / 0.16);
-  --brand: #c4592f;
+  --brand: #9a3b1b;
   --brand-foreground: #fff8f1;
   --brand-soft: #f3dccd;
   --accent-ink: var(--brand-ink);
@@ -290,7 +295,7 @@
   --sidebar-accent-foreground: var(--foreground);
   color-scheme: dark;
 }
-[data-theme="base"][data-mode="dark"] { --brand: #4a7cf2; }
+[data-theme="base"][data-mode="dark"] { --brand: #759bfd; }
 [data-theme="paper"][data-mode="dark"] { --brand: #ee997a; }
 [data-theme="hearth"][data-mode="dark"] { --brand: #ed987c; }
 [data-theme="signal"][data-mode="dark"] { --brand: #edc76a; }

@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import {useState,useRef} from 'react';
+import { Button } from '@saas-maker/ui/components/button';
+import { Input } from '@saas-maker/ui/components/input';
+import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
+import * as C from '@saas-maker/ui/blocks/closing';
+import {comparisonAfter,comparisonBefore} from '../fixtures';
+const meta={title:"Blocks/Closing",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/closing`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+export default meta;
+type Story=StoryObj;
+export const Playground:Story={render:function Render(){return <div className="story-stack"><C.Faq title="Working with the library" items={[{q:"Where does the source live?",a:"In the public sass-maker/ui-library repository."},{q:"How do I compare themes?",a:"Use the preset and mode controls in the explorer toolbar."}]}/><C.Cta title="Explore the source" lede="Use the components in a Fleet product." actions={<Button asChild><a href="https://github.com/sass-maker/ui-library">Open repository</a></Button>}/></div>;}};

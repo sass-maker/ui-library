@@ -9,4 +9,7 @@
    Keep the Console entry scoped to the sources above, rather than compiling
    unrelated Gallery/Workbench blocks and controls as well. */
 @source not "../blocks/{assistant-logos,closing,features,footer,frames,gallery,hero,layout,mobile-nav,site-header}.tsx";
-@source not "../components/{accordion,avatar,label,navigation-menu,progress,scroll-area,separator,sonner,switch,tabs,textarea,tooltip}.tsx";
+@source not "../components/{alert-dialog,alert,calendar,collapsible,combobox,context-menu,drawer,hover-card,input-group,input-otp,menubar,radio-group,resizable,accordion,avatar,label,navigation-menu,progress,scroll-area,separator,sonner,switch,tabs,textarea,tooltip}.tsx";
+
+@source not "../recipes";
+@source not "../effects";

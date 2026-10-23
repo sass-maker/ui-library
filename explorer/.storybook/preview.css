@@ -1,0 +1,35 @@
+@import "@saas-maker/ui/theme.css";
+@import "tailwindcss/utilities";
+@source "../stories";
+@source "../../packages/ui/src";
+@source "../../packages/templates/src";
+
+html, body, #storybook-root { min-height: 100%; }
+body { background: var(--background); color: var(--foreground); }
+.fleet-story-frame {
+  min-height: 100%;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+.sbdocs-wrapper { background: var(--background) !important; color: var(--foreground); }
+.sbdocs-preview { background: var(--background) !important; border-color: var(--border) !important; }
+.sbdocs-content { max-width: 1120px !important; }
+.sbdocs-title, .sbdocs-h1, .sbdocs-h2, .sbdocs-h3, .sbdocs-p, .sbdocs-li { color: var(--foreground) !important; }
+.sbdocs-a { color: var(--brand-ink) !important; }
+.story-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 24px; }
+.story-stack { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 760px; }
+.story-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.story-panel { padding: clamp(20px, 4vw, 40px); border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.story-caption { color: var(--muted-foreground); font-size: 13px; line-height: 1.6; }
+.story-label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
+[data-motion="reduced"] *, [data-motion="reduced"] *::before, [data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}

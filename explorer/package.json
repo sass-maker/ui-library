@@ -1,0 +1,35 @@
+{
+  "name": "@saas-maker/ui-explorer",
+  "version": "0.1.21",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006 --no-open",
+    "build": "storybook build --disable-telemetry",
+    "check": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@saas-maker/ui": "workspace:*",
+    "@saas-maker/motion": "workspace:*",
+    "@saas-maker/templates": "workspace:*",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "motion": "13.4.3",
+    "lucide-react": "1.48.0",
+    "radix-ui": "1.6.7",
+    "sonner": "2.0.8"
+  },
+  "devDependencies": {
+    "storybook": "10.6.3",
+    "@storybook/react-vite": "10.6.3",
+    "@storybook/addon-docs": "10.6.3",
+    "@storybook/addon-a11y": "10.6.3",
+    "@tailwindcss/vite": "4.3.3",
+    "tailwindcss": "4.3.3",
+    "vite": "8.3.5",
+    "typescript": "5.9.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/node": "22.19.15"
+  }
+}

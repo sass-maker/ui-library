@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import {useState,useRef} from 'react';
+import { Button } from '@saas-maker/ui/components/button';
+import { Input } from '@saas-maker/ui/components/input';
+import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
+import * as C from '@saas-maker/ui/blocks/proof';
+import {comparisonAfter,comparisonBefore} from '../fixtures';
+const meta={title:"Blocks/Proof",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/proof`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+export default meta;
+type Story=StoryObj;
+export const Playground:Story={render:function Render(){return <div className="story-stack"><C.StatusPill tone="neutral">Example evidence</C.StatusPill><C.CodeBlock label="Local command" code="pnpm storybook"/><C.DiffBlock file="button.tsx" lines={[{kind:"del",text:"<button>Save</button>"},{kind:"add",text:"<Button>Save</Button>"}]}/></div>;}};
