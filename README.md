@@ -23,6 +23,7 @@ pnpm storybook        # http://localhost:6006
 pnpm storybook:check  # explorer and component types
 pnpm storybook:build  # static explorer
 pnpm check:explorer --built
+BASE_URL=http://localhost:6006 pnpm check:browser:explorer
 ```
 
 Import interaction patterns from `@saas-maker/ui/recipes/*`, visual treatments

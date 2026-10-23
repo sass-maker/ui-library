@@ -23,7 +23,8 @@
     "storybook": "pnpm --filter @saas-maker/ui-explorer dev",
     "storybook:build": "pnpm --filter @saas-maker/ui-explorer build",
     "storybook:check": "pnpm --filter @saas-maker/ui-explorer check",
-    "check:explorer": "node explorer/scripts/check-explorer.mjs"
+    "check:explorer": "node explorer/scripts/check-explorer.mjs",
+    "check:browser:explorer": "node site/scripts/browser-check.mjs --explorer"
   },
   "devDependencies": {
     "@types/react": "19.3.0",

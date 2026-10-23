@@ -5,20 +5,28 @@
 //   pnpm --filter ./site build && pnpm --filter ./site preview   # in one shell
 //   pnpm check:browser                                           # in another
 //
+// --explorer checks the Storybook manager, templates and hosted asset paths.
 // BASE_URL (default http://localhost:4321) and CHROME (path to Chrome) override.
 import { spawn } from "node:child_process";
 import { mkdtempSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+const explorer = process.argv.includes("--explorer");
 const assets = new URL("../dist/_astro/", import.meta.url);
-const motionChunk = readdirSync(assets).find((file) => file.endsWith(".js") && /\bas initMotion\b/.test(readFileSync(new URL(file, assets), "utf8")));
-if (!motionChunk) throw new Error("Build the site before running browser checks.");
+const motionChunk = !explorer && readdirSync(assets).find((file) => file.endsWith(".js") && /\bas initMotion\b/.test(readFileSync(new URL(file, assets), "utf8")));
+if (!explorer && !motionChunk) throw new Error("Build the site before running browser checks.");
 
 const base = (process.env.BASE_URL ?? "http://localhost:4321").replace(/\/$/, "");
-const probe = await fetch(base + "/demo/identity-form/").catch(() => null);
-if (!probe?.ok) throw new Error(`${base} does not serve this build (no /demo/identity-form/ page). A stale preview may be holding the port; stop it or run with BASE_URL pointing at this build's preview.`);
-const chromePath = process.env.CHROME ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const probePath = explorer ? "/index.json" : "/demo/identity-form/";
+let probe;
+for (let attempt = 0; attempt < (explorer ? 40 : 1); attempt++) {
+  probe = await fetch(base + probePath).catch(() => null);
+  if (probe?.ok) break;
+  if (explorer) await new Promise(resolve => setTimeout(resolve, 100));
+}
+if (!probe?.ok) throw new Error(`${base} does not serve this build (no ${probePath} page). A stale preview may be holding the port; stop it or run with BASE_URL pointing at this build's preview.`);
+const chromePath = process.env.CHROME ?? process.env.CHROME_BIN ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const port = 9600 + Math.floor(Math.random() * 300);
@@ -75,6 +83,38 @@ function check(name, ok, detail = "") {
 
 await cdp("Page.enable");
 await cdp("Runtime.enable");
+
+// Check the actual built templates under a project subdirectory, as Pages hosts them.
+// This uses the same Chrome driver as the existing site checks, without new dependencies.
+if (explorer) {
+  try {
+    await open("/?path=/story/start-here-overview--explore");
+    check("explorer: manager renders its preview under the base path", await waitFor("document.querySelector('#storybook-preview-iframe')?.contentDocument?.querySelector('#storybook-root')?.childElementCount > 0"));
+    const checkedAssets = new Set();
+    for (const width of [390, 1440]) {
+      for (const id of ["start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
+        await open(`/iframe.html?id=${id}&viewMode=story`, width);
+        const ready = await waitFor("document.querySelector('#storybook-root')?.childElementCount > 0");
+        check(`explorer: ${id} renders at ${width}`, ready);
+        if (!ready) continue;
+        check(`explorer: ${id} fits at ${width}`, await js("document.documentElement.scrollWidth <= innerWidth + 1"));
+        const urls = await js("[...document.querySelectorAll('#storybook-root img')].map(img => img.src)");
+        for (const url of urls) {
+          if (url.startsWith("data:") || checkedAssets.has(url)) continue;
+          checkedAssets.add(url);
+          const local = url.startsWith(base + "/");
+          check("explorer: image stays under the hosted base path", local, url);
+          if (local) check("explorer: image asset exists", (await fetch(url)).ok, url);
+        }
+      }
+    }
+  } finally {
+    ws.close();
+    chrome.kill();
+  }
+  console.log(failed ? `\n${failed} explorer check(s) failed` : "\nall explorer checks passed");
+  process.exit(failed ? 1 : 0);
+}
 
 // Fake SaaS Maker: capture-config answers 503 once, then a key; sends answer 201.
 let lookups = 0;
