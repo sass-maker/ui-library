@@ -68,12 +68,19 @@ async function press(key) {
 }
 async function open(path, width = 1440) {
   await cdp("Emulation.setDeviceMetricsOverride", { width, height: 1000, deviceScaleFactor: 1, mobile: width < 600 });
-  await cdp("Page.navigate", { url: base + path });
-  for (let i = 0; i < 60; i++) {
+  const url = new URL(base + path);
+  const navigation = await cdp("Page.navigate", { url: url.href });
+  if (navigation.error || navigation.result?.errorText) throw new Error("Navigation failed: " + JSON.stringify(navigation));
+  const query = JSON.stringify([...url.searchParams]);
+  const correctPage = `location.pathname === ${JSON.stringify(url.pathname)} && ${query}.every(([key,value]) => new URLSearchParams(location.search).get(key) === value)`;
+  const ready = `${correctPage} && document.readyState === 'complete' && !document.querySelector('astro-island[ssr]')${explorer && url.pathname.endsWith('/iframe.html') ? " && document.body.classList.contains('sb-show-main') && document.querySelector('#storybook-root')?.childElementCount > 0" : ""}`;
+  let loaded = false;
+  for (let i = 0; i < 80; i++) {
     await sleep(150);
-    if ((await js("document.readyState")) === "complete" && (await js("!document.querySelector('astro-island[ssr]')"))) break;
+    if (await js(ready)) { loaded = true; break; }
   }
-  await sleep(400);
+  if (!loaded) throw new Error("Page did not render: " + JSON.stringify(await js("({url:location.href,title:document.title,body:document.body.innerText.slice(0,1000)})")));
+  await sleep(150);
 }
 const waitFor = async (expr, ms = 4000) => { for (let t = 0; t < ms; t += 100) { if (await js(expr)) return true; await sleep(100); } return false; };
 
@@ -149,10 +156,14 @@ if (explorer) {
 
     await open("/iframe.html?id=foundations-button--in-context&viewMode=story", 390);
     check("form example: response control renders", await waitFor("!!document.querySelector('[role=radio]')"));
-    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Error').click(); document.querySelector('button[type=submit]').click()");
+    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Error').click()");
+    check("form example: rejected response is selected before submitting", await waitFor("document.querySelector('[role=radio][aria-checked=true]')?.textContent === 'Error'"));
+    await js("document.querySelector('button[type=submit]').click()");
     check("form example: pending action is stable and guarded", await js("document.querySelector('button[type=submit]').disabled && document.querySelector('button[type=submit]').getAttribute('aria-busy') === 'true'"));
     check("form example: a rejected request retains the draft", await waitFor("document.body.innerText.includes('Connection interrupted.') && document.querySelector('input[name=projectName]').value === 'Kith · the next chapter'"));
-    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Success').click(); document.querySelector('button[type=submit]').click()");
+    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Success').click()");
+    check("form example: successful response is selected before retrying", await waitFor("document.querySelector('[role=radio][aria-checked=true]')?.textContent === 'Success'"));
+    await js("document.querySelector('button[type=submit]').click()");
     check("form example: retry reaches success", await waitFor("document.body.innerText.includes('Saved in this example.')"));
 
     for (const layer of ["Atoms", "Molecules", "Organisms", "Templates"]) {
