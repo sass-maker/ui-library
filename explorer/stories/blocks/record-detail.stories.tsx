@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import {useState,useRef} from 'react';
+import { Button } from '@saas-maker/ui/components/button';
+import { Input } from '@saas-maker/ui/components/input';
+import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
+import * as C from '@saas-maker/ui/blocks/record-detail';
+import {comparisonAfter,comparisonBefore} from '../fixtures';
+const meta={title:"Blocks/Record detail",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/record-detail`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+export default meta;
+type Story=StoryObj;
+export const Playground:Story={render:function Render(){const [open,setOpen]=useState(false);return <C.RecordLayout><Button onClick={()=>setOpen(true)}>Inspect Button</Button><C.RecordDetail open={open} onOpenChange={setOpen} title="Button" subtitle="Component source"><C.KeyValueList items={[{label:"Package",value:"@saas-maker/ui"},{label:"Import",value:"components/button"}]}/><C.Provenance info={{source:"UI Library",url:"https://github.com/sass-maker/ui-library",note:"Example record; source is public."}}/></C.RecordDetail></C.RecordLayout>;}};

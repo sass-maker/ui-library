@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import {useState,useRef} from 'react';
+import { Button } from '@saas-maker/ui/components/button';
+import { Input } from '@saas-maker/ui/components/input';
+import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
+import * as C from '@saas-maker/ui/blocks/app';
+import {comparisonAfter,comparisonBefore} from '../fixtures';
+const meta={title:"Blocks/App",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/app`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+export default meta;
+type Story=StoryObj;
+export const Playground:Story={render:function Render(){return <div className="story-stack"><C.PageHeader title="Library overview" description="Illustrative dashboard composition"/><div className="story-grid"><C.StatCard label="Example count" value="24" hint="Illustrative, not a measured Fleet result" trend={[2,4,3,5,7,8]}/><C.EmptyState icon={<Box/>} title="No components selected" body="Select a component to inspect its source."/></div><C.AreaChart series={[{name:"Example series",values:[2,4,3,7,6,9]}]} labels={["Mon","Tue","Wed","Thu","Fri","Sat"]}/></div>;}};

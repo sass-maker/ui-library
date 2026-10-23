@@ -12,6 +12,36 @@ one theme.
 | `SaaSMakerUI` (Swift) | palette, type, components and motion for Mac/iOS |
 
 
+## Explore the library
+
+The deployed [Fleet UI explorer](https://sass-maker.github.io/ui-library/) runs
+Storybook with live source, composition examples, theme and light/dark controls,
+responsive viewports, reduced motion, and accessibility inspection.
+
+```sh
+pnpm storybook        # http://localhost:6006
+pnpm storybook:check  # explorer and component types
+pnpm storybook:build  # static explorer
+pnpm check:explorer --built
+```
+
+Import interaction patterns from `@saas-maker/ui/recipes/*`, visual treatments
+from `@saas-maker/ui/effects/*`, and primitives from `@saas-maker/ui/components/*`.
+Import `@saas-maker/ui/styles.css` once; theme.css includes the effect keyframes.
+Each module has a working example and import path in the explorer. Uploads and
+async forms require application-owned callbacks; examples do not send files or
+create accounts. Motion is optional and honors reduced-motion preferences.
+
+Selective MIT adaptations come from shadcn/ui, Xevrion UI Lab, Motion Primitives
+and Magic UI. Pinned source provenance is in `packages/ui/upstream.json` and
+copyright/permission notices in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Transitions.dev is a design reference only; its restricted collection is not
+redistributed. The retained iOS factory keeps its independent dependencies.
+
+The `UI library and explorer` workflow checks pull requests and deploys the
+static explorer to GitHub Pages on main. Reverting the source commit and
+rerunning that workflow restores the previous deployment.
+
 ## Retained native-app landing factory
 
 The complete former iOS Landings repository lives in
@@ -46,7 +76,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.20"
+G="github:sass-maker/ui-library#v0.1.21"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -56,9 +86,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.20&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.20&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.20&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.21&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.21&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.21&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -595,7 +625,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.20&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.21&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

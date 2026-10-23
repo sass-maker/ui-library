@@ -253,7 +253,7 @@ extension SMPalette {
         brand: Color(.sRGB, red: 0.29, green: 0.486, blue: 0.949, opacity: 1),
         brandForeground: Color(.sRGB, red: 0.067, green: 0.067, blue: 0.067, opacity: 1),
         brandSoft: Color(.sRGB, red: 0.29, green: 0.486, blue: 0.949, opacity: 0.18),
-        accentInk: Color(.sRGB, red: 0.29, green: 0.486, blue: 0.949, opacity: 1),
+        accentInk: Color(.sRGB, red: 0.459, green: 0.608, blue: 0.992, opacity: 1),
         toneInk: Color(.sRGB, red: 0.961, green: 0.961, blue: 0.961, opacity: 1),
         destructive: Color(.sRGB, red: 1, green: 0.522, blue: 0.522, opacity: 1),
         success: Color(.sRGB, red: 0.459, green: 0.839, blue: 0.639, opacity: 1),

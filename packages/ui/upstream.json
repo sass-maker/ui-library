@@ -1,0 +1,528 @@
+{
+  "schemaVersion": 1,
+  "adaptedAt": "2026-10-23",
+  "components": [
+    {
+      "name": "radio-group",
+      "file": "packages/ui/src/components/radio-group.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/radio-group.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "input-otp",
+      "file": "packages/ui/src/components/input-otp.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/input-otp.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "calendar",
+      "file": "packages/ui/src/components/calendar.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/calendar.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "combobox",
+      "file": "packages/ui/src/components/combobox.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/combobox.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "context-menu",
+      "file": "packages/ui/src/components/context-menu.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/context-menu.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "hover-card",
+      "file": "packages/ui/src/components/hover-card.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/hover-card.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "alert",
+      "file": "packages/ui/src/components/alert.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/alert.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "alert-dialog",
+      "file": "packages/ui/src/components/alert-dialog.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/alert-dialog.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "collapsible",
+      "file": "packages/ui/src/components/collapsible.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/collapsible.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "menubar",
+      "file": "packages/ui/src/components/menubar.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/menubar.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "resizable",
+      "file": "packages/ui/src/components/resizable.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/resizable.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "drawer",
+      "file": "packages/ui/src/components/drawer.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/drawer.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    },
+    {
+      "name": "morphing-button",
+      "file": "packages/ui/src/recipes/morphing-button.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/morphing-button.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "copy-button",
+      "file": "packages/ui/src/recipes/copy-button.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/copy-button.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "hold-to-delete",
+      "file": "packages/ui/src/recipes/hold-to-delete.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/hold-to-delete.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "segmented-control",
+      "file": "packages/ui/src/recipes/segmented-control.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/segmented-control.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "file-dropzone",
+      "file": "packages/ui/src/recipes/file-dropzone.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/file-dropzone.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "inline-edit",
+      "file": "packages/ui/src/recipes/inline-edit.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/inline-edit.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "multi-step-form",
+      "file": "packages/ui/src/recipes/multi-step-form.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/multi-step-form.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "tag-input",
+      "file": "packages/ui/src/recipes/tag-input.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/tag-input.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "autosave-status",
+      "file": "packages/ui/src/recipes/autosave-status.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/autosave-status.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "progress-stepper",
+      "file": "packages/ui/src/recipes/progress-stepper.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/progress-stepper.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "notification-bell",
+      "file": "packages/ui/src/recipes/notification-bell.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/notification-bell.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "avatar-stack",
+      "file": "packages/ui/src/recipes/avatar-stack.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/avatar-stack.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "reorder-list",
+      "file": "packages/ui/src/recipes/reorder-list.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/reorder-list.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "sortable-grid",
+      "file": "packages/ui/src/recipes/sortable-grid.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/sortable-grid.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "kanban-board",
+      "file": "packages/ui/src/recipes/kanban-board.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/kanban-board.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "pricing-calculator",
+      "file": "packages/ui/src/recipes/pricing-calculator.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/pricing-calculator.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "storage-meter",
+      "file": "packages/ui/src/recipes/storage-meter.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/storage-meter.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "tree-view",
+      "file": "packages/ui/src/recipes/tree-view.tsx",
+      "upstream": "xevrion/ui-lab",
+      "revision": "846633609287fada19a1585dad1d4d4673eb76fe",
+      "source": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/src/lab/components/tree-view.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/xevrion/ui-lab/blob/846633609287fada19a1585dad1d4d4673eb76fe/LICENSE"
+    },
+    {
+      "name": "morphing-dialog",
+      "file": "packages/ui/src/recipes/morphing-dialog.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/morphing-dialog.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "morphing-popover",
+      "file": "packages/ui/src/recipes/morphing-popover.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/morphing-popover.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "transition-panel",
+      "file": "packages/ui/src/recipes/transition-panel.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/transition-panel.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "text-morph",
+      "file": "packages/ui/src/recipes/text-morph.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/text-morph.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "text-effect",
+      "file": "packages/ui/src/recipes/text-effect.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/text-effect.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "animated-number",
+      "file": "packages/ui/src/recipes/animated-number.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/animated-number.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "sliding-number",
+      "file": "packages/ui/src/recipes/sliding-number.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/sliding-number.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "image-comparison",
+      "file": "packages/ui/src/recipes/image-comparison.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/image-comparison.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "disclosure",
+      "file": "packages/ui/src/recipes/disclosure.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/disclosure.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "animated-background",
+      "file": "packages/ui/src/recipes/animated-background.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/animated-background.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "toolbar-dynamic",
+      "file": "packages/ui/src/recipes/toolbar-dynamic.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/toolbar-dynamic.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "carousel",
+      "file": "packages/ui/src/recipes/carousel.tsx",
+      "upstream": "ibelick/motion-primitives",
+      "revision": "120f64f6ca60348e251f929e9c81f11ccbe45eda",
+      "source": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/components/core/carousel.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/ibelick/motion-primitives/blob/120f64f6ca60348e251f929e9c81f11ccbe45eda/LICENCE.md"
+    },
+    {
+      "name": "number-ticker",
+      "file": "packages/ui/src/effects/number-ticker.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/number-ticker.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "animated-beam",
+      "file": "packages/ui/src/effects/animated-beam.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/animated-beam.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "bento-grid",
+      "file": "packages/ui/src/effects/bento-grid.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/bento-grid.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "border-beam",
+      "file": "packages/ui/src/effects/border-beam.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/border-beam.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "blur-fade",
+      "file": "packages/ui/src/effects/blur-fade.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/blur-fade.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "text-animate",
+      "file": "packages/ui/src/effects/text-animate.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/text-animate.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "marquee",
+      "file": "packages/ui/src/effects/marquee.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/marquee.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "file-tree",
+      "file": "packages/ui/src/effects/file-tree.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/file-tree.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "globe",
+      "file": "packages/ui/src/effects/globe.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/globe.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "orbiting-circles",
+      "file": "packages/ui/src/effects/orbiting-circles.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/orbiting-circles.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "dot-pattern",
+      "file": "packages/ui/src/effects/dot-pattern.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/dot-pattern.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "interactive-hover-button",
+      "file": "packages/ui/src/effects/interactive-hover-button.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/interactive-hover-button.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "shimmer-button",
+      "file": "packages/ui/src/effects/shimmer-button.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/shimmer-button.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "code-comparison",
+      "file": "packages/ui/src/effects/code-comparison.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/code-comparison.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "hero-video-dialog",
+      "file": "packages/ui/src/effects/hero-video-dialog.tsx",
+      "upstream": "magicuidesign/magicui",
+      "revision": "efe76fc5755eca1142dd4f74c1d6f0ace2887e3c",
+      "source": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/apps/www/registry/magicui/hero-video-dialog.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/magicuidesign/magicui/blob/efe76fc5755eca1142dd4f74c1d6f0ace2887e3c/LICENSE.md"
+    },
+    {
+      "name": "input-group",
+      "file": "packages/ui/src/components/input-group.tsx",
+      "upstream": "shadcn-ui/ui",
+      "revision": "3d98900e9b73c45f035f8109e9d41ba6a51685e7",
+      "source": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/apps/v4/registry/new-york-v4/ui/input-group.tsx",
+      "license": "MIT",
+      "licenseSource": "https://github.com/shadcn-ui/ui/blob/3d98900e9b73c45f035f8109e9d41ba6a51685e7/LICENSE.md"
+    }
+  ]
+}

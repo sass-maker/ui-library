@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "pnpm --filter @saas-maker/ui-site dev",
     "build": "pnpm --filter @saas-maker/ui-site build && pnpm registry:build",
-    "check": "pnpm test && pnpm typecheck && pnpm --filter @saas-maker/ui-site check",
+    "check": "pnpm test && pnpm typecheck && pnpm storybook:check && pnpm check:explorer && pnpm --filter @saas-maker/ui-site check",
     "check:browser": "node site/scripts/browser-check.mjs",
     "registry:build": "shadcn build --output site/dist/r",
     "typecheck": "tsc -p tsconfig.json",
@@ -19,7 +19,11 @@
     "landings:check": "pnpm --dir archives/ios-landings run check",
     "landings:check:one": "pnpm --dir archives/ios-landings run check:one",
     "landings:deploy": "pnpm --dir archives/ios-landings run deploy",
-    "landings:deploy:daddyrad": "pnpm --dir archives/ios-landings run deploy:daddyrad"
+    "landings:deploy:daddyrad": "pnpm --dir archives/ios-landings run deploy:daddyrad",
+    "storybook": "pnpm --filter @saas-maker/ui-explorer dev",
+    "storybook:build": "pnpm --filter @saas-maker/ui-explorer build",
+    "storybook:check": "pnpm --filter @saas-maker/ui-explorer check",
+    "check:explorer": "node explorer/scripts/check-explorer.mjs"
   },
   "devDependencies": {
     "@types/react": "19.3.0",
