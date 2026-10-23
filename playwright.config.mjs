@@ -4,6 +4,8 @@ const port = 4184;
 export default defineConfig({
   testDir: './explorer/browser',
   fullyParallel: true,
+  timeout: 20_000,
+  maxFailures: process.env.CI ? 3 : 0,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : 3,

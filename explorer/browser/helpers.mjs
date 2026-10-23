@@ -4,7 +4,7 @@ export async function openStory(page, id, globals = 'theme:paper;mode:light') {
   await page.goto(`/iframe.html?id=${id}&viewMode=story&globals=${globals}`);
   await expect(page.locator('#storybook-root')).not.toBeEmpty();
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator('.sb-errordisplay')).toHaveCount(0);
+  await expect(page.locator('.sb-errordisplay')).toBeHidden();
 }
 
 export async function noOverflow(page) {
