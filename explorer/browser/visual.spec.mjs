@@ -36,6 +36,13 @@ for (const width of [390, 820, 1440]) {
         await expect(page).toHaveScreenshot(`asset-${state.toLowerCase()}-${suffix}.png`, { fullPage: true });
       });
     }
+    test(`font impact ${suffix}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1000 });
+      await openStory(page, 'foundations-tokens--font-impact', globals);
+      await expect(page.getByTestId('font-measurement').first()).toContainText('body lines');
+      await noOverflow(page);
+      await expect(page).toHaveScreenshot(`fonts-${suffix}.png`, { fullPage: true });
+    });
     test(`visual source shelf ${suffix}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
       await openStory(page, 'start-here-visual-sources--source-shelf', globals);

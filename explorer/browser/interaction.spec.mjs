@@ -70,3 +70,19 @@ test('materials follow live reduced-motion preference and keyboard selection', a
   await expect(page.getByRole('button', { name: 'Copy Tidal CSS' })).toBeVisible();
   await noOverflow(page);
 });
+
+
+test('font comparisons measure live layout and retain usable inputs with fallbacks', async ({ page }) => {
+  await openStory(page, 'foundations-tokens--font-impact');
+  await expect(page.getByTestId('font-measurement')).toHaveCount(4);
+  await expect(page.getByTestId('font-measurement').first()).toContainText('body lines');
+  for (const input of await page.getByRole('textbox', { name: 'Public repository' }).all()) {
+    expect(await input.evaluate(element => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(page.viewportSize().width < 768 ? 16 : 14);
+  }
+  await page.getByRole('button', { name: 'System fallbacks off' }).click();
+  await expect(page.getByRole('button', { name: 'System fallbacks on' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByTestId('font-specimen').first()).toHaveCSS('font-family', /system-ui/);
+  await page.getByRole('button', { name: 'Tabular numbers on' }).click();
+  await expect(page.getByLabel('Figtree numeral comparison')).toHaveCSS('font-variant-numeric', 'proportional-nums');
+  await noOverflow(page);
+});
