@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, Plus } from "lucide-react";
 import { Button } from "@saas-maker/ui/atoms/button";
@@ -21,9 +21,10 @@ type Story = StoryObj;
 export const Files: Story = { render: function Render() {
   const [selected, setSelected] = useState<string[]>([]);
   const [opened, setOpened] = useState<string | null>(null);
+  const opener = useRef<HTMLButtonElement | null>(null);
   const file = sampleFiles.find(file => file.id === opened);
-  return <div className="w-full max-w-3xl space-y-4"><div className="grid gap-4 sm:grid-cols-3">{sampleFiles.slice(0,3).map(file => <FileCard key={file.id} file={file} selected={selected.includes(file.id)} onSelectedChange={checked => setSelected(current => checked ? [...current, file.id] : current.filter(id => id !== file.id))} onOpen={() => setOpened(file.id)} />)}</div><p role="status" className="story-caption">{selected.length} selected. Selection, preview, and file actions are separate interactions.</p>
-    <Dialog open={!!file} onOpenChange={open => { if (!open) setOpened(null); }}><DialogContent><DialogHeader><DialogTitle>{file?.name}</DialogTitle><DialogDescription>{file?.collection} · {file?.size}</DialogDescription></DialogHeader>{file?.preview && <img src={file.preview} alt={file.name} className="max-h-[60dvh] w-full rounded-lg object-contain" />}</DialogContent></Dialog>
+  return <div className="w-full max-w-3xl space-y-4"><div className="grid gap-4 sm:grid-cols-3">{sampleFiles.slice(0,3).map(file => <FileCard key={file.id} file={file} selected={selected.includes(file.id)} onSelectedChange={checked => setSelected(current => checked ? [...current, file.id] : current.filter(id => id !== file.id))} onOpen={trigger => { opener.current = trigger; setOpened(file.id); }} />)}</div><p role="status" className="story-caption">{selected.length} selected. Selection, preview, and file actions are separate interactions.</p>
+    <Dialog open={!!file} onOpenChange={open => { if (!open) setOpened(null); }}><DialogContent onCloseAutoFocus={event => { event.preventDefault(); opener.current?.focus(); }}><DialogHeader><DialogTitle>{file?.name}</DialogTitle><DialogDescription>{file?.collection} · {file?.size}</DialogDescription></DialogHeader>{file?.preview && <img src={file.preview} alt={file.name} className="max-h-[60dvh] w-full rounded-lg object-contain" />}</DialogContent></Dialog>
   </div>;
 } };
 

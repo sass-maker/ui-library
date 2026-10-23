@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { FolderOpen, Grid2X2, List, SearchX, X, ImageIcon, FileText, ArrowUpRight } from "lucide-react";
 import { Button } from "../components/button";
@@ -29,6 +29,8 @@ export type AssetLibraryProps = {
 
 export function AssetLibrary({ state, title = "Asset library", description = "A home for the files behind your next release.", action, onRemove, className }: AssetLibraryProps) {
   const reduced = useReducedMotion();
+  const opener = useRef<HTMLButtonElement | null>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [collection, setCollection] = useState("All files");
@@ -47,7 +49,7 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
   return <section className={cn("overflow-hidden rounded-2xl border border-border bg-card text-card-foreground", className)} aria-label={title}>
     <header className="flex flex-wrap items-start justify-between gap-5 border-b border-border px-5 py-6 sm:px-8">
       <div><div className="mb-3 flex items-center gap-2 text-xs font-medium text-muted-foreground"><FolderOpen aria-hidden className="size-3.5" />Workspace / Library</div>
-        <h2 className="text-2xl font-semibold tracking-tight">{title}</h2><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">{description}</p></div>
+        <h2 ref={heading} tabIndex={-1} className="text-2xl font-semibold tracking-tight outline-none">{title}</h2><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">{description}</p></div>
       {action && <div className="pt-6">{action}</div>}
     </header>
     <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
@@ -79,14 +81,14 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
         : <LayoutGroup><motion.div layout={!reduced} className={view === "grid" ? "grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 lg:grid-cols-3" : "grid gap-2"}>
           <AnimatePresence initial={false} mode="popLayout">
             {visible.map(file => <motion.div key={file.id} layout={!reduced ? "position" : false} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={motionTiming.feedback}>
-              <FileCard file={file} selected={selected.has(file.id)} onSelectedChange={value => select(file.id, value)} onOpen={() => setPreview(file.id)} onRemove={onRemove ? () => onRemove([file.id]) : undefined} view={view} />
+              <FileCard file={file} selected={selected.has(file.id)} onSelectedChange={value => select(file.id, value)} onOpen={trigger => { opener.current = trigger; setPreview(file.id); }} onRemove={onRemove ? () => onRemove([file.id]) : undefined} view={view} />
             </motion.div>)}
           </AnimatePresence>
         </motion.div></LayoutGroup>}
       {state.kind === "ready" && <p className="mt-5 text-xs text-muted-foreground" role="status">{visible.length} of {files.length} files</p>}
     </div>
     <Dialog open={!!previewFile} onOpenChange={open => { if (!open) setPreview(null); }}>
-      <DialogContent className="max-h-[90dvh] overflow-y-auto overscroll-contain sm:max-w-2xl">
+      <DialogContent onCloseAutoFocus={event => { event.preventDefault(); (opener.current?.isConnected ? opener.current : heading.current)?.focus({ preventScroll: true }); }} className="max-h-[90dvh] overflow-y-auto overscroll-contain sm:max-w-2xl">
         {previewFile && <><DialogHeader><DialogTitle className="break-words pr-6">{previewFile.name}</DialogTitle><DialogDescription>{previewFile.collection} <span aria-hidden>·</span> {previewFile.size}</DialogDescription></DialogHeader>
           <div className="mt-3 flex min-h-48 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface">
             {previewFile.preview ? <img src={previewFile.preview} alt={previewFile.name} className="max-h-[55dvh] w-full object-contain" /> : <FileText aria-hidden className="size-14 stroke-1 text-muted-foreground" />}
