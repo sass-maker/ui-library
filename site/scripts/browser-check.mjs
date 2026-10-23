@@ -23,9 +23,11 @@ let probe;
 for (let attempt = 0; attempt < (explorer ? 40 : 1); attempt++) {
   probe = await fetch(base + probePath).catch(() => null);
   if (probe?.ok) break;
+  await probe?.arrayBuffer();
   if (explorer) await new Promise(resolve => setTimeout(resolve, 100));
 }
 if (!probe?.ok) throw new Error(`${base} does not serve this build (no ${probePath} page). A stale preview may be holding the port; stop it or run with BASE_URL pointing at this build's preview.`);
+await probe.arrayBuffer();
 const chromePath = process.env.CHROME ?? process.env.CHROME_BIN ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -108,7 +110,11 @@ if (explorer) {
           checkedAssets.add(url);
           const local = url.startsWith(base + "/");
           check("explorer: image stays under the hosted base path", local, url);
-          if (local) check("explorer: image asset exists", (await fetch(url)).ok, url);
+          if (local) {
+            const response = await fetch(url);
+            const body = await response.arrayBuffer();
+            check("explorer: image asset exists", response.ok && body.byteLength > 0, url);
+          }
         }
       }
     }
