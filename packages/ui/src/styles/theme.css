@@ -157,6 +157,9 @@
   --sidebar-accent: oklch(0.21 0.01 265);
   --sidebar-accent-foreground: var(--foreground);
   color-scheme: dark;
+  --destructive: #ff8585;
+  --success: #75d6a3;
+  --warning: #edc76a;
 }
 
 /* Hearth: warm, personal, tactile. Consumer iPhone and life apps. */
@@ -185,6 +188,7 @@
   --brand: oklch(0.56 0.15 35);
   --brand-soft: oklch(0.92 0.045 45);
   --shadow-color: 25 40% 25%;
+  --brand-ink: oklch(0.5 0.15 35);
 }
 
 /* Signal: bright, color-blocked, confident. Playful consumer and community. */
@@ -214,6 +218,7 @@
   --tone-ink: oklch(0.2 0.02 265);
   --brand-soft: oklch(0.95 0.06 90);
   --border: oklch(0.88 0.01 80);
+  --brand-ink: oklch(0.48 0.13 55);
 }
 
 /* Gallery: monumental sans, serif text, image-led and quiet. Consumer apps.
@@ -242,7 +247,8 @@
   --border: rgb(29 22 17 / 0.12);
   --hairline: rgb(29 22 17 / 0.08);
   --input: rgb(29 22 17 / 0.16);
-  --brand: #c4592f;
+  --brand: #ad4524;
+  --brand-ink: #9a3b1b;
   --brand-foreground: #fff8f1;
   --brand-soft: #f3dccd;
   --accent-ink: var(--brand-ink);

@@ -65,7 +65,7 @@ export function SearchTrigger({ label = "Search", className }: { label?: string;
     <button
       type="button"
       data-search-trigger=""
-      aria-label={label}
+      aria-label={`${label} ⌘K`}
       aria-keyshortcuts="Meta+K Control+K"
       className={cn(
         "inline-flex h-9 items-center gap-2 rounded-md border border-input bg-background px-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:w-64",
@@ -73,7 +73,7 @@ export function SearchTrigger({ label = "Search", className }: { label?: string;
       )}
     >
       <SearchIcon className="size-4 shrink-0" aria-hidden />
-      <span className="hidden flex-1 truncate text-left sm:inline">{label}</span>
+      <span className="hidden flex-1 truncate text-left sm:inline">{label}</span>{" "}
       <Kbd className="hidden sm:inline-flex">⌘K</Kbd>
     </button>
   );

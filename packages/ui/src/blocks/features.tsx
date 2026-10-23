@@ -41,8 +41,8 @@ export function FeatureGrid({
               columns === 4 && "sm:[&:nth-child(2n+1)]:pl-0 lg:[&:nth-child(2n+1)]:pl-7 lg:[&:nth-child(4n+1)]:pl-0",
             )}
           >
-            {f.kicker && <span className="eyebrow text-brand">{f.kicker}</span>}
-            {f.icon && <span className="text-brand [&_svg]:size-5">{f.icon}</span>}
+            {f.kicker && <span className="eyebrow text-brand-ink">{f.kicker}</span>}
+            {f.icon && <span className="text-brand-ink [&_svg]:size-5">{f.icon}</span>}
             <h3 className="text-lg font-semibold tracking-[-0.015em] text-foreground">{f.title}</h3>
             <p className="text-[0.9375rem] leading-relaxed text-muted-foreground text-pretty">{f.body}</p>
             {f.meta && <div className="mt-auto pt-2 font-mono text-xs text-muted-foreground">{f.meta}</div>}
@@ -64,7 +64,7 @@ export function FeatureGrid({
           )}
         >
           {f.icon && (
-            <span className="mb-2 inline-flex size-10 items-center justify-center rounded-lg bg-brand-soft text-brand [&_svg]:size-5">
+            <span className="mb-2 inline-flex size-10 items-center justify-center rounded-lg bg-brand-soft text-brand-ink [&_svg]:size-5">
               {f.icon}
             </span>
           )}
@@ -91,7 +91,7 @@ export function FeatureSpread({
       {items.map((it, i) => (
         <div key={i} className="grid items-center gap-10 md:grid-cols-12 md:gap-12">
           <div className={cn("min-w-0 md:col-span-5", i % 2 === 1 && "md:order-2 md:col-start-8")}>
-            {it.kicker && <p className="eyebrow mb-4 text-brand">{it.kicker}</p>}
+            {it.kicker && <p className="eyebrow mb-4 text-brand-ink">{it.kicker}</p>}
             <h3 className="font-display text-[clamp(1.75rem,1.3rem+1.6vw,2.5rem)]">{it.title}</h3>
             <div className="mt-5 text-base leading-relaxed text-muted-foreground text-pretty">{it.body}</div>
             {it.footer && <div className="mt-6">{it.footer}</div>}
@@ -115,7 +115,7 @@ export function Steps({
     <ol className={cn("grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-[repeat(auto-fit,minmax(0,1fr))]", className)}>
       {items.map((s, i) => (
         <li key={i} className="flex flex-col gap-3 bg-background p-6 md:p-7">
-          <span className="font-mono text-xs text-brand">{String(i + 1).padStart(2, "0")}</span>
+          <span className="font-mono text-xs text-brand-ink">{String(i + 1).padStart(2, "0")}</span>
           <h3 className="text-base font-semibold tracking-[-0.01em]">{s.title}</h3>
           <p className="text-sm leading-relaxed text-muted-foreground text-pretty">{s.body}</p>
           {s.detail && <div className="mt-auto pt-3">{s.detail}</div>}
