@@ -1,3 +1,5 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
+import { FoundationFormExample } from "./system-examples";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "@saas-maker/ui/components/button";
@@ -12,3 +14,5 @@ export const Playground: Story = { render: function Render() { return <div class
 
 export const Controls: Story = { args: { children: "create project", variant: "brand", size: "default", disabled: false }, argTypes: { variant: { control: "select", options: ["default", "brand", "outline", "secondary", "ghost", "link", "destructive"] }, size: { control: "select", options: ["xs", "sm", "default", "lg", "xl", "icon"] }, disabled: { control: "boolean" }, children: { control: "text" } }, render: args => <C.Button {...args} /> };
 export const LongLabel: Story = { render: () => <C.Button className="h-auto min-h-11 max-w-full whitespace-normal text-left">create a project with a deliberately longer, localized action label</C.Button> };
+
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.FoundationFormExample, type: "code", language: "tsx" } } }, render: () => <FoundationFormExample /> };

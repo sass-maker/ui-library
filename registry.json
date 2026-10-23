@@ -4450,6 +4450,7 @@
         "lucide-react@1.48.0",
         "motion@13.4.3",
         "radix-ui@1.6.7",
+        "react-use-measure@2.1.7",
         "tailwind-merge@3.7.0"
       ],
       "registryDependencies": [
@@ -4520,6 +4521,11 @@
           "path": "packages/ui/src/organisms/asset-library.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/organisms/asset-library.tsx"
+        },
+        {
+          "path": "packages/ui/src/recipes/transition-panel.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/recipes/transition-panel.tsx"
         },
         {
           "path": "THIRD_PARTY_NOTICES.md",

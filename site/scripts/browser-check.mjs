@@ -98,7 +98,7 @@ if (explorer) {
     check("source: contextual example includes its implementation and imports", await waitFor("[...document.querySelectorAll('pre')].some(pre => pre.textContent.includes('export function ProjectDetailsContext') && pre.textContent.includes('@saas-maker/ui/recipes/inline-edit'))", 8000));
     const checkedAssets = new Set();
     for (const width of [390, 820, 1440]) {
-      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "data-pricing-calculator--in-context", "motion-morphing-dialog--in-context", "start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
+      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "data-pricing-calculator--in-context", "motion-morphing-dialog--in-context", "start-here-overview--explore", "start-here-composition--from-atom-to-organism", "start-here-states--state-lab", "foundations-button--in-context", "inputs-input--in-context", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
         await open(`/iframe.html?id=${id}&viewMode=story`, width);
         const ready = await waitFor("document.querySelector('#storybook-root')?.childElementCount > 0");
         check(`explorer: ${id} renders at ${width}`, ready);
@@ -120,6 +120,41 @@ if (explorer) {
     }
 
     const index = await (await fetch(base + "/index.json")).json();
+    await open("/iframe.html?id=start-here-composition--from-atom-to-organism&viewMode=story", 390);
+    check("composition: shared input renders", await waitFor("!!document.querySelector('#composition-atom')"));
+    await js("document.querySelector('#composition-atom').focus(); document.querySelector('#composition-atom').select()");
+    await cdp("Input.insertText", { text: "A shared workspace" });
+    check("composition: all three layers edit the same draft", await waitFor("[...document.querySelectorAll('input:not([type=email])')].length === 3 && [...document.querySelectorAll('input:not([type=email])')].every(input => input.value === 'A shared workspace')"));
+    await js("document.querySelector('button[type=submit]').click()");
+    check("composition: saved value reaches the application", await waitFor("document.querySelector('.composition-connection strong')?.textContent === 'A shared workspace' && document.body.innerText.includes('All changes saved.')"));
+    await js("document.querySelector('#composition-atom').focus(); document.querySelector('#composition-atom').select()");
+    await cdp("Input.insertText", { text: " " });
+    await js("document.querySelector('button[type=submit]').click()");
+    check("composition: validation focuses the actual organism field", await waitFor("document.activeElement?.name === 'workspaceName' && document.activeElement.getAttribute('aria-invalid') === 'true'"));
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'discard').click()");
+    check("composition: discard restores the saved value to every layer", await waitFor("[...document.querySelectorAll('input:not([type=email])')].every(input => input.value === 'A shared workspace') && !document.querySelector('[aria-invalid=true]')"));
+
+    await open("/iframe.html?id=start-here-states--state-lab&viewMode=story", 390);
+    check("states: state controls render", await waitFor("!!document.querySelector('[role=radio]')"));
+    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Loading').click()");
+    check("states: loading keeps the narrow file silhouette", await waitFor("!!document.querySelector('[aria-label=\"Loading files\"]')"));
+    check("states: outgoing panels are inert during transitions", await js("[...document.querySelectorAll('[data-slot=transition-panel]')].every(panel => [...panel.children].filter(child => !child.inert).length <= 1)"));
+    check("states: loading cards match the phone grid", await js("getComputedStyle(document.querySelector('[aria-label=\"Loading files\"]')).gridTemplateColumns.split(' ').length === 1"));
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'finish loading').click()");
+    check("states: loading transitions to working files", await waitFor("document.querySelectorAll('button[aria-label^=\"Preview \"]:not([inert] *)').length === 6 && !document.querySelector('[aria-label=\"Loading files\"]:not([inert] *)')"));
+    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Error').click()");
+    check("states: failure offers recovery", await waitFor("document.body.innerText.includes('Files couldn’t be loaded')"));
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'try again').click()");
+    check("states: retry recovers and retains meaningful focus", await waitFor("document.querySelectorAll('button[aria-label^=\"Preview \"]:not([inert] *)').length === 6 && document.activeElement?.tagName === 'H2'"));
+
+    await open("/iframe.html?id=foundations-button--in-context&viewMode=story", 390);
+    check("form example: response control renders", await waitFor("!!document.querySelector('[role=radio]')"));
+    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Error').click(); document.querySelector('button[type=submit]').click()");
+    check("form example: pending action is stable and guarded", await js("document.querySelector('button[type=submit]').disabled && document.querySelector('button[type=submit]').getAttribute('aria-busy') === 'true'"));
+    check("form example: a rejected request retains the draft", await waitFor("document.body.innerText.includes('Connection interrupted.') && document.querySelector('input[name=projectName]').value === 'Kith · the next chapter'"));
+    await js("[...document.querySelectorAll('[role=radio]')].find(button => button.textContent === 'Success').click(); document.querySelector('button[type=submit]').click()");
+    check("form example: retry reaches success", await waitFor("document.body.innerText.includes('Saved in this example.')"));
+
     for (const layer of ["Atoms", "Molecules", "Organisms", "Templates"]) {
       check("architecture: " + layer + " is discoverable", Object.values(index.entries).some(entry => entry.title.startsWith(layer + "/")));
     }
