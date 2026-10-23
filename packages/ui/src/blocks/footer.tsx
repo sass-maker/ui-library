@@ -378,7 +378,7 @@ export function StudioFooter({
       className={cn("border-t border-border bg-surface py-6", className)}>
       <div className="container-page flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
         <p className="font-display text-sm font-bold tracking-[-0.03em]">{mark}{product}</p>
-        {legal && <p className="font-display text-[0.8125rem] text-muted-foreground">{legal}</p>}
+        <p data-footer-legal="" hidden={!legal} className="font-display text-[0.8125rem] text-muted-foreground">{legal}</p>
       </div>
     </footer>
   );
@@ -488,7 +488,7 @@ export function StudioFooter({
         <div className={cn("flex flex-col gap-4", !(art && wordmark !== "fill") && "border-t border-border pt-7")}>
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
             <StudioStrip product={product} studio={studio?.length ? studio : defaultStudio} catalogId={catalogId} />
-            {legal && <p className="font-display text-[0.8125rem] text-muted-foreground">{legal}</p>}
+            <p data-footer-legal="" hidden={!legal} className="font-display text-[0.8125rem] text-muted-foreground">{legal}</p>
           </div>
           {variant === "gallery" && (
             <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2.5 font-display text-[0.8125rem] text-muted-foreground">
