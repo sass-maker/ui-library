@@ -49,8 +49,18 @@ export class StudioFooterElement extends HTMLElement {
     else this.updateStrip(this.readConfig());
     bindFooter(this);
   }
-  attributeChangedCallback() {
-    if (this.#ready) this.render();
+  attributeChangedCallback(name, previous, value) {
+    if (!this.#ready || previous === value) return;
+    if (name === "legal") {
+      const legal = this.querySelector("[data-footer-legal]");
+      if (legal) {
+        // Late metadata must not replace an open dialog or its draft/files.
+        legal.textContent = this.readConfig().legal ?? "";
+        legal.hidden = !legal.textContent;
+        return;
+      }
+    }
+    this.render();
   }
   readConfig() {
     const json = this.querySelector('script[type="application/json"]');
