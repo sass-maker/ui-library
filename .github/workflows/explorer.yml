@@ -4,6 +4,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      updateVisuals:
+        description: Generate candidate visual baselines for review
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -12,7 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -27,6 +32,21 @@ jobs:
       - run: pnpm storybook:build
       - run: pnpm exec shadcn build --output explorer/storybook-static/r
       - run: pnpm check:explorer --built
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Browser interactions and approved visual baselines
+        if: ${{ !inputs.updateVisuals }}
+        run: pnpm test:browser
+      - name: Generate candidate baselines for review
+        if: ${{ inputs.updateVisuals }}
+        run: pnpm test:browser --update-snapshots
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-review
+          path: |
+            playwright-report
+            test-results
+            explorer/browser/baselines/linux
       - name: Check deployed subdirectory layout and demo assets
         env:
           BASE_URL: http://127.0.0.1:4175/ui-library
