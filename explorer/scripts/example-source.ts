@@ -91,7 +91,7 @@ export function exampleSourcePlugin(): Plugin {
     handleHotUpdate(context) {
       if (!watched.includes(context.file)) return;
       const module = context.server.moduleGraph.getModuleById(resolved);
-      if (module) { context.server.moduleGraph.invalidateModule(module); return [module]; }
+      if (module) { context.server.moduleGraph.invalidateModule(module); return [...context.modules, module]; }
     },
   };
 }
