@@ -185,10 +185,9 @@
   --border: oklch(0.88 0.025 65);
   --hairline: oklch(0.915 0.02 68);
   --input: oklch(0.86 0.03 60);
-  --brand: oklch(0.56 0.15 35);
+  --brand: oklch(0.5 0.15 35);
   --brand-soft: oklch(0.92 0.045 45);
   --shadow-color: 25 40% 25%;
-  --brand-ink: oklch(0.5 0.15 35);
 }
 
 /* Signal: bright, color-blocked, confident. Playful consumer and community. */
@@ -247,8 +246,7 @@
   --border: rgb(29 22 17 / 0.12);
   --hairline: rgb(29 22 17 / 0.08);
   --input: rgb(29 22 17 / 0.16);
-  --brand: #ad4524;
-  --brand-ink: #9a3b1b;
+  --brand: #9a3b1b;
   --brand-foreground: #fff8f1;
   --brand-soft: #f3dccd;
   --accent-ink: var(--brand-ink);
@@ -297,7 +295,7 @@
   --sidebar-accent-foreground: var(--foreground);
   color-scheme: dark;
 }
-[data-theme="base"][data-mode="dark"] { --brand: #4a7cf2; --brand-ink: #759bfd; }
+[data-theme="base"][data-mode="dark"] { --brand: #759bfd; }
 [data-theme="paper"][data-mode="dark"] { --brand: #ee997a; }
 [data-theme="hearth"][data-mode="dark"] { --brand: #ed987c; }
 [data-theme="signal"][data-mode="dark"] { --brand: #edc76a; }

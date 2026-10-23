@@ -39,8 +39,9 @@ Transitions.dev is a design reference only; its restricted collection is not
 redistributed. The retained iOS factory keeps its independent dependencies.
 
 The `UI library and explorer` workflow checks pull requests and deploys the
-static explorer to GitHub Pages on main. Reverting the source commit and
-rerunning that workflow restores the previous deployment.
+static explorer to GitHub Pages on main. To restore a verified revision, rerun
+its successful main workflow. This first publication can be withdrawn by
+disabling Pages; product consumers keep their pinned Git tags.
 
 ## Retained native-app landing factory
 
