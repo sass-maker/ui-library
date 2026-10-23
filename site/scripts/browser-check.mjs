@@ -99,6 +99,8 @@ if (explorer) {
   try {
     await open("/?path=/story/start-here-overview--explore");
     check("explorer: manager renders its preview under the base path", await waitFor("document.querySelector('#storybook-preview-iframe')?.contentDocument?.querySelector('#storybook-root')?.childElementCount > 0"));
+    await js("document.querySelector('#storybook-preview-iframe').contentDocument.querySelector('a[href*=\"start-here-composition\"]').click()");
+    check("explorer: walkthrough links retain the manager and selected story", await waitFor("new URLSearchParams(location.search).get('path') === '/story/start-here-composition--from-atom-to-organism' && !!document.querySelector('#storybook-preview-iframe')?.contentDocument?.querySelector('#composition-atom')", 8000));
     await open("/?path=/story/interactions-inline-edit--in-context", 1440);
     check("source: Code panel is available", await waitFor("[...document.querySelectorAll('[role=tab]')].some(tab => tab.textContent.trim() === 'Code')", 8000));
     await js("[...document.querySelectorAll('[role=tab]')].find(tab => tab.textContent.trim() === 'Code').click()");
