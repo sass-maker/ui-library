@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { SharingContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-row"><code>pnpm storybook</code><C.CopyButton value="pnpm storybook"/></div>;}};
 
-export const InContext: Story = { render: () => <SharingContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.SharingContext, type: "code", language: "tsx" } } }, render: () => <SharingContext /> };

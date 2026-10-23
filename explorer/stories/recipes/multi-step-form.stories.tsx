@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { OnboardingContext } from "../workflow-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [reject,setReject]=useState(false);return <div className="story-stack"><label className="story-row"><input type="checkbox" checked={reject} onChange={e=>setReject(e.target.checked)}/> Reject creation</label><C.MultiStepForm plans={[{id:"local",name:"Local",note:"Example workspace",price:"Free"},{id:"team",name:"Team",note:"Example team workspace",price:"Demo"}]} onCreate={async()=>{if(reject)throw new Error("Example request rejected. Your choices are preserved.");}}/><p className="story-caption">Demonstrates a local callback. No account is created.</p></div>;}};
 
-export const InContext: Story = { render: () => <OnboardingContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.OnboardingContext, type: "code", language: "tsx" } } }, render: () => <OnboardingContext /> };

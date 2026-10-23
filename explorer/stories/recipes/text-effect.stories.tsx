@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { TypeContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [key,setKey]=useState(0);return <div className="story-stack"><C.TextEffect key={key} per="word" preset="fade-in-blur" className="text-3xl font-semibold">Build with a shared visual language.</C.TextEffect><Button variant="outline" onClick={()=>setKey(key+1)}>Replay</Button></div>;}};
 
-export const InContext: Story = { render: () => <TypeContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.TypeContext, type: "code", language: "tsx" } } }, render: () => <TypeContext /> };

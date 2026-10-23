@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { TypeContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [value,setValue]=useState(24);return <div className="story-stack"><div className="text-5xl font-semibold"><C.SlidingNumber value={value}/></div><Button variant="outline" onClick={()=>setValue(value+1)}>Increment</Button></div>;}};
 
-export const InContext: Story = { render: () => <TypeContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.TypeContext, type: "code", language: "tsx" } } }, render: () => <TypeContext /> };

@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { SegmentedContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [value,setValue]=useState("Components");return <div className="story-stack"><C.SegmentedControl label="Library view" options={["Components","Patterns","Pages"]} value={value} onChange={setValue}/><p role="status">{value}</p></div>;}};
 
-export const InContext: Story = { render: () => <SegmentedContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.SegmentedContext, type: "code", language: "tsx" } } }, render: () => <SegmentedContext /> };

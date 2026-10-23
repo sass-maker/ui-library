@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { ProjectDetailsContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <C.AvatarStack label="Example maintainers" people={[{name:"Sarthak"},{name:"UI contributors"},{name:"Motion contributors"},{name:"Community"}]} max={3}/>;}};
 
-export const InContext: Story = { render: () => <ProjectDetailsContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.ProjectDetailsContext, type: "code", language: "tsx" } } }, render: () => <ProjectDetailsContext /> };

@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { SearchToolbarContext } from "../workflow-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [query,setQuery]=useState("");return <div className="story-stack"><ToolbarDynamic onSearch={setQuery}/><output className="story-caption">{query?`Local search: ${query}`:"Expand the search field."}</output></div>;}};
 
-export const InContext: Story = { render: () => <SearchToolbarContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.SearchToolbarContext, type: "code", language: "tsx" } } }, render: () => <SearchToolbarContext /> };

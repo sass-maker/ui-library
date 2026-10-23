@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { NotificationContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [items,setItems]=useState([{id:"1",title:"Explorer preview is ready",time:"Example notification"}]);return <div className="story-stack min-h-80"><div className="story-row"><C.NotificationBell notifications={items}/><Button variant="outline" onClick={()=>setItems([{id:String(Date.now()),title:"New example notification",time:"Just now"},...items])}>Add notification</Button></div></div>;}};
 
-export const InContext: Story = { render: () => <NotificationContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.NotificationContext, type: "code", language: "tsx" } } }, render: () => <NotificationContext /> };

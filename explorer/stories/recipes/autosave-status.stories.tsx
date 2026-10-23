@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { ProjectDetailsContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [state,setState]=useState<"unsaved"|"saving"|"saved">("unsaved");return <div className="story-stack"><div className="story-row">{(["unsaved","saving","saved"] as const).map(value=><Button key={value} variant="outline" size="sm" onClick={()=>setState(value)}>{value}</Button>)}</div><C.AutosaveStatus state={state} savedAt={state==="saved"?Date.now():null} now={Date.now()}/><p className="story-caption">State controls only; no background save.</p></div>;}};
 
-export const InContext: Story = { render: () => <ProjectDetailsContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.ProjectDetailsContext, type: "code", language: "tsx" } } }, render: () => <ProjectDetailsContext /> };

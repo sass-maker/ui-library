@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { SourceTreeContext } from "../workflow-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [selected,setSelected]=useState("");return <div className="story-stack"><C.TreeView label="UI source files" nodes={[{name:"packages",children:[{name:"ui",children:[{name:"button.tsx"},{name:"theme.css"}]},{name:"motion",children:[{name:"index.ts"}]}]},{name:"README.md"}]} defaultOpen={["packages","packages/ui"]} onSelect={setSelected}/><output className="story-caption">{selected||"Select a file"}</output></div>;}};
 
-export const InContext: Story = { render: () => <SourceTreeContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.SourceTreeContext, type: "code", language: "tsx" } } }, render: () => <SourceTreeContext /> };

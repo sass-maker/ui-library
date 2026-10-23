@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { Upload, RotateCcw } from "lucide-react";
@@ -14,4 +15,4 @@ const meta = { component: ProjectOverview, title: "Organisms/Workspaces/Project 
 export default meta;
 type Story = StoryObj;
 
-export const Overview: Story = { render: () => <div className="w-full space-y-4"><ProjectOverviewExample /><p className="story-caption">Illustrative review-workspace data. Toggle the checklist to see the composed progress state.</p></div> };
+export const Overview: Story = { parameters: { docs: { source: { code: sourceSnippets.ProjectOverviewExample, type: "code", language: "tsx" } } }, render: () => <div className="w-full space-y-4"><ProjectOverviewExample /><p className="story-caption">Illustrative review-workspace data. Toggle the checklist to see the composed progress state.</p></div> };

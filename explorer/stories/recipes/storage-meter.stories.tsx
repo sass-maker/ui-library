@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { StorageContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-stack"><C.StorageMeter capacity={100} categories={[{id:"source",name:"Source",gb:24,color:"var(--brand)"},{id:"assets",name:"Assets",gb:38,color:"var(--chart-2)"},{id:"cache",name:"Cache",gb:12,color:"var(--chart-3)"}]}/><p className="story-caption">Illustrative storage only.</p></div>;}};
 
-export const InContext: Story = { render: () => <StorageContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.StorageContext, type: "code", language: "tsx" } } }, render: () => <StorageContext /> };

@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { CollectionDialogContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <C.MorphingDialog><C.MorphingDialogTrigger className="w-72 p-6"><Box className="mb-6 size-8 text-brand"/><C.MorphingDialogTitle>One shared system</C.MorphingDialogTitle><C.MorphingDialogSubtitle>Explore the implementation</C.MorphingDialogSubtitle></C.MorphingDialogTrigger><C.MorphingDialogContainer><C.MorphingDialogContent><C.MorphingDialogTitle>One shared system</C.MorphingDialogTitle><C.MorphingDialogDescription>Components, motion and tokens share an accessible foundation. Escape closes the dialog and restores focus.</C.MorphingDialogDescription><C.MorphingDialogClose/></C.MorphingDialogContent></C.MorphingDialogContainer></C.MorphingDialog>;}};
 
-export const InContext: Story = { render: () => <CollectionDialogContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.CollectionDialogContext, type: "code", language: "tsx" } } }, render: () => <CollectionDialogContext /> };

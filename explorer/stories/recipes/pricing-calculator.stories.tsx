@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { PricingContext } from "../workflow-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-stack"><p className="story-caption">Illustrative pricing; these are not Fleet product offers.</p><C.PricingCalculator plans={[{name:"Example solo",minSeats:1,seatPrice:10},{name:"Example team",minSeats:5,seatPrice:8}]} maxSeats={20}/></div>;}};
 
-export const InContext: Story = { render: () => <PricingContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.PricingContext, type: "code", language: "tsx" } } }, render: () => <PricingContext /> };

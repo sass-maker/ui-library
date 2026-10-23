@@ -90,6 +90,10 @@ if (explorer) {
   try {
     await open("/?path=/story/start-here-overview--explore");
     check("explorer: manager renders its preview under the base path", await waitFor("document.querySelector('#storybook-preview-iframe')?.contentDocument?.querySelector('#storybook-root')?.childElementCount > 0"));
+    await open("/?path=/story/interactions-inline-edit--in-context", 1440);
+    check("source: Code panel is available", await waitFor("[...document.querySelectorAll('[role=tab]')].some(tab => tab.textContent.trim() === 'Code')", 8000));
+    await js("[...document.querySelectorAll('[role=tab]')].find(tab => tab.textContent.trim() === 'Code').click()");
+    check("source: contextual example includes its implementation and imports", await waitFor("[...document.querySelectorAll('pre')].some(pre => pre.textContent.includes('export function ProjectDetailsContext') && pre.textContent.includes('@saas-maker/ui/recipes/inline-edit'))", 8000));
     const checkedAssets = new Set();
     for (const width of [390, 820, 1440]) {
       for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "data-pricing-calculator--in-context", "motion-morphing-dialog--in-context", "start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {

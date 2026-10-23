@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { StepperContext } from "../workflow-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [step,setStep]=useState(0);return <div className="story-stack"><C.ProgressStepper steps={["Details","Review","Ready"]} current={step}/><div className="story-row"><Button variant="outline" disabled={step===0} onClick={()=>setStep(step-1)}>Back</Button><Button disabled={step===2} onClick={()=>setStep(step+1)}>Continue</Button></div></div>;}};
 
-export const InContext: Story = { render: () => <StepperContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.StepperContext, type: "code", language: "tsx" } } }, render: () => <StepperContext /> };

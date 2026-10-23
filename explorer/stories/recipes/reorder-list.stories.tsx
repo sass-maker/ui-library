@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { OrderedWorkspaceContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [items,setItems]=useState<C.ReorderListItem[]>([{id:"tokens",label:"Theme tokens",meta:"Foundation"},{id:"inputs",label:"Input components",meta:"Interaction"},{id:"blocks",label:"Page blocks",meta:"Composition"}]);return <C.ReorderList label="Build order" items={items} onReorder={setItems}/>;}};
 
-export const InContext: Story = { render: () => <OrderedWorkspaceContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.OrderedWorkspaceContext, type: "code", language: "tsx" } } }, render: () => <OrderedWorkspaceContext /> };

@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { UploadContext } from "../workflow-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -17,4 +18,4 @@ export const UploadLifecycle:Story={render:function Render(){
  return <div className="story-stack"><C.FileDropzone multiple={false} onUpload={async(file,{signal,onProgress})=>{setPending(true);try{await new Promise<void>((resolve,reject)=>{job.current={resolve,reject,progress:onProgress};signal.addEventListener('abort',()=>reject(new Error('Cancelled')),{once:true});});}finally{job.current=null;setPending(false);}}}/><div className="story-row"><Button disabled={!pending} variant="outline" onClick={()=>job.current?.progress(50)}>Report 50%</Button><Button disabled={!pending} onClick={()=>job.current?.resolve()}>Resolve upload</Button><Button disabled={!pending} variant="destructive" onClick={()=>job.current?.reject(new Error('Example failure'))}>Reject upload</Button></div><p className="story-caption">Manual transport harness. Resolve or reject the actual pending promise. Nothing is sent over the network.</p></div>;
 }};
 
-export const InContext: Story = { render: () => <UploadContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.UploadContext, type: "code", language: "tsx" } } }, render: () => <UploadContext /> };

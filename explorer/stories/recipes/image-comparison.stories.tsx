@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { ComparisonContext } from "../workflow-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-stack"><C.ImageComparison className="aspect-[16/10] w-full max-w-2xl"><C.ImageComparisonImage src={comparisonBefore} alt="UI theme, light surface" position="left"/><C.ImageComparisonImage src={comparisonAfter} alt="UI theme, dark surface" position="right"/><C.ImageComparisonSlider className="w-1 bg-white/80"/></C.ImageComparison><p className="story-caption">Drag, touch or focus the slider and use arrow keys.</p></div>;}};
 
-export const InContext: Story = { render: () => <ComparisonContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.ComparisonContext, type: "code", language: "tsx" } } }, render: () => <ComparisonContext /> };

@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { SharingContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <C.MorphingPopover><C.MorphingPopoverTrigger>Library details</C.MorphingPopoverTrigger><C.MorphingPopoverContent><h2 className="font-semibold">Fleet UI</h2><p className="my-3 text-sm text-muted-foreground">A shared foundation for product interfaces.</p><C.MorphingPopoverClose/></C.MorphingPopoverContent></C.MorphingPopover>;}};
 
-export const InContext: Story = { render: () => <SharingContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.SharingContext, type: "code", language: "tsx" } } }, render: () => <SharingContext /> };

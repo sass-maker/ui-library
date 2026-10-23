@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { ProjectDetailsContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [fail,setFail]=useState(false); return <div className="story-stack"><label className="story-row"><input type="checkbox" checked={fail} onChange={e=>setFail(e.target.checked)}/> Reject save</label><C.MorphingButton onSave={async()=>{if(fail)throw new Error("Save rejected");}}/><p className="story-caption">Local promise only. Toggle rejection to inspect retry.</p></div>;}};
 
-export const InContext: Story = { render: () => <ProjectDetailsContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.ProjectDetailsContext, type: "code", language: "tsx" } } }, render: () => <ProjectDetailsContext /> };

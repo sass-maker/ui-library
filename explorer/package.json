@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006 --no-open",
     "build": "storybook build --disable-telemetry",
-    "check": "tsc --noEmit -p tsconfig.json"
+    "check": "tsc --noEmit -p tsconfig.json && node scripts/check-example-source.mjs"
   },
   "dependencies": {
     "@saas-maker/ui": "workspace:*",

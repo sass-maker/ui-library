@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { QuickAccessContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [items,setItems]=useState<C.SortableGridItem[]>(["Components","Patterns","Tokens","Motion","Blocks","Templates"].map(label=>({id:label,label,icon:<Box className="size-6"/>})));return <C.SortableGrid label="Library sections" items={items} onReorder={setItems}/>;}};
 
-export const InContext: Story = { render: () => <QuickAccessContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.QuickAccessContext, type: "code", language: "tsx" } } }, render: () => <QuickAccessContext /> };

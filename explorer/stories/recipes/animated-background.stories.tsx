@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { SegmentedContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="flex flex-wrap gap-2"><C.AnimatedBackground defaultValue="Components" className="rounded-lg bg-accent">{["Components","Tokens","Motion"].map(label=><button type="button" key={label} data-id={label} className="relative px-4 py-3 text-sm">{label}</button>)}</C.AnimatedBackground></div>;}};
 
-export const InContext: Story = { render: () => <SegmentedContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.SegmentedContext, type: "code", language: "tsx" } } }, render: () => <SegmentedContext /> };

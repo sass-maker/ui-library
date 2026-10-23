@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { Upload, RotateCcw } from "lucide-react";
@@ -14,7 +15,7 @@ const meta = { component: AssetLibrary, title: "Organisms/Workspaces/Asset libra
 export default meta;
 type Story = StoryObj;
 
-export const Files: Story = { render: () => <AssetLibraryExample /> };
+export const Files: Story = { parameters: { docs: { source: { code: sourceSnippets.AssetLibraryExample, type: "code", language: "tsx" } } }, render: () => <AssetLibraryExample /> };
 
 export const FilesLoading: Story = { render: () => <AssetLibrary state={{ kind: "loading" }} /> };
 

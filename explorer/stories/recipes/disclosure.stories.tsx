@@ -1,3 +1,4 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
 import { DisclosureContext } from "../recipe-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
@@ -11,4 +12,4 @@ export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <C.Disclosure className="story-panel"><C.DisclosureTrigger><Button variant="ghost">How do themes work?</Button></C.DisclosureTrigger><C.DisclosureContent className="px-3 pt-3"><p className="text-sm text-muted-foreground">Components read semantic CSS variables from the active theme. Change the toolbar preset to compare.</p></C.DisclosureContent></C.Disclosure>;}};
 
-export const InContext: Story = { render: () => <DisclosureContext /> };
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.DisclosureContext, type: "code", language: "tsx" } } }, render: () => <DisclosureContext /> };

@@ -1,5 +1,17 @@
 {
   "extends": "../tsconfig.json",
-  "compilerOptions": { "types": ["vite/client", "node"], "allowSyntheticDefaultImports": true },
-  "include": [".storybook/**/*.ts", ".storybook/**/*.tsx", "stories/**/*.tsx", "stories/**/*.ts"]
+  "compilerOptions": {
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
+    "stories/**/*.tsx",
+    "stories/**/*.ts"
+  ]
 }
