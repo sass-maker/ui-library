@@ -92,7 +92,7 @@ if (explorer) {
     check("explorer: manager renders its preview under the base path", await waitFor("document.querySelector('#storybook-preview-iframe')?.contentDocument?.querySelector('#storybook-root')?.childElementCount > 0"));
     const checkedAssets = new Set();
     for (const width of [390, 820, 1440]) {
-      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "motion-morphing-dialog--in-context", "start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
+      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "data-pricing-calculator--in-context", "motion-morphing-dialog--in-context", "start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
         await open(`/iframe.html?id=${id}&viewMode=story`, width);
         const ready = await waitFor("document.querySelector('#storybook-root')?.childElementCount > 0");
         check(`explorer: ${id} renders at ${width}`, ready);
@@ -140,6 +140,22 @@ if (explorer) {
     check("files: preview opens", await waitFor("!!document.querySelector('[role=dialog]')"));
     await press("Escape");
     check("files: preview returns focus", await waitFor("!document.querySelector('[role=dialog]') && document.activeElement?.getAttribute('aria-label')?.startsWith('Preview ')"));
+
+
+    await open("/iframe.html?id=organisms-workspaces-notification-inbox--inbox&viewMode=story", 390);
+    check("inbox: message list renders", await waitFor("[...document.querySelectorAll('button')].some(button => button.textContent.includes('The small things are coming together'))"));
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.includes('The small things are coming together')).click()");
+    check("inbox: phone detail receives focus", await waitFor("document.activeElement?.tagName === 'H3' && document.activeElement.textContent.includes('The small things are coming together')"));
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'inbox').click()");
+    check("inbox: back returns focus to its message", await waitFor("document.activeElement?.tagName === 'BUTTON' && document.activeElement.textContent.includes('The small things are coming together')"));
+
+    await cdp("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+    for (const id of ["motion-text-effect--in-context", "effects-border-beam--playground"]) {
+      await open("/iframe.html?id=" + id + "&viewMode=story", 390);
+      check("motion: reduced mode leaves no blur in " + id, await js("[...document.querySelectorAll('#storybook-root *')].every(element => !getComputedStyle(element).filter.includes('blur(') || getComputedStyle(element).filter.includes('blur(0px)'))"));
+      check("motion: reduced mode stops loops in " + id, await js("document.getAnimations().every(animation => animation.playState !== 'running' || animation.effect?.getTiming().iterations !== Infinity)"));
+    }
+    await cdp("Emulation.setEmulatedMedia", { features: [] });
 
     await open("/iframe.html?id=templates-console--gallery&viewMode=story", 1440);
     check("motion: template initializes offscreen reveals", await waitFor("[...document.querySelectorAll('.motion-reveal,.motion-stagger > *')].some(element => element.style.opacity === '0')"));
