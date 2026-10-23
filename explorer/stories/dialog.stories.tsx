@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/dialog";
 
-const meta = { title: "Overlays/Dialog", component: C.Dialog, parameters: {"docs": {"description": {"component": "Modal focus, Escape dismissal, accessible title, and focus return use Radix.\n\nImport from `@saas-maker/ui/components/dialog`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "overlays-dialog", title: "Molecules/Overlays/Dialog", component: C.Dialog, parameters: {"docs": {"description": {"component": "A focused task with an accessible title, Escape dismissal, contained scrolling, and focus return.\n\nImport from `@saas-maker/ui/molecules/dialog`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

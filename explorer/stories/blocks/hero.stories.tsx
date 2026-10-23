@@ -5,7 +5,7 @@ import { Input } from '@saas-maker/ui/components/input';
 import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
 import * as C from '@saas-maker/ui/blocks/hero';
 import {comparisonAfter,comparisonBefore} from '../fixtures';
-const meta={title:"Blocks/Hero",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/hero`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+const meta={id: "blocks-hero", title: "Organisms/Blocks/Hero",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/hero`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <C.Hero eyebrow="Fleet UI" title={<>Build on a <em>shared foundation.</em></>} lede="A reusable system of components, motion and page blocks for Fleet products." actions={<Button asChild><a href="https://github.com/sass-maker/ui-library">View source</a></Button>} media={<img src={comparisonAfter} alt="UI theme preview" className="rounded-xl"/>}/>;}};

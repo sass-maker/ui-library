@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/accordion";
 
-const meta = { title: "Navigation/Accordion", component: C.Accordion, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/accordion`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "navigation-accordion", title: "Molecules/Disclosure/Accordion", component: C.Accordion, parameters: {"docs": {"description": {"component": "A keyboard-friendly set of related disclosures with a clear expanded state.\n\nImport from `@saas-maker/ui/molecules/accordion`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

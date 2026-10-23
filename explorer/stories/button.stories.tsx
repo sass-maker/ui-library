@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/button";
 
-const meta = { title: "Foundations/Button", component: C.Button, parameters: {"docs": {"description": {"component": "Shared action geometry, quiet press feedback, and visible focus.\n\nImport from `@saas-maker/ui/components/button`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "foundations-button", title: "Atoms/Foundations/Button", component: C.Button, parameters: {"docs": {"description": {"component": "Shared action geometry, visible focus, clear variants, and immediate press feedback.\n\nImport from `@saas-maker/ui/atoms/button`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

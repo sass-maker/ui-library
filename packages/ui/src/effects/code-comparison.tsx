@@ -13,11 +13,11 @@ export type CodeComparisonProps = {
 export function CodeComparison({ beforeCode, afterCode, language = "text", filename = "example.tsx", className, renderCode }: CodeComparisonProps) {
   return <div className={cn("grid min-w-0 overflow-hidden rounded-xl border border-border bg-card md:grid-cols-2", className)}>
     {([{ side: "before", code: beforeCode }, { side: "after", code: afterCode }] as const).map(({ side, code }) =>
-      <section key={side} aria-label={`${side}: ${filename}`} className="min-w-0 first:border-b first:border-border md:first:border-r md:first:border-b-0">
+      <section key={side} className="min-w-0 first:border-b first:border-border md:first:border-r md:first:border-b-0">
         <div className="flex items-center gap-2 border-b border-border bg-surface px-4 py-3 text-xs">
           <FileCode2 aria-hidden className="size-4 text-muted-foreground" /><span className="min-w-0 truncate font-mono">{filename}</span><span className="ml-auto text-muted-foreground">{side}</span>
         </div>
-        <div className="max-h-[32rem] overflow-auto">{renderCode ? renderCode(code, side) : <pre className="m-0 p-5 font-mono text-xs leading-7"><code data-language={language}>{code}</code></pre>}</div>
+        <div tabIndex={0} role="region" aria-label={`${side} code: ${filename}`} className="max-h-[32rem] overflow-auto overscroll-contain outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">{renderCode ? renderCode(code, side) : <pre className="m-0 p-5 font-mono text-xs leading-7"><code data-language={language}>{code}</code></pre>}</div>
       </section>)}
   </div>;
 }

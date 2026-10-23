@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/select";
 
-const meta = { title: "Inputs/Select", component: C.Select, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/select`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-select", title: "Atoms/Inputs/Select", component: C.Select, parameters: {"docs": {"description": {"component": "A choice from a bounded set, with focus management, disabled options, and keyboard navigation.\n\nImport from `@saas-maker/ui/atoms/select`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

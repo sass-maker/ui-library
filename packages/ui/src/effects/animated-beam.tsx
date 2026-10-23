@@ -8,6 +8,7 @@
 import { useEffect, useId, useState, type RefObject } from "react"
 import { motion } from "motion/react"
 
+import { useReducedMotion } from "../lib/use-reduced-motion";
 import { cn } from "../lib/utils"
 
 export interface AnimatedBeamProps {
@@ -53,6 +54,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   endXOffset = 0,
   endYOffset = 0,
 }) => {
+  const reduced = useReducedMotion();
   const id = useId()
   const [pathD, setPathD] = useState("")
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 })
@@ -165,13 +167,13 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
             y1: "0%",
             y2: "0%",
           }}
-          animate={{
+          animate={reduced ? { x1: "0%", x2: "100%", y1: "0%", y2: "0%" } : {
             x1: gradientCoordinates.x1,
             x2: gradientCoordinates.x2,
             y1: gradientCoordinates.y1,
             y2: gradientCoordinates.y2,
           }}
-          transition={{
+          transition={reduced ? { duration: 0, repeat: 0 } : {
             delay,
             duration,
             ease: [0.16, 1, 0.3, 1], // https://easings.net/#easeOutExpo

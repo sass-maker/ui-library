@@ -5,7 +5,7 @@ import { Input } from '@saas-maker/ui/components/input';
 import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
 import * as C from '@saas-maker/ui/blocks/footer';
 import {comparisonAfter,comparisonBefore} from '../fixtures';
-const meta={title:"Blocks/Footer",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/footer`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+const meta={id: "blocks-footer", title: "Organisms/Blocks/Footer",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/blocks/footer`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <C.StudioFooter product="Fleet UI" url="https://github.com/sass-maker/ui-library" summary="The shared component and motion system for Fleet products." groups={[{title:"Library",links:[{label:"Source",href:"https://github.com/sass-maker/ui-library"}]}]} capture={false} legal="Open source · upstream notices preserved" mode="compact"/>;}};

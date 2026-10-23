@@ -1,86 +1,82 @@
 import { animate } from "motion/mini";
 import { inView, scroll } from "motion";
 
-/**
- * Fleet motion: one small script that animates server-rendered HTML by class.
- * Quiet by design: one move per element, no bounce, no loops. Elements that
- * are already on screen when the page loads are left alone (no flash), and
- * reduced motion turns everything off.
- *
- *   .motion-reveal    fades and rises when it scrolls into view
- *   .motion-stagger   reveals its direct children one after another
- *   .motion-zoom      the scale jump: grows to full size as it centers
- *   .motion-tilt      an app window lies back, then settles flat
- *   .motion-parallax  an image drifts slower than the page
- *   .motion-drift     a slow settling zoom on closing art
- *   .motion-draw      SVG paths draw in (give them pathLength="1")
- *   .motion-type      its child lines print one after another, like a terminal
- */
+const ease = [0.22, 1, 0.36, 1] as const;
+type Dispose = () => void;
+const sessions = new WeakMap<ParentNode, Dispose>();
 
-const ease = [0.22, 0.8, 0.24, 1] as const;
-
-function onScreen(el: Element) {
-  const r = el.getBoundingClientRect();
-  return r.top < innerHeight && r.bottom > 0;
-}
-
-function reveal(items: HTMLElement[]) {
-  const hidden = items.filter((el) => !onScreen(el));
-  for (const el of hidden) {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(2rem)";
-  }
-  for (const el of hidden) {
-    inView(
-      el,
-      () => {
-        const siblings = el.parentElement?.classList.contains("motion-stagger") ? [...el.parentElement.children] : [el];
-        const delay = Math.min(siblings.indexOf(el), 4) * 0.08;
-        animate(el, { opacity: 1, transform: "translateY(0)" }, { duration: 0.9, delay, ease });
-      },
-      { amount: 0.15 },
-    );
-  }
-}
-
-/** Link a keyframe animation to an element's trip through the viewport. */
-function link(el: HTMLElement, keyframes: Record<string, string[]>, offset: [string, string]) {
-  scroll(animate(el, keyframes, { ease: "linear" }), { target: el, offset: offset as never });
-}
-
-export function initMotion() {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const all = (selector: string) => [...document.querySelectorAll<HTMLElement>(selector)];
-
-  reveal(all(".motion-reveal"));
-
-  for (const el of all(".motion-type").filter((t) => !onScreen(t))) {
-    const lines = [...el.children] as HTMLElement[];
-    for (const line of lines) line.style.opacity = "0";
-    inView(
-      el,
-      () => {
-        // Blank lines are pauses; each printed line takes a beat.
-        let t = 0.3;
-        for (const line of lines) {
-          animate(line, { opacity: 1 }, { duration: 0.18, delay: t });
-          t += line.textContent?.trim() ? 0.32 : 0.45;
-        }
-      },
-      { amount: 0.5 },
-    );
-  }
-  reveal(all(".motion-stagger").flatMap((g) => [...g.children] as HTMLElement[]));
-
-  for (const el of all(".motion-zoom")) link(el, { transform: ["scale(0.82)", "scale(1)"] }, ["start end", "center center"]);
-  for (const el of all(".motion-tilt")) {
-    el.style.transformOrigin = "50% 0%";
-    link(el, { transform: ["perspective(1600px) rotateX(14deg) scale(0.94)", "perspective(1600px) rotateX(0deg) scale(1)"] }, ["start end", "start 30%"]);
-  }
-  for (const el of all(".motion-parallax")) link(el, { transform: ["translateY(-8%) scale(1.16)", "translateY(8%) scale(1.16)"] }, ["start end", "end start"]);
-  for (const el of all(".motion-drift")) link(el, { transform: ["scale(1.12)", "scale(1)"] }, ["start end", "end end"]);
-  for (const path of all(".motion-draw path")) {
-    path.style.strokeDasharray = "1";
-    link(path, { strokeDashoffset: ["1", "0"] }, ["start end", "center center"]);
-  }
+/** Quiet motion for server-rendered HTML. Safe to reinitialize after navigation. */
+export function initMotion(scope: ParentNode = document): Dispose {
+  sessions.get(scope)?.();
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  let stopCurrent: Dispose = () => {};
+  const start = () => {
+    stopCurrent();
+    const cleanups: Dispose[] = [];
+    const original = new Map<HTMLElement, { opacity: string; transform: string; origin: string; dash: string; dashOffset: string }>();
+    const all = (selector: string) => [...scope.querySelectorAll<HTMLElement>(selector)];
+    const remember = (element: HTMLElement) => {
+      if (!original.has(element)) original.set(element, { opacity: element.style.opacity, transform: element.style.transform, origin: element.style.transformOrigin, dash: element.style.strokeDasharray, dashOffset: element.style.strokeDashoffset });
+    };
+    const run = (element: HTMLElement, keyframes: Parameters<typeof animate>[1], options: Parameters<typeof animate>[2]) => {
+      const animation = animate(element, keyframes, options);
+      cleanups.push(() => animation.stop());
+      return animation;
+    };
+    stopCurrent = () => {
+      for (const cleanup of cleanups.splice(0)) cleanup();
+      for (const [element, before] of original) {
+        element.style.opacity = before.opacity;
+        element.style.transform = before.transform;
+        element.style.transformOrigin = before.origin;
+        element.style.strokeDasharray = before.dash;
+        element.style.strokeDashoffset = before.dashOffset;
+      }
+      original.clear();
+    };
+    if (preference.matches || ["off", "reduced"].includes(document.documentElement.dataset.motion ?? "")) return;
+    const onScreen = (element: HTMLElement) => { const bounds = element.getBoundingClientRect(); return bounds.top < innerHeight && bounds.bottom > 0; };
+    const reveal = (items: HTMLElement[]) => {
+      for (const element of items.filter(element => !onScreen(element))) {
+        remember(element);
+        element.style.opacity = "0";
+        element.style.transform = "translateY(16px)";
+        cleanups.push(inView(element, () => {
+          const siblings = element.parentElement?.classList.contains("motion-stagger") ? [...element.parentElement.children] : [element];
+          run(element, { opacity: 1, transform: "translateY(0)" }, { duration: .5, delay: Math.min(siblings.indexOf(element), 4) * .06, ease });
+        }, { amount: .12 }));
+      }
+    };
+    reveal(all(".motion-reveal"));
+    reveal(all(".motion-stagger").flatMap(group => [...group.children].filter((child): child is HTMLElement => child instanceof HTMLElement)));
+    for (const element of all(".motion-type").filter(element => !onScreen(element))) {
+      const lines = [...element.children].filter((child): child is HTMLElement => child instanceof HTMLElement);
+      lines.forEach(line => { remember(line); line.style.opacity = "0"; });
+      cleanups.push(inView(element, () => {
+        let delay = .1;
+        for (const line of lines) { run(line, { opacity: 1 }, { duration: .15, delay }); delay += line.textContent?.trim() ? .22 : .3; }
+      }, { amount: .3 }));
+    }
+    const link = (element: HTMLElement, keyframes: Record<string, string[]>, offset: Parameters<typeof scroll>[1]) => {
+      remember(element);
+      const animation = run(element, keyframes, { ease: "linear" });
+      cleanups.push(scroll(animation, { target: element, ...offset }));
+    };
+    for (const element of all(".motion-zoom")) link(element, { transform: ["scale(0.9)", "scale(1)"] }, { offset: ["start end", "center center"] });
+    for (const element of all(".motion-tilt")) {
+      remember(element); element.style.transformOrigin = "50% 0%";
+      link(element, { transform: ["perspective(1600px) rotateX(8deg) scale(0.97)", "perspective(1600px) rotateX(0deg) scale(1)"] }, { offset: ["start end", "start 30%"] });
+    }
+    for (const element of all(".motion-parallax")) link(element, { transform: ["translateY(-5%) scale(1.1)", "translateY(5%) scale(1.1)"] }, { offset: ["start end", "end start"] });
+    for (const element of all(".motion-drift")) link(element, { transform: ["scale(1.06)", "scale(1)"] }, { offset: ["start end", "end end"] });
+    for (const element of all(".motion-draw path")) {
+      remember(element); element.style.strokeDasharray = "1";
+      link(element, { strokeDashoffset: ["1", "0"] }, { offset: ["start end", "center center"] });
+    }
+  };
+  start();
+  preference.addEventListener("change", start);
+  const dispose = () => { preference.removeEventListener("change", start); stopCurrent(); if (sessions.get(scope) === dispose) sessions.delete(scope); };
+  sessions.set(scope, dispose);
+  return dispose;
 }

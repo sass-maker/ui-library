@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/drawer";
 
-const meta = { title: "Overlays/Drawer", component: C.Drawer, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/drawer`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "overlays-drawer", title: "Molecules/Overlays/Drawer", component: C.Drawer, parameters: {"docs": {"description": {"component": "A focused surface that comes from the edge and keeps the task within reach.\n\nImport from `@saas-maker/ui/molecules/drawer`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

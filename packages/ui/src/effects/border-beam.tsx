@@ -7,6 +7,7 @@
 
 import { motion, type MotionStyle, type Transition } from "motion/react"
 
+import { useReducedMotion } from "../lib/use-reduced-motion";
 import { cn } from "../lib/utils"
 
 interface BorderBeamProps {
@@ -69,6 +70,7 @@ export const BorderBeam = ({
   initialOffset = 0,
   borderWidth = 1,
 }: BorderBeamProps) => {
+  const reduced = useReducedMotion();
   return (
     <div
       className="pointer-events-none absolute inset-0 rounded-[inherit] border-(length:--border-beam-width) border-transparent mask-[linear-gradient(transparent,transparent),linear-gradient(#000,#000)] mask-intersect [mask-clip:padding-box,border-box]"
@@ -94,12 +96,12 @@ export const BorderBeam = ({
           } as MotionStyle
         }
         initial={{ offsetDistance: `${initialOffset}%` }}
-        animate={{
+        animate={reduced ? { offsetDistance: `${initialOffset}%` } : {
           offsetDistance: reverse
             ? [`${100 - initialOffset}%`, `${-initialOffset}%`]
             : [`${initialOffset}%`, `${100 + initialOffset}%`],
         }}
-        transition={{
+        transition={reduced ? { duration: 0, repeat: 0 } : {
           repeat: Infinity,
           ease: "linear",
           duration,

@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/resizable";
 
-const meta = { title: "Navigation/Resizable panels", component: C.ResizablePanelGroup, parameters: {"docs": {"description": {"component": "Resize with a pointer or focus the divider and use arrow keys.\n\nImport from `@saas-maker/ui/components/resizable`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "navigation-resizable-panels", title: "Molecules/Layout/Resizable panels", component: C.ResizablePanelGroup, parameters: {"docs": {"description": {"component": "Resize with a pointer or focus the divider and use arrow keys.\n\nImport from `@saas-maker/ui/components/resizable`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

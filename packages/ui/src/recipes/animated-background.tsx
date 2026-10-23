@@ -5,6 +5,8 @@
  */
 'use client';
 import { cn } from '../lib/utils';
+import { useReducedMotion } from '../lib/use-reduced-motion';
+import { motionTiming } from '../lib/motion';
 import { AnimatePresence, Transition, motion } from 'motion/react';
 import {
   Children,
@@ -35,7 +37,8 @@ export function AnimatedBackground({
   transition,
   enableHover = false,
 }: AnimatedBackgroundProps) {
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const reduced = useReducedMotion();
+  const [activeId, setActiveId] = useState<string | null>(defaultValue ?? null);
   const uniqueId = useId();
 
   const handleSetActiveId = (id: string | null) => {
@@ -78,9 +81,9 @@ export function AnimatedBackground({
         <AnimatePresence initial={false}>
           {activeId === id && (
             <motion.span
-              layoutId={`background-${uniqueId}`}
+              layoutId={reduced ? undefined : `background-${uniqueId}`}
               className={cn('absolute inset-0', className)}
-              transition={transition}
+              transition={reduced ? motionTiming.feedback : transition ?? motionTiming.layout}
               initial={{ opacity: defaultValue ? 1 : 0 }}
               animate={{
                 opacity: 1,

@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/error-state";
 
-const meta = { title: "Feedback/Error state", component: C.ErrorState, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/error-state`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "feedback-error-state", title: "Molecules/Feedback/Error state", component: C.ErrorState, parameters: {"docs": {"description": {"component": "Keep the failure specific and provide a clear retry path.\n\nImport from `@saas-maker/ui/molecules/error-state`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

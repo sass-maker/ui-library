@@ -1,5 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
+import { exampleSourcePlugin } from "../scripts/example-source.ts";
 
 const config: StorybookConfig = {
   framework: "@storybook/react-vite",
@@ -10,7 +11,7 @@ const config: StorybookConfig = {
   docs: { defaultName: "Guide" },
   async viteFinal(config) {
     config.base = "./";
-    config.plugins = [...(config.plugins ?? []), tailwindcss()];
+    config.plugins = [...(config.plugins ?? []), tailwindcss(), exampleSourcePlugin()];
     return config;
   },
 };

@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/skeleton";
 
-const meta = { title: "Feedback/Skeleton", component: C.Skeleton, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/skeleton`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "feedback-skeleton", title: "Atoms/Feedback/Skeleton", component: C.Skeleton, parameters: {"docs": {"description": {"component": "Reserve the loaded content\u2019s shape while a request is pending.\n\nImport from `@saas-maker/ui/atoms/skeleton`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

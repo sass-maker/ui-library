@@ -23,9 +23,11 @@ let probe;
 for (let attempt = 0; attempt < (explorer ? 40 : 1); attempt++) {
   probe = await fetch(base + probePath).catch(() => null);
   if (probe?.ok) break;
+  await probe?.arrayBuffer();
   if (explorer) await new Promise(resolve => setTimeout(resolve, 100));
 }
 if (!probe?.ok) throw new Error(`${base} does not serve this build (no ${probePath} page). A stale preview may be holding the port; stop it or run with BASE_URL pointing at this build's preview.`);
+await probe.arrayBuffer();
 const chromePath = process.env.CHROME ?? process.env.CHROME_BIN ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -56,7 +58,7 @@ const js = async (expression) => {
   if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description ?? expression);
   return r.result?.result?.value;
 };
-const KEYS = { Enter: [13, "\r"], " ": [32, " "], ArrowDown: [40], ArrowUp: [38], Escape: [27], Tab: [9] };
+const KEYS = { Enter: [13, "\r"], " ": [32, " "], ArrowDown: [40], ArrowUp: [38], ArrowRight: [39], ArrowLeft: [37], Escape: [27], Tab: [9] };
 async function press(key) {
   const [code, text] = KEYS[key];
   const name = key === " " ? "Space" : key;
@@ -90,9 +92,13 @@ if (explorer) {
   try {
     await open("/?path=/story/start-here-overview--explore");
     check("explorer: manager renders its preview under the base path", await waitFor("document.querySelector('#storybook-preview-iframe')?.contentDocument?.querySelector('#storybook-root')?.childElementCount > 0"));
+    await open("/?path=/story/interactions-inline-edit--in-context", 1440);
+    check("source: Code panel is available", await waitFor("[...document.querySelectorAll('[role=tab]')].some(tab => tab.textContent.trim() === 'Code')", 8000));
+    await js("[...document.querySelectorAll('[role=tab]')].find(tab => tab.textContent.trim() === 'Code').click()");
+    check("source: contextual example includes its implementation and imports", await waitFor("[...document.querySelectorAll('pre')].some(pre => pre.textContent.includes('export function ProjectDetailsContext') && pre.textContent.includes('@saas-maker/ui/recipes/inline-edit'))", 8000));
     const checkedAssets = new Set();
-    for (const width of [390, 1440]) {
-      for (const id of ["start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
+    for (const width of [390, 820, 1440]) {
+      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "data-pricing-calculator--in-context", "motion-morphing-dialog--in-context", "start-here-overview--explore", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
         await open(`/iframe.html?id=${id}&viewMode=story`, width);
         const ready = await waitFor("document.querySelector('#storybook-root')?.childElementCount > 0");
         check(`explorer: ${id} renders at ${width}`, ready);
@@ -104,10 +110,99 @@ if (explorer) {
           checkedAssets.add(url);
           const local = url.startsWith(base + "/");
           check("explorer: image stays under the hosted base path", local, url);
-          if (local) check("explorer: image asset exists", (await fetch(url)).ok, url);
+          if (local) {
+            const response = await fetch(url);
+            const body = await response.arrayBuffer();
+            check("explorer: image asset exists", response.ok && body.byteLength > 0, url);
+          }
         }
       }
     }
+
+    const index = await (await fetch(base + "/index.json")).json();
+    for (const layer of ["Atoms", "Molecules", "Organisms", "Templates"]) {
+      check("architecture: " + layer + " is discoverable", Object.values(index.entries).some(entry => entry.title.startsWith(layer + "/")));
+    }
+    await open("/iframe.html?id=organisms-workspaces-workspace-settings--settings&viewMode=story", 390);
+    check("settings: form renders", await waitFor("!!document.querySelector('input[name=workspaceName]')"));
+    await js("document.querySelector('input[name=workspaceName]').focus(); document.querySelector('input[name=workspaceName]').select()");
+    await cdp("Input.insertText", { text: "  Kith, considered  " });
+    await js("[...document.querySelectorAll('label')].find(label => label.textContent.includes('Make the next save fail')).querySelector('input').click(); [...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'save changes').click()");
+    check("settings: failed save retains edits", await waitFor("document.body.innerText.includes('Your changes are still here.') && document.querySelector('input[name=workspaceName]').value === '  Kith, considered  '"));
+    await js("[...document.querySelectorAll('label')].find(label => label.textContent.includes('Make the next save fail')).querySelector('input').click(); [...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'try again').click()");
+    check("settings: retry saves normalized values", await waitFor("document.body.innerText.includes('All changes saved.') && document.querySelector('input[name=workspaceName]').value === 'Kith, considered'"));
+
+    await open("/iframe.html?id=feedback-notification-bell--in-context&viewMode=story", 390);
+    await js("document.querySelector('button[aria-label^=Notifications]').click()");
+    check("notifications: anchored panel opens", await waitFor("!!document.querySelector('[role=region][aria-label=Notifications]')"));
+    check("notifications: panel stays in the phone viewport", await js("(() => {const r=document.querySelector('[role=region][aria-label=Notifications]').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && document.documentElement.scrollWidth <= innerWidth + 1})()"));
+    await press("Escape");
+    check("notifications: Escape closes and restores focus", await waitFor("!document.querySelector('[role=region][aria-label=Notifications]') && document.activeElement?.getAttribute('aria-label')?.startsWith('Notifications')"));
+
+    await open("/iframe.html?id=organisms-workspaces-asset-library--files&viewMode=story", 390);
+    check("files: search renders", await waitFor("!!document.querySelector('input[aria-label=\"Search files\"]')"));
+    await js("document.querySelector('input[aria-label=\"Search files\"]').focus()");
+    await cdp("Input.insertText", { text: "no-such-file" });
+    check("files: search exposes an empty result", await waitFor("document.body.innerText.includes('No matching files')"));
+    await js("document.querySelector('button[aria-label=\"Clear search files\"]').click()");
+    check("files: clearing restores results and focus", await waitFor("!!document.querySelector('button[aria-label^=\"Preview \"]') && document.activeElement?.getAttribute('aria-label') === 'Search files'"));
+    await js("document.querySelector('button[aria-label^=\"Preview \"]').click()");
+    check("files: preview opens", await waitFor("!!document.querySelector('[role=dialog]')"));
+    await press("Escape");
+    check("files: preview returns focus", await waitFor("!document.querySelector('[role=dialog]') && document.activeElement?.getAttribute('aria-label')?.startsWith('Preview ')"));
+
+
+    await open("/iframe.html?id=organisms-workspaces-notification-inbox--inbox&viewMode=story", 390);
+    check("inbox: message list renders", await waitFor("[...document.querySelectorAll('button')].some(button => button.textContent.includes('The small things are coming together'))"));
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.includes('The small things are coming together')).click()");
+    check("inbox: phone detail receives focus", await waitFor("document.activeElement?.tagName === 'H3' && document.activeElement.textContent.includes('The small things are coming together')"));
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.trim().toLowerCase() === 'inbox').click()");
+    check("inbox: back returns focus to its message", await waitFor("document.activeElement?.tagName === 'BUTTON' && document.activeElement.textContent.includes('The small things are coming together')"));
+
+    await cdp("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+    for (const id of ["motion-text-effect--in-context", "effects-border-beam--playground"]) {
+      await open("/iframe.html?id=" + id + "&viewMode=story", 390);
+      check("motion: reduced mode leaves no blur in " + id, await js("[...document.querySelectorAll('#storybook-root *')].every(element => !getComputedStyle(element).filter.includes('blur(') || getComputedStyle(element).filter.includes('blur(0px)'))"));
+      check("motion: reduced mode stops loops in " + id, await js("document.getAnimations().every(animation => animation.playState !== 'running' || animation.effect?.getTiming().iterations !== Infinity)"));
+    }
+    await cdp("Emulation.setEmulatedMedia", { features: [] });
+
+    await open("/iframe.html?id=effects-code-comparison--playground&viewMode=story", 820);
+    check("code: scroll region renders", await waitFor("!!document.querySelector('[aria-label^=\"before code:\"]')"));
+    await js("document.querySelector('[aria-label^=\"before code:\"]').focus()");
+    await press("ArrowRight");
+    check("code: keyboard scrolls long lines", await waitFor("document.activeElement?.getAttribute('aria-label')?.startsWith('before code:') && document.activeElement.scrollLeft > 0"));
+    await press("Tab");
+    check("code: both panels are reachable by Tab", await waitFor("document.activeElement?.getAttribute('aria-label')?.startsWith('after code:')"));
+
+
+    for (const theme of ["paper", "hearth", "gallery"]) {
+      await open("/iframe.html?id=navigation-tabs--playground&viewMode=story&globals=theme:" + theme + ";mode:light", 820);
+      const tabContrast = await js(`(() => {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 1;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        const luminance = rgb => rgb.map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4).reduce((sum, value, index) => sum + value * [.2126,.7152,.0722][index], 0);
+        return [...document.querySelectorAll('[data-slot=tabs-trigger][data-state=inactive]')].map(tab => {
+          context.clearRect(0,0,1,1);
+          context.fillStyle = getComputedStyle(tab.closest('[data-slot=tabs-list]')).backgroundColor;
+          context.fillRect(0,0,1,1);
+          const background = luminance([...context.getImageData(0,0,1,1).data].slice(0,3));
+          context.fillStyle = getComputedStyle(tab).color;
+          context.fillRect(0,0,1,1);
+          const foreground = luminance([...context.getImageData(0,0,1,1).data].slice(0,3));
+          return (Math.max(background,foreground)+.05)/(Math.min(background,foreground)+.05);
+        });
+      })()`);
+      check("tabs: inactive labels have AA contrast in " + theme, tabContrast.length > 0 && tabContrast.every(ratio => ratio >= 4.5), tabContrast.join(", "));
+    }
+
+    await open("/iframe.html?id=templates-console--gallery&viewMode=story", 1440);
+    check("motion: template initializes offscreen reveals", await waitFor("[...document.querySelectorAll('.motion-reveal,.motion-stagger > *')].some(element => element.style.opacity === '0')"));
+    await cdp("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+    check("motion: live reduced preference restores hidden content", await waitFor("[...document.querySelectorAll('.motion-reveal,.motion-stagger > *')].every(element => element.style.opacity !== '0')"));
+    await cdp("Emulation.setEmulatedMedia", { features: [] });
+
   } finally {
     ws.close();
     chrome.kill();

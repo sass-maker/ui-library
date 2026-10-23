@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/input-otp";
 
-const meta = { title: "Inputs/One-time code", component: C.InputOTP, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/input-otp`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "inputs-one-time-code", title: "Molecules/Inputs/One-time code", component: C.InputOTP, parameters: {"docs": {"description": {"component": "A segmented code entry that keeps native text editing and a single accessible input.\n\nImport from `@saas-maker/ui/molecules/input-otp`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

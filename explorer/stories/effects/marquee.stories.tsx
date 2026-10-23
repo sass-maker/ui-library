@@ -5,7 +5,7 @@ import { Input } from '@saas-maker/ui/components/input';
 import { Box, FileText, Folder, Search, Check, ArrowRight, Cloud, Code, Globe, Settings } from 'lucide-react';
 import * as C from '@saas-maker/ui/effects/marquee';
 
-const meta={title:"Effects/Marquee",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/effects/marquee`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
+const meta={id: "effects-marquee", title: "Molecules/Effects/Marquee",parameters:{docs:{description:{component:"Import from `@saas-maker/ui/effects/marquee`.  Example data is local to this story. Use the toolbar to compare presets, light/dark and reduced motion. Upstream attribution and pinned source are in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-stack"><C.Marquee pauseOnHover className="max-w-3xl [--duration:24s]">{["Components","Tokens","Motion","Blocks","Templates"].map(label=><div key={label} className="story-panel w-44 text-center">{label}</div>)}</C.Marquee><p className="story-caption">Pauses on hover and keyboard focus. Reduced motion displays a static row.</p></div>;}};
