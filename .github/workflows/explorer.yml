@@ -12,6 +12,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -26,6 +27,15 @@ jobs:
       - run: pnpm storybook:build
       - run: pnpm exec shadcn build --output explorer/storybook-static/r
       - run: pnpm check:explorer --built
+      - name: Check deployed subdirectory layout and demo assets
+        env:
+          BASE_URL: http://127.0.0.1:4175/ui-library
+          CHROME: /usr/bin/google-chrome
+        run: |
+          mkdir -p "$RUNNER_TEMP/explorer-preview"
+          ln -s "$PWD/explorer/storybook-static" "$RUNNER_TEMP/explorer-preview/ui-library"
+          python3 -m http.server 4175 --bind 127.0.0.1 --directory "$RUNNER_TEMP/explorer-preview" > "$RUNNER_TEMP/explorer-server.log" 2>&1 &
+          pnpm check:browser:explorer
       - uses: actions/upload-artifact@v4
         with:
           name: explorer-preview
