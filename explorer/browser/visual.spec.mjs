@@ -51,5 +51,15 @@ for (const width of [390, 820, 1440]) {
       await noOverflow(page);
       await expect(page).toHaveScreenshot(`sources-${suffix}.png`, { fullPage: true });
     });
+    test(`complete media page ${suffix}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1000 });
+      await openStory(page, 'start-here-media--complete-page', globals);
+      await expect(page.getByAltText('Illustrative coastal walk in Kith’s warm visual world')).toBeVisible();
+      await page.locator('#kith-status').scrollIntoViewIfNeeded();
+      await expect.poll(() => page.locator('img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+      await page.getByRole('link', { name: 'Kith for iPhone', exact: true }).scrollIntoViewIfNeeded();
+      await noOverflow(page);
+      await expect(page).toHaveScreenshot(`media-${suffix}.png`, { fullPage: true });
+    });
   }
 }

@@ -1788,6 +1788,41 @@
       ]
     },
     {
+      "name": "responsive-image",
+      "type": "registry:ui",
+      "title": "Responsive Image",
+      "description": "Responsive image atom with native picture selection, intrinsic geometry, focal points and a visible failure state.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/responsive-image.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/responsive-image.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/utils.ts"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.fleet-ui.md"
+        },
+        {
+          "path": "LICENSE",
+          "type": "registry:file",
+          "target": "LICENSE.fleet-ui"
+        }
+      ]
+    },
+    {
       "name": "scroll-area",
       "type": "registry:ui",
       "title": "Scroll Area",
@@ -2274,6 +2309,47 @@
           "path": "packages/ui/src/components/tooltip.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/tooltip.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/utils.ts"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.fleet-ui.md"
+        },
+        {
+          "path": "LICENSE",
+          "type": "registry:file",
+          "target": "LICENSE.fleet-ui"
+        }
+      ]
+    },
+    {
+      "name": "video",
+      "type": "registry:ui",
+      "title": "Video",
+      "description": "Native video atom with deliberate loading, controls, captions, failure recovery and offscreen pause.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/video.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/video.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/use-reduced-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -4311,6 +4387,41 @@
       ]
     },
     {
+      "name": "media-frame",
+      "type": "registry:ui",
+      "title": "Media Frame",
+      "description": "Caption and credit molecule for images, video and interactive artwork.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/molecules/media-frame.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/molecules/media-frame.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.fleet-ui.md"
+        },
+        {
+          "path": "LICENSE",
+          "type": "registry:file",
+          "target": "LICENSE.fleet-ui"
+        }
+      ]
+    },
+    {
       "name": "metric-card",
       "type": "registry:ui",
       "title": "Metric Card",
@@ -4526,6 +4637,53 @@
           "path": "packages/ui/src/recipes/transition-panel.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/recipes/transition-panel.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.fleet-ui.md"
+        },
+        {
+          "path": "LICENSE",
+          "type": "registry:file",
+          "target": "LICENSE.fleet-ui"
+        }
+      ]
+    },
+    {
+      "name": "media-sequence",
+      "type": "registry:block",
+      "title": "Media Sequence",
+      "description": "Product narrative organism with keyboard-accessible chapters and captioned media.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/tabs.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/tabs.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/molecules/media-frame.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/molecules/media-frame.tsx"
+        },
+        {
+          "path": "packages/ui/src/organisms/media-sequence.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/organisms/media-sequence.tsx"
         },
         {
           "path": "THIRD_PARTY_NOTICES.md",

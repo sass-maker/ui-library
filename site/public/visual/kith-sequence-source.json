@@ -1,0 +1,33 @@
+{
+  "description": "Original silent edited sequence of existing Kith app screens, not a live interaction recording.",
+  "sourceRevision": "316ecb38c0da17dc19b509a58c45acb53dc2138f",
+  "sources": [
+    {
+      "file": "site/public/demo/kith/onboarding.webp",
+      "sha256": "97f78b7deb9c60b1a61c9210ed91ae923cdedf2f0bc30ce71706692ce929f4e2",
+      "source": "https://github.com/sass-maker/ui-library/blob/316ecb38c0da17dc19b509a58c45acb53dc2138f/site/public/demo/kith/onboarding.webp"
+    },
+    {
+      "file": "site/public/demo/kith/constellation.webp",
+      "sha256": "c45a5f803a5a82da6960556a854ad12094b2eb264ff3cd69d46f660d3a8d8ea6",
+      "source": "https://github.com/sass-maker/ui-library/blob/316ecb38c0da17dc19b509a58c45acb53dc2138f/site/public/demo/kith/constellation.webp"
+    },
+    {
+      "file": "site/public/demo/kith/person.webp",
+      "sha256": "838f9a1e651a4c920e34cbd0156b6e694fc2abfc69088ab6d0ca94c01b64a066",
+      "source": "https://github.com/sass-maker/ui-library/blob/316ecb38c0da17dc19b509a58c45acb53dc2138f/site/public/demo/kith/person.webp"
+    }
+  ],
+  "license": "Repository MIT license; SaaS Maker contributors. Not third-party studio artwork.",
+  "recipe": "Three3second stills with333ms crossfades, aspect-preserving phone screens on a warm neutral field,24fps, no sound; regenerate with this script.",
+  "outputs": [
+    {
+      "file": "site/public/visual/kith-sequence.mp4",
+      "sha256": "f5535437e71b30dd47b985e82cf9cb38003a40575ca5f89e392df1b5156a17b7"
+    },
+    {
+      "file": "site/public/visual/kith-sequence.webm",
+      "sha256": "dc3535ed91c554c3b345e3e586e09bf626f2458716a8474f37f15a195eb49739"
+    }
+  ]
+}

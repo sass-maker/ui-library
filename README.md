@@ -16,13 +16,13 @@ one theme.
 
 The explorer follows the same dependency direction as the source:
 
-- **Atoms** — 19 primitives: inputs, actions, type-level labels and feedback.
+- **Atoms** — 21 primitives: inputs, actions, type-level labels, feedback and media.
   Import from `@saas-maker/ui/atoms/button` (and the other named atom exports).
-- **Molecules** — 76 focused compositions and effects, including labeled fields,
+- **Molecules** — 77 focused compositions and effects, including labeled fields,
   search, file cards, settings rows and existing interaction recipes.
   New compositions live under `@saas-maker/ui/molecules/*`; existing
   `components/*` and `recipes/*` imports keep working.
-- **Organisms** — 26 complete sections and patterns. New exported workspace
+- **Organisms** — 27 complete sections and patterns. New exported workspace
   organisms are `asset-library`, `workspace-settings`, `notification-inbox`
   and `project-overview`. Applications own data and persistence callbacks.
 - **Templates** place these sections into a complete Gallery, Workbench or
@@ -75,6 +75,26 @@ static explorer to GitHub Pages on main. To restore a verified revision, rerun
 its successful main workflow. This first publication can be withdrawn by
 disabling Pages; product consumers keep their pinned Git tags.
 
+## Media-led compositions
+
+Start here → Media in the explorer contains a complete Kith page and a copyable
+source example. It uses existing artwork and actual app screens, with truthful
+internal-beta status. The silent movie is an edited screen sequence, not a live
+interaction recording.
+
+- `@saas-maker/ui/atoms/responsive-image`: native picture sources, dimensions,
+  mobile/wide focal points and a visible image failure state.
+- `@saas-maker/ui/atoms/video`: no movie fetch until play; native controls,
+  captions, error/retry, and pause offscreen, on hidden tabs or on a live
+  reduced-motion change. Deliberate playback remains available.
+- `@saas-maker/ui/molecules/media-frame`: consistent caption and credit.
+- `@saas-maker/ui/organisms/media-sequence`: keyboard-accessible product chapters.
+
+The two local movie formats, English descriptions and source hashes live in
+`site/public/visual/kith-sequence*`. The optional regeneration script is
+`node explorer/scripts/build-media-sample.mjs` and requires an installed ffmpeg.
+Standard checks and consumer builds use the committed media.
+
 ## Retained native-app landing factory
 
 The complete former iOS Landings repository lives in
@@ -109,7 +129,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.24"
+G="github:sass-maker/ui-library#v0.1.25"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -119,9 +139,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.24&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.24&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.24&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.25&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.25&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.25&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -606,7 +626,7 @@ Framework references: [Astro server islands](https://docs.astro.build/en/guides/
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.24")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.25")
 // ...
 ContentView().smTheme(.gallery.dark.brand(Color("Brand")))
 ```
@@ -658,7 +678,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.24&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.25&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```
