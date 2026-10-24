@@ -75,9 +75,20 @@ test('an embedded tablet inbox keeps its detail readable and restores focus afte
 
 test('workspace navigation retains drafts and settings recover from a failed save', async ({ page }) => {
   await openStory(page, 'start-here-workspace--complete-workflow');
+  const search = page.getByRole('button', { name: 'Jump to a section ⌘K', exact: true });
+  await search.click();
+  await expect(page.getByRole('dialog', { name: 'Search', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(search).toBeFocused();
+  await expect(page.getByRole('heading', { name: 'Search', exact: true })).toHaveCount(0);
+  await search.click();
+  await page.getByRole('button', { name: 'Close', exact: true }).click();
+  await expect(search).toBeFocused();
   await page.keyboard.press('Control+k');
   await page.getByPlaceholder('Find a workspace section…').fill('preferences');
   await page.getByRole('option', { name: /Settings/ }).click();
+  await expect(page.getByRole('dialog')).toBeHidden();
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
   const name = page.getByLabel('Workspace name', { exact: true });
   await name.fill('Kith design room');
   await workspaceSection(page, 'Assets');

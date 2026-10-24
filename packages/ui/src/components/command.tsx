@@ -26,6 +26,7 @@ function CommandDialog({
   className,
   showCloseButton = true,
   commandProps,
+  contentProps,
   ...props
 }: React.ComponentProps<typeof Dialog> & {
   title?: string
@@ -33,20 +34,23 @@ function CommandDialog({
   className?: string
   showCloseButton?: boolean
   commandProps?: React.ComponentProps<typeof CommandPrimitive>
+  contentProps?: Omit<React.ComponentProps<typeof DialogContent>, "children" | "showCloseButton">
 }) {
   return (
     <Dialog {...props}>
-      <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-      </DialogHeader>
       <DialogContent
+        {...contentProps}
         className={cn(
-          "top-[12vh] translate-y-0 overflow-hidden p-0 sm:top-[18vh] sm:max-w-xl",
-          className
+          "top-[12vh] translate-y-0 overflow-hidden p-0 sm:top-[18vh] sm:max-w-xl [&_[data-slot=dialog-close]]:top-0.5 [&_[data-slot=dialog-close]]:right-0.5",
+          className,
+          contentProps?.className
         )}
         showCloseButton={showCloseButton}
       >
+        <DialogHeader className="sr-only">
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
         <Command
           {...commandProps}
           className={cn("[&_[cmdk-item]]:py-2", commandProps?.className)}
@@ -60,12 +64,12 @@ function CommandDialog({
 
 function CommandInput({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
-    <div data-slot="command-input-wrapper" className="flex h-12 items-center gap-2 border-b px-3 pr-10">
+    <div data-slot="command-input-wrapper" className="flex h-12 items-center gap-2 border-b px-3 pr-12">
       <SearchIcon className="size-4 shrink-0 opacity-50" />
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "flex h-10 w-full rounded-md bg-transparent py-3 text-base outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm",
+          "flex h-10 w-full rounded-md bg-transparent py-3 text-base outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm [@media(pointer:coarse)]:text-base",
           className
         )}
         {...props}
@@ -78,7 +82,7 @@ function CommandList({ className, ...props }: React.ComponentProps<typeof Comman
   return (
     <CommandPrimitive.List
       data-slot="command-list"
-      className={cn("max-h-[min(60vh,26rem)] scroll-py-1 overflow-x-hidden overflow-y-auto", className)}
+      className={cn("max-h-[min(60vh,26rem)] scroll-py-1 overflow-x-hidden overflow-y-auto overscroll-contain", className)}
       {...props}
     />
   )
