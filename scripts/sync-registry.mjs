@@ -64,6 +64,17 @@ for (const category of categories) {
   }
 }
 registry.items = [...registry.items.filter(item => !generated.has(item.name)), ...generated.values()];
+// Older blocks retain their public registry names, but use the same exact
+// dependency versions as the package rather than floating installer versions.
+for (const item of registry.items) {
+  if (!item.dependencies) continue;
+  item.dependencies = item.dependencies.map(dependency => {
+    const version = manifest.dependencies[dependency];
+    if (version) return `${dependency}@${version}`;
+    if (dependency.lastIndexOf("@") > 0) return dependency;
+    throw new Error(`Unpinned registry dependency in ${item.name}: ${dependency}`);
+  });
+}
 const output = JSON.stringify(registry, null, 2) + "\n";
 const catalogPath = path.join(root, "explorer/stories/module-catalog-data.ts");
 const catalog = await buildModuleCatalog(root, manifest, registry);

@@ -78,6 +78,10 @@ export async function buildModuleCatalog(root, manifest, registry) {
       }
       const primary = defaultName ?? symbols.find(symbol => /^[A-Z]/.test(symbol));
       const item = registry.items.find(item => item.name === name && item.files.some(file => file.path === sourcePath));
+      // Some established blocks have an alternate registry name or ship inside
+      // another registry item. Match their actual source, preserving package names.
+      const dependencyItem = item ?? registry.items.find(item => item.files.some(file => file.path === sourcePath));
+      if (!dependencyItem) throw new Error(`No registry dependency metadata found for ${sourcePath}`);
       entries.push({
         id: `${category}/${name}`,
         name: item?.title && item.title !== name ? item.title : name.replace(/(^|-)([a-z])/g, (_, separator, letter) => (separator ? " " : "") + letter.toUpperCase()),
@@ -91,7 +95,8 @@ export async function buildModuleCatalog(root, manifest, registry) {
         sourcePath,
         sourceRef: `v${manifest.version}`,
         storyId: `${story.group}--${slug(example.name.text)}`,
-        dependencies: item?.dependencies ?? [],
+        registryName: dependencyItem.name,
+        dependencies: dependencyItem.dependencies ?? [],
       });
     }
   }

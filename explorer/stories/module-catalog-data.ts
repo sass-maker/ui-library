@@ -13,6 +13,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/accordion.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-accordion--playground",
+    "registryName": "accordion",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -33,6 +34,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/molecules/activity-item.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "molecules-compositions-activity-item--activity",
+    "registryName": "activity-item",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -53,6 +55,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/alert.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-alert--playground",
+    "registryName": "alert",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -72,6 +75,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/alert-dialog.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-alert-dialog--playground",
+    "registryName": "alert-dialog",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -92,6 +96,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/animated-background.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-animated-background--playground",
+    "registryName": "animated-background",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -111,6 +116,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/animated-beam.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-animated-beam--playground",
+    "registryName": "animated-beam",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -130,6 +136,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/animated-number.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-animated-number--playground",
+    "registryName": "animated-number",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -149,9 +156,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/app.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-app--playground",
+    "registryName": "app",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -167,6 +175,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/organisms/asset-library.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "organisms-workspaces-asset-library--files",
+    "registryName": "asset-library",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -190,6 +199,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/assistant-logos.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-assistant-logos--playground",
+    "registryName": "assistant-logos",
     "dependencies": []
   },
   {
@@ -205,6 +215,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/autosave-status.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-autosave-status--playground",
+    "registryName": "autosave-status",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -224,6 +235,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/avatar.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "foundations-avatar--playground",
+    "registryName": "avatar",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -243,6 +255,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/avatar-stack.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "data-avatar-stack--playground",
+    "registryName": "avatar-stack",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -262,6 +275,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/badge.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "foundations-badge--playground",
+    "registryName": "badge",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -282,6 +296,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/bento-grid.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-bento-grid--playground",
+    "registryName": "bento-grid",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -303,6 +318,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/blur-fade.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-blur-fade--playground",
+    "registryName": "blur-fade",
     "dependencies": [
       "motion@13.4.3"
     ]
@@ -320,6 +336,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/border-beam.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-border-beam--playground",
+    "registryName": "border-beam",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -339,6 +356,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/breadcrumb.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-breadcrumb--playground",
+    "registryName": "breadcrumb",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -359,6 +377,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/button.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "foundations-button--playground",
+    "registryName": "button",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -379,6 +398,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/calendar.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-calendar--playground",
+    "registryName": "calendar",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -401,6 +421,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/card.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "foundations-card--playground",
+    "registryName": "card",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -419,6 +440,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/carousel.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-carousel--playground",
+    "registryName": "carousel",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -439,6 +461,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/checkbox.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-checkbox--playground",
+    "registryName": "checkbox",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -459,10 +482,11 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/closing.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-closing--playground",
+    "registryName": "closing",
     "dependencies": [
-      "clsx",
-      "tailwind-merge",
-      "lucide-react"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0",
+      "lucide-react@1.48.0"
     ]
   },
   {
@@ -478,6 +502,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/code-comparison.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-code-comparison--playground",
+    "registryName": "code-comparison",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -497,6 +522,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/collapsible.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-collapsible--playground",
+    "registryName": "collapsible",
     "dependencies": [
       "radix-ui@1.6.7"
     ]
@@ -514,6 +540,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/combobox.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-combobox--playground",
+    "registryName": "combobox",
     "dependencies": [
       "@base-ui/react@1.9.0",
       "class-variance-authority@0.7.1",
@@ -536,6 +563,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/command.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-command--playground",
+    "registryName": "command",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -558,6 +586,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/context-menu.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-context-menu--playground",
+    "registryName": "context-menu",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -578,6 +607,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/copy-button.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-copy-button--playground",
+    "registryName": "copy-button",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -597,6 +627,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/data-table.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "data-data-table--in-context",
+    "registryName": "data-table",
     "dependencies": [
       "@tanstack/react-table@9.2.4",
       "class-variance-authority@0.7.1",
@@ -619,6 +650,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/dialog.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-dialog--playground",
+    "registryName": "dialog",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -640,6 +672,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/disclosure.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-disclosure--playground",
+    "registryName": "disclosure",
     "dependencies": [
       "motion@13.4.3",
       "radix-ui@1.6.7"
@@ -658,6 +691,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/dot-pattern.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-dot-pattern--playground",
+    "registryName": "dot-pattern",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -677,6 +711,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/drawer.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-drawer--playground",
+    "registryName": "drawer",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0",
@@ -696,6 +731,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/dropdown-menu.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-dropdown-menu--playground",
+    "registryName": "dropdown-menu",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -716,6 +752,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/empty-state.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-empty-state--playground",
+    "registryName": "empty-state",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -736,6 +773,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/error-state.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-error-state--playground",
+    "registryName": "error-state",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -756,8 +794,9 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/export-menu.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-export-menu--playground",
+    "registryName": "export-menu",
     "dependencies": [
-      "lucide-react"
+      "lucide-react@1.48.0"
     ]
   },
   {
@@ -773,9 +812,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/features.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-features--playground",
+    "registryName": "features",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -791,6 +831,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/molecules/file-card.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "molecules-compositions-file-card--files",
+    "registryName": "file-card",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -812,6 +853,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/file-dropzone.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-file-dropzone--playground",
+    "registryName": "file-dropzone",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -834,6 +876,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/file-tree.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-file-tree--playground",
+    "registryName": "file-tree",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -855,10 +898,11 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/filter-bar.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-filter-bar--playground",
+    "registryName": "filter-bar",
     "dependencies": [
-      "clsx",
-      "tailwind-merge",
-      "lucide-react"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0",
+      "lucide-react@1.48.0"
     ]
   },
   {
@@ -874,7 +918,12 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/footer.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-footer--playground",
-    "dependencies": []
+    "registryName": "studio-footer",
+    "dependencies": [
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0",
+      "lucide-react@1.48.0"
+    ]
   },
   {
     "id": "blocks/frames",
@@ -889,9 +938,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/frames.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-frames--playground",
+    "registryName": "frames",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -907,9 +957,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/gallery.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-gallery--playground",
+    "registryName": "gallery",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -925,6 +976,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/globe.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-globe--playground",
+    "registryName": "globe",
     "dependencies": [
       "clsx@2.1.1",
       "cobe@2.0.1",
@@ -944,9 +996,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/hero.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-hero--playground",
+    "registryName": "hero",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -962,6 +1015,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/hero-video-dialog.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-hero-video-dialog--playground",
+    "registryName": "hero-video-dialog",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -983,6 +1037,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/hold-to-delete.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-hold-to-delete--playground",
+    "registryName": "hold-to-delete",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1001,6 +1056,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/hover-card.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-hover-card--playground",
+    "registryName": "hover-card",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -1020,6 +1076,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/image-comparison.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-image-comparison--playground",
+    "registryName": "image-comparison",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1039,6 +1096,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/inline-edit.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-inline-edit--playground",
+    "registryName": "inline-edit",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1058,6 +1116,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/input.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-input--playground",
+    "registryName": "input",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1076,6 +1135,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/molecules/input-field.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "molecules-compositions-input-field--fields",
+    "registryName": "input-field",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1097,6 +1157,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/input-group.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-input-group--playground",
+    "registryName": "input-group",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -1117,6 +1178,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/input-otp.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-one-time-code--playground",
+    "registryName": "input-otp",
     "dependencies": [
       "clsx@2.1.1",
       "input-otp@1.5.0",
@@ -1137,6 +1199,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/interactive-hover-button.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-interactive-hover-button--playground",
+    "registryName": "interactive-hover-button",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1156,6 +1219,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/kanban-board.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-kanban-board--playground",
+    "registryName": "kanban-board",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1175,6 +1239,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/kbd.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "foundations-keyboard-hints--playground",
+    "registryName": "kbd",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1193,6 +1258,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/label.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-label--playground",
+    "registryName": "label",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -1212,9 +1278,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/layout.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-layout--playground",
+    "registryName": "layout",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -1230,6 +1297,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/marquee.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-marquee--playground",
+    "registryName": "marquee",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1248,6 +1316,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/molecules/media-frame.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "molecules-media-media-frame--caption-and-credit",
+    "registryName": "media-frame",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1266,6 +1335,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/organisms/media-sequence.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "organisms-media-media-sequence--chapters",
+    "registryName": "media-sequence",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -1286,6 +1356,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/menubar.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-menubar--playground",
+    "registryName": "menubar",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1306,6 +1377,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/molecules/metric-card.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "molecules-compositions-metric-card--metrics",
+    "registryName": "metric-card",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1326,7 +1398,11 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/mobile-nav.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-mobile-nav--playground",
-    "dependencies": []
+    "registryName": "site-header",
+    "dependencies": [
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
+    ]
   },
   {
     "id": "recipes/morphing-button",
@@ -1341,6 +1417,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/morphing-button.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-morphing-button--playground",
+    "registryName": "morphing-button",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1360,6 +1437,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/morphing-dialog.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-morphing-dialog--playground",
+    "registryName": "morphing-dialog",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1381,6 +1459,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/morphing-popover.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-morphing-popover--playground",
+    "registryName": "morphing-popover",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1401,6 +1480,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/multi-step-form.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-multi-step-form--playground",
+    "registryName": "multi-step-form",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1420,6 +1500,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/navigation-menu.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-navigation-menu--playground",
+    "registryName": "navigation-menu",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -1441,6 +1522,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/notification-bell.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-notification-bell--playground",
+    "registryName": "notification-bell",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1461,6 +1543,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/organisms/notification-inbox.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "organisms-workspaces-notification-inbox--inbox",
+    "registryName": "notification-inbox",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -1483,6 +1566,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/number-ticker.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-number-ticker--playground",
+    "registryName": "number-ticker",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1502,6 +1586,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/orbiting-circles.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-orbiting-circles--playground",
+    "registryName": "orbiting-circles",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1520,6 +1605,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/pagination.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-pagination--playground",
+    "registryName": "pagination",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -1541,6 +1627,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/popover.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-popover--playground",
+    "registryName": "popover",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -1560,6 +1647,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/pricing-calculator.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "data-pricing-calculator--playground",
+    "registryName": "pricing-calculator",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1579,6 +1667,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/progress.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-progress--playground",
+    "registryName": "progress",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -1598,6 +1687,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/progress-stepper.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-progress-stepper--playground",
+    "registryName": "progress-stepper",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1617,6 +1707,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/organisms/project-overview.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "organisms-workspaces-project-overview--overview",
+    "registryName": "project-overview",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -1639,9 +1730,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/proof.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-proof--playground",
+    "registryName": "proof",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -1657,9 +1749,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/quote-list.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-quote-list--playground",
+    "registryName": "quote-list",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -1675,6 +1768,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/radio-group.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-radio-group--playground",
+    "registryName": "radio-group",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1695,10 +1789,11 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/record-detail.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-record-detail--playground",
+    "registryName": "record-detail",
     "dependencies": [
-      "clsx",
-      "tailwind-merge",
-      "lucide-react"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0",
+      "lucide-react@1.48.0"
     ]
   },
   {
@@ -1714,6 +1809,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/reorder-list.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-reorder-list--playground",
+    "registryName": "reorder-list",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1733,6 +1829,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/resizable.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-resizable-panels--playground",
+    "registryName": "resizable",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1753,6 +1850,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/resource-boundary.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-resource-boundary--playground",
+    "registryName": "resource-boundary",
     "dependencies": []
   },
   {
@@ -1768,6 +1866,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/responsive-image.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "atoms-media--image",
+    "registryName": "responsive-image",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1786,6 +1885,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/scroll-area.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-scroll-area--playground",
+    "registryName": "scroll-area",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -1805,6 +1905,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/molecules/search-field.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "molecules-compositions-search-field--search",
+    "registryName": "search-field",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1824,10 +1925,11 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/search-palette.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-search-palette--playground",
+    "registryName": "search-palette",
     "dependencies": [
-      "clsx",
-      "tailwind-merge",
-      "lucide-react"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0",
+      "lucide-react@1.48.0"
     ]
   },
   {
@@ -1843,6 +1945,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/segmented-control.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-segmented-control--playground",
+    "registryName": "segmented-control",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -1862,6 +1965,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/select.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-select--playground",
+    "registryName": "select",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1882,6 +1986,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/separator.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "foundations-separator--playground",
+    "registryName": "separator",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -1901,6 +2006,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/molecules/setting-row.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "molecules-compositions-setting-row--preferences",
+    "registryName": "setting-row",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -1920,6 +2026,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/sheet.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-sheet--playground",
+    "registryName": "sheet",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -1940,6 +2047,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/shimmer-button.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-shimmer-button--playground",
+    "registryName": "shimmer-button",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1958,9 +2066,10 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/site-header.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-site-header--playground",
+    "registryName": "site-header",
     "dependencies": [
-      "clsx",
-      "tailwind-merge"
+      "clsx@2.1.1",
+      "tailwind-merge@3.7.0"
     ]
   },
   {
@@ -1976,6 +2085,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/skeleton.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-skeleton--playground",
+    "registryName": "skeleton",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -1994,6 +2104,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/blocks/skeletons.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "blocks-skeletons--playground",
+    "registryName": "skeletons",
     "dependencies": []
   },
   {
@@ -2009,6 +2120,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/slider.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-slider--playground",
+    "registryName": "slider",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -2028,6 +2140,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/sliding-number.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-sliding-number--playground",
+    "registryName": "sliding-number",
     "dependencies": [
       "motion@13.4.3",
       "react-use-measure@2.1.7"
@@ -2046,6 +2159,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/sonner.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "feedback-toast--playground",
+    "registryName": "sonner",
     "dependencies": [
       "lucide-react@1.48.0",
       "sonner@2.0.8"
@@ -2064,6 +2178,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/sortable-grid.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-sortable-grid--playground",
+    "registryName": "sortable-grid",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2083,6 +2198,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/storage-meter.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "data-storage-meter--playground",
+    "registryName": "storage-meter",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2102,6 +2218,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/switch.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-switch--playground",
+    "registryName": "switch",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -2121,6 +2238,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/table.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "data-table--playground",
+    "registryName": "table",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -2139,6 +2257,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/tabs.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-tabs--playground",
+    "registryName": "tabs",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -2159,6 +2278,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/tag-input.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "interactions-tag-input--playground",
+    "registryName": "tag-input",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2178,6 +2298,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/effects/text-animate.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "effects-text-animate--playground",
+    "registryName": "text-animate",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2197,6 +2318,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/text-effect.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-text-effect--playground",
+    "registryName": "text-effect",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2216,6 +2338,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/text-morph.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-text-morph--playground",
+    "registryName": "text-morph",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2235,6 +2358,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/textarea.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-textarea--playground",
+    "registryName": "textarea",
     "dependencies": [
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
@@ -2253,6 +2377,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/toggle.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-toggle--playground",
+    "registryName": "toggle",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -2273,6 +2398,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/toggle-group.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "inputs-toggle-group--playground",
+    "registryName": "toggle-group",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -2293,6 +2419,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/toolbar-dynamic.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-dynamic-toolbar--playground",
+    "registryName": "toolbar-dynamic",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
@@ -2315,6 +2442,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/tooltip.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "overlays-tooltip--playground",
+    "registryName": "tooltip",
     "dependencies": [
       "clsx@2.1.1",
       "radix-ui@1.6.7",
@@ -2334,6 +2462,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/transition-panel.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "motion-transition-panel--playground",
+    "registryName": "transition-panel",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2354,6 +2483,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/recipes/tree-view.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "navigation-tree-view--playground",
+    "registryName": "tree-view",
     "dependencies": [
       "clsx@2.1.1",
       "motion@13.4.3",
@@ -2373,6 +2503,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/components/video.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "atoms-media--playback",
+    "registryName": "video",
     "dependencies": [
       "clsx@2.1.1",
       "lucide-react@1.48.0",
@@ -2392,6 +2523,7 @@ export const moduleCatalog = [
     "sourcePath": "packages/ui/src/organisms/workspace-settings.tsx",
     "sourceRef": "v0.1.27",
     "storyId": "organisms-workspaces-workspace-settings--settings",
+    "registryName": "workspace-settings",
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
