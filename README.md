@@ -852,3 +852,7 @@ branch with `updateVisuals: true`, inspect the `browser-review` artifact, and
 commit only the reviewed `baselines/linux` images. macOS candidates remain
 local because font rasterization differs by OS. Keep Playwright pinned so its
 browser builds and comparisons stay reproducible.
+
+Candidate generation runs the visual suite and never deploys. Pull requests
+and normal main builds run the complete interaction and screenshot suite;
+only successful normal main builds can publish the explorer.

@@ -520,6 +520,25 @@ test('a connected workspace previews, removes and restores local files', async (
   await noOverflow(page);
 });
 
+test('default and custom-height tabs contain their controls with usable touch targets', async ({ page }) => {
+  for (const story of ['navigation-tabs--playground', 'start-here-overview--explore']) {
+    await openStory(page, story);
+    const geometry = await page.getByRole('tablist').evaluate(list => {
+      const frame = list.getBoundingClientRect();
+      return [...list.querySelectorAll('[role="tab"]')].map(tab => {
+        const bounds = tab.getBoundingClientRect();
+        return { top: bounds.top - frame.top, bottom: frame.bottom - bounds.bottom, height: bounds.height };
+      });
+    });
+    for (const tab of geometry) {
+      expect(tab.top).toBeGreaterThanOrEqual(2.99);
+      expect(tab.bottom).toBeGreaterThanOrEqual(2.99);
+      if (await page.evaluate(() => matchMedia('(pointer:coarse)').matches) || story.startsWith('start-here')) expect(tab.height).toBeGreaterThanOrEqual(44);
+    }
+    await noOverflow(page);
+  }
+});
+
 test('home composition tabs retain decisions and share the actual inbox and files', async ({ page }) => {
   await openStory(page, 'start-here-overview--explore');
   await page.getByRole('button', { name: 'Approve The long way home.webp', exact: true }).click();

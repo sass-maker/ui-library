@@ -10,6 +10,13 @@
     overscroll-behavior: contain;
   }
   @media (pointer: coarse) {
+    [data-slot="tabs-list"] {
+      min-height: 50px;
+    }
+    [data-slot="tabs-trigger"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
     :is([data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-checkbox-item"],
         [data-slot="dropdown-menu-radio-item"], [data-slot="dropdown-menu-sub-trigger"],
         [data-slot="context-menu-item"], [data-slot="context-menu-checkbox-item"],
