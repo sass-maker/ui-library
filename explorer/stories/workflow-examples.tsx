@@ -78,7 +78,7 @@ export function MediaContext() {
     <Carousel.Carousel index={index} onIndexChange={setIndex} label="Kith moments" className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card has-[[data-slot=carousel-viewport]:focus-visible]:ring-[3px] has-[[data-slot=carousel-viewport]:focus-visible]:ring-ring has-[[data-slot=carousel-viewport]:focus-visible]:ring-offset-2 has-[[data-slot=carousel-viewport]:focus-visible]:ring-offset-background">
       <Carousel.CarouselContent viewportClassName="rounded-none focus-visible:ring-0 focus-visible:ring-offset-0">{moments.map((moment, position) => <Carousel.CarouselItem key={moment.id} label={moment.title}>
         <figure className="grid h-full sm:grid-cols-[1.15fr_1fr]">
-          <div className="relative aspect-[4/5] min-w-0 overflow-hidden bg-surface sm:aspect-[6/5] sm:min-h-[25rem]">
+          <div className="relative aspect-[4/5] w-full min-w-0 overflow-hidden bg-surface sm:aspect-[6/5] sm:min-h-[25rem]">
             {moment.id === "people" ? <div className="absolute inset-7 flex items-center justify-center"><ResponsiveImage src={`./demo/kith/${moment.image}.webp`} alt={moment.alt} width={moment.width} height={moment.height} className="h-full w-auto max-w-full rounded-[10%/4.6%] border border-border bg-transparent shadow-sm" imageClassName="object-contain" /></div> : <ResponsiveImage src={`./demo/kith/${moment.image}.webp`} alt={moment.alt} width={moment.width} height={moment.height} loading={position === 0 ? "eager" : "lazy"} className="absolute! inset-0 size-full" imageClassName="object-cover" />}
             <span className="absolute bottom-4 left-4 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium">{moment.kind}</span>
           </div>

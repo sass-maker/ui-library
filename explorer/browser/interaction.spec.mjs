@@ -188,6 +188,16 @@ test('the media gallery supports keyboard browsing and isolates offscreen links'
     expect(size.width).toBeGreaterThanOrEqual(44);
     expect(size.height).toBeGreaterThanOrEqual(44);
   }
+  const originalViewport = page.viewportSize();
+  await page.setViewportSize({ width: 820, height: 1000 });
+  const firstSlide = gallery.locator('[data-slot="carousel-slide"]').first();
+  await expect.poll(async () => {
+    const artwork = await firstSlide.locator('figure > div').boundingBox();
+    const caption = await firstSlide.locator('figcaption').boundingBox();
+    return artwork.x + artwork.width - caption.x;
+  }, { message: 'tablet artwork stays inside its grid column and clears the caption' }).toBeLessThanOrEqual(1);
+  await noOverflow(page);
+  await page.setViewportSize(originalViewport);
   await frame.focus();
   await page.keyboard.press('ArrowRight');
   await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
