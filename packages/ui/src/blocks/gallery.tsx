@@ -12,7 +12,7 @@ import { cn } from "../lib/utils";
 type Spot = { x: number; y: number; r: number };
 /** phone: an iPhone silhouette. desktop: a quiet Mac window. none: the bare screenshot, rounded. */
 export type DeviceFrame = "phone" | "desktop" | "none";
-type Img = { src: string; alt: string; width?: number; height?: number; priority?: boolean; spots?: Spot[]; frame?: DeviceFrame };
+type Img = { src: string; alt: string; width?: number; height?: number; priority?: boolean; focalPoint?: string; spots?: Spot[]; frame?: DeviceFrame };
 
 /** Width classes per frame: phones stay narrow, desktop windows take the measure. */
 function sized(device: Img, phone: string, wide = "w-[min(100%,60rem)]") {
@@ -29,6 +29,7 @@ function Picture({ image, className }: { image: Img; className?: string }) {
       loading={image.priority ? "eager" : "lazy"}
       fetchPriority={image.priority ? "high" : undefined}
       decoding="async"
+      style={image.focalPoint ? { objectPosition: image.focalPoint } : undefined}
       className={className}
     />
   );
@@ -153,6 +154,47 @@ export function GalleryNote({ children, className }: { children: React.ReactNode
 
 const wrap = "mx-auto w-full max-w-[75rem] px-[clamp(1.25rem,4vw,3.5rem)]";
 const pad = "py-[clamp(6rem,13vw,11.25rem)]";
+
+export type GalleryEditorialProps = {
+  as?: "h1" | "h2";
+  eyebrow?: React.ReactNode;
+  title: React.ReactNode;
+  lede?: React.ReactNode;
+  actions?: React.ReactNode;
+  image: Img;
+  caption?: React.ReactNode;
+  related?: { image: Img; eyebrow?: React.ReactNode; title: React.ReactNode; description?: React.ReactNode };
+  footer?: React.ReactNode;
+  className?: string;
+};
+
+/** An editorial image spread. Container queries keep it composed inside an app or a full-width page. */
+export function GalleryEditorial({ as: Tag = "h2", eyebrow, title, lede: intro, actions, image, caption, related, footer, className }: GalleryEditorialProps) {
+  const RelatedTitle = Tag === "h1" ? "h2" : "h3";
+  return <section className={cn("@container", className)}>
+    <div className="grid items-end gap-7 py-8 @min-[700px]:grid-cols-[minmax(0,1fr)_minmax(0,.44fr)] @min-[700px]:py-12">
+      <div>{eyebrow && <p className="text-xs font-medium leading-relaxed text-muted-foreground">{eyebrow}</p>}
+        <Tag className="font-display mt-5 text-[clamp(2.5rem,8cqw,6.25rem)] leading-[1.04] tracking-[-.04em] normal-case [&_em]:font-normal [&_em]:tracking-normal">{title}</Tag>
+      </div>
+      {(intro || actions) && <div className="max-w-[35ch] pb-1 text-[clamp(1rem,1.8cqw,1.25rem)] leading-[1.6]">{intro && <p>{intro}</p>}{actions && <div className="mt-6 flex flex-wrap gap-3">{actions}</div>}</div>}
+    </div>
+    <div className={cn("grid gap-8", related && "@min-[700px]:grid-cols-[minmax(0,1fr)_minmax(0,.44fr)]")}>
+      <figure className="min-w-0">
+        <div className="aspect-[1.14] overflow-hidden rounded-md bg-surface @min-[700px]:aspect-[1.42]"><Picture image={image} className="size-full object-cover" /></div>
+        {caption && <figcaption className="pt-3 text-[0.8125rem] leading-relaxed">{caption}</figcaption>}
+      </figure>
+      {related && <figure className="grid items-center gap-5 @min-[420px]:grid-cols-[minmax(0,.85fr)_minmax(0,1fr)] @min-[700px]:flex @min-[700px]:flex-col @min-[700px]:items-stretch @min-[700px]:justify-end @min-[700px]:gap-0 @min-[700px]:pb-8">
+        <div className="aspect-[1.5] overflow-hidden rounded-md bg-surface @min-[420px]:aspect-[.85] @min-[700px]:aspect-[1.1]"><Picture image={related.image} className="size-full object-cover" /></div>
+        <figcaption className="@min-[700px]:pt-6">
+          {related.eyebrow && <p className="text-xs font-medium leading-relaxed text-muted-foreground">{related.eyebrow}</p>}
+          <RelatedTitle className="font-display mt-3 max-w-[15ch] text-[clamp(1.75rem,3.4cqw,2.5rem)] leading-[1.15] tracking-[-.025em] normal-case [&_em]:font-normal [&_em]:tracking-normal">{related.title}</RelatedTitle>
+          {related.description && <p className="mt-4 max-w-[27ch] text-sm leading-relaxed text-muted-foreground">{related.description}</p>}
+        </figcaption>
+      </figure>}
+    </div>
+    {footer && <footer className="mt-8 border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground @min-[700px]:mt-10">{footer}</footer>}
+  </section>;
+}
 
 /** Centered monumental hero; the device rises out of a full-bleed backdrop. */
 export function GalleryHero({

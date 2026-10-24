@@ -156,7 +156,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.28"
+G="github:sass-maker/ui-library#v0.1.29"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -166,9 +166,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.28&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.28&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.28&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.29&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.29&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.29&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -191,6 +191,14 @@ export default defineConfig({ integrations: [react()] });
 ```
 
 Fonts: the theme ships Latin-only, weight-clamped woff2 subsets (about 50 KB on a Gallery page, about 105 KB on a Workbench paper page; `@font-face` is lazy and `Base.astro` preloads only the display font). Characters outside Latin fall back to the system font; add your own `@font-face` for other scripts. Regenerate with `pnpm --filter @saas-maker/ui fonts:build`.
+
+The image spread is reusable as `GalleryEditorial` from
+`@saas-maker/ui/blocks/gallery`. It accepts title, lede, actions, primary image,
+related image/story, captions and footer. It reflows by its container width, so
+it works inside an application panel as well as a landing page. Images accept
+`focalPoint` for deliberate cropping. `FileCard` also accepts `previewFit`,
+`previewFocalPoint` and caller-supplied `previewText`; `AssetLibrary` presents
+that excerpt in the preview dialog without fetching document contents.
 
 The explorer’s **Foundations → Tokens → Font Pairings** compares four curated
 web pairings on the same Kith landing and interactive asset library. Copy the
@@ -726,7 +734,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.28&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.29&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

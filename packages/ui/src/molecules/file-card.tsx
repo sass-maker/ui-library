@@ -15,6 +15,11 @@ export type LibraryFile = {
   size: string;
   updated: string;
   preview?: string;
+  /** Preserve a complete screen, cover or diagram instead of cropping it. */
+  previewFit?: "cover" | "contain";
+  previewFocalPoint?: string;
+  /** A caller-supplied excerpt; never fetch document contents in a card. */
+  previewText?: string;
   collection: string;
 };
 
@@ -33,10 +38,13 @@ export function FileCard({ file, selected, onSelectedChange, onOpen, onRemove, v
   const afterMenuClose = useRef<(() => void) | null>(null);
   const Icon = file.kind === "image" ? ImageIcon : FileText;
   const list = view === "list";
-  return <article data-selected={selected} className={cn("group/file relative min-w-0 overflow-hidden rounded-xl border bg-card text-card-foreground transition-[border-color,box-shadow] duration-150", selected ? "border-brand ring-1 ring-brand/20" : "border-border hover:border-foreground/25", list && "flex items-center gap-4 rounded-lg p-3")}>
+  return <article data-selected={selected} className={cn("@container/file group/file relative min-w-0 overflow-hidden rounded-xl border bg-card text-card-foreground transition-[border-color,box-shadow] duration-150", selected ? "border-brand ring-1 ring-brand/20" : "border-border hover:border-foreground/25", list && "flex items-center gap-4 rounded-lg p-3")}>
     <div className={cn("relative overflow-hidden bg-surface", list ? "size-12 shrink-0 rounded-md" : "aspect-[4/3] border-b border-border")}>
       <button type="button" onClick={event => onOpen(event.currentTarget)} aria-label={`Preview ${file.name}`} className="absolute inset-0 flex size-full items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
-        {file.preview ? <ResponsiveImage src={file.preview} alt="" width={4} height={3} focalPoint="50% 0%" className="size-full" imageClassName="motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover/file:scale-[1.025]" /> : <Icon aria-hidden className={cn("text-muted-foreground/60", list ? "size-6" : "size-12 stroke-1")} />}
+        {file.preview ? <ResponsiveImage src={file.preview} alt="" width={4} height={3} focalPoint={file.previewFocalPoint ?? "50% 0%"} className={cn("size-full", file.previewFit === "contain" && "bg-surface")} imageClassName={cn("motion-safe:transition-transform motion-safe:duration-300 [@media(hover:hover)_and_(pointer:fine)]:motion-safe:group-hover/file:scale-[1.025]", file.previewFit === "contain" && "object-contain p-4")} /> : file.previewText && !list ? <span aria-hidden className="flex h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] flex-col overflow-hidden rounded-md border border-border bg-card p-3 text-left shadow-sm @min-[260px]/file:h-[calc(100%-2rem)] @min-[260px]/file:w-[calc(100%-2rem)] @min-[260px]/file:p-4 @min-[340px]/file:h-[calc(100%-2.5rem)] @min-[340px]/file:w-[calc(100%-2.5rem)] @min-[340px]/file:p-5">
+          <span className="mb-3 hidden shrink-0 items-center gap-2 text-xs font-medium text-muted-foreground @min-[220px]/file:flex"><FileText className="size-3.5" />{file.name.split('.').at(-1)?.toUpperCase()}</span>
+          <span className="line-clamp-2 shrink-0 whitespace-pre-wrap font-sans text-sm leading-[1.65] @min-[160px]/file:line-clamp-3 @min-[340px]/file:line-clamp-4">{file.previewText}</span>
+        </span> : <Icon aria-hidden className={cn("text-muted-foreground/60", list ? "size-6" : "size-12 stroke-1")} />}
       </button>
       {!list && <label htmlFor={checkboxId} className={cn("absolute left-3 top-3 cursor-pointer rounded-md bg-card/95 p-3.5 shadow-sm transition-opacity [@media(hover:hover)_and_(pointer:fine)]:p-1.5", !selected && "[@media(hover:hover)_and_(pointer:fine)]:opacity-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/file:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:group-focus-within/file:opacity-100")}>
         <Checkbox id={checkboxId} aria-label={`Select ${file.name}`} checked={selected} onCheckedChange={value => onSelectedChange(value === true)} className="block" />

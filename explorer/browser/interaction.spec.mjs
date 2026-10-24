@@ -6,6 +6,8 @@ import { noOverflow, openStory } from './helpers.mjs';
 test('curated font pairings load real faces and preserve the working collection', async ({ page }) => {
   await openStory(page, 'foundations-tokens--font-pairings');
   const preview = page.getByTestId('font-pairing-preview');
+  const tileTops = await page.locator('.type-choice-top').evaluateAll(items => items.map(item => item.getBoundingClientRect().top));
+  expect(Math.abs(tileTops[0] - tileTops[1]), 'wrapping font labels do not shift the selector headings').toBeLessThan(1);
   await preview.getByRole('button', { name: 'Brand', exact: true }).click();
   for (const [label, id, family] of [
     ['Editorial', 'editorial', 'Instrument Sans Variable'],
@@ -42,6 +44,13 @@ test('curated font pairings load real faces and preserve the working collection'
     expect(face.loaded, `${face.family} ${face.style} loads a declared face`).toBeGreaterThan(0);
     expect(face.difference, `${face.family} ${face.style} renders beyond fallback`).toBeGreaterThan(0.1);
   }
+  await preview.getByRole('button', { name: 'All files', exact: true }).click();
+  const screen = preview.getByRole('button', { name: 'Preview A little constellation.webp', exact: true }).locator('img');
+  await expect(screen).toHaveCSS('object-fit', 'contain');
+  await preview.getByRole('button', { name: 'Preview Release notes.md', exact: true }).click();
+  await expect(page.getByRole('dialog')).toContainText('Photography, notes, and stories, together.');
+  await page.keyboard.press('Escape');
+  await expect(preview.getByRole('button', { name: 'Preview Release notes.md', exact: true })).toBeFocused();
 });
 
 test('the media gallery supports keyboard browsing and isolates offscreen links', async ({ page }) => {
