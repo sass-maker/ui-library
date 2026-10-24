@@ -14,7 +14,7 @@ export default defineConfig({
   snapshotPathTemplate: '{testDir}/baselines/{platform}/{projectName}/{arg}{ext}',
   use: { baseURL: `http://127.0.0.1:${port}`, trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   webServer: {
-    command: `python3 -m http.server ${port} --bind 127.0.0.1 --directory explorer/storybook-static`,
+    command: `pnpm --filter @saas-maker/ui-explorer exec vite preview --host 127.0.0.1 --port ${port} --strictPort --outDir storybook-static`,
     url: `http://127.0.0.1:${port}/index.json`, reuseExistingServer: !process.env.CI,
   },
   projects: [

@@ -39,9 +39,9 @@ test('interrupted state changes keep recovery and keyboard focus usable', async 
   await noOverflow(page);
 });
 
-test('sources filter, reset and export without loading third-party media', async ({ page }) => {
+test('sources filter, reset and export without loading third-party media', async ({ page, baseURL }) => {
   const external = [];
-  page.on('request', request => { if (!new URL(request.url()).hostname.match(/^(127\.0\.0\.1|localhost)$/)) external.push(request.url()); });
+  page.on('request', request => { const url = new URL(request.url()); if (url.origin !== 'null' && url.origin !== new URL(baseURL).origin) external.push(request.url()); });
   await openStory(page, 'start-here-visual-sources--source-shelf');
   await page.getByRole('button', { name: 'Pixel art', exact: true }).click();
   await expect(page.getByRole('link', { name: 'Kenney', exact: true })).toBeVisible();
@@ -85,4 +85,81 @@ test('font comparisons measure live layout and retain usable inputs with fallbac
   await page.getByRole('button', { name: 'Tabular numbers on' }).click();
   await expect(page.getByLabel('Figtree numeral comparison')).toHaveCSS('font-variant-numeric', 'proportional-nums');
   await noOverflow(page);
+});
+
+test('responsive artwork selects a crop and media chapters work from the keyboard', async ({ page }) => {
+  await openStory(page, 'start-here-media--primitives');
+  const image = page.getByAltText('Responsive Kith artwork');
+  await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
+  expect(await image.evaluate(element => element.currentSrc)).toContain(page.viewportSize().width <= 600 ? 'coastal-walk' : 'memory-table');
+  const first = page.getByRole('tab', { name: 'Image', exact: true });
+  await first.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('tab', { name: 'Failure', exact: true })).toBeFocused();
+  await expect(page.getByRole('img', { name: 'Example artwork — image unavailable' })).toBeVisible();
+  await page.keyboard.press('ArrowLeft');
+  await expect(first).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByAltText('Kith memory table')).toBeVisible();
+  const initialWidth = page.viewportSize().width;
+  await page.getByRole('tab', { name: 'Recovery', exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.getByAltText('Responsive recovery artwork').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('img', { name: 'Responsive recovery artwork — image unavailable' })).toBeVisible();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.getByAltText('Responsive recovery artwork').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('img', { name: 'Responsive recovery artwork — image unavailable' })).toHaveCount(0);
+  await expect.poll(() => page.getByAltText('Responsive recovery artwork').evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
+  await page.setViewportSize({ width: initialWidth, height: 900 });
+  await noOverflow(page);
+});
+
+test('video is deliberate, plays real frames and respects live reduced motion', async ({ page }) => {
+  const movies = [];
+  page.on('request', request => { if (/kith-sequence\.(mp4|webm)/.test(request.url())) movies.push(request.url()); });
+  await openStory(page, 'start-here-media--primitives');
+  const video = page.locator('video');
+  await expect(video).not.toHaveAttribute('src');
+  expect(movies).toEqual([]);
+  const play = page.getByRole('button', { name: 'Play Kith screen sequence', exact: true });
+  await play.focus();
+  await page.keyboard.press('Enter');
+  await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  expect(movies.length).toBeGreaterThan(0);
+  await expect(video).toHaveAttribute('controls', '');
+  await expect(video).toBeFocused();
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
+  await noOverflow(page);
+});
+
+test('video pauses offscreen and failed sources can recover without a reload', async ({ page }) => {
+  await page.route(/kith-sequence\.(mp4|webm)/, route => route.abort());
+  await openStory(page, 'start-here-media--primitives');
+  await page.getByRole('button', { name: 'Play Kith screen sequence', exact: true }).click();
+  const retry = page.getByRole('button', { name: 'Retry Kith screen sequence', exact: true });
+  await expect(retry).toBeVisible();
+  await expect(retry).toBeFocused();
+  await page.unroute(/kith-sequence\.(mp4|webm)/);
+  await retry.click();
+  const video = page.locator('video');
+  await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
+  await noOverflow(page);
+});
+
+test('the complete media page connects real screens, playback and truthful beta status', async ({ page, baseURL }) => {
+  const external = [];
+  page.on('request', request => { const url = new URL(request.url()); if (url.origin !== 'null' && url.origin !== new URL(baseURL).origin) external.push(request.url()); });
+  await openStory(page, 'start-here-media--complete-page');
+  await page.getByRole('link', { name: 'Meet Kith', exact: true }).click();
+  await page.getByRole('tab', { name: 'Keep the small things' }).click();
+  await expect(page.getByRole('tabpanel')).toContainText('How you met');
+  await expect(page.getByAltText('Kith · person detail · actual app screen')).toBeVisible();
+  await page.getByRole('button', { name: 'Play Kith screen sequence', exact: true }).click();
+  await expect.poll(() => page.locator('video').evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  await page.getByRole('link', { name: 'Beta status', exact: true }).click();
+  await expect(page.locator('#kith-status')).toContainText('There is no public invite or App Store listing yet.');
+  await noOverflow(page);
+  expect(external).toEqual([]);
 });

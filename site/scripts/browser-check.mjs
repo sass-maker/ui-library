@@ -107,7 +107,7 @@ if (explorer) {
     check("source: contextual example includes its implementation and imports", await waitFor("[...document.querySelectorAll('pre')].some(pre => pre.textContent.includes('export function ProjectDetailsContext') && pre.textContent.includes('@saas-maker/ui/recipes/inline-edit'))", 8000));
     const checkedAssets = new Set();
     for (const width of [390, 820, 1440]) {
-      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "data-pricing-calculator--in-context", "motion-morphing-dialog--in-context", "start-here-overview--explore", "start-here-composition--from-atom-to-organism", "start-here-states--state-lab", "foundations-button--in-context", "inputs-input--in-context", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
+      for (const id of ["organisms-workspaces-asset-library--files", "organisms-workspaces-workspace-settings--settings", "organisms-workspaces-notification-inbox--inbox", "organisms-workspaces-project-overview--overview", "data-pricing-calculator--in-context", "motion-morphing-dialog--in-context", "start-here-overview--explore", "start-here-composition--from-atom-to-organism", "start-here-states--state-lab", "start-here-media--complete-page", "start-here-media--primitives", "foundations-button--in-context", "inputs-input--in-context", "templates-console--workspace", "templates-console--gallery", "templates-console--workbench"]) {
         await open(`/iframe.html?id=${id}&viewMode=story`, width);
         const ready = await waitFor("document.querySelector('#storybook-root')?.childElementCount > 0");
         check(`explorer: ${id} renders at ${width}`, ready);
@@ -127,6 +127,12 @@ if (explorer) {
         }
       }
     }
+
+    await open("/iframe.html?id=start-here-media--primitives&viewMode=story", 390);
+    await js("[...document.querySelectorAll('button')].find(button => button.textContent.includes('Play Kith screen sequence')).click()");
+    check("media: local movie plays under the hosted base path", await waitFor("document.querySelector('video')?.currentTime > 0.1"));
+    check("media: movie URL retains the hosted base path", await js(`document.querySelector('video').currentSrc.startsWith(${JSON.stringify(base + "/")})`));
+    check("media: descriptions retain the hosted base path", await js(`document.querySelector('video track').src.startsWith(${JSON.stringify(base + "/")})`));
 
     const index = await (await fetch(base + "/index.json")).json();
     await open("/iframe.html?id=start-here-composition--from-atom-to-organism&viewMode=story", 390);

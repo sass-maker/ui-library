@@ -13,7 +13,7 @@ import { useReducedMotion } from "../lib/use-reduced-motion";
 
 import { cn } from "../lib/utils";
 
-type Status = "idle" | "copied" | "failed";
+type Status = "idle" | "copying" | "copied" | "failed";
 
 const ICON_SWAP = { type: "spring", duration: 0.3, bounce: 0 } as const;
 
@@ -34,8 +34,8 @@ resetAfter = 1600, onCopy, className, }: {
     const [message, setMessage] = useState("Copied");
     const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
     const attempt = useRef(0);
-    useEffect(() => () => clearTimeout(timer.current), []);
-    const show = (next: Exclude<Status, "idle">) => {
+    useEffect(() => () => { clearTimeout(timer.current); attempt.current++; }, []);
+    const show = (next: "copied" | "failed") => {
         setStatus(next);
         setMessage(next === "copied" ? "Copied" : "Couldn't copy");
         clearTimeout(timer.current);
@@ -43,15 +43,18 @@ resetAfter = 1600, onCopy, className, }: {
     };
     const copy = async () => {
         const id = ++attempt.current;
-        // Confirm on press rather than after the write resolves; the write is
-        // near instant, and waiting for it makes the click feel ignored.
-        show("copied");
+        // Acknowledge the press immediately; confirm only after the platform does.
+        clearTimeout(timer.current);
+        setStatus("copying");
+        setMessage("Copying…");
         try {
             if (!navigator.clipboard)
                 throw new Error("Clipboard unavailable");
             await navigator.clipboard.writeText(value);
-            if (id === attempt.current)
+            if (id === attempt.current) {
+                show("copied");
                 onCopy?.(value);
+            }
         }
         catch {
             // Ignore failures from a click that a newer one has superseded.
