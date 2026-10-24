@@ -54,7 +54,7 @@ function VideoPlayback({ title, poster, sources, width = 1280, height = 800, cla
   }, [activated, attempt]);
 
   return <div className={cn("relative isolate overflow-hidden rounded-xl border border-border bg-muted", className)} style={{ aspectRatio: `${width} / ${height}` }} data-video-state={failed ? "error" : buffering ? "loading" : activated ? "active" : "poster"}>
-    <video key={attempt} ref={ref} aria-label={title} poster={poster} width={width} height={height} controls={activated && !failed} preload="none" playsInline muted tabIndex={activated && !failed ? 0 : -1}
+    <video key={attempt} ref={ref} aria-label={title} aria-hidden={!activated} poster={poster} width={width} height={height} controls={activated && !failed} preload="none" playsInline muted tabIndex={activated && !failed ? 0 : -1}
       className="block size-full object-contain" onError={() => setFailed(true)} onWaiting={() => setBuffering(true)} onCanPlay={() => setBuffering(false)} onPlaying={() => setBuffering(false)} onPause={() => setBuffering(false)}>
       {activated && sources.map(source => <source key={source.src} {...source} onError={() => { failedSources.current.add(source.src); if (failedSources.current.size === sources.length) setFailed(true); }} />)}
       {activated && captions && <track kind="captions" src={captions.src} srcLang={captions.language} label={captions.label} default />}
