@@ -69,7 +69,7 @@ export function ModuleCatalogExample() {
       actions={<Badge variant="outline">{moduleCatalog[0].sourceRef} · {moduleCatalog.length} modules</Badge>}
       sidebarFooter={<div className="space-y-3"><p>One source, from atom to complete workflow.</p><a target="_top" href="./?path=/story/start-here-workspace--complete-workflow" className="inline-flex min-h-11 items-center gap-2 rounded-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring">Explore the workspace<ArrowUpRight aria-hidden className="size-3.5" /></a></div>}>
       <div className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-4">
-        <SearchField ref={filter} label="Filter modules" placeholder="Name, purpose or import path…" value={query} onValueChange={setQuery} className="w-full sm:max-w-sm" />
+        <SearchField ref={filter} label="Filter modules" placeholder="Name, purpose or import path…" value={query} onValueChange={setQuery} className="w-full sm:max-w-xs xl:max-w-sm" />
         <div role="group" aria-label="Atomic layer" className="grid w-full grid-cols-2 gap-1 min-[440px]:flex min-[440px]:w-auto">{catalogLayers.map(value => <Button key={value} size="sm" variant={layer === value ? "secondary" : "ghost"} aria-pressed={layer === value} onClick={() => setLayer(value)}>{value}</Button>)}</div>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3 py-4 text-xs text-muted-foreground"><span role="status">{visible.length} of {moduleCatalog.length} modules</span><span>Sort a column. Select imports. Open a row.</span></div>
