@@ -99,6 +99,12 @@ test('catalog rows and command search open real examples with reliable dialog fo
   await expect(detail.getByRole('heading', { name: 'Button', exact: true })).toBeFocused();
   await expect(detail.getByRole('link', { name: 'Open live example', exact: true })).toHaveAttribute('href', './?path=/story/foundations-button--playground');
   await expect(detail.getByRole('link', { name: 'View source', exact: true })).toHaveAttribute('href', /\/packages\/ui\/src\/components\/button\.tsx$/);
+  for (let index = 0; index < 8; index++) {
+    await page.keyboard.press('Tab');
+    expect(await detail.evaluate(element => element.contains(document.activeElement))).toBe(true);
+  }
+  await page.keyboard.press('Shift+Tab');
+  expect(await detail.evaluate(element => element.contains(document.activeElement))).toBe(true);
   await page.keyboard.press('Escape');
   await expect(row).toBeFocused();
   await page.keyboard.press('Control+k');
