@@ -9,6 +9,13 @@ const explorerRequire = createRequire(new URL('../package.json', import.meta.url
 const addonRequire = createRequire(explorerRequire.resolve('@storybook/addon-a11y/package.json'));
 const axeSource = addonRequire.resolve('axe-core/axe.min.js');
 async function accessibleStory(page, testInfo, scope) {
+  // Contrast is assessed at rest, after real entrance/dismissal motion. A
+  // fading, closed drawer must not be mistaken for static low-contrast text.
+  const drawer = page.locator('[data-slot="app-drawer"]');
+  if (await drawer.count()) await expect(drawer).toBeHidden();
+  const panel = page.locator('[data-slot="workspace-panel"]:not([hidden])');
+  if (await panel.count()) await expect(panel).toHaveCSS('opacity', '1');
+  await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => animation.effect?.getComputedTiming().endTime !== Infinity).map(animation => animation.finished.catch(() => {}))));
   if (!await page.evaluate(() => !!window.axe)) await page.addScriptTag({ path: axeSource });
   const result = await page.evaluate(async () => {
     const audit = await window.axe.run(document.querySelector('#storybook-root'), { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } });
@@ -172,13 +179,14 @@ test('a connected workspace previews, removes and restores local files', async (
   await noOverflow(page);
 });
 
-test('an embedded tablet inbox keeps its detail readable and restores focus after filtering', async ({ page }) => {
+test('a tablet inbox survives narrow reflow and restores focus after filtering', async ({ page }) => {
   await page.setViewportSize({ width: 820, height: 1000 });
   await openStory(page, 'start-here-workspace--complete-workflow');
   await workspaceSection(page, 'Inbox');
   await page.getByRole('button', { name: 'Unread', exact: false }).filter({ hasText: /^Unread/ }).click();
   await page.getByRole('button', { name: /Maya Chen/ }).click();
   await expect(page.getByRole('heading', { name: 'The small things are coming together', exact: true })).toBeVisible();
+  await page.setViewportSize({ width: 700, height: 1000 });
   await page.getByRole('button', { name: 'Inbox', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Inbox', exact: true, level: 2 })).toBeFocused();
   await expect(page.getByRole('button', { name: /Arjun Patel/ })).toBeVisible();
