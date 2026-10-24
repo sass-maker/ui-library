@@ -1,6 +1,44 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { noOverflow, openStory } from './helpers.mjs';
+
+// Reuse the explorer's installed accessibility engine; no second version or
+// network-loaded checker. Keep review-needed findings in the test artifact.
+const explorerRequire = createRequire(new URL('../package.json', import.meta.url));
+const addonRequire = createRequire(explorerRequire.resolve('@storybook/addon-a11y/package.json'));
+const axeSource = addonRequire.resolve('axe-core/axe.min.js');
+async function accessibleStory(page, testInfo, scope) {
+  if (!await page.evaluate(() => !!window.axe)) await page.addScriptTag({ path: axeSource });
+  const result = await page.evaluate(async () => {
+    const audit = await window.axe.run(document.querySelector('#storybook-root'), { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } });
+    const summarize = items => items.map(item => ({ id: item.id, impact: item.impact, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) }));
+    return { engine: window.axe.version, violations: summarize(audit.violations), incomplete: summarize(audit.incomplete) };
+  });
+  await testInfo.attach(`${scope}-accessibility`, { body: JSON.stringify(result, null, 2), contentType: 'application/json' });
+  expect(result.violations, scope).toEqual([]);
+}
+
+for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+  test(`the catalog and its detail meet automated accessibility checks in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    await openStory(page, 'start-here-catalog--all-modules', `theme:${theme};mode:${mode}`);
+    await accessibleStory(page, testInfo, 'catalog');
+    await page.getByRole('searchbox', { name: 'Filter modules', exact: true }).fill('@saas-maker/ui/atoms/button');
+    await page.getByRole('row').filter({ has: page.getByText('Button', { exact: true }) }).click();
+    await expect(page.getByRole('dialog', { name: 'Button', exact: true })).toBeVisible();
+    await accessibleStory(page, testInfo, 'module-detail');
+  });
+  test(`workspace and first-run forms meet automated accessibility checks in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    await openStory(page, 'start-here-workspace--complete-workflow', `theme:${theme};mode:${mode}`);
+    await accessibleStory(page, testInfo, 'workspace');
+    await workspaceSection(page, 'Settings');
+    await accessibleStory(page, testInfo, 'settings');
+    await openStory(page, 'start-here-workspace--first-run-to-workspace', `theme:${theme};mode:${mode}`);
+    await accessibleStory(page, testInfo, 'first-run');
+  });
+}
 
 test('the catalog filters real modules, keeps selection and exports the sorted view', async ({ page }) => {
   await openStory(page, 'start-here-catalog--all-modules');
@@ -64,7 +102,7 @@ test('a table retry restores the collection and keeps focus in the named region'
 });
 
 async function workspaceSection(page, label) {
-  if (page.viewportSize().width < 768) await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
+  if (page.viewportSize().width < 1024) await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
   await page.getByRole('link', { name: new RegExp(`^${label}(?: \\d+)?$`) }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(label);
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused();

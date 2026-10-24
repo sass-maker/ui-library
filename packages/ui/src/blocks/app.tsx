@@ -80,14 +80,14 @@ export function AppShell({
 
   return (
     <div className="flex min-h-dvh bg-background">
-      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
+      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
         {brandRow}
         {navList}
         {secondary && <div className="px-3 pb-3">{secondary}</div>}
         {userRow}
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-md md:hidden">
+        <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-md lg:hidden">
           <div className="flex min-w-0 items-center gap-2.5">
             {brand.mark}
             <span className="truncate text-sm font-semibold">{brand.name}</span>

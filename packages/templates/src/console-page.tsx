@@ -89,7 +89,7 @@ export function ConsolePage({ brand, nav, breadcrumbs, title, titleRef, descript
 
   return (
     <div className="flex min-h-dvh bg-background">
-      <aside className="sticky top-0 hidden h-dvh w-56 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
+      <aside className="sticky top-0 hidden h-dvh w-56 shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
         <div className="flex h-14 items-center px-5">{brandLink}</div>
         <div className="flex-1 overflow-y-auto overscroll-contain px-3 py-3">
           <NavList nav={nav} onNavigate={onNavigate} />
@@ -100,14 +100,14 @@ export function ConsolePage({ brand, nav, breadcrumbs, title, titleRef, descript
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-md">
           <div className="flex h-14 items-center gap-3 px-4 md:px-8">
-            <div className="flex min-w-0 flex-1 items-center gap-2 md:hidden">{brandLink}</div>
-            {breadcrumbs && <Breadcrumbs items={breadcrumbs} className="hidden min-w-0 flex-1 md:block" />}
+            <div className="flex min-w-0 flex-1 items-center gap-2 lg:hidden">{brandLink}</div>
+            {breadcrumbs && <Breadcrumbs items={breadcrumbs} className="hidden min-w-0 flex-1 lg:block" />}
             {search && <SearchTrigger label={search.label} className="ml-auto" />}
             <button
               type="button"
               popoverTarget={drawerId}
               aria-label="Open collections"
-              className="inline-flex size-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-accent active:bg-accent focus-visible:ring-2 focus-visible:ring-ring md:hidden"
+              className="inline-flex size-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-accent active:bg-accent focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
             >
               <MenuIcon className="size-5" aria-hidden />
             </button>
