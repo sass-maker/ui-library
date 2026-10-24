@@ -29,12 +29,12 @@ export function ProjectOverview({ name, description, metrics, tasks, activity, o
   const scope = useId();
   const done = tasks.filter(task => task.complete).length;
   const percent = tasks.length ? Math.round(done / tasks.length * 100) : 0;
-  return <section className={cn("rounded-2xl border border-border bg-card p-5 text-card-foreground sm:p-8", className)} aria-label={`${name} project overview`}>
+  return <section className={cn("@container rounded-2xl border border-border bg-card p-5 text-card-foreground sm:p-8", className)} aria-label={`${name} project overview`}>
     <header className="mb-7 flex flex-wrap items-start justify-between gap-5"><div><p className="mb-3 text-xs text-muted-foreground">Workspace / Overview</p><div className="flex flex-wrap items-center gap-3"><h2 className="text-2xl font-semibold tracking-tight">{name}</h2><Badge variant="outline">Project workspace</Badge></div><p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">{description}</p></div>
       {action && <Button variant="outline" asChild><a href={action.href} target="_blank" rel="noreferrer">{action.label}<ArrowUpRight /></a></Button>}
     </header>
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{metrics.map(metric => <MetricCard key={metric.label} {...metric} />)}</div>
-    <div className="mt-7 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
+    <div className="grid gap-4 @min-[500px]:grid-cols-2 @min-[900px]:grid-cols-3">{metrics.map(metric => <MetricCard key={metric.label} {...metric} />)}</div>
+    <div className="mt-7 grid gap-7 @min-[900px]:grid-cols-[1.3fr_1fr]">
       <section className="min-w-0 rounded-xl border border-border"><header className="border-b border-border p-5"><div className="flex items-center justify-between gap-4"><h3 className="text-sm font-semibold">Release checklist</h3><span className="text-xs tabular-nums text-muted-foreground" role="status">{done}/{tasks.length} complete</span></div><Progress value={percent} aria-label="Project checklist progress" className="mt-4 h-1.5" /></header>
         <ul className="divide-y divide-border">{tasks.map(task => <motion.li key={task.id} layout={!reduced ? "position" : false} transition={motionTiming.layout} className="flex items-start gap-3 p-5">
           <Checkbox id={`${scope}-task-${task.id}`} checked={task.complete} onCheckedChange={value => onTaskChange(task.id, value === true)} className="mt-0.5" />

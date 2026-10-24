@@ -32,18 +32,19 @@ export function NotificationInbox({ messages, onReadChange, className }: {
   const [selected, setSelected] = useState<string | null>(null);
   const focusMessage = useCallback((element: HTMLHeadingElement | null) => { element?.focus({ preventScroll: true }); }, []);
   const rows = useRef(new Map<string, HTMLButtonElement>());
+  const listHeading = useRef<HTMLHeadingElement>(null);
   const previous = useRef<string | null>(null);
-  useEffect(() => { if (!selected && previous.current) rows.current.get(previous.current)?.focus({ preventScroll: true }); previous.current = selected; }, [selected]);
+  useEffect(() => { if (!selected && previous.current) (rows.current.get(previous.current) ?? listHeading.current)?.focus({ preventScroll: true }); previous.current = selected; }, [selected]);
   const current = messages.find(message => message.id === selected);
   const unread = messages.filter(message => !message.read).length;
   const visible = messages.filter(message => (filter === "all" || !message.read) && `${message.sender} ${message.subject}`.toLowerCase().includes(query.toLowerCase()));
-  return <section className={cn("overflow-hidden rounded-2xl border border-border bg-card text-card-foreground", className)} aria-label="Team inbox">
+  return <section className={cn("@container overflow-hidden rounded-2xl border border-border bg-card text-card-foreground", className)} aria-label="Team inbox">
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-6 sm:px-7">
-      <div><div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground"><Inbox aria-hidden className="size-3.5" />Workspace / Inbox</div><div className="flex items-center gap-3"><h2 className="text-2xl font-semibold tracking-tight">Inbox</h2>{unread > 0 && <Badge variant="secondary">{unread} unread</Badge>}</div></div>
+      <div><div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground"><Inbox aria-hidden className="size-3.5" />Workspace / Inbox</div><div className="flex items-center gap-3"><h2 ref={listHeading} tabIndex={-1} className="text-2xl font-semibold tracking-tight outline-none">Inbox</h2>{unread > 0 && <Badge variant="secondary">{unread} unread</Badge>}</div></div>
       <Button variant="outline" size="sm" disabled={unread === 0} onClick={() => onReadChange(messages.filter(message => !message.read).map(message => message.id), true)}><CheckCheck />Mark all read</Button>
     </header>
-    <div className="grid min-h-[460px] md:grid-cols-[minmax(280px,0.9fr)_1.1fr]">
-      <div className={cn("min-w-0 border-border md:border-r", current && "hidden md:block")}>
+    <div className="grid min-h-[460px] @min-[720px]:grid-cols-[minmax(280px,0.9fr)_1.1fr]">
+      <div className={cn("min-w-0 border-border @min-[720px]:border-r", current && "hidden @min-[720px]:block")}>
         <div className="space-y-4 border-b border-border p-5"><SearchField label="Search messages" placeholder="Search messages…" value={query} onValueChange={setQuery} />
           <div className="flex gap-4 text-[0.8125rem]" aria-label="Message filter">{(["all", "unread"] as const).map(value => <button key={value} type="button" aria-pressed={filter === value} onClick={() => setFilter(value)} className={cn("rounded-sm py-1 font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", filter === value ? "text-foreground" : "text-muted-foreground")}>{value === "all" ? "All messages" : "Unread"}{value === "unread" && <span className="ml-1.5 tabular-nums text-muted-foreground">{unread}</span>}</button>)}</div>
         </div>
@@ -59,10 +60,10 @@ export function NotificationInbox({ messages, onReadChange, className }: {
         </AnimatePresence></ul>
         {visible.length === 0 && <div className="grid min-h-56 place-content-center gap-3 p-6 text-center"><Inbox aria-hidden className="mx-auto size-8 stroke-1 text-muted-foreground" /><p className="text-sm font-medium">{query ? "No messages found." : "You’re all caught up."}</p><p className="text-xs text-muted-foreground">{query ? "Try another name or subject." : "New messages will appear here."}</p></div>}
       </div>
-      <div className={cn("min-w-0", !current && "hidden md:block")}>
+      <div className={cn("min-w-0", !current && "hidden @min-[720px]:block")}>
         <AnimatePresence initial={false} mode="wait">
           {current ? <motion.article key={current.id} initial={{ opacity: 0, y: reduced ? 0 : 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={motionTiming.content} className="p-5 sm:p-7">
-            <div className="mb-7 flex items-center justify-between gap-3"><Button variant="ghost" size="sm" className="md:hidden" onClick={() => setSelected(null)}><ArrowLeft />Inbox</Button><span className="hidden text-xs text-muted-foreground md:block">Message details</span>
+            <div className="mb-7 flex items-center justify-between gap-3"><Button variant="ghost" size="sm" className="@min-[720px]:hidden" onClick={() => setSelected(null)}><ArrowLeft />Inbox</Button><span className="hidden text-xs text-muted-foreground md:block">Message details</span>
               <Button variant="ghost" size="sm" onClick={() => onReadChange([current.id], !current.read)}>{current.read ? <Mail /> : <MailOpen />}{current.read ? "Mark unread" : "Mark read"}</Button></div>
             <h3 ref={focusMessage} tabIndex={-1} className="text-xl font-semibold leading-snug tracking-tight outline-none">{current.subject}</h3><p className="mt-3 text-xs text-muted-foreground">{current.sender} <span aria-hidden>·</span> {current.time}</p>
             <div className="mt-7 whitespace-pre-line text-sm leading-[1.75]">{current.body}</div>

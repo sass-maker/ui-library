@@ -5,6 +5,22 @@ for (const width of [390, 820, 1440]) {
   for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
     const suffix = `${width}-${theme}-${mode}`;
     const globals = `theme:${theme};mode:${mode};motion:reduced`;
+    test(`complete workspace ${suffix}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1000 });
+      await openStory(page, 'start-here-workspace--complete-workflow', globals);
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      await expect.poll(() => page.getByAltText('Kith’s illustrated coastal walk, part of the release artwork').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+      await noOverflow(page);
+      await expect(page).toHaveScreenshot(`workspace-${suffix}.png`, { fullPage: true });
+      await page.getByRole('button', { name: 'Browse release assets' }).click();
+      await expect.poll(() => page.locator('section[aria-label="Release assets"] img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+      await noOverflow(page);
+      await expect(page).toHaveScreenshot(`workspace-assets-${suffix}.png`, { fullPage: true });
+      await page.getByRole('button', { name: 'Preview The long way home.webp', exact: true }).click();
+      await expect(page.getByRole('dialog')).toBeVisible();
+      await expect.poll(() => page.getByRole('dialog').locator('img').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+      await expect(page).toHaveScreenshot(`workspace-preview-${suffix}.png`);
+    });
     test(`composition ${suffix}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
       await openStory(page, 'start-here-composition--from-atom-to-organism', globals);

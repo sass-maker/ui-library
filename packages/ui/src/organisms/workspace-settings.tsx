@@ -88,7 +88,7 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
       setSave({ kind: "error", message: error instanceof Error ? error.message : "Your changes couldn’t be saved. Please try again." });
     }
   };
-  return <section className={cn("overflow-hidden rounded-2xl border border-border bg-card text-card-foreground", className)} aria-label="Workspace settings">
+  return <section className={cn("@container overflow-hidden rounded-2xl border border-border bg-card text-card-foreground", className)} aria-label="Workspace settings">
     <header className="border-b border-border px-5 py-6 sm:px-8"><div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground"><Settings2 aria-hidden className="size-3.5" />Workspace / Settings</div>
       <div className="flex flex-wrap items-center gap-3"><h2 className="text-2xl font-semibold tracking-tight">Workspace settings</h2>{dirty && <Badge variant="outline">Unsaved changes</Badge>}</div>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Manage workspace details and email preferences.</p>
@@ -101,14 +101,14 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
       </div></div>
       <div id={`${scope}-panel`} role="region" aria-labelledby={`${scope}-tab-${tab}`} className="px-5 py-7 sm:px-8">
         <TransitionPanel activeIndex={tab}>
-          <div className="grid gap-8 md:grid-cols-[1fr_1.4fr]">
+          <div className="grid gap-8 @min-[640px]:grid-cols-[1fr_1.4fr]">
             <div><h3 className="text-sm font-medium">Workspace details</h3><p className="mt-2 max-w-xs text-[0.8125rem] leading-relaxed text-muted-foreground">Give your team a familiar home. These details appear in invitations and workspace menus.</p></div>
             <fieldset disabled={busy} className="min-w-0 space-y-6">
               <InputField ref={element => { if (element && focusInvalid.current && fieldErrors.name) { element.focus(); focusInvalid.current = false; } }} label="Workspace name" error={fieldErrors.name} name="workspaceName" autoComplete="organization" required maxLength={80} value={values.name} onChange={event => update("name", event.target.value)} description="Use a name your team will recognize." />
               <InputField ref={element => { if (element && focusInvalid.current && !fieldErrors.name && fieldErrors.email) { element.focus(); focusInvalid.current = false; } }} label="Contact email" error={fieldErrors.email} name="email" type="email" autoComplete="email" required value={values.email} onChange={event => update("email", event.target.value)} description="Where we’ll send account and billing messages." />
             </fieldset>
           </div>
-          <div className="grid gap-5 md:grid-cols-[1fr_1.4fr]">
+          <div className="grid gap-5 @min-[640px]:grid-cols-[1fr_1.4fr]">
             <div><h3 className="text-sm font-medium">Email preferences</h3><p className="mt-2 max-w-xs text-[0.8125rem] leading-relaxed text-muted-foreground">Choose what reaches your inbox. You can change your mind at any time.</p></div>
             <div className="divide-y divide-border">
               <SettingRow label="Release notifications" description="A short note when something new is ready." checked={values.releaseNotifications} onCheckedChange={value => update("releaseNotifications", value)} disabled={busy} className="pt-0" />

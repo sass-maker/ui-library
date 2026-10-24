@@ -1,6 +1,97 @@
 import { expect, test } from '@playwright/test';
 import { noOverflow, openStory } from './helpers.mjs';
 
+async function workspaceSection(page, label) {
+  if (page.viewportSize().width < 768) await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
+  await page.getByRole('link', { name: new RegExp(`^${label}(?: \\d+)?$`) }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(label);
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+}
+
+test('first run keeps choices on failure and hands the created name into a working app', async ({ page }) => {
+  await openStory(page, 'start-here-workspace--first-run-to-workspace');
+  await page.getByRole('textbox', { name: 'Workspace name', exact: true }).fill('Kith review room');
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.getByText('Review together', { exact: true }).click();
+  await expect(page.getByRole('radio', { name: /Review together/ })).toBeChecked();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.getByLabel('Simulate a connection failure').check();
+  await page.getByRole('button', { name: 'Create', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('Your choices are retained');
+  await expect(page.locator('form')).toContainText('Kith review room');
+  await page.getByLabel('Simulate a connection failure').uncheck();
+  await page.getByRole('button', { name: 'Create', exact: true }).click();
+  await page.getByRole('button', { name: 'Open workspace', exact: true }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+  await expect(page.getByRole('status').filter({ hasText: 'Welcome to Kith review room.' })).toBeVisible();
+  await workspaceSection(page, 'Settings');
+  await expect(page.getByLabel('Workspace name', { exact: true })).toHaveValue('Kith review room');
+  await noOverflow(page);
+});
+
+test('a connected workspace previews, removes and restores local files', async ({ page }) => {
+  await openStory(page, 'start-here-workspace--complete-workflow');
+  await page.getByRole('button', { name: 'Browse release assets' }).click();
+  const preview = page.getByRole('button', { name: 'Preview The long way home.webp', exact: true });
+  await preview.click();
+  await expect(page.getByRole('dialog')).toContainText('The long way home.webp');
+  await page.keyboard.press('Escape');
+  await expect(preview).toBeFocused();
+  await page.getByLabel('Select The long way home.webp', { exact: true }).check();
+  await page.getByRole('button', { name: 'Remove selected', exact: true }).click();
+  await expect(preview).toHaveCount(0);
+  await page.getByRole('button', { name: 'Undo removal', exact: true }).click();
+  await expect(preview).toBeVisible();
+  await page.getByLabel('Add local files', { exact: true }).setInputFiles({ name: 'Review notes.txt', mimeType: 'text/plain', buffer: Buffer.from('Local example notes') });
+  await page.getByRole('button', { name: 'Local files', exact: true }).click();
+  await page.getByLabel('Select Review notes.txt', { exact: true }).check();
+  await page.getByRole('button', { name: 'Remove selected', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'All files', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('status').filter({ hasText: '6 of 6 files' })).toBeVisible();
+  await noOverflow(page);
+});
+
+test('an embedded tablet inbox keeps its detail readable and restores focus after filtering', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'start-here-workspace--complete-workflow');
+  await workspaceSection(page, 'Inbox');
+  await page.getByRole('button', { name: 'Unread', exact: false }).filter({ hasText: /^Unread/ }).click();
+  await page.getByRole('button', { name: /Maya Chen/ }).click();
+  await expect(page.getByRole('heading', { name: 'The small things are coming together', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Inbox', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Inbox', exact: true, level: 2 })).toBeFocused();
+  await expect(page.getByRole('button', { name: /Arjun Patel/ })).toBeVisible();
+  await noOverflow(page);
+});
+
+test('workspace navigation retains drafts and settings recover from a failed save', async ({ page }) => {
+  await openStory(page, 'start-here-workspace--complete-workflow');
+  await page.keyboard.press('Control+k');
+  await page.getByPlaceholder('Find a workspace section…').fill('preferences');
+  await page.getByRole('option', { name: /Settings/ }).click();
+  const name = page.getByLabel('Workspace name', { exact: true });
+  await name.fill('Kith design room');
+  await workspaceSection(page, 'Assets');
+  await page.goBack();
+  await expect(name).toBeVisible();
+  await expect(name).toHaveValue('Kith design room');
+  await page.getByText('Controls', { exact: true }).click();
+  await page.getByLabel('Simulate save failure').check();
+  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'The example save was interrupted.' })).toBeVisible();
+  await expect(name).toHaveValue('Kith design room');
+  await page.getByLabel('Simulate save failure').uncheck();
+  await page.getByRole('button', { name: 'Try again', exact: true }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'All changes saved.' })).toBeVisible();
+  await workspaceSection(page, 'Inbox');
+  await page.getByRole('button', { name: 'Mark all read', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Mark all read', exact: true })).toBeDisabled();
+  await workspaceSection(page, 'Settings');
+  await expect(name).toHaveValue('Kith design room');
+  await expect(page.getByRole('button', { name: 'Save changes', exact: true })).toBeDisabled();
+  await noOverflow(page);
+});
+
 test('a shared draft validates, saves and discards across all layers', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));

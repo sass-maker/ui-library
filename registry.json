@@ -4307,6 +4307,11 @@
           "target": "src/components/fleet/components/dropdown-menu.tsx"
         },
         {
+          "path": "packages/ui/src/components/responsive-image.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/responsive-image.tsx"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -4597,6 +4602,11 @@
           "path": "packages/ui/src/components/input.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/input.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/responsive-image.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/responsive-image.tsx"
         },
         {
           "path": "packages/ui/src/components/skeleton.tsx",

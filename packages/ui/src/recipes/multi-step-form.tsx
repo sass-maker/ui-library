@@ -60,12 +60,15 @@ const fade: Variants = {
 };
 
 
-export function MultiStepForm({ plans, onCreate, className, }: {
+export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Open workspace", className, }: {
     plans: Plan[];
     onCreate: (value: {
         name: string;
         plan: string;
     }) => void | Promise<void>;
+    /** Continue into the created workspace; omitted examples can still start over. */
+    onComplete?: (value: { name: string; plan: string }) => void;
+    completeLabel?: string;
     className?: string;
 }) {
     const reduceMotion = useReducedMotion();
@@ -144,6 +147,7 @@ export function MultiStepForm({ plans, onCreate, className, }: {
             }
         }
         else {
+            if (onComplete && planId) { onComplete({ name: name.trim(), plan: planId }); return; }
             setName("");
             setPlanId(null);
             go(0, -1);
@@ -158,7 +162,8 @@ export function MultiStepForm({ plans, onCreate, className, }: {
             go(1, -1);
     };
     const stepIndex = panel === "done" ? 3 : panel;
-    const primary = panel === 2 ? "Create" : panel === "done" ? "Start over" : "Continue";
+    const doneLabel = onComplete ? completeLabel : "Start over";
+    const primary = panel === 2 ? "Create" : panel === "done" ? doneLabel : "Continue";
     const content = (p: Panel, prefix: string) => (<PanelContent panel={p} prefix={prefix} plans={plans} name={name} onNameChange={setName} planId={planId} onPlanChange={setPlanId} plan={plan} reduceMotion={reduceMotion}/>);
     return (
     // The card grows up from a fixed bottom, so Back and Continue never move
@@ -172,7 +177,7 @@ export function MultiStepForm({ plans, onCreate, className, }: {
               {content(p, `${uid}-ghost`)}
             </div>))}
         </div>
-        <Footer canGoBack={false} valid={false} primary={busy ? "Creating…" : primary} onBack={() => { }}/>
+        <Footer canGoBack={false} valid={false} primary={busy ? "Creating…" : primary} completeLabel={doneLabel} onBack={() => { }}/>
       </div>
 
       <form noValidate aria-busy={busy} aria-label="Create a workspace" className="col-start-1 row-start-1 flex flex-col self-end overflow-hidden rounded-[20px] bg-surface shadow-md" onSubmit={(e) => {
@@ -199,7 +204,7 @@ export function MultiStepForm({ plans, onCreate, className, }: {
           </div>
         </motion.div>
         {error && <p role="alert" className="px-6 pb-3 text-sm text-destructive">{error}</p>}
-        <Footer canGoBack={!busy && (panel === 1 || panel === 2)} valid={valid && !busy} primary={busy ? "Creating…" : primary} onBack={back}/>
+        <Footer canGoBack={!busy && (panel === 1 || panel === 2)} valid={valid && !busy} primary={busy ? "Creating…" : primary} completeLabel={doneLabel} onBack={back}/>
         <span className="sr-only" aria-live="polite">
           {panel === "done"
             ? "Workspace created"
@@ -228,22 +233,23 @@ function Header({ stepIndex }: {
     </div>);
 }
 
-function Footer({ canGoBack, valid, primary, onBack, }: {
+function Footer({ canGoBack, valid, primary, completeLabel, onBack, }: {
     canGoBack: boolean;
     valid: boolean;
     primary: string;
+    completeLabel: string;
     onBack: () => void;
 }) {
     return (<div className="flex items-center justify-between border-t border-border p-4">
       {/* Always rendered, so Continue keeps its place when Back is hidden. */}
-      <button type="button" onClick={onBack} disabled={!canGoBack} className={cn("h-11 touch-manipulation rounded-full px-4 text-[15px] font-medium text-muted-foreground outline-hidden transition-[scale,opacity,color,background-color] duration-150 ease-out select-none hover:bg-background hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground active:scale-[0.96]", !canGoBack && "pointer-events-none opacity-0")}>
+      <button type="button" onClick={onBack} disabled={!canGoBack} className={cn("h-11 touch-manipulation rounded-full px-4 text-[15px] font-medium text-muted-foreground outline-hidden transition-[scale,opacity,color,background-color] duration-150 ease-out select-none hover:bg-background hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground motion-safe:active:scale-[0.96]", !canGoBack && "pointer-events-none opacity-0")}>
         Back
       </button>
-      <button type="submit" disabled={!valid} className="h-11 touch-manipulation rounded-full bg-foreground px-5 text-[15px] font-medium text-background outline-hidden transition-[scale,opacity] duration-150 ease-out select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground enabled:active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-40">
+      <button type="submit" disabled={!valid} className="h-11 touch-manipulation rounded-full bg-foreground px-5 text-[15px] font-medium text-background outline-hidden transition-[scale,opacity] duration-150 ease-out select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground motion-safe:enabled:active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-40">
         {/* Every label shares one grid cell, so the button holds the width of
             the longest and never resizes as the label changes. */}
         <span className="grid">
-          {["Continue", "Create", "Creating…", "Start over"].map((label) => (<span key={label} aria-hidden={label !== primary} className={cn("col-start-1 row-start-1 transition-[opacity,filter] duration-200 ease-out", label !== primary && "opacity-0 blur-[4px]")}>
+          {[...new Set(["Continue", "Create", "Creating…", completeLabel])].map((label) => (<span key={label} aria-hidden={label !== primary} className={cn("col-start-1 row-start-1 transition-[opacity,filter] duration-200 ease-out", label !== primary && "opacity-0 blur-[4px]")}>
               {label}
             </span>))}
         </span>
@@ -268,7 +274,7 @@ function PanelContent({ panel, prefix, plans, name, onNameChange, planId, onPlan
         <label htmlFor={`${prefix}-name`} className="sr-only">
           Workspace name
         </label>
-        <input id={`${prefix}-name`} data-autofocus value={name} onChange={(e) => onNameChange(e.target.value)} placeholder="Acme Inc" autoComplete="organization" className="h-11 rounded-xl bg-background px-3.5 text-[15px] text-foreground shadow-md outline-hidden placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground"/>
+        <input id={`${prefix}-name`} data-autofocus value={name} onChange={(e) => onNameChange(e.target.value)} placeholder="Acme Inc" maxLength={80} autoComplete="organization" className="h-11 rounded-xl bg-background px-3.5 text-base md:text-[15px] [@media(pointer:coarse)]:text-base text-foreground shadow-md outline-hidden placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground"/>
       </div>);
     }
     if (panel === 1) {
@@ -277,7 +283,7 @@ function PanelContent({ panel, prefix, plans, name, onNameChange, planId, onPlan
         <div role="radiogroup" aria-label="Plan" className="flex flex-col gap-2">
           {plans.map((p, i) => {
                 const checked = p.id === planId;
-                return (<label key={p.id} className={cn("flex cursor-pointer items-center gap-3.5 rounded-xl bg-background px-4 py-3 shadow-md transition-[scale,box-shadow] duration-150 ease-out select-none active:scale-[0.98] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-solid has-[:focus-visible]:outline-foreground", checked && "shadow-[0_0_0_1.5px_var(--foreground)]")}>
+                return (<label key={p.id} className={cn("flex cursor-pointer items-center gap-3.5 rounded-xl bg-background px-4 py-3 shadow-md transition-[scale,box-shadow] duration-150 ease-out select-none motion-safe:active:scale-[0.98] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-solid has-[:focus-visible]:outline-foreground", checked && "shadow-[0_0_0_1.5px_var(--foreground)]")}>
                 <input type="radio" name={`${prefix}-plan`} value={p.id} checked={checked} onChange={() => onPlanChange(p.id)} 
                 // The checked option, or the first when none is, is where
                 // arrow keys start from.
