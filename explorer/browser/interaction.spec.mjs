@@ -197,6 +197,15 @@ async function accessibleStory(page, testInfo, scope) {
 }
 
 for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+  test(`font pairing code is keyboard scrollable and accessible in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    await openStory(page, 'foundations-tokens--font-pairings', `theme:${theme};mode:${mode}`);
+    const css = page.getByRole('region', { name: 'React and CSS applications configuration' });
+    await css.focus();
+    await expect(css).toBeFocused();
+    await accessibleStory(page, testInfo, 'font-pairings');
+  });
+
   test(`the media gallery meets automated accessibility checks in ${mode} mode`, async ({ page }, testInfo) => {
     test.setTimeout(45_000);
     await openStory(page, 'motion-carousel--in-context', `theme:${theme};mode:${mode}`);
