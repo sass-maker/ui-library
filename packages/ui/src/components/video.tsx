@@ -19,7 +19,7 @@ export type VideoProps = {
 
 /** Deliberate playback: no movie request until play, native controls thereafter. */
 export function Video(props: VideoProps) {
-  return <VideoPlayback key={props.sources.map(source => source.src).join("\n")} {...props} />;
+  return <VideoPlayback key={props.sources.map(source => `${source.type}:${source.src}`).join("\n")} {...props} />;
 }
 
 function VideoPlayback({ title, poster, sources, width = 1280, height = 800, className, captions }: VideoProps) {

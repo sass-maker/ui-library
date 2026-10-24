@@ -100,6 +100,16 @@ test('responsive artwork selects a crop and media chapters work from the keyboar
   await page.keyboard.press('ArrowLeft');
   await expect(first).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByAltText('Kith memory table')).toBeVisible();
+  const initialWidth = page.viewportSize().width;
+  await page.getByRole('tab', { name: 'Recovery', exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.getByAltText('Responsive recovery artwork').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('img', { name: 'Responsive recovery artwork — image unavailable' })).toBeVisible();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.getByAltText('Responsive recovery artwork').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('img', { name: 'Responsive recovery artwork — image unavailable' })).toHaveCount(0);
+  await expect.poll(() => page.getByAltText('Responsive recovery artwork').evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
+  await page.setViewportSize({ width: initialWidth, height: 900 });
   await noOverflow(page);
 });
 
