@@ -39,7 +39,7 @@ jobs:
         run: pnpm test:browser
       - name: Generate candidate baselines for review
         if: ${{ inputs.updateVisuals }}
-        run: pnpm test:browser --update-snapshots
+        run: pnpm test:visual --update-snapshots
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -62,11 +62,11 @@ jobs:
           name: explorer-preview
           path: explorer/storybook-static
       - uses: actions/upload-pages-artifact@v4
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && !inputs.updateVisuals
         with:
           path: explorer/storybook-static
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !inputs.updateVisuals
     needs: build
     runs-on: ubuntu-latest
     permissions:

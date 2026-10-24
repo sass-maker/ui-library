@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import React, { act, Profiler } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
+import { createPortal } from "react-dom";
 import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DataTable } from "../src/components/data-table";
@@ -22,6 +23,37 @@ afterEach(() => { for (const { root, container } of roots.splice(0)) { act(() =>
 const checks = container => [...container.querySelectorAll('tbody [role="checkbox"]')];
 
 describe("controlled DataTable selection", () => {
+  it("keeps portalled row actions from also opening the owning record", () => {
+    const open = vi.fn(), action = vi.fn();
+    const { container } = mount(<DataTable {...base} data={data.slice(0, 2)} onRowClick={open}
+      columns={[{ ...columns[0], cell: row => <>{row.name}{createPortal(<div role="menuitem" tabIndex={0} data-row-action={row.id} onClick={action}>Preview {row.name}</div>, document.body)}</> }]} />);
+    act(() => document.querySelector('[data-row-action="0"]').click());
+    expect(action).toHaveBeenCalledTimes(1);
+    expect(open).not.toHaveBeenCalled();
+    act(() => container.querySelector("tr[data-row]").click());
+    expect(open).toHaveBeenCalledWith(data[0]);
+  });
+  it("lets nested cell controls own their keys while retaining row navigation", () => {
+    const open = vi.fn();
+    const { container } = mount(<DataTable {...base} data={data.slice(0, 2)} onRowClick={open}
+      columns={[{ ...columns[0], cell: row => <input aria-label={`Edit ${row.name}`} defaultValue={row.name} /> }]} />);
+    const rows = container.querySelectorAll("tr[data-row]");
+    const input = rows[0].querySelector("input");
+    act(() => input.click());
+    expect(open).not.toHaveBeenCalled();
+    act(() => input.focus());
+    for (const key of ["ArrowDown", "Home", "End", "Enter", " "]) {
+      const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      act(() => input.dispatchEvent(event));
+      expect(event.defaultPrevented).toBe(false);
+      expect(document.activeElement).toBe(input);
+    }
+    expect(open).not.toHaveBeenCalled();
+    act(() => { rows[0].focus(); rows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })); });
+    expect(open).toHaveBeenCalledWith(data[0]);
+    act(() => rows[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })));
+    expect(document.activeElement).toBe(rows[1]);
+  });
   it("hydrates all 50 rows without selection form-bridge update commits", () => {
     const commits = []; const errors = vi.spyOn(console, "error");
     const { container } = mount(<Profiler id="table" onRender={(_, phase) => commits.push(phase)}><DataTable {...base} selection={{ selected: ["2"], onChange: vi.fn() }} /></Profiler>, true);

@@ -15,6 +15,7 @@ import { ProjectOverview } from "@saas-maker/ui/organisms/project-overview";
 import { sampleFiles, samplePreferences, sampleMessages, sampleTasks } from "./composition-fixtures";
 import { Badge } from "@saas-maker/ui/atoms/badge";
 import { Label } from "@saas-maker/ui/atoms/label";
+import { EmptyState } from "@saas-maker/ui/molecules/empty-state";
 import { Textarea } from "@saas-maker/ui/atoms/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@saas-maker/ui/molecules/dialog";
 import * as Carousel from "@saas-maker/ui/recipes/carousel";
@@ -37,6 +38,8 @@ const reviewTargets: readonly { id: string; alt: string; width: number; height: 
 const reviewStatusLabel: Record<ReviewStatus, string> = { approved: "Approved", changes: "Changes requested", pending: "Awaiting review" };
 /** A review note carries its file in the message ID, so “changes requested” is derived from the inbox. */
 const reviewMessagePrefix = (fileId: string) => `review-${fileId}-`;
+
+const reviewActivityEmpty = <EmptyState title="Your next decision starts the story" description="Approve an image or request a change. Your review will appear here, alongside its checklist update." className="items-start px-0 py-0 text-left" />;
 
 function reviewActivity(kind: ActivityEntry["kind"], action: string, subject: string): ActivityEntry {
   return { id: `review-activity-${crypto.randomUUID()}`, kind, actor: "You", action, subject, time: "Just now", dateTime: new Date().toISOString() };
@@ -236,7 +239,7 @@ export function ProjectOverviewExample({ variant = "card", inbox, files = sample
   const [messages, setMessages] = inbox ?? localInbox;
   const review = useReleaseReview(files, messages, setMessages);
   return <ProjectOverview variant={variant} name="Kith’s October release" eyebrow="Kith / October release" badge={null} description="Review the artwork and leave a clear next step for the release."
-    focus={review.focus} metrics={review.metrics} tasks={review.tasks} activity={review.activity} onTaskChange={review.onTaskChange} />;
+    focus={review.focus} metrics={review.metrics} tasks={review.tasks} activity={review.activity} activityEmpty={reviewActivityEmpty} onTaskChange={review.onTaskChange} />;
 }
 
 /** A connected, local workspace built from the organisms shown separately. */
@@ -325,7 +328,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-7 sm:px-8 lg:px-10 lg:pt-10">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div><h1 ref={heading} tabIndex={-1} className="font-display text-3xl leading-tight outline-none sm:text-4xl">{section.label === "Overview" ? "Kith’s October release." : section.label}</h1><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">{section.description}</p></div>{view === "overview" && <Button variant="outline" onClick={() => navigate("assets")}>Browse release assets<ArrowRight /></Button>}</div>
         <motion.div data-slot="workspace-panel" hidden={view !== "overview"} initial={false} animate={{ opacity: reduced || view === "overview" ? 1 : 0, y: reduced || view === "overview" ? 0 : 6 }} transition={reduced ? { duration: 0 } : motionTiming.content}>
-          <ProjectOverview variant="plain" showHeader={false} name="Release readiness" description="Review the release artwork." focus={review.focus} metrics={review.metrics} tasks={review.tasks} activity={review.activity} onTaskChange={review.onTaskChange} />
+          <ProjectOverview variant="plain" showHeader={false} name="Release readiness" description="Review the release artwork." focus={review.focus} metrics={review.metrics} tasks={review.tasks} activity={review.activity} activityEmpty={reviewActivityEmpty} onTaskChange={review.onTaskChange} />
           <div className="mt-8 grid overflow-hidden rounded-2xl border border-border bg-card md:grid-cols-[1.1fr_1fr]">
             <ResponsiveImage src="./demo/kith/book-stage.webp" alt="Kith’s illustrated memory book, part of the release artwork" width={760} height={507} loading="eager" className="h-full min-h-52 w-full min-w-0" />
             <div className="flex flex-col items-start justify-center p-6 sm:p-8"><p className="eyebrow">The next chapter / Kith</p><h2 className="mt-4 font-display text-2xl leading-snug sm:text-3xl">Kith’s next chapter,<br />in context.</h2><p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">Preview the artwork and real app screens together before the next handoff.</p><Button variant="link" className="mt-4 px-0" asChild><a target="_top" href="./?path=/story/start-here-media--complete-page">Open the product story<ArrowUpRight /></a></Button></div>

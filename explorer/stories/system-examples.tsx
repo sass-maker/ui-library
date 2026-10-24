@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowDown, ArrowRight, Box, Component, Layers3, Check, RotateCcw, Loader2, AlertCircle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@saas-maker/ui/atoms/button";
@@ -24,23 +24,23 @@ export function AtomicCompositionExample() {
       <p>Edit the workspace name in any layer. The same draft travels through the input, the composed field, and the complete settings section.</p>
     </header>
     <div className="composition-connection mb-5 flex flex-wrap items-center gap-2.5 text-xs text-muted-foreground [&>strong]:font-medium [&>strong]:text-foreground [&>strong]:[overflow-wrap:anywhere]" role="status"><span className="size-1.5 rounded-full bg-brand" aria-hidden /><span>Saved workspace</span><strong>{savedName}</strong></div>
-    <div className="composition-pieces grid gap-5 sm:grid-cols-2">
-      <section className="composition-piece flex min-w-0 flex-col rounded-[14px] border border-border bg-card">
+    <div className="composition-pieces grid gap-5 sm:grid-cols-2 sm:grid-rows-[auto_auto_1fr]">
+      <section className="composition-piece flex min-w-0 flex-col rounded-[14px] border border-border bg-card sm:row-span-3 sm:grid sm:grid-rows-subgrid sm:gap-0">
         <div className="composition-label flex flex-wrap items-center gap-2.5 border-b border-border px-5 py-4 text-xs text-muted-foreground sm:px-6 sm:py-5 [&>[data-slot=badge]]:ml-auto"><Box aria-hidden size={16} /><span>01 / Atom</span><Badge variant="outline">Input</Badge></div>
-        <div className="composition-demo grid content-start gap-2 p-5 sm:min-h-[168px] sm:p-6"><Label htmlFor="composition-atom">Workspace name</Label><Input id="composition-atom" value={values.name} maxLength={80} onChange={event => setValues(current => ({ ...current, name: event.target.value }))} /></div>
-        <div className="composition-note mt-auto px-5 pb-5 text-[0.8125rem] leading-relaxed text-muted-foreground sm:px-6 sm:pb-6 [&>code]:text-[0.6875rem] [&>code]:[overflow-wrap:anywhere] [&>p]:mt-2.5"><code>@saas-maker/ui/atoms/input</code><p>The control owns geometry, keyboard editing, focus, and disabled states.</p></div>
+        <div className="composition-demo p-5 sm:p-6"><div className="grid gap-2"><div className="flex items-baseline justify-between gap-4"><Label htmlFor="composition-atom">Workspace name</Label></div><Input id="composition-atom" value={values.name} maxLength={80} onChange={event => setValues(current => ({ ...current, name: event.target.value }))} /></div></div>
+        <div className="composition-note px-5 pb-5 text-[0.8125rem] leading-relaxed text-muted-foreground sm:px-6 sm:pb-6 [&>code]:text-[0.6875rem] [&>code]:[overflow-wrap:anywhere] [&>p]:mt-2.5"><code>@saas-maker/ui/atoms/input</code><p>The control owns geometry, keyboard editing, focus, and disabled states.</p></div>
       </section>
-      <section className="composition-piece flex min-w-0 flex-col rounded-[14px] border border-border bg-card">
+      <section className="composition-piece flex min-w-0 flex-col rounded-[14px] border border-border bg-card sm:row-span-3 sm:grid sm:grid-rows-subgrid sm:gap-0">
         <div className="composition-label flex flex-wrap items-center gap-2.5 border-b border-border px-5 py-4 text-xs text-muted-foreground sm:px-6 sm:py-5 [&>[data-slot=badge]]:ml-auto"><Component aria-hidden size={16} /><span>02 / Molecule</span><Badge variant="outline">InputField</Badge></div>
-        <div className="composition-demo grid content-start gap-2 p-5 sm:min-h-[168px] sm:p-6"><InputField label="Workspace name" value={values.name} maxLength={80} onChange={event => setValues(current => ({ ...current, name: event.target.value }))} description="A label, an input, guidance, and validation." error={values.name.trim() ? undefined : "Your workspace needs a name."} /></div>
-        <div className="composition-note mt-auto px-5 pb-5 text-[0.8125rem] leading-relaxed text-muted-foreground sm:px-6 sm:pb-6 [&>code]:text-[0.6875rem] [&>code]:[overflow-wrap:anywhere] [&>p]:mt-2.5"><code>@saas-maker/ui/molecules/input-field</code><p>The molecule adds label association, a description, and animated error feedback.</p></div>
+        <div className="composition-demo p-5 sm:p-6"><InputField label="Workspace name" value={values.name} maxLength={80} onChange={event => setValues(current => ({ ...current, name: event.target.value }))} description="A label, an input, guidance, and validation." error={values.name.trim() ? undefined : "Your workspace needs a name."} /></div>
+        <div className="composition-note px-5 pb-5 text-[0.8125rem] leading-relaxed text-muted-foreground sm:px-6 sm:pb-6 [&>code]:text-[0.6875rem] [&>code]:[overflow-wrap:anywhere] [&>p]:mt-2.5"><code>@saas-maker/ui/molecules/input-field</code><p>The molecule adds label association, a description, and animated error feedback.</p></div>
       </section>
     </div>
     <div className="composition-bridge my-6 flex items-center justify-center gap-3 text-xs text-muted-foreground"><ArrowDown aria-hidden size={16} /><span>Shared draft → complete interaction</span></div>
     <div className="composition-organism-label mb-4 mt-6 flex flex-wrap items-center gap-2.5 text-xs text-muted-foreground"><Layers3 aria-hidden size={16} /><span>03 / Organism</span><span className="ml-auto text-xs text-muted-foreground">Try editing, saving, and discarding</span></div>
     <WorkspaceSettings value={values} onValuesChange={setValues} onSave={async next => { await new Promise(resolve => setTimeout(resolve, 700)); setSavedName(next.name); }} />
     <div className="composition-note mt-5 text-[0.8125rem] leading-relaxed text-muted-foreground [&>code]:text-[0.6875rem] [&>code]:[overflow-wrap:anywhere] [&>p]:mt-2.5 [&>p]:max-w-[72ch]"><code>@saas-maker/ui/organisms/workspace-settings</code><p>The organism owns validation, sections, pending state, recovery, and saved feedback. The application owns the draft and supplies the save callback. This example saves locally.</p></div>
-    <footer className="system-links mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground [&>a]:inline-flex [&>a]:items-center [&>a]:gap-2 [&>a]:rounded-sm [&>a]:text-foreground [&>a]:underline-offset-4 [&>a:hover]:underline [&>a:focus-visible]:outline-2 [&>a:focus-visible]:outline-offset-4 [&>a:focus-visible]:outline-ring"><Button variant="ghost" size="sm" onClick={() => setValues(samplePreferences)}><RotateCcw />Reset shared draft</Button><a target="_top" href="./?path=/story/start-here-states--state-lab">Explore the interaction states<ArrowRight aria-hidden size={14} /></a></footer>
+    <footer className="system-links mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5"><Button variant="ghost" size="sm" className="-ml-2.5" onClick={() => setValues(samplePreferences)}><RotateCcw />Reset shared draft</Button><Button variant="ghost" size="sm" className="-mr-2.5" asChild><a target="_top" href="./?path=/story/start-here-states--state-lab">Explore the interaction states<ArrowRight aria-hidden /></a></Button></footer>
   </main>;
 }
 
@@ -70,6 +70,7 @@ export function StateLabExample() {
 }
 
 export function FoundationFormExample() {
+  const nameField = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("Kith · the next chapter");
   const [outcome, setOutcome] = useState("Success");
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -79,7 +80,7 @@ export function FoundationFormExample() {
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (busy) return;
-    if (!name.trim()) { setError("Give this project a name before saving."); return; }
+    if (!name.trim()) { setError("Give this project a name before saving."); nameField.current?.focus(); return; }
     setError(undefined);
     setState("saving");
     await new Promise(resolve => setTimeout(resolve, 900));
@@ -89,7 +90,7 @@ export function FoundationFormExample() {
     <div className="foundation-example-settings mb-6 flex flex-wrap items-center justify-between gap-3"><span className="text-xs text-muted-foreground">Example response</span><SegmentedControl options={["Success", "Error"]} value={outcome} onChange={setOutcome} label="Save response" /></div>
     <form onSubmit={submit} noValidate className="rounded-xl border border-border bg-background">
       <div className="border-b border-border px-6 py-5"><p className="eyebrow mb-2">Project details</p><h2 className="text-xl font-semibold tracking-tight">Give the next chapter a name.</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Try an empty name, a slow save, and a rejected request.</p></div>
-      <div className="px-6 py-6"><InputField label="Project name" name="projectName" required value={name} disabled={busy} error={error} maxLength={80} onChange={event => { setName(event.target.value); setError(undefined); setState("idle"); }} description="Visible to everyone in this example workspace." /></div>
+      <div className="px-6 py-6"><InputField ref={nameField} label="Project name" name="projectName" required value={name} disabled={busy} error={error} maxLength={80} onChange={event => { setName(event.target.value); setError(undefined); setState("idle"); }} description="Visible to everyone in this example workspace." /></div>
       <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-border bg-surface/40 px-6 py-4">
         <div className="max-w-64 text-[0.8125rem] leading-relaxed" role="status"><AnimatePresence initial={false} mode="wait"><motion.span key={state} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={motionTiming.feedback} className={state === "error" ? "flex items-start gap-2 text-destructive" : "flex items-center gap-2 text-muted-foreground"}>{state === "saved" ? <><Check aria-hidden size={15} />Saved in this example.</> : state === "error" ? <><AlertCircle aria-hidden size={16} className="mt-0.5 shrink-0" />Connection interrupted. Your name is still here.</> : busy ? "Saving your changes…" : "Changes stay local to this example."}</motion.span></AnimatePresence></div>
         <Button type="submit" variant="brand" aria-busy={busy} disabled={busy || state === "saved"} className="relative min-w-36 overflow-hidden"><AnimatePresence initial={false} mode="popLayout"><motion.span key={state} initial={{ opacity: 0, y: reduced ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduced ? 0 : -8 }} transition={motionTiming.feedback} className="inline-flex items-center justify-center gap-2">{busy ? <><Loader2 aria-hidden className="motion-safe:animate-spin" />Saving…</> : state === "saved" ? <><Check aria-hidden />Saved</> : state === "error" ? <><RotateCcw aria-hidden />Try again</> : <>Save project<ArrowRight aria-hidden /></>}</motion.span></AnimatePresence></Button>

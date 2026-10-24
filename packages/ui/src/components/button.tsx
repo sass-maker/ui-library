@@ -36,6 +36,9 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
+    // Inline links share the text column even when they include an arrow.
+    // The icon-aware size padding otherwise wins over a caller's px-0.
+    compoundVariants: [{ variant: "link", className: "px-0 has-[>svg]:px-0" }],
   }
 )
 

@@ -10,7 +10,7 @@ export type EmptyStateProps = React.ComponentProps<"div"> & {
   primaryAction?: StateAction | React.ReactNode
 }
 
-export function EmptyState({ title = "nothing here yet", description, icon, primaryAction, className, ...props }: EmptyStateProps) {
+export function EmptyState({ title = "Nothing here yet", description, icon, primaryAction, className, ...props }: EmptyStateProps) {
   return <div data-slot="empty-state" className={cn("flex min-w-0 flex-col items-center gap-3 px-6 py-12 text-center", className)} {...props}>
     {icon && <div aria-hidden="true" className="text-muted-foreground [&_svg]:size-6">{icon}</div>}
     <div className="max-w-sm">

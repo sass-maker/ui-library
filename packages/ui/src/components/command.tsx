@@ -5,6 +5,7 @@ import { Command as CommandPrimitive } from "cmdk"
 import { SearchIcon } from "lucide-react"
 import { cn } from "../lib/utils"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./dialog"
+import { instantSurface } from "../lib/surface-motion"
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
@@ -40,8 +41,10 @@ function CommandDialog({
     <Dialog {...props}>
       <DialogContent
         {...contentProps}
+        overlayClassName={cn(instantSurface, contentProps?.overlayClassName)}
         className={cn(
           "top-[12vh] translate-y-0 overflow-hidden p-0 sm:top-[18vh] sm:max-w-xl [&_[data-slot=dialog-close]]:top-0.5 [&_[data-slot=dialog-close]]:right-0.5",
+          instantSurface,
           className,
           contentProps?.className
         )}

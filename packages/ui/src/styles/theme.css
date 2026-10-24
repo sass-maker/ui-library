@@ -4,6 +4,7 @@
 @import "tw-animate-css";
 @import "./fonts.css";
 @import "./effects.css";
+@import "./interactions.css";
 
 @custom-variant dark (&:is([data-mode="dark"] *, [data-mode="dark"]));
 

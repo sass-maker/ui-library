@@ -62,6 +62,22 @@ for (const width of [390, 820, 1440]) {
         await expect(page.getByRole('dialog', { name: 'Button', exact: true })).toBeVisible();
         await expect(page).toHaveScreenshot(`catalog-detail-${suffix}.png`);
       });
+      test(`overlay finishes ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        await openStory(page, 'overlays-dialog--playground', globals);
+        await page.getByRole('button', { name: 'Edit project', exact: true }).click();
+        await expect(page.getByRole('dialog', { name: 'Edit project', exact: true })).toBeVisible();
+        await expect(page).toHaveScreenshot(`dialog-${suffix}.png`);
+        await openStory(page, 'overlays-sheet--playground', globals);
+        await page.getByRole('button', { name: 'Open inspector', exact: true }).click();
+        await expect(page.getByRole('dialog', { name: 'Button inspector', exact: true })).toBeVisible();
+        await expect(page).toHaveScreenshot(`sheet-${suffix}.png`);
+        await openStory(page, 'overlays-dropdown-menu--playground', globals);
+        await page.getByRole('button', { name: 'Project actions', exact: true }).click();
+        await expect(page.getByRole('menuitem', { name: 'Move to', exact: true })).toBeVisible();
+        await expect(page).toHaveScreenshot(`menu-${suffix}.png`);
+        await noOverflow(page);
+      });
       test(`table states ${suffix}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 1000 });
         for (const state of ['loading', 'empty', 'failure-recovery']) {

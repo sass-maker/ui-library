@@ -14,7 +14,7 @@ import {
   type SortingState,
   type ColumnVisibilityState,
 } from "@tanstack/react-table"
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, Columns3Icon, CheckIcon, MinusIcon } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, ArrowLeftRightIcon, ChevronsUpDownIcon, Columns3Icon, CheckIcon, MinusIcon, SearchXIcon, CircleAlertIcon } from "lucide-react"
 import { cn } from "../lib/utils"
 import { Button } from "./button"
 import { Checkbox, checkboxClassName } from "./checkbox"
@@ -28,6 +28,7 @@ import {
 } from "./dropdown-menu"
 import { Pagination } from "./pagination"
 import { Skeleton, SkeletonContainer } from "./skeleton"
+import { EmptyState } from "./empty-state"
 
 /**
  * DataTable: sortable, paginated, column-toggleable table on TanStack Table
@@ -322,6 +323,8 @@ function DataTable<T extends RowData>({
     bodyRef.current?.querySelectorAll<HTMLTableRowElement>("tr[data-row]")[n]?.focus()
   }
   const onRowKey = (e: React.KeyboardEvent, i: number, row: T) => {
+    // A link, menu trigger or editable control in a cell owns its keys.
+    if (e.target !== e.currentTarget) return
     if (e.key === "ArrowDown") focusRow(i + 1)
     else if (e.key === "ArrowUp") focusRow(i - 1)
     else if (e.key === "Home") focusRow(0)
@@ -352,25 +355,49 @@ function DataTable<T extends RowData>({
   const grouped = columns.some((column) => !!column.group)
   const colCount = Math.max(1, visibleColumns.length) + (selection ? 1 : 0)
   const scrollRef = React.useRef<HTMLDivElement>(null)
+  const [headerHeight, setHeaderHeight] = React.useState(40)
+  const [edges, setEdges] = React.useState({ left: false, right: false })
+  React.useLayoutEffect(() => {
+    const viewport = scrollRef.current
+    const content = viewport?.querySelector("table")
+    if (!viewport || !content) return
+    const measure = () => {
+      const frame = viewport.getBoundingClientRect()
+      const table = content.getBoundingClientRect()
+      const visibleLeft = frame.left + viewport.clientLeft
+      const visibleRight = visibleLeft + viewport.clientWidth
+      const left = table.left < visibleLeft - 1
+      const right = table.right > visibleRight + 1
+      const header = content.querySelector("thead tr")?.getBoundingClientRect().height
+      if (header) setHeaderHeight(previous => previous === header ? previous : header)
+      setEdges(previous => previous.left === left && previous.right === right ? previous : { left, right })
+    }
+    measure()
+    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(measure)
+    observer?.observe(viewport)
+    observer?.observe(content)
+    viewport.addEventListener("scroll", measure, { passive: true })
+    return () => { observer?.disconnect(); viewport.removeEventListener("scroll", measure) }
+  }, [])
   React.useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0 })
   }, [pageIndex, sorting])
 
   return (
-    <div ref={rootRef} data-slot="data-table" className={cn("flex min-w-0 flex-col gap-3", className)}>
-      {status === "loading" && <span role="status" className="sr-only">loading</span>}
-      <div className="flex min-h-8 flex-wrap items-center justify-between gap-2">
-        <div className="flex min-w-0 flex-wrap items-center gap-2">{toolbar?.({ rows: sortedRows, columns: visibleColumns })}</div>
+    <div ref={rootRef} data-slot="data-table" className={cn("flex min-w-0 flex-col gap-3 [--data-table-header-height:40px] [@media(pointer:coarse)]:[--data-table-header-height:48px]", className)}>
+      {status === "loading" && <span role="status" className="sr-only">Loading</span>}
+      <div className={cn("grid min-h-8 items-start gap-2", hideable.length ? "grid-cols-[minmax(0,1fr)_auto]" : "grid-cols-1")}>
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">{toolbar?.({ rows: sortedRows, columns: visibleColumns })}</div>
         {hideable.length > 0 && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="text-muted-foreground">
                 <Columns3Icon />
-                columns
+                Columns
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="max-h-80 w-52">
-              <DropdownMenuLabel className="ui-case text-xs font-medium text-muted-foreground">show columns</DropdownMenuLabel>
+              <DropdownMenuLabel className="ui-case text-xs font-medium text-muted-foreground">Show columns</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {hideable.map((col) => (
                 <DropdownMenuCheckboxItem
@@ -387,6 +414,7 @@ function DataTable<T extends RowData>({
         )}
       </div>
 
+      <div className="relative min-w-0">
       <div
         ref={scrollRef}
         className="relative overflow-auto rounded-lg border border-border bg-card"
@@ -395,6 +423,8 @@ function DataTable<T extends RowData>({
         tabIndex={pageRows.length && onRowClick ? -1 : 0}
         role="region"
         aria-label={label}
+        data-scroll-left={edges.left || undefined}
+        data-scroll-right={edges.right || undefined}
       >
         <table className="w-full border-separate border-spacing-0 text-sm" aria-busy={status === "loading" || undefined}>
           <caption className="sr-only">
@@ -406,7 +436,7 @@ function DataTable<T extends RowData>({
             {headerGroups.map((group, rowIndex) => (
               <tr key={group.id}>
                 {selection && rowIndex === 0 && (
-                  <th scope="col" rowSpan={headerGroups.length > 1 ? headerGroups.length : undefined} className="sticky top-0 z-10 h-10 w-10 border-b border-border bg-card pl-4 pr-1 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground">
+                  <th scope="col" rowSpan={headerGroups.length > 1 ? headerGroups.length : undefined} className="sticky top-0 z-10 h-(--data-table-header-height) w-10 border-b border-border bg-card pl-4 pr-1 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground">
                     {selection.max == null ? (
                       <SelectionCheckbox
                         inForm={inForm}
@@ -428,7 +458,7 @@ function DataTable<T extends RowData>({
                 )}
                 {group.headers.map((header) => {
                   const col = byId.get(header.column.id)
-                  if (header.isPlaceholder) return <th key={header.id} aria-hidden="true" colSpan={grouped ? header.colSpan : undefined} className="sticky top-0 z-10 h-10 border-b border-border bg-card" style={{ top: grouped && rowIndex > 0 ? rowIndex * 40 : undefined }} />
+                  if (header.isPlaceholder) return <th key={header.id} aria-hidden="true" colSpan={grouped ? header.colSpan : undefined} className="sticky top-0 z-10 h-(--data-table-header-height) border-b border-border bg-card" style={{ top: grouped && rowIndex > 0 ? rowIndex * headerHeight : undefined }} />
                   const isGroupHeader = header.column.columns.length > 0
                   const columnGroup = col?.group
                   const dir = header.column.getIsSorted()
@@ -442,10 +472,10 @@ function DataTable<T extends RowData>({
                       data-group-header={isGroupHeader ? String(header.column.columnDef.header ?? "") : undefined}
                       aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : undefined}
                       className={cn(
-                        "sticky top-0 z-10 h-10 border-b border-border bg-card px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4",
+                        "sticky top-0 z-10 h-(--data-table-header-height) border-b border-border bg-card px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4",
                         right && "text-right"
                       )}
-                      style={{ top: grouped && rowIndex > 0 ? rowIndex * 40 : undefined, minWidth: col?.minWidth }}
+                      style={{ top: grouped && rowIndex > 0 ? rowIndex * headerHeight : undefined, minWidth: col?.minWidth }}
                     >
                       {isGroupHeader ? (
                         <span className="ui-case">{String(header.column.columnDef.header ?? "")}</span>
@@ -455,7 +485,7 @@ function DataTable<T extends RowData>({
                           aria-label={columnGroup ? `${columnGroup}: ${col?.header ?? header.column.id}` : undefined}
                           onClick={header.column.getToggleSortingHandler()}
                           className={cn(
-                            "ui-case -mx-1.5 inline-flex h-7 items-center gap-1 rounded-md px-1.5 transition-colors hover:bg-accent hover:text-foreground",
+                            "ui-case -mx-1.5 inline-flex h-7 items-center gap-1 rounded-md px-1.5 outline-none transition-colors duration-150 hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring [@media(pointer:coarse)]:min-h-11",
                             dir && "text-foreground",
                             right && "flex-row-reverse"
                           )}
@@ -482,20 +512,16 @@ function DataTable<T extends RowData>({
             {status === "loading" && <DataTableSkeletonRows columns={visibleColumns} rows={skeletonRows} selection={!!selection} />}
             {status === "error" && (
               <tr>
-                <td colSpan={colCount} className="px-4 py-16 text-center">
-                  <div role="alert" className="text-sm text-foreground">{error ?? "This view could not load."}</div>
-                  {onRetry && (
-                    <Button variant="outline" size="sm" className="mt-4" onClick={() => { scrollRef.current?.focus({ preventScroll: true }); onRetry(); }}>
-                      try again
-                    </Button>
-                  )}
+                <td colSpan={colCount} className="p-0">
+                  <div role="alert"><EmptyState icon={<CircleAlertIcon />} title="Couldn't load this view" description={error ?? "Please try again in a moment."}
+                    primaryAction={onRetry ? { label: "Try again", onClick: () => { scrollRef.current?.focus({ preventScroll: true }); onRetry() } } : undefined} /></div>
                 </td>
               </tr>
             )}
             {status === "ready" && pageRows.length === 0 && (
               <tr>
-                <td colSpan={colCount} className="px-4 py-16 text-center text-sm text-muted-foreground">
-                  {empty ?? "Nothing matches."}
+                <td colSpan={colCount} className="p-0">
+                  {typeof empty === "string" ? <EmptyState icon={<SearchXIcon />} title="No matching records" description={empty} /> : empty ?? <EmptyState icon={<SearchXIcon />} title="Nothing to show yet" description="Records will appear here when they're available." />}
                 </td>
               </tr>
             )}
@@ -512,7 +538,14 @@ function DataTable<T extends RowData>({
                     data-picked={isPicked || undefined}
                     aria-current={selected || undefined}
                     tabIndex={onRowClick ? (i === focusIndex ? 0 : -1) : undefined}
-                    onClick={onRowClick ? () => (setFocusIndex(i), onRowClick(row.original)) : undefined}
+                    onClick={onRowClick ? event => {
+                      // React portal events bubble through their owning row too.
+                      // A menu or dialog action must not also open that record.
+                      if (!(event.target instanceof Node) || !event.currentTarget.contains(event.target)) return
+                      if (event.target instanceof Element && event.target.closest("a,button,input,select,textarea,summary,[role=button],[role=combobox],[role=checkbox],[role=switch],[role=radio],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[contenteditable]:not([contenteditable=false])")) return
+                      setFocusIndex(i)
+                      onRowClick(row.original)
+                    } : undefined}
                     onKeyDown={onRowClick ? (e) => onRowKey(e, i, row.original) : undefined}
                     onFocus={() => setFocusIndex(i)}
                     className={cn(
@@ -561,6 +594,10 @@ function DataTable<T extends RowData>({
           </tbody>
         </table>
       </div>
+      {edges.left && <span aria-hidden className="pointer-events-none absolute inset-y-px left-px z-20 w-6 rounded-l-lg bg-linear-to-r from-card to-transparent" />}
+      {edges.right && <span aria-hidden className="pointer-events-none absolute inset-y-px right-px z-20 w-6 rounded-r-lg bg-linear-to-l from-card to-transparent" />}
+      </div>
+      {(edges.left || edges.right) && <p className="flex items-center gap-2 text-xs text-muted-foreground"><ArrowLeftRightIcon aria-hidden className="size-3.5" />Scroll horizontally for more columns.</p>}
 
       {status === "ready" && rowCount > pageSize && (
         <Pagination
@@ -580,7 +617,7 @@ type SkeletonColumn = Pick<DataColumn<unknown>, "id" | "header" | "align" | "min
 /** Shared with DataTable's loading branch so row geometry cannot drift. */
 function DataTableSkeletonRows({ columns, rows, selection }: { columns: SkeletonColumn[]; rows: number; selection: boolean }) {
   return <>{Array.from({ length: Math.max(0, rows) }, (_, i) => <tr key={i}>
-    {selection && <td className="w-10 border-b border-hairline py-2.5 pl-4 pr-1"><div className="flex h-5 items-center"><Skeleton className="size-4" /></div></td>}
+    {selection && <td className="w-10 border-b border-hairline py-2.5 pl-4 pr-1"><div className="flex h-5 items-center [@media(pointer:coarse)]:h-11"><Skeleton className="size-4" /></div></td>}
     {columns.map((col, j) => <td key={col.id} className={cn("border-b border-hairline px-3 py-2.5 align-middle whitespace-nowrap first:pl-4 last:pr-4", col.className)} style={{ minWidth: col.minWidth }}>
       <div className={cn("flex h-5 items-center", col.align === "right" && "justify-end")}><Skeleton className={cn("h-3.5 max-w-full", j === 0 ? "w-32" : "w-14")} /></div>
     </td>)}
@@ -596,14 +633,14 @@ function DataTableSkeleton({ columns, rows = 8, selection = false, label = "tabl
   className?: string
   announce?: boolean
 }) {
-  return <SkeletonContainer announce={announce} data-slot="data-table-skeleton" className={cn("flex min-w-0 flex-col gap-3", className)}>
-    <div className="flex min-h-8 items-center justify-end"><Skeleton className="h-8 w-24" /></div>
+  return <SkeletonContainer announce={announce} data-slot="data-table-skeleton" className={cn("flex min-w-0 flex-col gap-3 [--data-table-header-height:40px] [@media(pointer:coarse)]:[--data-table-header-height:48px]", className)}>
+    <div className="flex min-h-8 items-center justify-end"><Skeleton className="h-8 w-24 [@media(pointer:coarse)]:h-11" /></div>
     <div className="relative overflow-auto rounded-lg border border-border bg-card" style={{ maxHeight }}>
       <table className="w-full border-separate border-spacing-0 text-sm" aria-hidden="true">
         <caption className="sr-only">{label}</caption>
         <thead><tr>
-          {selection && <th className="sticky top-0 z-10 h-10 w-10 border-b border-border bg-card pl-4 pr-1" />}
-          {columns.map(col => <th key={col.id} className={cn("sticky top-0 z-10 h-10 border-b border-border bg-card px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4", col.align === "right" && "text-right")} style={{ minWidth: col.minWidth }}><span className="ui-case">{col.header}</span></th>)}
+          {selection && <th className="sticky top-0 z-10 h-(--data-table-header-height) w-10 border-b border-border bg-card pl-4 pr-1" />}
+          {columns.map(col => <th key={col.id} className={cn("sticky top-0 z-10 h-(--data-table-header-height) border-b border-border bg-card px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4", col.align === "right" && "text-right")} style={{ minWidth: col.minWidth }}><span className="ui-case">{col.header}</span></th>)}
         </tr></thead>
         <tbody><DataTableSkeletonRows columns={columns} rows={rows} selection={selection} /></tbody>
       </table>
