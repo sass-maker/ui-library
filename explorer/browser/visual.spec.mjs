@@ -7,6 +7,9 @@ for (const width of [390, 820, 1440]) {
     const globals = `theme:${theme};mode:${mode};motion:reduced`;
     test.describe(suffix, () => {
       test.use({ hasTouch: width <= 820, isMobile: width <= 820 });
+      test.beforeEach(async ({ page }) => {
+        expect(await page.evaluate(() => matchMedia('(pointer:coarse)').matches)).toBe(width <= 820);
+      });
       test(`catalog ${suffix}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 1000 });
         await openStory(page, 'start-here-catalog--all-modules', globals);

@@ -48,7 +48,7 @@ export function FileCard({ file, selected, onSelectedChange, onOpen, onRemove, v
       <p className="mt-1 truncate text-xs leading-relaxed text-muted-foreground">{file.size} <span aria-hidden>·</span> {file.updated}</p>
     </div>
     <DropdownMenu><DropdownMenuTrigger asChild><Button ref={menuTrigger} variant="ghost" size="icon-sm" aria-label={`Actions for ${file.name}`} className={cn("shrink-0", !list && "absolute bottom-4 right-2 bg-card")}><MoreHorizontal /></Button></DropdownMenuTrigger>
-      <DropdownMenuContent align="end" onCloseAutoFocus={event => {
+      <DropdownMenuContent align="end" updatePositionStrategy="always" onCloseAutoFocus={event => {
         const action = afterMenuClose.current;
         if (!action) return;
         event.preventDefault(); afterMenuClose.current = null;
