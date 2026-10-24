@@ -60,7 +60,7 @@ const fade: Variants = {
 };
 
 
-export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Open workspace", className, }: {
+export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Open workspace", anchor = "end", className, }: {
     plans: Plan[];
     onCreate: (value: {
         name: string;
@@ -69,6 +69,8 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
     /** Continue into the created workspace; omitted examples can still start over. */
     onComplete?: (value: { name: string; plan: string }) => void;
     completeLabel?: string;
+    /** Start keeps embedded forms beside their introduction; end anchors the actions in isolated demos. */
+    anchor?: "start" | "end";
     className?: string;
 }) {
     const reduceMotion = useReducedMotion();
@@ -182,7 +184,7 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
         <Footer canGoBack={false} valid={false} primary={busy ? "Creating…" : primary} completeLabel={doneLabel} onBack={() => { }}/>
       </div>
 
-      <form noValidate aria-busy={busy} aria-label="Create a workspace" className="col-start-1 row-start-1 flex min-w-0 flex-col self-end overflow-hidden rounded-[20px] bg-surface shadow-md" onSubmit={(e) => {
+      <form noValidate aria-busy={busy} aria-label="Create a workspace" className={cn("col-start-1 row-start-1 flex min-w-0 flex-col overflow-hidden rounded-[20px] bg-surface shadow-md", anchor === "start" ? "self-start" : "self-end")} onSubmit={(e) => {
             e.preventDefault();
             advance();
         }} onKeyDown={(e) => {

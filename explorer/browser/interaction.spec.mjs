@@ -110,6 +110,11 @@ async function workspaceSection(page, label) {
 
 test('first run keeps choices on failure and hands the created name into a working app', async ({ page }) => {
   await openStory(page, 'start-here-workspace--first-run-to-workspace');
+  if (page.viewportSize().width < 1024) {
+    const introduction = await page.locator('main > section').first().boundingBox();
+    const form = await page.getByRole('form', { name: 'Create a workspace', exact: true }).boundingBox();
+    expect(form.y - introduction.y - introduction.height).toBeLessThanOrEqual(32);
+  }
   await page.getByRole('textbox', { name: 'Workspace name', exact: true }).fill('Kith review room');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.getByRole('form', { name: 'Create a workspace' }).getByText('Review together', { exact: true }).click();
