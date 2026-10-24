@@ -8,5 +8,5 @@ export async function openStory(page, id, globals = 'theme:paper;mode:light') {
 }
 
 export async function noOverflow(page) {
-  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 }

@@ -5,6 +5,15 @@ for (const width of [390, 820, 1440]) {
   for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
     const suffix = `${width}-${theme}-${mode}`;
     const globals = `theme:${theme};mode:${mode};motion:reduced`;
+    test(`first run ${suffix}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1000 });
+      await openStory(page, 'start-here-workspace--first-run-to-workspace', globals);
+      await expect(page.getByRole('textbox', { name: 'Workspace name', exact: true })).toBeVisible();
+      const artwork = page.getByAltText('Kith’s illustrated memory book with a photograph and cup of coffee');
+      if (await artwork.isVisible()) await expect.poll(() => artwork.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+      await noOverflow(page);
+      await expect(page).toHaveScreenshot(`workspace-first-run-${suffix}.png`, { fullPage: true });
+    });
     test(`complete workspace ${suffix}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
       await openStory(page, 'start-here-workspace--complete-workflow', globals);

@@ -169,10 +169,10 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
     // The card grows up from a fixed bottom, so Back and Continue never move
     // under the cursor. An invisible copy holding every step at once reserves
     // the tallest height, which keeps the outer box a constant size.
-    <div className={cn("grid w-[420px] max-w-full", className)}>
-      <div aria-hidden inert className="invisible col-start-1 row-start-1 flex flex-col">
+    <div className={cn("grid min-w-0 w-[420px] max-w-full grid-cols-1", className)}>
+      <div aria-hidden inert className="invisible col-start-1 row-start-1 flex min-w-0 flex-col overflow-hidden">
         <Header stepIndex={stepIndex}/>
-        <div className="grid">
+        <div className="grid min-w-0 grid-cols-1">
           {([0, 1, 2, "done"] as const).map((p) => (<div key={p} className="col-start-1 row-start-1 p-6">
               {content(p, `${uid}-ghost`)}
             </div>))}
@@ -180,7 +180,7 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
         <Footer canGoBack={false} valid={false} primary={busy ? "Creating…" : primary} completeLabel={doneLabel} onBack={() => { }}/>
       </div>
 
-      <form noValidate aria-busy={busy} aria-label="Create a workspace" className="col-start-1 row-start-1 flex flex-col self-end overflow-hidden rounded-[20px] bg-surface shadow-md" onSubmit={(e) => {
+      <form noValidate aria-busy={busy} aria-label="Create a workspace" className="col-start-1 row-start-1 flex min-w-0 flex-col self-end overflow-hidden rounded-[20px] bg-surface shadow-md" onSubmit={(e) => {
             e.preventDefault();
             advance();
         }} onKeyDown={(e) => {
@@ -274,7 +274,7 @@ function PanelContent({ panel, prefix, plans, name, onNameChange, planId, onPlan
         <label htmlFor={`${prefix}-name`} className="sr-only">
           Workspace name
         </label>
-        <input id={`${prefix}-name`} data-autofocus value={name} onChange={(e) => onNameChange(e.target.value)} placeholder="Acme Inc" maxLength={80} autoComplete="organization" className="h-11 rounded-xl bg-background px-3.5 text-base md:text-[15px] [@media(pointer:coarse)]:text-base text-foreground shadow-md outline-hidden placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground"/>
+        <input id={`${prefix}-name`} data-autofocus value={name} onChange={(e) => onNameChange(e.target.value)} placeholder="Acme Inc" maxLength={80} autoComplete="organization" className="h-11 min-w-0 w-full rounded-xl bg-background px-3.5 text-base md:text-[15px] [@media(pointer:coarse)]:text-base text-foreground shadow-md outline-hidden placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground"/>
       </div>);
     }
     if (panel === 1) {

@@ -12,7 +12,7 @@ test('first run keeps choices on failure and hands the created name into a worki
   await openStory(page, 'start-here-workspace--first-run-to-workspace');
   await page.getByRole('textbox', { name: 'Workspace name', exact: true }).fill('Kith review room');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
-  await page.getByText('Review together', { exact: true }).click();
+  await page.getByRole('form', { name: 'Create a workspace' }).getByText('Review together', { exact: true }).click();
   await expect(page.getByRole('radio', { name: /Review together/ })).toBeChecked();
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.getByLabel('Simulate a connection failure').check();
