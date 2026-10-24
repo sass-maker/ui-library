@@ -50,6 +50,13 @@ test('a connected workspace previews, removes and restores local files', async (
   await page.getByRole('button', { name: 'Remove selected', exact: true }).click();
   await expect(page.getByRole('button', { name: 'All files', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('status').filter({ hasText: '6 of 6 files' })).toBeVisible();
+  await page.getByRole('button', { name: 'Actions for Release notes.md', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Remove file', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Preview Release notes.md', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Release assets', exact: true })).toBeFocused();
+  await page.getByRole('button', { name: 'Undo removal', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Preview Release notes.md', exact: true })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: '1 file restored.' })).toBeFocused();
   await noOverflow(page);
 });
 
@@ -93,6 +100,14 @@ test('workspace navigation retains drafts and settings recover from a failed sav
   await workspaceSection(page, 'Settings');
   await expect(name).toHaveValue('Kith design room');
   await expect(page.getByRole('button', { name: 'Save changes', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Notifications', exact: true }).click();
+  const release = page.getByRole('switch', { name: 'Release notifications', exact: true });
+  await expect(release).toBeChecked();
+  await page.getByText('A short note when something new is ready.', { exact: true }).click();
+  await expect(release).not.toBeChecked();
+  await page.getByRole('button', { name: 'Discard', exact: true }).click();
+  await expect(release).toBeChecked();
+  await expect(page.getByRole('status').filter({ hasText: 'You’re all up to date.' })).toBeFocused();
   await noOverflow(page);
 });
 

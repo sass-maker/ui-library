@@ -66,6 +66,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
   const [notice, setNotice] = useState("");
   const upload = useRef<HTMLInputElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const noticeRef = useRef<HTMLDivElement>(null);
   const objectUrls = useRef(new Set<string>());
   const firstView = useRef(true);
   useEffect(() => () => { for (const url of objectUrls.current) URL.revokeObjectURL(url); }, []);
@@ -94,6 +95,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
       .sort((left, right) => (removalOrder.current.get(left.id) ?? Infinity) - (removalOrder.current.get(right.id) ?? Infinity)));
     setNotice(`${removed.length} ${removed.length === 1 ? "file restored" : "files restored"}.`);
     setRemoved([]);
+    noticeRef.current?.focus({ preventScroll: true });
   };
   const reset = () => {
     for (const url of objectUrls.current) URL.revokeObjectURL(url);
@@ -137,7 +139,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
         </div>
         <div hidden={view !== "inbox"}><NotificationInbox messages={messages} onReadChange={(ids, read) => setMessages(current => current.map(message => ids.includes(message.id) ? { ...message, read } : message))} /></div>
         <div hidden={view !== "settings"}><WorkspaceSettings value={preferences} onValuesChange={setPreferences} onSave={async values => { await new Promise(resolve => setTimeout(resolve, 700)); if (rejectSave) throw new Error("The example save was interrupted. Your edits are still here. Try again when you’re ready."); setName(values.name); }} /></div>
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm" role="status" aria-live="polite"><span className="text-muted-foreground">{notice}</span>{removed.length > 0 && <Button variant="outline" size="sm" onClick={undoRemoval}><Undo2 />Undo removal</Button>}</div>
+        <div ref={noticeRef} tabIndex={-1} className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm outline-none" role="status" aria-live="polite"><span className="text-muted-foreground">{notice}</span>{removed.length > 0 && <Button variant="outline" size="sm" onClick={undoRemoval}><Undo2 />Undo removal</Button>}</div>
       </div>
     </AppShell>
     <SearchPalette sources={sources} placeholder="Find a workspace section…" emptyHint="Try “artwork”, “feedback” or “preferences”." onSelect={result => navigate(result.id)} />

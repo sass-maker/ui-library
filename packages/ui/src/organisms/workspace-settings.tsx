@@ -135,7 +135,7 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
             {save.kind === "saved" && !dirty ? <><Check aria-hidden className="size-4" />All changes saved.</> : save.kind === "error" ? save.message : invalid ? "Check the highlighted details." : busy ? "Saving your changes…" : dirty ? "Your changes are ready to save." : "You’re all up to date."}
           </motion.span></AnimatePresence>
         </div>
-        <div className="ml-auto flex gap-2"><Button type="button" variant="ghost" disabled={!dirty || busy} onClick={() => { setValues(saved); setShowErrors(false); setSave({ kind: "idle" }); }}>Discard</Button>
+        <div className="ml-auto flex gap-2"><Button type="button" variant="ghost" disabled={!dirty || busy} onClick={() => { setValues(saved); setShowErrors(false); setSave({ kind: "idle" }); saveStatus.current?.focus({ preventScroll: true }); }}>Discard</Button>
           <Button ref={submitButton} type="submit" aria-busy={busy} aria-disabled={busy || undefined} disabled={!dirty && !busy}>{busy && <Loader2 aria-hidden className="motion-safe:animate-spin" />}{busy ? "Saving…" : save.kind === "error" ? "Try again" : "Save changes"}</Button>
         </div>
       </footer>
