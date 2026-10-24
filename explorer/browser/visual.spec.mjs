@@ -27,7 +27,16 @@ for (const width of [390, 820, 1440]) {
         await page.keyboard.press('End');
         await expect.poll(() => gallery.getByAltText('Kith’s actual constellation screen with people shown as warm lanterns').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
         if (width <= 820) await gallery.scrollIntoViewIfNeeded();
-        await expect(page).toHaveScreenshot(`carousel-screen-${suffix}.png`, { fullPage: width > 820 });
+        const viewport = gallery.locator('[data-slot="carousel-viewport"]');
+        const lastSlide = gallery.locator('[data-slot="carousel-slide"]').last();
+        const alignment = async () => Math.abs((await lastSlide.boundingBox()).x - (await viewport.boundingBox()).x);
+        await expect(gallery.getByRole('status')).toHaveText('Slide 4 of 4');
+        await expect.poll(alignment).toBeLessThan(2);
+        // Motion commits its zero-duration reduced state on a render frame.
+        // Capture the settled geometry; screenshot animation cancellation must
+        // not rewind that compositor layer to its initial first slide.
+        await expect(page).toHaveScreenshot(`carousel-screen-${suffix}.png`, { fullPage: width > 820, animations: 'allow' });
+        await expect.poll(alignment).toBeLessThan(2);
         await openStory(page, 'motion-carousel--responsive-collection', globals);
         const collection = page.getByRole('group', { name: 'Responsive artwork', exact: true });
         await collection.locator('[data-slot="carousel-viewport"]').focus();
