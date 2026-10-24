@@ -18,6 +18,7 @@ test('first run keeps choices on failure and hands the created name into a worki
   await page.getByLabel('Simulate a connection failure').check();
   await page.getByRole('button', { name: 'Create', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Your choices are retained');
+  await expect(page.getByRole('alert')).toBeFocused();
   await expect(page.locator('form')).toContainText('Kith review room');
   await page.getByLabel('Simulate a connection failure').uncheck();
   await page.getByRole('button', { name: 'Create', exact: true }).click();
@@ -42,6 +43,7 @@ test('a connected workspace previews, removes and restores local files', async (
   await expect(preview).toHaveCount(0);
   await page.getByRole('button', { name: 'Undo removal', exact: true }).click();
   await expect(preview).toBeVisible();
+  await expect(page.locator('section[aria-label="Release assets"] article').first()).toContainText('The long way home.webp');
   await page.getByLabel('Add local files', { exact: true }).setInputFiles({ name: 'Review notes.txt', mimeType: 'text/plain', buffer: Buffer.from('Local example notes') });
   await page.getByRole('button', { name: 'Local files', exact: true }).click();
   await page.getByLabel('Select Review notes.txt', { exact: true }).check();
@@ -79,10 +81,12 @@ test('workspace navigation retains drafts and settings recover from a failed sav
   await page.getByLabel('Simulate save failure').check();
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(page.getByRole('status').filter({ hasText: 'The example save was interrupted.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Try again', exact: true })).toBeFocused();
   await expect(name).toHaveValue('Kith design room');
   await page.getByLabel('Simulate save failure').uncheck();
   await page.getByRole('button', { name: 'Try again', exact: true }).click();
   await expect(page.getByRole('status').filter({ hasText: 'All changes saved.' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: 'All changes saved.' })).toBeFocused();
   await workspaceSection(page, 'Inbox');
   await page.getByRole('button', { name: 'Mark all read', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Mark all read', exact: true })).toBeDisabled();

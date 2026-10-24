@@ -57,14 +57,14 @@ export function AppShell({
     </nav>
   );
   const brandRow = (
-    <div className="flex h-14 items-center gap-2.5 px-5">
+    <div className="flex h-14 min-w-0 items-center gap-2.5 px-5 [&>svg]:shrink-0">
       {brand.mark}
-      <span className="text-sm font-semibold tracking-[-0.01em]">{brand.name}</span>
+      <span className="truncate text-sm font-semibold tracking-[-0.01em]">{brand.name}</span>
     </div>
   );
   const userRow = user && (
     <div className="flex items-center gap-2.5 border-t border-sidebar-border px-5 py-3.5">
-      <span className="inline-flex size-7 items-center justify-center rounded-full bg-brand-soft text-[0.6875rem] font-semibold text-brand">
+      <span className="inline-flex size-7 items-center justify-center rounded-full bg-brand-soft text-[0.6875rem] font-semibold uppercase text-brand">
         {user.name
           .split(" ")
           .map((w) => w[0])

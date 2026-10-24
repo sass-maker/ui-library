@@ -63,6 +63,16 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
   const dirty = !samePreferences(values, saved);
   const invalid = save.kind === "invalid" && !!(fieldErrors.name || fieldErrors.email);
   const busy = save.kind === "saving";
+  const submitButton = useRef<HTMLButtonElement>(null);
+  const saveStatus = useRef<HTMLDivElement>(null);
+  const returnFocus = useRef(false);
+  useEffect(() => {
+    if (!returnFocus.current || (save.kind !== "saved" && save.kind !== "error")) return;
+    returnFocus.current = false;
+    if (!submitButton.current?.getClientRects().length) return;
+    if (document.activeElement !== document.body && document.activeElement !== submitButton.current) return;
+    (save.kind === "error" ? submitButton.current : saveStatus.current)?.focus({ preventScroll: true });
+  }, [save.kind]);
   const update = <K extends keyof WorkspacePreferences>(key: K, value: WorkspacePreferences[K]) => {
     setValues({ ...values, [key]: value });
     if (save.kind !== "saving") setSave({ kind: "idle" });
@@ -75,6 +85,7 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
     if (errors.name || errors.email) { focusInvalid.current = true; setTab(0); setSave({ kind: "invalid" }); return; }
     const original = values;
     const submitted = { ...values, name: values.name.trim(), email: values.email.trim() };
+    returnFocus.current = event.currentTarget.contains(document.activeElement);
     setSave({ kind: "saving" });
     try {
       await onSave(submitted);
@@ -119,13 +130,13 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
         </TransitionPanel>
       </div>
       <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-border bg-surface/40 px-5 py-4 sm:px-8">
-        <div className="min-w-0 text-[0.8125rem] leading-relaxed" role="status" aria-live="polite">
+        <div ref={saveStatus} tabIndex={-1} className="min-w-0 text-[0.8125rem] leading-relaxed outline-none" role="status" aria-live="polite">
           <AnimatePresence initial={false} mode="wait"><motion.span key={save.kind} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={motionTiming.feedback} className={cn("flex items-center gap-2", save.kind === "error" || invalid ? "text-destructive" : "text-muted-foreground")}>
             {save.kind === "saved" && !dirty ? <><Check aria-hidden className="size-4" />All changes saved.</> : save.kind === "error" ? save.message : invalid ? "Check the highlighted details." : busy ? "Saving your changes…" : dirty ? "Your changes are ready to save." : "You’re all up to date."}
           </motion.span></AnimatePresence>
         </div>
         <div className="ml-auto flex gap-2"><Button type="button" variant="ghost" disabled={!dirty || busy} onClick={() => { setValues(saved); setShowErrors(false); setSave({ kind: "idle" }); }}>Discard</Button>
-          <Button type="submit" aria-busy={busy} disabled={!dirty || busy}>{busy && <Loader2 aria-hidden className="motion-safe:animate-spin" />}{busy ? "Saving…" : save.kind === "error" ? "Try again" : "Save changes"}</Button>
+          <Button ref={submitButton} type="submit" aria-busy={busy} aria-disabled={busy || undefined} disabled={!dirty && !busy}>{busy && <Loader2 aria-hidden className="motion-safe:animate-spin" />}{busy ? "Saving…" : save.kind === "error" ? "Try again" : "Save changes"}</Button>
         </div>
       </footer>
     </form>

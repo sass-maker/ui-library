@@ -36,7 +36,7 @@ export function ProjectOverviewExample() {
 /** A connected, local workspace built from the organisms shown separately. */
 export function CompleteWorkspaceExample({ sourceAction, initialName = samplePreferences.name }: { sourceAction?: ReactNode; initialName?: string } = {}) {
   const sections = [
-    { id: "overview", label: "Overview", Icon: LayoutDashboard, description: "The release, its checklist, and the people working on it." },
+    { id: "overview", label: "Overview", Icon: LayoutDashboard, description: "Review the artwork, close the feedback loop, and keep the release moving." },
     { id: "assets", label: "Assets", Icon: FolderOpen, description: "Browse artwork, preview a file, and keep your release library in order." },
     { id: "inbox", label: "Inbox", Icon: Inbox, description: "Read the feedback behind the next round of refinements." },
     { id: "settings", label: "Settings", Icon: Settings2, description: "A familiar workspace, with the preferences that suit you." },
@@ -57,6 +57,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
   }, []);
   const [files, setFiles] = useState(sampleFiles);
   const [removed, setRemoved] = useState<typeof sampleFiles>([]);
+  const removalOrder = useRef(new Map<string, number>());
   const [messages, setMessages] = useState(sampleMessages);
   const [tasks, setTasks] = useState(sampleTasks);
   const [preferences, setPreferences] = useState({ ...samplePreferences, name: initialName });
@@ -81,6 +82,19 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
     { id: "inbox", title: "Inbox", subtitle: "Messages and unread feedback" },
     { id: "settings", title: "Settings", subtitle: "Workspace name, email and notification preferences" },
   ].filter(item => `${item.title} ${item.subtitle}`.toLowerCase().includes(query.toLowerCase())) }], []);
+  const removeFiles = (ids: string[]) => {
+    const batch = files.filter(file => ids.includes(file.id));
+    removalOrder.current = new Map(files.map((file, index) => [file.id, index]));
+    setRemoved(batch);
+    setFiles(current => current.filter(file => !ids.includes(file.id)));
+    setNotice(`${batch.length} ${batch.length === 1 ? "file removed" : "files removed"}. You can undo this change.`);
+  };
+  const undoRemoval = () => {
+    setFiles(current => [...current, ...removed.filter(file => !current.some(item => item.id === file.id))]
+      .sort((left, right) => (removalOrder.current.get(left.id) ?? Infinity) - (removalOrder.current.get(right.id) ?? Infinity)));
+    setNotice(`${removed.length} ${removed.length === 1 ? "file restored" : "files restored"}.`);
+    setRemoved([]);
+  };
   const reset = () => {
     for (const url of objectUrls.current) URL.revokeObjectURL(url);
     objectUrls.current.clear();
@@ -100,16 +114,17 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
       user={{ name: "Your local workspace", detail: "No sign-in or upload required" }}>
       <header className="hidden flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-5 md:flex md:px-8"><div className="flex items-center gap-2 text-xs text-muted-foreground"><BookOpen aria-hidden className="size-3.5" /><span>Kith</span><span aria-hidden>/</span><span>{section.label}</span></div><SearchTrigger label="Jump to a section" className="min-h-11" /></header>
       <div className="mx-auto max-w-7xl px-5 pb-10 pt-8 sm:px-8 lg:px-10 lg:pt-10">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div>{view === "overview" && <p className="eyebrow mb-3">October / a little more considered</p>}<h1 ref={heading} tabIndex={-1} className="font-display text-3xl leading-tight outline-none sm:text-4xl">{section.label === "Overview" ? "A place to bring it together." : section.label}</h1><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">{section.description}</p></div>{view === "overview" && <Button variant="outline" onClick={() => navigate("assets")}>Browse release assets<ArrowRight /></Button>}</div>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div>{view === "overview" && <p className="eyebrow mb-3">Kith / release workspace</p>}<h1 ref={heading} tabIndex={-1} className="font-display text-3xl leading-tight outline-none sm:text-4xl">{section.label === "Overview" ? "Kith’s October release." : section.label}</h1><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">{section.description}</p></div>{view === "overview" && <Button variant="outline" onClick={() => navigate("assets")}>Browse release assets<ArrowRight /></Button>}</div>
         <div hidden={view !== "overview"}>
-          <div className="mb-8 grid overflow-hidden rounded-2xl border border-border bg-card md:grid-cols-[1.1fr_1fr]">
+          <ProjectOverview name="Release readiness" description="An illustrative review workspace. Check off a task and follow the progress through the release." metrics={sampleMetrics} tasks={tasks} activity={sampleActivity} onTaskChange={(id, complete) => setTasks(current => current.map(task => task.id === id ? { ...task, complete } : task))} />
+          <div className="mt-8 grid overflow-hidden rounded-2xl border border-border bg-card md:grid-cols-[1.1fr_1fr]">
             <ResponsiveImage src="./demo/kith/coastal-walk-v2.webp" alt="Kith’s illustrated coastal walk, part of the release artwork" width={760} height={460} loading="eager" className="h-full min-h-52" />
-            <div className="flex flex-col items-start justify-center p-6 sm:p-8"><p className="eyebrow">The next chapter / Kith</p><h2 className="mt-4 font-display text-2xl leading-snug sm:text-3xl">Good work lives<br />in the small details.</h2><p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">The artwork, the words, and the way it all comes together. Keep the work and the feedback in one place.</p><Button variant="link" className="mt-4 px-0" asChild><a target="_top" href="./?path=/story/start-here-media--complete-page">Open the product story<ArrowUpRight /></a></Button></div>
+            <div className="flex flex-col items-start justify-center p-6 sm:p-8"><p className="eyebrow">The next chapter / Kith</p><h2 className="mt-4 font-display text-2xl leading-snug sm:text-3xl">Kith’s next chapter,<br />in context.</h2><p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">Preview the artwork and real app screens together before the next handoff.</p><Button variant="link" className="mt-4 px-0" asChild><a target="_top" href="./?path=/story/start-here-media--complete-page">Open the product story<ArrowUpRight /></a></Button></div>
           </div>
-          <ProjectOverview name="October release" description="An illustrative review workspace. Check off a task and follow the progress through the release." metrics={sampleMetrics} tasks={tasks} activity={sampleActivity} onTaskChange={(id, complete) => setTasks(current => current.map(task => task.id === id ? { ...task, complete } : task))} />
+
         </div>
         <div hidden={view !== "assets"}>
-          <AssetLibrary showHeader={false} title="Release assets" description="The Kith artwork, screens and documents behind this release." state={{ kind: "ready", files }} onRemove={ids => { const batch = files.filter(file => ids.includes(file.id)); setRemoved(batch); setFiles(current => current.filter(file => !ids.includes(file.id))); setNotice(`${batch.length} ${batch.length === 1 ? "file removed" : "files removed"}. You can undo this change.`); }}
+          <AssetLibrary showHeader={false} title="Release assets" description="The Kith artwork, screens and documents behind this release." state={{ kind: "ready", files }} onRemove={removeFiles}
             action={<><Button className="min-h-11" onClick={() => upload.current?.click()}><Upload />Add local files</Button><input ref={upload} type="file" multiple className="sr-only" aria-label="Add local files" onChange={event => {
               const additions = Array.from(event.target.files ?? []).map(file => {
                 const preview = file.type.startsWith("image/") ? URL.createObjectURL(file) : undefined;
@@ -122,7 +137,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
         </div>
         <div hidden={view !== "inbox"}><NotificationInbox messages={messages} onReadChange={(ids, read) => setMessages(current => current.map(message => ids.includes(message.id) ? { ...message, read } : message))} /></div>
         <div hidden={view !== "settings"}><WorkspaceSettings value={preferences} onValuesChange={setPreferences} onSave={async values => { await new Promise(resolve => setTimeout(resolve, 700)); if (rejectSave) throw new Error("The example save was interrupted. Your edits are still here. Try again when you’re ready."); setName(values.name); }} /></div>
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm" role="status" aria-live="polite"><span className="text-muted-foreground">{notice}</span>{removed.length > 0 && <Button variant="outline" size="sm" onClick={() => { setFiles(current => [...current, ...removed]); setNotice(`${removed.length} ${removed.length === 1 ? "file restored" : "files restored"}.`); setRemoved([]); }}><Undo2 />Undo removal</Button>}</div>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm" role="status" aria-live="polite"><span className="text-muted-foreground">{notice}</span>{removed.length > 0 && <Button variant="outline" size="sm" onClick={undoRemoval}><Undo2 />Undo removal</Button>}</div>
       </div>
     </AppShell>
     <SearchPalette sources={sources} placeholder="Find a workspace section…" emptyHint="Try “artwork”, “feedback” or “preferences”." onSelect={result => navigate(result.id)} />

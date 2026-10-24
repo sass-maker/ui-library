@@ -77,6 +77,8 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
     const [direction, setDirection] = useState<1 | -1>(1);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const errorRef = useRef<HTMLParagraphElement>(null);
+    useEffect(() => { if (error) errorRef.current?.focus({ preventScroll: true }); }, [error]);
     const pending = useRef(false);
     const [name, setName] = useState("");
     const [planId, setPlanId] = useState<string | null>(null);
@@ -203,7 +205,7 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
             </AnimatePresence>
           </div>
         </motion.div>
-        {error && <p role="alert" className="px-6 pb-3 text-sm text-destructive">{error}</p>}
+        {error && <p ref={errorRef} tabIndex={-1} role="alert" className="px-6 pb-3 text-sm text-destructive outline-none">{error}</p>}
         <Footer canGoBack={!busy && (panel === 1 || panel === 2)} valid={valid && !busy} primary={busy ? "Creating…" : primary} completeLabel={doneLabel} onBack={back}/>
         <span className="sr-only" aria-live="polite">
           {panel === "done"
@@ -270,7 +272,7 @@ function PanelContent({ panel, prefix, plans, name, onNameChange, planId, onPlan
 }) {
     if (panel === 0) {
         return (<div className="flex flex-col gap-4">
-        <Heading title="Name your workspace" note="You can change this later."/>
+        <Heading title="Name your workspace" note="Use at least two characters. You can change this later."/>
         <label htmlFor={`${prefix}-name`} className="sr-only">
           Workspace name
         </label>
