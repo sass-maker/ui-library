@@ -75,6 +75,10 @@ const style = Object.entries({ ...fontOverrides(fonts, theme), ...tokensFromApp(
 const displayFace = fromApp?.fonts?.display ?? fonts?.display ?? (theme === "paper" ? "newsreader" : theme === "hearth" ? "fraunces" : theme === "signal" ? "instrument-serif" : "figtree");
 const displayFont = displayFace === "system" || displayFace === "ui-rounded" ? undefined
   : displayFace === "geist-mono" ? (await import("@saas-maker/ui/fonts/geist-mono-latin-normal.woff2?url")).default
+  : displayFace === "instrument-sans" ? (await import("@saas-maker/ui/fonts/instrument-sans-latin-normal.woff2?url")).default
+  : displayFace === "manrope" ? (await import("@saas-maker/ui/fonts/manrope-latin-normal.woff2?url")).default
+  : displayFace === "bricolage-grotesque" ? (await import("@saas-maker/ui/fonts/bricolage-grotesque-latin-normal.woff2?url")).default
+  : displayFace === "ibm-plex-sans" ? (await import("@saas-maker/ui/fonts/ibm-plex-sans-latin-normal.woff2?url")).default
   : displayFace === "newsreader"
   ? (await import("@saas-maker/ui/fonts/newsreader-display-latin-normal.woff2?url")).default
   : displayFace === "fraunces"

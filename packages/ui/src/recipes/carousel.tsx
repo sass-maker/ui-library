@@ -90,8 +90,8 @@ function CarouselIndicator({ className, classNameButton }: CarouselIndicatorProp
   </div>;
 }
 
-export type CarouselContentProps = { children: ReactNode; className?: string; transition?: Transition };
-function CarouselContent({ children, className, transition }: CarouselContentProps) {
+export type CarouselContentProps = { children: ReactNode; className?: string; viewportClassName?: string; transition?: Transition };
+function CarouselContent({ children, className, viewportClassName, transition }: CarouselContentProps) {
   const { index, setIndex, setItemsCount, disableDrag, geometry, setGeometry } = useCarousel();
   const reduced = useReducedMotion();
   const viewport = useRef<HTMLDivElement>(null);
@@ -130,7 +130,7 @@ function CarouselContent({ children, className, transition }: CarouselContentPro
     const inactive = track.current?.querySelectorAll('[inert]') ?? [];
     for (const slide of inactive) if (slide.contains(document.activeElement)) viewport.current?.focus({ preventScroll: true });
   }, [index, geometry]);
-  return <div ref={viewport} role="group" data-slot="carousel-viewport" tabIndex={0} aria-label="Slides. Use Left and Right arrow keys to browse." className="overflow-hidden rounded-[inherit] outline-none focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" onKeyDown={event => {
+  return <div ref={viewport} role="group" data-slot="carousel-viewport" tabIndex={0} aria-label="Slides. Use Left and Right arrow keys to browse." className={cn("overflow-hidden rounded-[inherit] outline-none focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background", viewportClassName)} onKeyDown={event => {
     if (event.target !== event.currentTarget || !count) return;
     // Input can arrive in the same frame as a resize, before ResizeObserver.
     // Resolve that command against the current layout, not yesterday's end.

@@ -114,3 +114,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Self-hosted fonts
+
+Figtree, Geist, Geist Mono, Newsreader, Fraunces, Instrument Serif,
+Instrument Sans, Manrope, Bricolage Grotesque, and IBM Plex Sans are separately
+licensed under SIL Open Font License 1.1. Full copyright notices and license
+texts ship with the web assets in `packages/ui/src/fonts/licenses/`.
+`packages/ui/src/fonts/sources.json` records Fontsource package versions,
+asset provenance, byte sizes and SHA-256 hashes. Keep those notices with copies
+of the font files. The four new variable families retain unmodified Fontsource
+Latin binaries; the original six use the existing documented subset build.

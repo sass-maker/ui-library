@@ -45,7 +45,7 @@ export const singleFieldForm = z.object({
   error: z.string().optional(),
   prefill: z.string().optional(),
 }).strict();
-const font = z.enum(["figtree", "newsreader", "instrument-serif", "fraunces", "geist"]);
+const font = z.enum(["figtree", "newsreader", "instrument-serif", "fraunces", "geist", "instrument-sans", "manrope", "bricolage-grotesque", "ibm-plex-sans"]);
 const pageFont = font.or(z.literal("ui-rounded"));
 /** Omitted layout preserves the original hero. Plain cards need intrinsic dimensions. */
 const heroIdentity = {
@@ -65,7 +65,7 @@ function validateHero(h: { layout?: string; form?: unknown; primary?: unknown; c
 }
 
 const appColor = z.string().refine(v => rgb(v) !== null, "Use a solid #hex, rgb(), or oklch() color (no alpha or var())");
-const appFont = z.enum(["figtree", "newsreader", "instrument-serif", "fraunces", "geist", "geist-mono", "system"]);
+const appFont = z.enum(["figtree", "newsreader", "instrument-serif", "fraunces", "geist", "instrument-sans", "manrope", "bricolage-grotesque", "ibm-plex-sans", "geist-mono", "system"]);
 export const fromApp = z.object({
   background: appColor, foreground: appColor, card: appColor, surface: appColor,
   muted: appColor, mutedForeground: appColor, border: appColor, brand: appColor,

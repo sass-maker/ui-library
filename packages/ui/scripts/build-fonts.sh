@@ -33,4 +33,5 @@ build fraunces-latin-normal       $N/@fontsource-variable/fraunces/files/fraunce
 build fraunces-latin-italic       $N/@fontsource-variable/fraunces/files/fraunces-latin-soft-italic.woff2 wght=400:700 SOFT=100
 build instrument-serif-latin-normal $N/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2
 build instrument-serif-latin-italic $N/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2
+node scripts/sync-font-assets.mjs
 ls -l $OUT

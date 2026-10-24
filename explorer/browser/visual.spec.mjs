@@ -125,6 +125,18 @@ for (const width of [390, 820, 1440]) {
           await expect(page).toHaveScreenshot(`asset-${state.toLowerCase()}-${suffix}.png`, { fullPage: width > 820 });
         });
       }
+      test(`font pairings ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        await openStory(page, 'foundations-tokens--font-pairings', globals);
+        const preview = page.getByTestId('font-pairing-preview');
+        await preview.scrollIntoViewIfNeeded();
+        await noOverflow(page);
+        await expect(page).toHaveScreenshot(`pairing-editorial-${suffix}.png`, { fullPage: width > 820 });
+        await page.getByRole('group', { name: 'Choose a font pairing' }).getByRole('button', { name: /^Expressive/ }).click();
+        await page.evaluate(() => document.fonts.ready);
+        await preview.scrollIntoViewIfNeeded();
+        await expect(page).toHaveScreenshot(`pairing-expressive-${suffix}.png`, { fullPage: width > 820 });
+      });
       test(`font impact ${suffix}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 1000 });
         await openStory(page, 'foundations-tokens--font-impact', globals);

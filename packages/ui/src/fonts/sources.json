@@ -1,0 +1,313 @@
+{
+  "subset": "latin",
+  "families": [
+    {
+      "family": "Figtree",
+      "package": "@fontsource-variable/figtree",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2022 The Figtree Project Authors (https://github.com/erikdkennedy/figtree) Figtree-Italic[wght].ttf: Copyright 2022 The Figtree Project Authors (https://github.com/erikdkennedy/figtree)",
+        "file": "licenses/figtree-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "figtree-latin-italic.woff2",
+          "bytes": 17964,
+          "sha256": "4ae4cf86df8dbc9aafef9ad4eedf51637314c6320da6896fac261f89ce1946ef",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "figtree-latin-normal.woff2",
+          "bytes": 17428,
+          "sha256": "bf27f091b6c929cf529bb656cec4590c39a921d2911e1a0c5b60232c68abc97a",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        }
+      ]
+    },
+    {
+      "family": "Geist",
+      "package": "@fontsource-variable/geist",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2024 The Geist Project Authors (https://github.com/vercel/geist-font) Geist-Italic[wght].ttf: Copyright 2024 The Geist Project Authors (https://github.com/vercel/geist-font)",
+        "file": "licenses/geist-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "geist-latin-italic.woff2",
+          "bytes": 18936,
+          "sha256": "0982909d98d83ddc22d6cf4f39e99901358da71c36b010c72d9fefeb6df823de",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "geist-latin-normal.woff2",
+          "bytes": 18188,
+          "sha256": "7a8169db7e948500af7fd9c8e169d6dab71b8b8d4ab5377d655d6bc6f731aa1a",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        }
+      ]
+    },
+    {
+      "family": "Geist Mono",
+      "package": "@fontsource-variable/geist-mono",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2024 The Geist Project Authors (https://github.com/vercel/geist-font.git) GeistMono-Italic[wght].ttf: Copyright 2024 The Geist Project Authors (https://github.com/vercel/geist-font.git)",
+        "file": "licenses/geist-mono-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "geist-mono-latin-italic.woff2",
+          "bytes": 14768,
+          "sha256": "49bb79524540349868d178dffdcc6b3105dafdba2c8b20194b30911e6f8fcded",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "geist-mono-latin-normal.woff2",
+          "bytes": 13748,
+          "sha256": "83b4d5341c6f93935440d564026d1a7546b81e4b1a9b2d1b9ff615242a66f96c",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        }
+      ]
+    },
+    {
+      "family": "Newsreader",
+      "package": "@fontsource-variable/newsreader",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2020 The Newsreader Project Authors (http://github.com/productiontype/Newsreader) Newsreader-Italic[opsz,wght].ttf: Copyright 2020 The Newsreader Project Authors (http://github.com/productiontype/Newsreader)",
+        "file": "licenses/newsreader-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "newsreader-display-latin-italic.woff2",
+          "bytes": 38128,
+          "sha256": "afd4455ce0615ab5163dbff5ab7ce62a40a1ffb31d8db598f3784923fc3b2e9a",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "newsreader-display-latin-normal.woff2",
+          "bytes": 34424,
+          "sha256": "1917f690d59f5fd52765fccad3d960c18c038c2842eca1f0356a1af94044e5c9",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "newsreader-text-latin-italic.woff2",
+          "bytes": 39056,
+          "sha256": "839f7ab69e9b92ded33a21e0a91572cbe13fc7bfdf9e3bb46570750ad6e96f85",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "newsreader-text-latin-normal.woff2",
+          "bytes": 35012,
+          "sha256": "17b7ebca7c3597fac43b6e4925e3adbd8e691757f0b3fcaed6a78c44f0d5c890",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        }
+      ]
+    },
+    {
+      "family": "Fraunces",
+      "package": "@fontsource-variable/fraunces",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2020 The Fraunces Project Authors (github.com/undercasetype/Fraunces) Fraunces-Italic[SOFT,WONK,opsz,wght].ttf: Copyright 2020 The Fraunces Project Authors (github.com/undercasetype/Fraunces)",
+        "file": "licenses/fraunces-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "fraunces-latin-italic.woff2",
+          "bytes": 39296,
+          "sha256": "14f10a21f9de7976c2e9884fd8a5394771660df5405376ea6242b695dd057b56",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "fraunces-latin-normal.woff2",
+          "bytes": 31728,
+          "sha256": "80a373b19e75a397b058a133b9d67b5a3f713bf405be80890cc25e128109083e",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        }
+      ]
+    },
+    {
+      "family": "Instrument Serif",
+      "package": "@fontsource/instrument-serif",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2022 The Instrument Serif Project Authors (https://github.com/Instrument/instrument-serif) InstrumentSerif-Italic.ttf: Copyright 2022 The Instrument Serif Project Authors (https://github.com/Instrument/instrument-serif)",
+        "file": "licenses/instrument-serif-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "instrument-serif-latin-italic.woff2",
+          "bytes": 14612,
+          "sha256": "90b6e2d0b91d3e7299c7144bfd844f74d2b3e63a676a4fe61f29faacc735eba9",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        },
+        {
+          "file": "instrument-serif-latin-normal.woff2",
+          "bytes": 13936,
+          "sha256": "c2ed2a41341cba56dda200bb8130f951b13cbf7fd30d9880c9691662fec88396",
+          "modified": true,
+          "build": "../../scripts/build-fonts.sh"
+        }
+      ]
+    },
+    {
+      "family": "Instrument Sans",
+      "package": "@fontsource-variable/instrument-sans",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2022 The Instrument Sans Project Authors (https://github.com/Instrument/instrument-sans) InstrumentSans-Italic[wdth,wght].ttf: Copyright 2022 The Instrument Sans Project Authors (https://github.com/Instrument/instrument-sans)",
+        "file": "licenses/instrument-sans-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "instrument-sans-latin-italic.woff2",
+          "bytes": 31828,
+          "sha256": "77210cdde0281b5ecb0d592e063a98656f1bc36993a3b98f506eb91ff4a433a5",
+          "upstreamFile": "files/instrument-sans-latin-wght-italic.woff2",
+          "modified": false
+        },
+        {
+          "file": "instrument-sans-latin-normal.woff2",
+          "bytes": 30092,
+          "sha256": "2ee17598a98d8a59e4df8152d015bec9ab8e4d5672cc0ab42bef806b568e3971",
+          "upstreamFile": "files/instrument-sans-latin-wght-normal.woff2",
+          "modified": false
+        }
+      ]
+    },
+    {
+      "family": "Manrope",
+      "package": "@fontsource-variable/manrope",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2019 The Manrope Project Authors (https://github.com/sharanda/manrope)",
+        "file": "licenses/manrope-OFL.txt"
+      },
+      "styles": [
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "manrope-latin-normal.woff2",
+          "bytes": 24836,
+          "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+          "upstreamFile": "files/manrope-latin-wght-normal.woff2",
+          "modified": false
+        }
+      ]
+    },
+    {
+      "family": "Bricolage Grotesque",
+      "package": "@fontsource-variable/bricolage-grotesque",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2022 The Bricolage Grotesque Project Authors (https://github.com/ateliertriay/bricolage)",
+        "file": "licenses/bricolage-grotesque-OFL.txt"
+      },
+      "styles": [
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "bricolage-grotesque-latin-normal.woff2",
+          "bytes": 76888,
+          "sha256": "a79fdb52d4a5c76552452f69202add96e287401fff03d3e8c0e38b4dcb5a99cd",
+          "upstreamFile": "files/bricolage-grotesque-latin-opsz-normal.woff2",
+          "modified": false
+        }
+      ]
+    },
+    {
+      "family": "IBM Plex Sans",
+      "package": "@fontsource-variable/ibm-plex-sans",
+      "version": "5.3.0",
+      "license": {
+        "type": "OFL-1.1",
+        "url": "https://openfontlicense.org",
+        "attribution": "Copyright 2019 IBM Corp. All rights reserved. IBMPlexSans-Italic[wdth,wght].ttf: Copyright 2019 IBM Corp. All rights reserved.",
+        "file": "licenses/ibm-plex-sans-OFL.txt"
+      },
+      "styles": [
+        "italic",
+        "normal"
+      ],
+      "assets": [
+        {
+          "file": "ibm-plex-sans-latin-italic.woff2",
+          "bytes": 50184,
+          "sha256": "4363757d2695c7633f98472855849f7c30528eba869d7968ee35b58c87cf14c1",
+          "upstreamFile": "files/ibm-plex-sans-latin-wght-italic.woff2",
+          "modified": false
+        },
+        {
+          "file": "ibm-plex-sans-latin-normal.woff2",
+          "bytes": 45712,
+          "sha256": "e2291e842cf5af167122a22881a740c7f2dda7716f1e8cd76680264f4a859470",
+          "upstreamFile": "files/ibm-plex-sans-latin-wght-normal.woff2",
+          "modified": false
+        }
+      ]
+    }
+  ]
+}

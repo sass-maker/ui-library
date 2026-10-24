@@ -268,6 +268,7 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
             dir={dir as Direction}
           >
             <AccordionPrimitive.Root
+              role="group"
               {...props}
               type="multiple"
               value={expandedItems}

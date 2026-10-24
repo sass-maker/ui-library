@@ -3,6 +3,47 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { noOverflow, openStory } from './helpers.mjs';
 
+test('curated font pairings load real faces and preserve the working collection', async ({ page }) => {
+  await openStory(page, 'foundations-tokens--font-pairings');
+  const preview = page.getByTestId('font-pairing-preview');
+  await preview.getByRole('button', { name: 'Brand', exact: true }).click();
+  for (const [label, id, family] of [
+    ['Editorial', 'editorial', 'Instrument Sans Variable'],
+    ['Calm product', 'calm', 'Manrope Variable'],
+    ['Expressive', 'expressive', 'Geist Variable'],
+    ['Technical', 'technical', 'IBM Plex Sans Variable'],
+  ]) {
+    await page.getByRole('group', { name: 'Choose a font pairing' }).getByRole('button', { name: new RegExp(`^${label}`) }).click();
+    await expect(preview).toHaveAttribute('data-pairing', id);
+    await expect(preview).toHaveCSS('font-family', new RegExp(family));
+    await expect(preview.getByRole('button', { name: 'Brand', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(preview.getByText('The long way home.webp', { exact: true })).toHaveCount(0);
+    const art = await preview.getByAltText('Two people walking along Kith’s illustrated coastal path').boundingBox();
+    const landing = await preview.getByRole('region', { name: 'Kith landing preview' }).boundingBox();
+    expect(art.x + art.width).toBeLessThanOrEqual(landing.x + landing.width + 1);
+    await noOverflow(page);
+  }
+  const faces = await page.evaluate(async () => {
+    const samples = [
+      ['Instrument Sans Variable', 'normal'], ['Instrument Sans Variable', 'italic'],
+      ['Manrope Variable', 'normal'], ['Bricolage Grotesque Variable', 'normal'],
+      ['IBM Plex Sans Variable', 'normal'], ['IBM Plex Sans Variable', 'italic'],
+    ];
+    return Promise.all(samples.map(async ([family, style]) => {
+      const loaded = await document.fonts.load(`${style} 400 20px "${family}"`);
+      const context = document.createElement('canvas').getContext('2d');
+      context.font = `${style} 400 20px "${family}", monospace`;
+      const actual = context.measureText('Remember the people, Il1 O0 0123456789').width;
+      context.font = `${style} 400 20px monospace`;
+      return { family, style, loaded: loaded.length, difference: Math.abs(actual - context.measureText('Remember the people, Il1 O0 0123456789').width) };
+    }));
+  });
+  for (const face of faces) {
+    expect(face.loaded, `${face.family} ${face.style} loads a declared face`).toBeGreaterThan(0);
+    expect(face.difference, `${face.family} ${face.style} renders beyond fallback`).toBeGreaterThan(0.1);
+  }
+});
+
 test('the media gallery supports keyboard browsing and isolates offscreen links', async ({ page }) => {
   await openStory(page, 'motion-carousel--in-context');
   const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
@@ -458,7 +499,7 @@ test('materials follow live reduced-motion preference and keyboard selection', a
 
 test('font comparisons measure live layout and retain usable inputs with fallbacks', async ({ page }) => {
   await openStory(page, 'foundations-tokens--font-impact');
-  await expect(page.getByTestId('font-measurement')).toHaveCount(4);
+  await expect(page.getByTestId('font-measurement')).toHaveCount(10);
   await expect(page.getByTestId('font-measurement').first()).toContainText('body lines');
   for (const input of await page.getByRole('textbox', { name: 'Public repository' }).all()) {
     expect(await input.evaluate(element => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(page.viewportSize().width < 768 ? 16 : 14);

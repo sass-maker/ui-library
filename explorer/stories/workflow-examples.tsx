@@ -75,8 +75,8 @@ export function MediaContext() {
   ];
   return <section aria-labelledby={titleId} className="w-full max-w-4xl">
     <header className="mb-7 grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end"><div><p className="eyebrow mb-4">Kith / A collection of moments</p><h2 id={titleId} className="max-w-lg font-display text-3xl leading-[1.12] sm:text-5xl">A few things<br /><em>worth keeping.</em></h2></div><p className="max-w-xs text-sm leading-relaxed text-muted-foreground">Original artwork and a real app screen. One quiet frame, with the whole story in view.</p></header>
-    <Carousel.Carousel index={index} onIndexChange={setIndex} label="Kith moments" className="flex flex-col rounded-2xl border border-border bg-card">
-      <Carousel.CarouselContent>{moments.map((moment, position) => <Carousel.CarouselItem key={moment.id} label={moment.title}>
+    <Carousel.Carousel index={index} onIndexChange={setIndex} label="Kith moments" className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card has-[[data-slot=carousel-viewport]:focus-visible]:ring-[3px] has-[[data-slot=carousel-viewport]:focus-visible]:ring-ring has-[[data-slot=carousel-viewport]:focus-visible]:ring-offset-2 has-[[data-slot=carousel-viewport]:focus-visible]:ring-offset-background">
+      <Carousel.CarouselContent viewportClassName="rounded-none focus-visible:ring-0 focus-visible:ring-offset-0">{moments.map((moment, position) => <Carousel.CarouselItem key={moment.id} label={moment.title}>
         <figure className="grid h-full sm:grid-cols-[1.15fr_1fr]">
           <div className="relative aspect-[4/3] min-w-0 overflow-hidden bg-surface sm:aspect-auto sm:min-h-[25rem]">
             <ResponsiveImage src={`./demo/kith/${moment.image}.webp`} alt={moment.alt} width={moment.width} height={moment.height} loading={position === 0 ? "eager" : "lazy"} className={moment.id === "people" ? "absolute! inset-7 size-[calc(100%-3.5rem)] bg-transparent" : "absolute! inset-0 size-full"} imageClassName={moment.id === "people" ? "object-contain" : "object-cover"} />
