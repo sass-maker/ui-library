@@ -2,7 +2,6 @@ import { Fragment, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Box, Download, SearchX, X } from "lucide-react";
 import { ConsolePage } from "@saas-maker/templates/console-page";
 import { Button } from "@saas-maker/ui/atoms/button";
-import { Badge } from "@saas-maker/ui/atoms/badge";
 import { DataTable, type DataColumn } from "@saas-maker/ui/organisms/data-table";
 import { SearchField } from "@saas-maker/ui/molecules/search-field";
 import { CopyButton } from "@saas-maker/ui/recipes/copy-button";
@@ -21,7 +20,7 @@ const catalogColumns: DataColumn<CatalogModule>[] = [
   { id: "packages", header: "Packages", value: item => item.dependencies.length, align: "right" },
 ];
 
-export function ModuleCatalogExample() {
+export function ModuleCatalogExample({ sourceCode }: { sourceCode?: string } = {}) {
   const [query, setQuery] = useState("");
   const [layer, setLayer] = useState<(typeof catalogLayers)[number]>("All modules");
   const [selected, setSelected] = useState<string[]>([]);
@@ -60,14 +59,14 @@ export function ModuleCatalogExample() {
   return <div ref={root}>
     <ConsolePage brand={{ name: "Fleet UI", mark: <Box aria-hidden className="size-5 stroke-[1.5] text-brand" />, href: "./?path=/story/start-here-overview--explore", target: "_top" }}
       title="Component catalog" titleRef={heading} description="Search the shipped modules, inspect an import, and open its working example. This inventory comes from the actual repository sources."
-      search={{ label: "Find a component" }} breadcrumbs={[{ label: "Fleet UI" }, { label: "Library" }]}
+      search={{ label: "Find a component" }} breadcrumbs={[{ label: "Fleet UI" }, { label: "Library" }, { label: moduleCatalog[0].sourceRef }]}
       nav={[{ title: "Library", items: catalogLayers.map(value => ({ label: value, href: `#catalog-${value.toLowerCase().replaceAll(" ", "-")}`, active: layer === value, count: value === "All modules" ? moduleCatalog.length : moduleCatalog.filter(item => item.layer === value).length })) }]}
       onNavigate={href => {
         const next = catalogLayers.find(value => href === `#catalog-${value.toLowerCase().replaceAll(" ", "-")}`);
         if (!next) return;
         setLayer(next); setQuery(""); requestAnimationFrame(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); });
       }}
-      actions={<Badge variant="outline">{moduleCatalog[0].sourceRef}</Badge>}
+      actions={sourceCode && <div className="flex items-center gap-2 text-xs text-muted-foreground"><span>Copy example</span><CopyButton value={sourceCode} label="Copy module browser source" className="[&_button]:size-11" /></div>}
       sidebarFooter={<div className="space-y-3"><p>One source, from atom to complete workflow.</p><a target="_top" href="./?path=/story/start-here-workspace--complete-workflow" className="inline-flex min-h-11 items-center gap-2 rounded-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring">Explore the workspace<ArrowUpRight aria-hidden className="size-3.5" /></a></div>}>
       <div className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-4">
         <SearchField ref={filter} label="Filter modules" placeholder="Name, purpose or import path…" value={query} onValueChange={setQuery} className="w-full sm:max-w-xs xl:max-w-sm" />
@@ -76,7 +75,7 @@ export function ModuleCatalogExample() {
       <DataTable label="Component catalog" data={visible} columns={catalogColumns} getRowId={item => item.id} pageSize={12} maxHeight="none"
         className="mt-4"
         selectedId={detailOpen ? current?.id : null} onRowClick={item => openModule(item)} selection={{ selected, onChange: setSelected, rowLabel: item => item.name }}
-        toolbar={view => <><span role="status" className="mr-auto text-xs text-muted-foreground">{visible.length} of {moduleCatalog.length} modules</span><Button variant="outline" size="sm" aria-label="Download view" className="w-11 px-0 sm:w-auto sm:px-3" onClick={() => download(view.rows)}><Download /><span className="hidden sm:inline">Download view</span></Button>{selectedModules.length > 0 && <div className="flex flex-wrap items-center gap-2"><span className="text-xs text-muted-foreground">{selectedModules.length} selected</span><CopyButton value={selectedModules.map(item => item.importStatement).join("\n")} label="Copy selected imports" className="[&_button]:size-11" /><Button variant="ghost" size="sm" aria-label="Clear selection" className="w-11 px-0 sm:w-auto sm:px-3" onClick={() => { setSelected([]); setNotice("Selection cleared."); feedback.current?.focus({ preventScroll: true }); }}><X /><span className="hidden sm:inline">Clear selection</span></Button></div>}</>}
+        toolbar={view => <><span role="status" className="mr-auto text-xs text-muted-foreground">{visible.length} of {moduleCatalog.length} modules</span><Button variant="ghost" size="sm" aria-label="Download view" className="w-11 px-0 sm:w-auto sm:px-3" onClick={() => download(view.rows)}><Download /><span className="hidden sm:inline">Download view</span></Button>{selectedModules.length > 0 && <div className="flex basis-full flex-wrap items-center gap-2 sm:basis-auto"><span className="text-xs text-muted-foreground">{selectedModules.length} selected</span><CopyButton value={selectedModules.map(item => item.importStatement).join("\n")} label="Copy selected imports" className="[&_button]:size-11" /><Button variant="ghost" size="sm" aria-label="Clear selection" className="w-11 px-0 sm:w-auto sm:px-3" onClick={() => { setSelected([]); setNotice("Selection cleared."); feedback.current?.focus({ preventScroll: true }); }}><X /><span className="hidden sm:inline">Clear selection</span></Button></div>}</>}
         empty={<EmptyState icon={<SearchX />} title="No matching modules" description="Try another name or return to the full library." primaryAction={{ label: "Clear filters", onClick: clearFilters }} />} />
       <div ref={feedback} tabIndex={-1} role="status" aria-live="polite" className="mt-4 min-h-5 text-xs leading-relaxed text-muted-foreground outline-none">{notice}</div>
       <p className="mt-5 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">Package counts describe the registry’s dependency pins, including shared imports. They are not bundle-size measurements. Selection is kept when you change filters.</p>

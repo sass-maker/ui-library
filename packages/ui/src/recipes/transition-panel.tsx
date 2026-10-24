@@ -12,6 +12,8 @@ export type TransitionPanelProps = {
   className?: string;
   transition?: Transition;
   activeIndex: number;
+  /** Keep long collections in natural flow while their contents animate. */
+  animateHeight?: boolean;
   variants?: { enter: Variant; center: Variant; exit: Variant };
 } & MotionProps;
 
@@ -21,7 +23,7 @@ const Panel = forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(function Panel(
 });
 
 /** Resizes with its content; rapid changes retarget the current spring. */
-export function TransitionPanel({ children, className, transition, variants, activeIndex, ...motionProps }: TransitionPanelProps) {
+export function TransitionPanel({ children, className, transition, variants, activeIndex, animateHeight = true, ...motionProps }: TransitionPanelProps) {
   const reduced = useReducedMotion();
   const [measure, bounds] = useMeasure();
   const states = variants ?? {
@@ -29,7 +31,7 @@ export function TransitionPanel({ children, className, transition, variants, act
     center: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: reduced ? 0 : -4 },
   };
-  return <motion.div data-slot="transition-panel" initial={false} animate={{ height: bounds.height || "auto" }}
+  return <motion.div data-slot="transition-panel" initial={false} animate={{ height: animateHeight ? bounds.height || "auto" : "auto" }}
     transition={reduced ? { duration: 0 } : motionTiming.layout} className={cn("relative", className)}>
     <AnimatePresence initial={false} mode="popLayout" custom={motionProps.custom}>
       <Panel key={activeIndex} ref={measure} variants={states} initial="enter" animate="center" exit="exit"

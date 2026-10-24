@@ -386,7 +386,7 @@ function DataTable<T extends RowData>({
   return (
     <div ref={rootRef} data-slot="data-table" className={cn("flex min-w-0 flex-col gap-3 [--data-table-header-height:40px] [@media(pointer:coarse)]:[--data-table-header-height:48px]", className)}>
       {status === "loading" && <span role="status" className="sr-only">Loading</span>}
-      <div className="flex min-h-8 flex-wrap items-center justify-between gap-2">
+      <div className={cn("grid min-h-8 items-start gap-2", hideable.length ? "grid-cols-[minmax(0,1fr)_auto]" : "grid-cols-1")}>
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">{toolbar?.({ rows: sortedRows, columns: visibleColumns })}</div>
         {hideable.length > 0 && (
           <DropdownMenu>

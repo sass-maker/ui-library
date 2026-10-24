@@ -108,6 +108,9 @@ test('the paged catalog shows a complete page and makes horizontal overflow expl
   await page.setViewportSize({ width: 390, height: 900 });
   await expect(region).toHaveAttribute('data-scroll-right', 'true');
   await expect(page.getByText('Scroll horizontally for more columns.', { exact: true })).toBeVisible();
+  await page.getByRole('checkbox', { name: 'Select Accordion', exact: true }).check();
+  const actions = await Promise.all(['Download view', 'Columns'].map(name => page.getByRole('button', { name, exact: true }).boundingBox()));
+  expect(Math.abs(actions[0].y - actions[1].y), 'selection keeps primary table actions on one line').toBeLessThan(1);
   await region.evaluate(element => { element.scrollLeft = element.scrollWidth; });
   await expect(region).toHaveAttribute('data-scroll-left', 'true');
   await expect(region).not.toHaveAttribute('data-scroll-right');
@@ -156,6 +159,15 @@ test('curated font pairings load real faces and preserve the working collection'
     expect(face.difference, `${face.family} ${face.style} renders beyond fallback`).toBeGreaterThan(0.1);
   }
   await preview.getByRole('button', { name: 'All files', exact: true }).click();
+  const clipped = await preview.locator('[data-slot="transition-panel"]').evaluate(element => new Promise(resolve => {
+    let worst = 0, frames = 0;
+    function measure() {
+      worst = Math.max(worst, element.firstElementChild.getBoundingClientRect().bottom - element.getBoundingClientRect().bottom);
+      if (++frames < 8) requestAnimationFrame(measure); else resolve(worst);
+    }
+    requestAnimationFrame(measure);
+  }));
+  expect(clipped, 'newly filtered cards stay in natural document flow throughout their entrance').toBeLessThanOrEqual(1);
   const screen = preview.getByRole('button', { name: 'Preview A little constellation.webp', exact: true }).locator('img');
   await expect(screen).toHaveCSS('object-fit', 'contain');
   await preview.getByRole('button', { name: 'Preview Release notes.md', exact: true }).click();
