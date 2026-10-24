@@ -13,6 +13,9 @@ for (const width of [390, 820, 1440]) {
         await expect(page.getByRole('searchbox', { name: 'Filter modules', exact: true })).toBeVisible();
         await noOverflow(page);
         await expect(page).toHaveScreenshot(`catalog-${suffix}.png`, { fullPage: true });
+        await page.getByRole('checkbox', { name: 'Select Accordion', exact: true }).check();
+        await expect(page.getByRole('checkbox', { name: 'Select all rows on this page', exact: true })).toHaveAttribute('aria-checked', 'mixed');
+        await expect(page).toHaveScreenshot(`catalog-selected-${suffix}.png`, { fullPage: true });
         await page.getByRole('searchbox', { name: 'Filter modules', exact: true }).fill('@saas-maker/ui/atoms/button');
         await page.getByRole('row').filter({ has: page.getByText('Button', { exact: true }) }).click();
         await expect(page.getByRole('dialog', { name: 'Button', exact: true })).toBeVisible();

@@ -14,7 +14,7 @@ import {
   type SortingState,
   type ColumnVisibilityState,
 } from "@tanstack/react-table"
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, Columns3Icon, CheckIcon } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, Columns3Icon, CheckIcon, MinusIcon } from "lucide-react"
 import { cn } from "../lib/utils"
 import { Button } from "./button"
 import { Checkbox, checkboxClassName } from "./checkbox"
@@ -199,7 +199,7 @@ function SelectionCheckbox({ inForm, checked, onCheckedChange, className, ...pro
     onKeyDown={event => { if (event.key === "Enter") event.preventDefault() }}
     onClick={() => onCheckedChange(checked === "indeterminate" || !checked)}
   >
-    {checked && <span data-slot="checkbox-indicator" className="grid place-content-center text-current transition-none"><CheckIcon className="size-3.5" /></span>}
+    {checked && <span data-slot="checkbox-indicator" className="grid place-content-center text-current transition-none">{checked === "indeterminate" ? <MinusIcon className="size-3.5" /> : <CheckIcon className="size-3.5" />}</span>}
   </button>
   return <label htmlFor={id} onClick={event => event.stopPropagation()} className={cn("inline-flex size-6 shrink-0 items-center justify-center align-middle [@media(pointer:coarse)]:size-11", props.disabled ? "cursor-default" : "cursor-pointer")}>{checkbox}</label>
 }
