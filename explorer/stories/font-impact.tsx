@@ -37,7 +37,7 @@ function FontSample({ font, fallback, tabular }: { font: typeof families[number]
     document.fonts.ready.then(measure);
     return () => { disposed = true; observer.disconnect(); };
   }, [fallback]);
-  return <article className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card">
+  return <article className="row-span-3 grid min-w-0 grid-rows-subgrid gap-0 overflow-hidden rounded-xl border border-border bg-card">
     <header className="border-b border-border p-5"><p className="eyebrow mb-2">{font.role}</p><h2 className="text-xl font-semibold">{font.name}</h2></header>
     <div className="p-5" style={{ fontFamily: fallback ? font.fallback : font.family, fontFeatureSettings: "normal", fontSynthesisWeight: font.name === "Instrument Serif" ? "none" : undefined }} data-testid="font-specimen">
       <p style={{ fontWeight: font.name === 'Instrument Serif' ? 400 : 600 }} className="text-[2rem] leading-[1.2] tracking-[-.015em]">Tools that fit<br />your project.</p>
@@ -47,7 +47,7 @@ function FontSample({ font, fallback, tabular }: { font: typeof families[number]
       <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border pt-4 text-lg leading-relaxed" role="group" style={{ fontVariantNumeric: tabular ? 'tabular-nums' : 'proportional-nums' }} aria-label={`${font.name} numeral comparison`}><span>1,111,111</span><span>8,888,888</span><span>00:11:11</span><span>08:58:08</span></div>
       <p className="mt-3 text-base leading-relaxed">Il1 · O0 · rn m · @ # &amp;</p>
     </div>
-    <footer className="mt-auto border-t border-border p-5"><p className="font-mono text-xs tabular-nums" data-testid="font-measurement">{metrics ? `${metrics.lines} body lines · ${metrics.button}px button` : 'Measuring after font load…'}</p><p className="mt-3 text-xs leading-relaxed text-muted-foreground">{font.note}</p></footer>
+    <footer className="border-t border-border p-5"><p className="font-mono text-xs tabular-nums" data-testid="font-measurement">{metrics ? `${metrics.lines} body lines · ${metrics.button}px button` : 'Measuring after font load…'}</p><p className="mt-3 text-xs leading-relaxed text-muted-foreground">{font.note}</p></footer>
   </article>;
 }
 

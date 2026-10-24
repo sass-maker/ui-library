@@ -31,7 +31,7 @@ export function AppShell({
     <nav aria-label="App" className="flex flex-1 flex-col gap-6 overflow-y-auto overscroll-contain px-3 py-4">
       {nav.map((group, gi) => (
         <div key={gi} className="flex flex-col gap-0.5">
-          {group.title && <p className="px-2.5 pb-1.5 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-muted-foreground">{group.title}</p>}
+          {group.title && <p className="px-2.5 pb-1.5 text-xs font-medium text-muted-foreground">{group.title}</p>}
           {group.items.map((it) => (
             <a
               key={it.href + it.label}

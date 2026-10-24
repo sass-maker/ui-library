@@ -14,7 +14,7 @@ export function ExampleShell({ title, name, description, importPath, children }:
   const level = category === "Atoms" ? levels.Atoms : category === "Molecules" ? levels.Molecules : category === "Organisms" ? levels.Organisms : undefined;
   if (!level) return <div className="explorer-unframed">{children}</div>;
   const { Icon } = level;
-  return <main className="example-shell" data-level={category.toLowerCase()}>
+  return <main className="example-shell" data-level={category.toLowerCase()} data-contextual={name === "In Context" || undefined}>
     <header className="example-heading">
       <div className="example-breadcrumb"><Icon aria-hidden size={14} /><span>{level.label}</span><span aria-hidden>/</span><span>{title.split("/").slice(1).join(" / ")}</span></div>
       <div className="example-heading-row"><div><h1>{title.split("/").at(-1)}</h1><p>{description?.split("\n")[0]?.replace(/Import from `[^`]+`\.\s*/, "") || level.description}</p></div><span className="example-state">{name}</span></div>

@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
 import { useReducedMotion } from "@saas-maker/ui/lib/use-reduced-motion";
 import { motionTiming } from "@saas-maker/ui/lib/motion";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ArrowRight, ArrowUpRight, BookOpen, FolderOpen, Inbox, LayoutDashboard, Settings2, Upload, RotateCcw, Undo2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, useId, type Dispatch, type FormEvent, type RefObject, type SetStateAction, type ReactNode } from "react";
+import { Check, PencilLine, ArrowRight, ArrowUpRight, BookOpen, FolderOpen, Inbox, LayoutDashboard, Settings2, Upload, RotateCcw, Undo2 } from "lucide-react";
 import { Button } from "@saas-maker/ui/atoms/button";
 import { ResponsiveImage } from "@saas-maker/ui/atoms/responsive-image";
 import { AppShell } from "@saas-maker/ui/blocks/app";
@@ -12,11 +12,213 @@ import { AssetLibrary } from "@saas-maker/ui/organisms/asset-library";
 import { WorkspaceSettings } from "@saas-maker/ui/organisms/workspace-settings";
 import { NotificationInbox } from "@saas-maker/ui/organisms/notification-inbox";
 import { ProjectOverview } from "@saas-maker/ui/organisms/project-overview";
-import { sampleFiles, samplePreferences, sampleMessages, sampleMetrics, sampleTasks, sampleActivity } from "./composition-fixtures";
+import { sampleFiles, samplePreferences, sampleMessages, sampleTasks } from "./composition-fixtures";
+import { Badge } from "@saas-maker/ui/atoms/badge";
+import { Label } from "@saas-maker/ui/atoms/label";
+import { Textarea } from "@saas-maker/ui/atoms/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@saas-maker/ui/molecules/dialog";
+import * as Carousel from "@saas-maker/ui/recipes/carousel";
+import type { LibraryFile } from "@saas-maker/ui/molecules/file-card";
+import type { InboxMessage } from "@saas-maker/ui/organisms/notification-inbox";
+import type { ActivityEntry } from "@saas-maker/ui/molecules/activity-item";
+import type { ProjectTask } from "@saas-maker/ui/organisms/project-overview";
+import type { MetricCardProps } from "@saas-maker/ui/molecules/metric-card";
 
+type ReviewStatus = "approved" | "changes" | "pending";
+type ReviewItem = { file: LibraryFile; src: string; alt: string; width: number; height: number; fit: "cover" | "contain"; status: ReviewStatus };
+type ReviewUndo = { taskId: string; complete: boolean; messageIds: string[]; activityIds: string[] };
 
-export function AssetLibraryExample() {
-  const [files, setFiles] = useState(sampleFiles);
+/** The release artwork under review. Artwork is cropped to the card; the app screen stays whole. */
+const reviewTargets: readonly { id: string; alt: string; width: number; height: number; fit: "cover" | "contain" }[] = [
+  { id: "coast", alt: "Kith’s illustrated coastal walk: two people on a path above the sea", width: 760, height: 790, fit: "cover" },
+  { id: "memory", alt: "Kith artwork of a memory book, a coastal photograph and a cup of coffee", width: 760, height: 507, fit: "cover" },
+  { id: "sky", alt: "Kith’s constellation screen, with people shown as warm lanterns", width: 603, height: 1311, fit: "contain" },
+];
+const reviewStatusLabel: Record<ReviewStatus, string> = { approved: "Approved", changes: "Changes requested", pending: "Awaiting review" };
+/** A review note carries its file in the message ID, so “changes requested” is derived from the inbox. */
+const reviewMessagePrefix = (fileId: string) => `review-${fileId}-`;
+
+function reviewActivity(kind: ActivityEntry["kind"], action: string, subject: string): ActivityEntry {
+  return { id: `review-activity-${crypto.randomUUID()}`, kind, actor: "You", action, subject, time: "Just now", dateTime: new Date().toISOString() };
+}
+
+function ReviewStatusBadge({ status }: { status: ReviewStatus }) {
+  return <Badge variant={status === "approved" ? "secondary" : "outline"} className={status === "changes" ? "border-brand-ink/40 text-brand-ink" : status === "pending" ? "text-muted-foreground" : undefined}>
+    {status === "approved" && <Check aria-hidden />}{reviewStatusLabel[status]}
+  </Badge>;
+}
+
+function ReviewCard({ item, onApprove, onRequestChanges }: {
+  item: ReviewItem;
+  onApprove: (file: LibraryFile) => void;
+  onRequestChanges: (file: LibraryFile, opener: HTMLButtonElement) => void;
+}) {
+  const titleId = useId();
+  const { file, status } = item;
+  const approved = status === "approved";
+  return <article aria-labelledby={titleId} className="@container/review-card flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <ResponsiveImage src={item.src} alt={item.alt} width={item.width} height={item.height} focalPoint={file.previewFocalPoint} style={{ aspectRatio: "4 / 3" }}
+      className={item.fit === "contain" ? "bg-surface" : undefined} imageClassName={item.fit === "contain" ? "object-contain py-3" : undefined} />
+    <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-wrap items-start justify-between gap-2"><h4 id={titleId} className="min-w-0 break-words text-sm font-medium leading-snug">{file.name}</h4><ReviewStatusBadge status={status} /></div>
+      <p className="text-xs text-muted-foreground">{file.collection} · {file.size}</p>
+      <div className="mt-auto grid grid-cols-1 gap-2 pt-2 @min-[360px]/review-card:grid-cols-[auto_1fr]">
+        <Button variant={approved ? "secondary" : "default"} aria-disabled={approved || undefined} aria-label={`${approved ? "Approved" : "Approve"} ${file.name}`} className="min-h-11 min-w-0 w-full whitespace-normal aria-disabled:cursor-default" onClick={() => { if (!approved) onApprove(file); }}><Check />{approved ? "Approved" : "Approve"}</Button>
+        <Button variant="outline" aria-label={`Request changes to ${file.name}`} className="min-h-11 min-w-0 w-full whitespace-normal" onClick={event => onRequestChanges(file, event.currentTarget)}><PencilLine />Request changes</Button>
+      </div>
+    </div>
+  </article>;
+}
+
+function ReleaseReviewFocus({ items, notice, canUndo, noticeRef, onApprove, onRequestChanges, onUndo }: {
+  items: readonly ReviewItem[];
+  notice: string;
+  canUndo: boolean;
+  noticeRef: RefObject<HTMLParagraphElement | null>;
+  onApprove: (file: LibraryFile) => void;
+  onRequestChanges: (file: LibraryFile, opener: HTMLButtonElement) => void;
+  onUndo: () => void;
+}) {
+  const headingId = useId();
+  const open = items.filter(item => item.status !== "approved").length;
+  return <section aria-labelledby={headingId} className="@container">
+    <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+      <h3 id={headingId} className="font-display text-xl leading-tight">Waiting for your review</h3>
+      <p className="text-sm text-muted-foreground">{items.length === 0 ? "No release artwork is in this workspace." : open === 0 ? "Every image is approved." : `${open} of ${items.length} images still need a decision.`}</p>
+    </div>
+    {items.length > 0 && <Carousel.Carousel label="Artwork waiting for review">
+      {/* Each slide's right padding is the gap; the viewport bleeds by the same amount so the last card meets the edge. */}
+      <Carousel.CarouselContent viewportClassName="-mr-3 rounded-none">
+        {items.map(item => <Carousel.CarouselItem key={item.file.id} label={item.file.name} className="w-[85%] pr-3 @min-[700px]:w-1/3"><ReviewCard item={item} onApprove={onApprove} onRequestChanges={onRequestChanges} /></Carousel.CarouselItem>)}
+      </Carousel.CarouselContent>
+      <div className="mt-3 flex min-h-11 @min-[700px]:min-h-0 flex-wrap items-center justify-between gap-3">
+        <p ref={noticeRef} tabIndex={-1} role="status" className="min-w-0 flex-1 text-sm text-muted-foreground outline-none">{notice}</p>
+        <div className="ml-auto flex items-center gap-3">{canUndo && <Button variant="outline" className="min-h-11" onClick={onUndo}><Undo2 />Undo</Button>}<Carousel.CarouselNavigation className="static inset-auto w-auto translate-y-0 gap-2 p-0 @min-[700px]:hidden" /></div>
+      </div>
+    </Carousel.Carousel>}
+    {items.length === 0 && <p ref={noticeRef} tabIndex={-1} role="status" className="text-sm text-muted-foreground outline-none">{notice}</p>}
+  </section>;
+}
+
+function ReviewNoteDialog({ open, file, note, invalid, onNoteChange, onSubmit, onClose, onRestoreFocus }: {
+  open: boolean;
+  file: LibraryFile | null;
+  note: string;
+  invalid: boolean;
+  onNoteChange: (value: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onClose: () => void;
+  onRestoreFocus: () => void;
+}) {
+  const id = useId();
+  const field = useRef<HTMLTextAreaElement>(null);
+  return <Dialog open={open} onOpenChange={next => { if (!next) onClose(); }}>
+    <DialogContent onCloseAutoFocus={event => { event.preventDefault(); onRestoreFocus(); }}>
+      <form noValidate className="grid gap-5" onSubmit={event => { onSubmit(event); if (!note.trim()) field.current?.focus(); }}>
+        <DialogHeader><DialogTitle className="font-display">Request changes</DialogTitle><DialogDescription>Describe what should change in {file?.name ?? "this image"}. The note is added to this example’s inbox.</DialogDescription></DialogHeader>
+        <div className="grid gap-2">
+          <Label htmlFor={`${id}-note`}>What should change?</Label>
+          <Textarea ref={field} id={`${id}-note`} required rows={4} value={note} onChange={event => onNoteChange(event.target.value)} aria-invalid={invalid || undefined} aria-describedby={`${id}-hint`} className="min-h-28" />
+          <p id={`${id}-hint`} className={invalid ? "text-xs text-destructive" : "text-xs text-muted-foreground"}>{invalid ? "Add a note before saving." : "Saved in this browser only. Nothing is sent."}</p>
+        </div>
+        <DialogFooter><Button type="button" variant="outline" className="min-h-11" onClick={onClose}>Cancel</Button><Button type="submit" className="min-h-11">Save note</Button></DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>;
+}
+
+/** Local release review: approve or request changes on the artwork, with one reversible step. */
+function useReleaseReview(files: readonly LibraryFile[], messages: InboxMessage[], setMessages: Dispatch<SetStateAction<InboxMessage[]>>) {
+  const [tasks, setTasks] = useState<ProjectTask[]>(sampleTasks);
+  const [activity, setActivity] = useState<ActivityEntry[]>([]);
+  const [undo, setUndo] = useState<ReviewUndo | null>(null);
+  const [notice, setNotice] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [requested, setRequested] = useState<LibraryFile | null>(null);
+  const [note, setNote] = useState("");
+  const [noteInvalid, setNoteInvalid] = useState(false);
+  const opener = useRef<HTMLButtonElement | null>(null);
+  const noticeRef = useRef<HTMLParagraphElement>(null);
+
+  const visibleTasks = tasks.filter(task => files.some(file => file.id === task.id));
+  const items = reviewTargets.flatMap((target): ReviewItem[] => {
+    const file = files.find(candidate => candidate.id === target.id);
+    const task = tasks.find(candidate => candidate.id === target.id);
+    if (!file?.preview || file.kind !== "image" || !task) return [];
+    const changes = messages.some(message => message.id.startsWith(reviewMessagePrefix(file.id)));
+    return [{ file, src: file.preview, alt: target.alt, width: target.width, height: target.height, fit: file.previewFit ?? target.fit, status: task.complete ? "approved" : changes ? "changes" : "pending" }];
+  });
+  const approved = items.filter(item => item.status === "approved").length;
+  const changes = items.filter(item => item.status === "changes").length;
+  const unread = messages.filter(message => !message.read).length;
+  const metrics: MetricCardProps[] = [
+    { label: "Approved", value: `${approved}/${items.length}`, detail: "Release images" },
+    { label: "Needs changes", value: String(changes), detail: "Images to revise" },
+    { label: "Unread", value: String(unread), detail: "Inbox messages" },
+  ];
+
+  const remember = (next: ReviewUndo, message: string) => { setUndo(next); setNotice(message); };
+  const approve = (file: LibraryFile) => {
+    const task = tasks.find(candidate => candidate.id === file.id);
+    if (!task || task.complete) return;
+    const entry = reviewActivity("completed", "approved", file.name);
+    setTasks(current => current.map(candidate => candidate.id === file.id ? { ...candidate, complete: true } : candidate));
+    setActivity(current => [entry, ...current]);
+    remember({ taskId: file.id, complete: task.complete, messageIds: [], activityIds: [entry.id] }, `Approved ${file.name}.`);
+  };
+  const openRequest = (file: LibraryFile, button: HTMLButtonElement) => {
+    opener.current = button;
+    setRequested(file); setNote(""); setNoteInvalid(false); setDialogOpen(true);
+  };
+  const closeRequest = () => { setDialogOpen(false); setNoteInvalid(false); };
+  const saveRequest = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const text = note.trim();
+    if (!requested) return;
+    if (!text) { setNoteInvalid(true); return; }
+    const file = requested;
+    const task = tasks.find(candidate => candidate.id === file.id);
+    const message: InboxMessage = { id: `${reviewMessagePrefix(file.id)}${crypto.randomUUID()}`, sender: "You", initials: "YO", subject: `Changes requested: ${file.name}`, preview: text.replace(/\s+/g, " "), body: `${text}
+
+Note on ${file.name} from the release review.`, time: "Just now", read: true };
+    const entry = reviewActivity("comment", "requested changes to", file.name);
+    setTasks(current => current.map(candidate => candidate.id === file.id ? { ...candidate, complete: false } : candidate));
+    setMessages(current => [message, ...current]);
+    setActivity(current => [entry, ...current]);
+    remember({ taskId: file.id, complete: task?.complete ?? false, messageIds: [message.id], activityIds: [entry.id] }, `Changes requested for ${file.name}. Your note is in the inbox.`);
+    closeRequest();
+  };
+  /** Reverses only the last review step; other read states and files are untouched. */
+  const undoLast = () => {
+    if (!undo) return;
+    setTasks(current => current.map(task => task.id === undo.taskId ? { ...task, complete: undo.complete } : task));
+    if (undo.messageIds.length) setMessages(current => current.filter(message => !undo.messageIds.includes(message.id)));
+    setActivity(current => current.filter(entry => !undo.activityIds.includes(entry.id)));
+    setUndo(null);
+    setNotice("Review step undone.");
+    noticeRef.current?.focus({ preventScroll: true });
+  };
+  const onTaskChange = (id: string, complete: boolean) => {
+    setTasks(current => current.map(task => task.id === id ? { ...task, complete } : task));
+    if (undo?.taskId === id) { setUndo(null); setNotice(""); }
+  };
+  const reset = () => {
+    closeRequest();
+    setTasks(sampleTasks); setActivity([]); setUndo(null); setNotice("");
+  };
+
+  const focus = <>
+    <ReleaseReviewFocus items={items} notice={notice} canUndo={undo !== null} noticeRef={noticeRef} onApprove={approve} onRequestChanges={openRequest} onUndo={undoLast} />
+    <ReviewNoteDialog open={dialogOpen} file={requested} note={note} invalid={noteInvalid}
+      onNoteChange={value => { setNote(value); if (value.trim()) setNoteInvalid(false); }}
+      onSubmit={saveRequest} onClose={closeRequest} onRestoreFocus={() => opener.current?.focus({ preventScroll: true })} />
+  </>;
+  return { tasks: visibleTasks, metrics, activity, onTaskChange, focus, reset };
+}
+
+export function AssetLibraryExample({ library }: { library?: [LibraryFile[], Dispatch<SetStateAction<LibraryFile[]>>] } = {}) {
+  const localLibrary = useState(sampleFiles);
+  const [files, setFiles] = library ?? localLibrary;
   const input = useRef<HTMLInputElement>(null);
   return <div className="w-full space-y-4">
     <AssetLibrary state={{ kind: "ready", files }} onRemove={ids => setFiles(current => current.filter(file => !ids.includes(file.id)))}
@@ -29,10 +231,12 @@ export function AssetLibraryExample() {
 }
 
 
-export function ProjectOverviewExample() {
-  const [tasks, setTasks] = useState(sampleTasks);
-  return <ProjectOverview name="Kith · October release" description="Track the component review, handoff checklist, and team feedback." metrics={sampleMetrics} tasks={tasks} activity={sampleActivity}
-    onTaskChange={(id, complete) => setTasks(current => current.map(task => task.id === id ? { ...task, complete } : task))} />;
+export function ProjectOverviewExample({ variant = "card", inbox, files = sampleFiles }: { variant?: "card" | "plain"; inbox?: [InboxMessage[], Dispatch<SetStateAction<InboxMessage[]>>]; files?: readonly LibraryFile[] } = {}) {
+  const localInbox = useState(sampleMessages);
+  const [messages, setMessages] = inbox ?? localInbox;
+  const review = useReleaseReview(files, messages, setMessages);
+  return <ProjectOverview variant={variant} name="Kith’s October release" eyebrow="Kith / October release" badge={null} description="Review the artwork and leave a clear next step for the release."
+    focus={review.focus} metrics={review.metrics} tasks={review.tasks} activity={review.activity} onTaskChange={review.onTaskChange} />;
 }
 
 /** A connected, local workspace built from the organisms shown separately. */
@@ -62,7 +266,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
   const [removed, setRemoved] = useState<typeof sampleFiles>([]);
   const removalOrder = useRef(new Map<string, number>());
   const [messages, setMessages] = useState(sampleMessages);
-  const [tasks, setTasks] = useState(sampleTasks);
+  const review = useReleaseReview(files, messages, setMessages);
   const [preferences, setPreferences] = useState({ ...samplePreferences, name: initialName });
   const [name, setName] = useState(initialName);
   const [rejectSave, setRejectSave] = useState(false);
@@ -103,7 +307,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
   const reset = () => {
     for (const url of objectUrls.current) URL.revokeObjectURL(url);
     objectUrls.current.clear();
-    setFiles(sampleFiles); setRemoved([]); setMessages(sampleMessages); setTasks(sampleTasks);
+    setFiles(sampleFiles); setRemoved([]); setMessages(sampleMessages); review.reset();
     setNotice("Example files, messages and checklist restored. Workspace preferences are kept.");
   };
   return <div className="min-h-dvh">
@@ -116,14 +320,14 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
       onNavigate={href => navigate(href.replace("#workspace-", ""))}
       mobileActions={<SearchTrigger label="Jump to a section" className="size-11 border-transparent p-0 sm:w-11 [&>span]:hidden [&>kbd]:hidden" />}
       secondary={<div className="rounded-xl border border-sidebar-border p-4"><p className="text-xs font-medium">The story behind the work</p><p className="mt-2 text-xs leading-relaxed text-muted-foreground">See these same assets in a finished product page.</p><a target="_top" href="./?path=/story/start-here-media--complete-page" className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-sm text-xs font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring">Explore Kith<ArrowUpRight aria-hidden className="size-3.5" /></a></div>}
-      user={{ name: "Your local workspace", detail: "No sign-in or upload required" }}>
+      user={{ name: "Your local workspace", detail: "No sign-in needed" }}>
       <header className="hidden flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-5 lg:flex lg:px-8"><div className="flex items-center gap-2 text-xs text-muted-foreground"><BookOpen aria-hidden className="size-3.5" /><span>Kith</span><span aria-hidden>/</span><span>{section.label}</span></div><SearchTrigger label="Jump to a section" className="min-h-11" /></header>
-      <div className="mx-auto max-w-7xl px-5 pb-10 pt-8 sm:px-8 lg:px-10 lg:pt-10">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div>{view === "overview" && <p className="eyebrow mb-3">Kith / release workspace</p>}<h1 ref={heading} tabIndex={-1} className="font-display text-3xl leading-tight outline-none sm:text-4xl">{section.label === "Overview" ? "Kith’s October release." : section.label}</h1><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">{section.description}</p></div>{view === "overview" && <Button variant="outline" onClick={() => navigate("assets")}>Browse release assets<ArrowRight /></Button>}</div>
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-7 sm:px-8 lg:px-10 lg:pt-10">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div><h1 ref={heading} tabIndex={-1} className="font-display text-3xl leading-tight outline-none sm:text-4xl">{section.label === "Overview" ? "Kith’s October release." : section.label}</h1><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">{section.description}</p></div>{view === "overview" && <Button variant="outline" onClick={() => navigate("assets")}>Browse release assets<ArrowRight /></Button>}</div>
         <motion.div data-slot="workspace-panel" hidden={view !== "overview"} initial={false} animate={{ opacity: reduced || view === "overview" ? 1 : 0, y: reduced || view === "overview" ? 0 : 6 }} transition={reduced ? { duration: 0 } : motionTiming.content}>
-          <ProjectOverview name="Release readiness" description="An illustrative review workspace. Check off a task and follow the progress through the release." metrics={sampleMetrics} tasks={tasks} activity={sampleActivity} onTaskChange={(id, complete) => setTasks(current => current.map(task => task.id === id ? { ...task, complete } : task))} />
+          <ProjectOverview variant="plain" showHeader={false} name="Release readiness" description="Review the release artwork." focus={review.focus} metrics={review.metrics} tasks={review.tasks} activity={review.activity} onTaskChange={review.onTaskChange} />
           <div className="mt-8 grid overflow-hidden rounded-2xl border border-border bg-card md:grid-cols-[1.1fr_1fr]">
-            <ResponsiveImage src="./demo/kith/coastal-walk-v2.webp" alt="Kith’s illustrated coastal walk, part of the release artwork" width={760} height={460} loading="eager" className="h-full min-h-52" />
+            <ResponsiveImage src="./demo/kith/book-stage.webp" alt="Kith’s illustrated memory book, part of the release artwork" width={760} height={507} loading="eager" className="h-full min-h-52 w-full min-w-0" />
             <div className="flex flex-col items-start justify-center p-6 sm:p-8"><p className="eyebrow">The next chapter / Kith</p><h2 className="mt-4 font-display text-2xl leading-snug sm:text-3xl">Kith’s next chapter,<br />in context.</h2><p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">Preview the artwork and real app screens together before the next handoff.</p><Button variant="link" className="mt-4 px-0" asChild><a target="_top" href="./?path=/story/start-here-media--complete-page">Open the product story<ArrowUpRight /></a></Button></div>
           </div>
 
@@ -140,8 +344,8 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
             }} /></>} />
           <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Preview, select, remove and restore. Images added from your device get a local preview. Nothing is uploaded.</p>
         </motion.div>
-        <motion.div data-slot="workspace-panel" hidden={view !== "inbox"} initial={false} animate={{ opacity: reduced || view === "inbox" ? 1 : 0, y: reduced || view === "inbox" ? 0 : 6 }} transition={reduced ? { duration: 0 } : motionTiming.content}><NotificationInbox messages={messages} onReadChange={(ids, read) => setMessages(current => current.map(message => ids.includes(message.id) ? { ...message, read } : message))} /></motion.div>
-        <motion.div data-slot="workspace-panel" hidden={view !== "settings"} initial={false} animate={{ opacity: reduced || view === "settings" ? 1 : 0, y: reduced || view === "settings" ? 0 : 6 }} transition={reduced ? { duration: 0 } : motionTiming.content}><WorkspaceSettings value={preferences} onValuesChange={setPreferences} onSave={async values => { await new Promise(resolve => setTimeout(resolve, 700)); if (rejectSave) throw new Error("The example save was interrupted. Your edits are still here. Try again when you’re ready."); setName(values.name); }} /></motion.div>
+        <motion.div data-slot="workspace-panel" hidden={view !== "inbox"} initial={false} animate={{ opacity: reduced || view === "inbox" ? 1 : 0, y: reduced || view === "inbox" ? 0 : 6 }} transition={reduced ? { duration: 0 } : motionTiming.content}><NotificationInbox showHeader={false} messages={messages} onReadChange={(ids, read) => setMessages(current => current.map(message => ids.includes(message.id) ? { ...message, read } : message))} /></motion.div>
+        <motion.div data-slot="workspace-panel" hidden={view !== "settings"} initial={false} animate={{ opacity: reduced || view === "settings" ? 1 : 0, y: reduced || view === "settings" ? 0 : 6 }} transition={reduced ? { duration: 0 } : motionTiming.content}><WorkspaceSettings showHeader={false} value={preferences} onValuesChange={setPreferences} onSave={async values => { await new Promise(resolve => setTimeout(resolve, 700)); if (rejectSave) throw new Error("The example save was interrupted. Your edits are still here. Try again when you’re ready."); setName(values.name); }} /></motion.div>
         <div ref={noticeRef} tabIndex={-1} className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm outline-none" role="status" aria-live="polite"><span className="text-muted-foreground">{notice}</span>{removed.length > 0 && <Button variant="outline" size="sm" onClick={undoRemoval}><Undo2 />Undo removal</Button>}</div>
       </div>
     </AppShell>

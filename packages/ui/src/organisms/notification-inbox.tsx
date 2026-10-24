@@ -21,9 +21,10 @@ export type InboxMessage = {
   read: boolean;
 };
 
-export function NotificationInbox({ messages, onReadChange, className }: {
+export function NotificationInbox({ messages, onReadChange, showHeader = true, className }: {
   messages: readonly InboxMessage[];
   onReadChange: (ids: string[], read: boolean) => void;
+  showHeader?: boolean;
   className?: string;
 }) {
   const reduced = useReducedMotion();
@@ -40,7 +41,7 @@ export function NotificationInbox({ messages, onReadChange, className }: {
   const visible = messages.filter(message => (filter === "all" || !message.read) && `${message.sender} ${message.subject}`.toLowerCase().includes(query.toLowerCase()));
   return <section className={cn("@container overflow-hidden rounded-2xl border border-border bg-card text-card-foreground", className)} aria-label="Team inbox">
     <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-6 sm:px-7">
-      <div><div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground"><Inbox aria-hidden className="size-3.5" />Workspace / Inbox</div><div className="flex items-center gap-3"><h2 ref={listHeading} tabIndex={-1} className="text-2xl font-semibold tracking-tight outline-none">Inbox</h2>{unread > 0 && <Badge variant="secondary">{unread} unread</Badge>}</div></div>
+      <div>{showHeader && <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground"><Inbox aria-hidden className="size-3.5" />Workspace / Inbox</div>}<div className="flex items-center gap-3"><h2 ref={listHeading} tabIndex={-1} className={cn("font-display text-2xl leading-tight tracking-tight outline-none", !showHeader && "sr-only")}>Inbox</h2>{unread > 0 && <Badge variant="secondary">{unread} unread</Badge>}</div></div>
       <Button variant="outline" size="sm" disabled={unread === 0} onClick={() => onReadChange(messages.filter(message => !message.read).map(message => message.id), true)}><CheckCheck />Mark all read</Button>
     </header>
     <div className="grid min-h-[460px] @min-[720px]:grid-cols-[minmax(280px,0.9fr)_1.1fr]">

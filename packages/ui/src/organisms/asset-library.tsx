@@ -65,7 +65,7 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
   return <section ref={region} tabIndex={-1} className={cn("@container overflow-hidden rounded-2xl border border-border bg-card text-card-foreground outline-none", className)} aria-label={title}>
     {showHeader && <header className="flex flex-wrap items-start justify-between gap-5 border-b border-border px-5 py-6 sm:px-8">
       <div><div className="mb-3 flex items-center gap-2 text-xs font-medium text-muted-foreground"><FolderOpen aria-hidden className="size-3.5" />Workspace / Library</div>
-        <h2 ref={heading} tabIndex={-1} className="text-2xl font-semibold tracking-tight outline-none">{title}</h2><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">{description}</p></div>
+        <h2 ref={heading} tabIndex={-1} className="font-display text-2xl leading-tight tracking-tight outline-none">{title}</h2><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">{description}</p></div>
       {action && <div className="sm:pt-6">{action}</div>}
     </header>}
     <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
@@ -110,7 +110,7 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
       <DialogContent onCloseAutoFocus={event => { event.preventDefault(); (opener.current?.isConnected ? opener.current : heading.current ?? region.current)?.focus({ preventScroll: true }); }} className="max-h-[90dvh] overflow-y-auto overscroll-contain sm:max-w-2xl">
         {previewFile && <><DialogHeader><DialogTitle className="break-words pr-6">{previewFile.name}</DialogTitle><DialogDescription>{previewFile.collection} <span aria-hidden>·</span> {previewFile.size}</DialogDescription></DialogHeader>
           <div className="mt-3 flex min-h-48 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface">
-            {previewFile.preview ? <ResponsiveImage src={previewFile.preview} alt={previewFile.name} width={960} height={600} className="max-h-[55dvh] w-full" imageClassName="object-contain" /> : <FileText aria-hidden className="size-14 stroke-1 text-muted-foreground" />}
+            {previewFile.preview ? <ResponsiveImage src={previewFile.preview} alt={previewFile.name} width={960} height={600} className="max-h-[55dvh] w-full" imageClassName="object-contain" /> : previewFile.previewText ? <pre className="w-full whitespace-pre-wrap p-6 font-sans text-base leading-relaxed">{previewFile.previewText}</pre> : <FileText aria-hidden className="size-14 stroke-1 text-muted-foreground" />}
           </div><div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground"><span>Updated {previewFile.updated}</span><Badge variant="outline">{previewFile.kind === "image" ? <ImageIcon /> : <FileText />}{previewFile.kind}</Badge></div>
           {previewFile.preview && <Button variant="outline" asChild><a href={previewFile.preview} target="_blank" rel="noreferrer">Open original<ArrowUpRight /></a></Button>}</>}
       </DialogContent>
