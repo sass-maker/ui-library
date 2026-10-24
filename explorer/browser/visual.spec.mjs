@@ -16,6 +16,25 @@ for (const width of [390, 820, 1440]) {
       test.afterEach(async ({ page }) => {
         if (!page.isClosed()) expect(await page.evaluate(() => matchMedia('(pointer:coarse)').matches)).toBe(width <= 820);
       });
+      test(`media gallery ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        await openStory(page, 'motion-carousel--in-context', globals);
+        const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
+        await expect.poll(() => gallery.getByAltText('Illustrated coastal path above a quiet blue sea').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+        await noOverflow(page);
+        await expect(page).toHaveScreenshot(`carousel-${suffix}.png`, { fullPage: width > 820 });
+        await gallery.locator('[data-slot="carousel-viewport"]').focus();
+        await page.keyboard.press('End');
+        await expect.poll(() => gallery.getByAltText('Kith’s actual constellation screen with people shown as warm lanterns').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+        if (width <= 820) await gallery.scrollIntoViewIfNeeded();
+        await expect(page).toHaveScreenshot(`carousel-screen-${suffix}.png`, { fullPage: width > 820 });
+        await openStory(page, 'motion-carousel--responsive-collection', globals);
+        const collection = page.getByRole('group', { name: 'Responsive artwork', exact: true });
+        await collection.locator('[data-slot="carousel-viewport"]').focus();
+        await page.keyboard.press('End');
+        await noOverflow(page);
+        await expect(page).toHaveScreenshot(`carousel-collection-${suffix}.png`, { fullPage: width > 820 });
+      });
       test(`catalog ${suffix}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 1000 });
         await openStory(page, 'start-here-catalog--all-modules', globals);

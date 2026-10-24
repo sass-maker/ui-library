@@ -2553,6 +2553,16 @@
       ],
       "files": [
         {
+          "path": "packages/ui/src/lib/motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/use-reduced-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
