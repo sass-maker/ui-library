@@ -25,6 +25,10 @@ if(process.argv.includes('--built')){
  const count=entries.filter(entry=>entry.type==='story').length;
  if(count<storyFiles.length)throw new Error('Built story index lost examples.');
  console.log(`${count} built stories; ${entries.filter(entry=>entry.type==='docs').length} guides.`);
+ const { moduleCatalog } = await import('../stories/module-catalog-data.ts');
+ for (const item of moduleCatalog) if (index.entries[item.storyId]?.type !== 'story') throw new Error(`Missing catalog example: ${item.id} → ${item.storyId}`);
+ if (moduleCatalog.length !== modules) throw new Error('Explorer catalog lost a UI module.');
+ console.log(`${moduleCatalog.length} catalog records resolve to working story IDs.`);
 }
 
 const catalog = JSON.parse(await readFile(path.join(root, 'packages/ui/visual-sources.json'), 'utf8'));

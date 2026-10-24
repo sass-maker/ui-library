@@ -14,7 +14,7 @@ import { ActivityItem } from "@saas-maker/ui/molecules/activity-item";
 import { sampleActivity, sampleFiles, sampleMetrics } from "../composition-fixtures";
 
 
-const meta = { title: "Molecules/Compositions/File card", parameters: { docs: { description: { component: "Import from `@saas-maker/ui/molecules/file-card`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
+const meta = { title: "Molecules/Compositions/File card", parameters: { docs: { description: { component: "A file preview, filename and metadata with selectable state and contextual actions in grid or list layouts.\n\nImport from `@saas-maker/ui/molecules/file-card`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

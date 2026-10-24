@@ -14,7 +14,7 @@ import { ActivityItem } from "@saas-maker/ui/molecules/activity-item";
 import { sampleActivity, sampleFiles, sampleMetrics } from "../composition-fixtures";
 
 
-const meta = { component: ActivityItem, title: "Molecules/Compositions/Activity item", parameters: { docs: { description: { component: "Import from `@saas-maker/ui/molecules/activity-item`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
+const meta = { component: ActivityItem, title: "Molecules/Compositions/Activity item", parameters: { docs: { description: { component: "A readable timeline entry that pairs an actor, action and time with a consistent status marker.\n\nImport from `@saas-maker/ui/molecules/activity-item`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

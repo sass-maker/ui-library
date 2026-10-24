@@ -1,5 +1,67 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import { noOverflow, openStory } from './helpers.mjs';
+
+test('the catalog filters real modules, keeps selection and exports the sorted view', async ({ page }) => {
+  await openStory(page, 'start-here-catalog--all-modules');
+  await page.getByRole('button', { name: /^Atoms$/i }).click();
+  const button = page.getByRole('checkbox', { name: 'Select Button', exact: true });
+  await page.locator('label').filter({ has: button }).click({ position: { x: 2, y: 2 } });
+  await expect(button).toBeChecked();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.getByRole('button', { name: /^Molecules$/i }).click();
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async value => { window.__catalogClipboard = value; } } }));
+  await page.getByRole('button', { name: 'Copy selected imports', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.__catalogClipboard)).toBe('import { Button } from "@saas-maker/ui/atoms/button";');
+  await page.getByRole('button', { name: 'Clear selection', exact: true }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Selection cleared.' })).toBeFocused();
+  await page.getByRole('button', { name: /^Atoms$/i }).click();
+  await page.getByRole('button', { name: /^Module$/i }).click();
+  await page.getByRole('button', { name: /^Module$/i }).click();
+  const downloading = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download view', exact: true }).click();
+  const file = await downloading;
+  expect(file.suggestedFilename()).toBe('fleet-ui-modules.json');
+  const exported = JSON.parse(await readFile(await file.path(), 'utf8'));
+  expect(exported.modules.length).toBeGreaterThan(10);
+  expect(exported.modules.every(item => item.layer === 'Atoms')).toBe(true);
+  expect(exported.modules.map(item => item.name)).toEqual([...exported.modules.map(item => item.name)].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base', numeric: true })));
+  await page.getByRole('searchbox', { name: 'Filter modules', exact: true }).fill('no-module-has-this-name');
+  await expect(page.getByText('No matching modules', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
+  await expect(page.getByRole('searchbox', { name: 'Filter modules', exact: true })).toBeFocused();
+  await noOverflow(page);
+});
+
+test('catalog rows and command search open real examples with reliable dialog focus', async ({ page }) => {
+  await openStory(page, 'start-here-catalog--all-modules');
+  await page.getByRole('searchbox', { name: 'Filter modules', exact: true }).fill('@saas-maker/ui/atoms/button');
+  const row = page.getByRole('row').filter({ has: page.getByText('Button', { exact: true }) });
+  await row.focus();
+  await page.keyboard.press('Enter');
+  const detail = page.getByRole('dialog', { name: 'Button', exact: true });
+  await expect(detail.getByRole('heading', { name: 'Button', exact: true })).toBeFocused();
+  await expect(detail.getByRole('link', { name: 'Open live example', exact: true })).toHaveAttribute('href', './?path=/story/foundations-button--playground');
+  await expect(detail.getByRole('link', { name: 'View source', exact: true })).toHaveAttribute('href', /\/packages\/ui\/src\/components\/button\.tsx$/);
+  await page.keyboard.press('Escape');
+  await expect(row).toBeFocused();
+  await page.keyboard.press('Control+k');
+  await page.getByPlaceholder('Find a component by name or purpose…').fill('workspace settings');
+  await page.getByRole('option', { name: /^Workspace Settings/ }).click();
+  await expect(page.getByRole('dialog', { name: 'Workspace Settings', exact: true }).getByRole('heading', { name: 'Workspace Settings', exact: true })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Find a component ⌘K', exact: true })).toBeFocused();
+  await noOverflow(page);
+});
+
+test('a table retry restores the collection and keeps focus in the named region', async ({ page }) => {
+  await openStory(page, 'data-data-table--failure-recovery');
+  await expect(page.getByRole('alert')).toContainText('The example request was interrupted.');
+  await page.getByRole('button', { name: 'Try again', exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Recoverable module request', exact: true })).toBeFocused();
+  await expect(page.getByText('Accordion', { exact: true })).toBeVisible();
+  await noOverflow(page);
+});
 
 async function workspaceSection(page, label) {
   if (page.viewportSize().width < 768) await page.getByRole('button', { name: 'Open navigation', exact: true }).click();

@@ -15,7 +15,7 @@ import { ActivityItem } from "@saas-maker/ui/molecules/activity-item";
 import { sampleActivity, sampleFiles, sampleMetrics } from "../composition-fixtures";
 
 
-const meta = { component: SettingRow, title: "Molecules/Compositions/Setting row", parameters: { docs: { description: { component: "Import from `@saas-maker/ui/molecules/setting-row`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
+const meta = { component: SettingRow, title: "Molecules/Compositions/Setting row", parameters: { docs: { description: { component: "A preference label and explanation paired with a switch; the whole written row is a click target.\n\nImport from `@saas-maker/ui/molecules/setting-row`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

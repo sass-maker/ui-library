@@ -7,6 +7,25 @@ for (const width of [390, 820, 1440]) {
     const globals = `theme:${theme};mode:${mode};motion:reduced`;
     test.describe(suffix, () => {
       test.use({ hasTouch: width <= 820, isMobile: width <= 820 });
+    test(`catalog ${suffix}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1000 });
+      await openStory(page, 'start-here-catalog--all-modules', globals);
+      await expect(page.getByRole('searchbox', { name: 'Filter modules', exact: true })).toBeVisible();
+      await noOverflow(page);
+      await expect(page).toHaveScreenshot(`catalog-${suffix}.png`, { fullPage: true });
+      await page.getByRole('searchbox', { name: 'Filter modules', exact: true }).fill('@saas-maker/ui/atoms/button');
+      await page.getByRole('row').filter({ has: page.getByText('Button', { exact: true }) }).click();
+      await expect(page.getByRole('dialog', { name: 'Button', exact: true })).toBeVisible();
+      await expect(page).toHaveScreenshot(`catalog-detail-${suffix}.png`);
+    });
+    test(`table states ${suffix}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1000 });
+      for (const state of ['loading', 'empty', 'failure-recovery']) {
+        await openStory(page, `data-data-table--${state}`, globals);
+        await noOverflow(page);
+        await expect(page).toHaveScreenshot(`table-${state}-${suffix}.png`, { fullPage: true });
+      }
+    });
     test(`first run ${suffix}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
       await openStory(page, 'start-here-workspace--first-run-to-workspace', globals);

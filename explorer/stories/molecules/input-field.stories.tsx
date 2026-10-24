@@ -14,7 +14,7 @@ import { ActivityItem } from "@saas-maker/ui/molecules/activity-item";
 import { sampleActivity, sampleFiles, sampleMetrics } from "../composition-fixtures";
 
 
-const meta = { component: InputField, title: "Molecules/Compositions/Input field", parameters: { docs: { description: { component: "Import from `@saas-maker/ui/molecules/input-field`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
+const meta = { component: InputField, title: "Molecules/Compositions/Input field", parameters: { docs: { description: { component: "A field composed with its label, description and validation message, with the associations handled together.\n\nImport from `@saas-maker/ui/molecules/input-field`. A focused composition of shared atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

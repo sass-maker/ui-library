@@ -155,6 +155,8 @@ function SelectionCheckbox({ inForm, checked, onCheckedChange, className, ...pro
   onCheckedChange: (checked: boolean | "indeterminate") => void
 } & Omit<React.ComponentProps<"button">, "onChange">) {
   const control = React.useRef<HTMLButtonElement>(null)
+  const generatedId = React.useId()
+  const id = props.id ?? generatedId
   const initialChecked = React.useRef(checked)
   const resetEvent = React.useRef<Event | null>(null)
   const clickEvent = React.useRef<Event | null>(null)
@@ -170,8 +172,9 @@ function SelectionCheckbox({ inForm, checked, onCheckedChange, className, ...pro
     form.addEventListener("reset", reset, true)
     return () => form.removeEventListener("reset", reset, true)
   }, [checked, onCheckedChange, inForm])
-  if (inForm) return <Checkbox
+  const checkbox = inForm ? <Checkbox
     {...props}
+    id={id}
     ref={control}
     checked={checked}
     onCheckedChange={value => {
@@ -182,9 +185,9 @@ function SelectionCheckbox({ inForm, checked, onCheckedChange, className, ...pro
     }}
     onClick={event => { clickEvent.current = event.nativeEvent }}
     className={className}
-  />
-  return <button
+  /> : <button
     {...props}
+    id={id}
     ref={control}
     type="button"
     role="checkbox"
@@ -198,6 +201,7 @@ function SelectionCheckbox({ inForm, checked, onCheckedChange, className, ...pro
   >
     {checked && <span data-slot="checkbox-indicator" className="grid place-content-center text-current transition-none"><CheckIcon className="size-3.5" /></span>}
   </button>
+  return <label htmlFor={id} onClick={event => event.stopPropagation()} className={cn("inline-flex size-6 shrink-0 items-center justify-center align-middle [@media(pointer:coarse)]:size-11", props.disabled ? "cursor-default" : "cursor-pointer")}>{checkbox}</label>
 }
 
 function DataTable<T extends RowData>({
@@ -388,7 +392,7 @@ function DataTable<T extends RowData>({
         className="relative overflow-auto rounded-lg border border-border bg-card"
         style={{ maxHeight }}
         // The scroll area is focusable only when it can hold focus usefully (no rows to tab to).
-        tabIndex={pageRows.length && onRowClick ? undefined : 0}
+        tabIndex={pageRows.length && onRowClick ? -1 : 0}
         role="region"
         aria-label={label}
       >
@@ -479,9 +483,9 @@ function DataTable<T extends RowData>({
             {status === "error" && (
               <tr>
                 <td colSpan={colCount} className="px-4 py-16 text-center">
-                  <p className="text-sm text-foreground">{error ?? "This view could not load."}</p>
+                  <div role="alert" className="text-sm text-foreground">{error ?? "This view could not load."}</div>
                   {onRetry && (
-                    <Button variant="outline" size="sm" className="mt-4" onClick={onRetry}>
+                    <Button variant="outline" size="sm" className="mt-4" onClick={() => { scrollRef.current?.focus({ preventScroll: true }); onRetry(); }}>
                       try again
                     </Button>
                   )}

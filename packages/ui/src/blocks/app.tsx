@@ -37,11 +37,11 @@ export function AppShell({
               key={it.href + it.label}
               href={it.href}
               aria-current={it.active ? "page" : undefined}
-              onClick={event => {
+              onClick={onNavigate ? event => {
                 if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                if (onNavigate) { event.preventDefault(); onNavigate(it.href); }
+                event.preventDefault(); onNavigate(it.href);
                 event.currentTarget.closest<HTMLElement>("[popover]")?.hidePopover();
-              }}
+              } : undefined}
               className={cn(
                 "flex min-h-11 items-center gap-2.5 rounded-md px-2.5 text-[0.8125rem] text-sidebar-foreground/75 outline-none transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-ring md:min-h-9 [@media(pointer:coarse)]:min-h-11 [&_svg]:size-4 [&_svg]:text-muted-foreground",
                 it.active && "bg-sidebar-accent font-medium text-sidebar-foreground [&_svg]:text-brand",

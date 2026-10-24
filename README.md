@@ -40,14 +40,17 @@ Repeated initialization and live OS reduced-motion changes are supported.
 React components use the shared reduced-motion hook; application save/upload
 callbacks remain responsible for real completion.
 
-`pnpm registry:sync` builds registry items from their actual transitive imports;
+`pnpm registry:sync` builds registry items and the explorer catalog from actual source imports;
 `pnpm registry:check` catches stale copied dependencies before publication.
 
 ## Explore the library
 
 The deployed [Fleet UI explorer](https://sass-maker.github.io/ui-library/) runs
 Storybook with live source, composition examples, theme and light/dark controls,
-responsive viewports, reduced motion, and accessibility inspection.
+responsive viewports, reduced motion, and accessibility inspection. The catalog
+adds a complete data workspace: filter modules, collect imports, inspect their
+registry dependency pins and open the matching examples. Catalog imports are
+compiled and example IDs are checked against the built explorer.
 
 ```sh
 pnpm storybook        # http://localhost:6006

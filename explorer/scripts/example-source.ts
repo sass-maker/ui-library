@@ -4,8 +4,8 @@ import ts from "typescript";
 import type { Plugin } from "vite";
 
 const directory = new URL("../stories/", import.meta.url);
-const helperNames = ["recipe-examples.tsx", "workflow-examples.tsx", "workspace-examples.tsx", "system-examples.tsx", "media-examples.tsx"];
-const fixtureName = "composition-fixtures.ts";
+const helperNames = ["recipe-examples.tsx", "workflow-examples.tsx", "workspace-examples.tsx", "system-examples.tsx", "media-examples.tsx", "module-catalog-examples.tsx"];
+const fixtureNames = ["composition-fixtures.ts", "module-catalog-data.ts"];
 const read = (name: string) => ts.createSourceFile(name, readFileSync(new URL(name, directory), "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 
 function namesIn(node: ts.Node) {
@@ -22,6 +22,7 @@ function definitions(file: ts.SourceFile) {
       if (ts.isIdentifier(declaration.name)) result.set(declaration.name.text, node);
     }
     if (ts.isFunctionDeclaration(node) && node.name) result.set(node.name.text, node);
+    if (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) result.set(node.name.text, node);
   }
   return result;
 }
@@ -43,11 +44,11 @@ function importText(node: ts.ImportDeclaration, file: ts.SourceFile, used: Set<s
 
 /** Build copyable examples from the implementation, with only their actual dependencies. */
 export function buildExampleSources() {
-  const fixture = read(fixtureName);
+  const fixtures = fixtureNames.map(read);
   const result: Record<string, string> = {};
   for (const name of helperNames) {
     const file = read(name);
-    const available = new Map([...definitions(fixture), ...definitions(file)]);
+    const available = new Map([...fixtures.flatMap(fixture => [...definitions(fixture)]), ...definitions(file)]);
     for (const node of file.statements) {
       if (!ts.isFunctionDeclaration(node) || !node.name || !node.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)) continue;
       const used = namesIn(node);
@@ -61,7 +62,7 @@ export function buildExampleSources() {
         declarations.push(dependency.getText().replace(/^export\s+/, ""));
       };
       for (const identifier of [...used]) include(identifier);
-      const imports = [...file.statements, ...fixture.statements].filter(ts.isImportDeclaration).map(declaration => importText(declaration, declaration.getSourceFile(), used)).filter((text): text is string => !!text);
+      const imports = [...file.statements, ...fixtures.flatMap(fixture => [...fixture.statements])].filter(ts.isImportDeclaration).map(declaration => importText(declaration, declaration.getSourceFile(), used)).filter((text): text is string => !!text);
       result[node.name.text] = [
         '"use client";',
         "// Local example data. Replace demo artwork URLs with your own assets.",
@@ -79,7 +80,7 @@ export function buildExampleSources() {
 export function exampleSourcePlugin(): Plugin {
   const id = "virtual:fleet-example-source";
   const resolved = "\0" + id;
-  const watched = [...helperNames, fixtureName].map(name => fileURLToPath(new URL(name, directory)));
+  const watched = [...helperNames, ...fixtureNames].map(name => fileURLToPath(new URL(name, directory)));
   return {
     name: "fleet-example-source",
     resolveId(source) { if (source === id) return resolved; },
