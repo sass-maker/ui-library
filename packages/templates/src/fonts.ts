@@ -1,12 +1,9 @@
+import { fontFaces } from "@saas-maker/ui/lib/typography";
 import type { PageSettings } from "./schema";
 
 const faces = {
+  ...fontFaces,
   "ui-rounded": 'ui-rounded, "SF Pro Rounded", Nunito, Figtree, system-ui, sans-serif',
-  figtree: '"Figtree Variable", ui-sans-serif, system-ui, sans-serif',
-  newsreader: '"Newsreader Display", "Iowan Old Style", Georgia, serif',
-  "instrument-serif": '"Instrument Serif", Georgia, serif',
-  fraunces: '"Fraunces Variable", "Iowan Old Style", Georgia, serif',
-  geist: '"Geist Variable", ui-sans-serif, system-ui, sans-serif',
 };
 
 /** Inline root variables win over theme defaults; explicit page.tokens win last. */
@@ -25,9 +22,13 @@ export function fontOverrides(fonts?: PageSettings["fonts"], theme?: PageSetting
     const text = fonts.text === "newsreader" ? faces.newsreader.replace("Newsreader Display", "Newsreader Text") : faces[fonts.text];
     vars["--font-sans"] = text;
     vars["--font-text"] = text;
+    if (["instrument-sans", "manrope", "bricolage-grotesque", "ibm-plex-sans"].includes(fonts.text)) vars["--font-features"] = "normal";
   }
   if (fonts?.accent) vars["--font-accent"] = faces[fonts.accent];
   if (fonts?.accent || fonts?.display) vars["--accent-weight"] = (fonts.accent ?? fonts.display) === "instrument-serif" ? "400" : "inherit";
-  if (fonts?.accentStyle) vars["--accent-style"] = fonts.accentStyle;
+  const accent = fonts?.accent ?? fonts?.display;
+  // These two families ship upright only. Never inherit an italic preset for them.
+  if (accent === "manrope" || accent === "bricolage-grotesque") vars["--accent-style"] = "normal";
+  else if (fonts?.accentStyle) vars["--accent-style"] = fonts.accentStyle;
   return vars;
 }

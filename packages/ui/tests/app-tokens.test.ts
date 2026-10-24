@@ -15,7 +15,7 @@ describe("app palette content contract", () => {
     const parsed = pageSettings.parse({ title: "Product", fromApp: app });
     expect(tokensFromApp(parsed.fromApp)).toMatchObject({ "--background": app.background,
       "--muted-foreground": app.mutedForeground, "--card-foreground": "var(--foreground)",
-      "--font-text": '"Geist Variable", system-ui, sans-serif' });
+      "--font-text": '"Geist Variable", ui-sans-serif, system-ui, sans-serif' });
     expect(parsed.mode).toBeUndefined(); // Base chooses dark; explicit light remains allowed.
     expect(pageSettings.parse({ title: "Product", fromApp: app, mode: "light" }).mode).toBe("light");
   });
@@ -67,4 +67,19 @@ it("supports the native rounded stack for display and text only", () => {
   const stack = 'ui-rounded, "SF Pro Rounded", Nunito, Figtree, system-ui, sans-serif';
   expect(fontOverrides(page.fonts)).toMatchObject({ "--font-display": stack, "--font-sans": stack, "--font-text": stack });
   expect(pageSettings.safeParse({ title: "Anchor", fonts: { accent: "ui-rounded" } }).success).toBe(false);
+});
+
+
+it("accepts the curated pairings for both content pages and application roles", async () => {
+  const { fontPairings, fontFaces } = await import("../src/lib/typography");
+  for (const pairing of fontPairings) {
+    const page = pageSettings.parse({ title: "Kith", fonts: pairing.fonts });
+    const vars = fontOverrides(page.fonts);
+    expect(vars["--font-sans"]).toBe(fontFaces[pairing.fonts.text]);
+    expect(vars["--font-display"]).toBe(fontFaces[pairing.fonts.display]);
+    const parsed = pageSettings.parse({ title: "Kith", fromApp: { ...app, fonts: { sans: pairing.fonts.text, display: pairing.fonts.display } } });
+    const appVars = tokensFromApp(parsed.fromApp);
+    expect(appVars["--font-sans"]).toBe(vars["--font-sans"]);
+    expect(appVars["--font-display"]).toBe(vars["--font-display"]);
+  }
 });

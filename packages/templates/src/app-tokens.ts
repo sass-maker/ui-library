@@ -1,3 +1,5 @@
+import { fontFaces } from "@saas-maker/ui/lib/typography";
+
 /** Solid sRGB colors only: app palettes must be measurable at build time. */
 export function rgb(value: string): number[] | null {
   let m: RegExpMatchArray | null;
@@ -39,11 +41,7 @@ export function contrast(a: string, b: string): number {
 }
 
 export const appFaces = {
-  figtree: '"Figtree Variable", system-ui, sans-serif',
-  newsreader: '"Newsreader Display", Georgia, serif',
-  "instrument-serif": '"Instrument Serif", Georgia, serif',
-  fraunces: '"Fraunces Variable", Georgia, serif',
-  geist: '"Geist Variable", system-ui, sans-serif',
+  ...fontFaces,
   "geist-mono": '"Geist Mono Variable", ui-monospace, monospace',
   system: 'system-ui, sans-serif',
 };
@@ -75,6 +73,7 @@ export function tokensFromApp(app?: AppTokens): Record<string, string> {
     if (role === "sans") {
       if (face === "newsreader") vars["--font-sans"] = appFaces[face].replace("Display", "Text");
       vars["--font-text"] = vars["--font-sans"];
+      if (["instrument-sans", "manrope", "bricolage-grotesque", "ibm-plex-sans"].includes(face)) vars["--font-features"] = "normal";
     }
     if (role === "display") {
       vars["--font-accent"] = vars["--font-display"];

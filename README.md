@@ -108,6 +108,15 @@ interaction recording.
 - `@saas-maker/ui/molecules/media-frame`: consistent caption and credit.
 - `@saas-maker/ui/organisms/media-sequence`: keyboard-accessible product chapters.
 
+Molecules → Motion → Carousel includes a copyable Kith artwork gallery,
+a responsive collection with live removal/restoration, and an RTL example.
+Navigation and slide selectors have 44px targets. Focus the frame for arrow,
+Home and End navigation; controls keep focus as slides change. Offscreen
+slides are inert, geometry follows actual widths and gaps on resize, and
+reduced motion follows the live preference. The gallery never auto-advances.
+`Carousel` accepts a descriptive `label`, controlled `index`/`onIndexChange`,
+or `initialIndex`; `CarouselItem` accepts an optional slide `label`.
+
 The two local movie formats, English descriptions and source hashes live in
 `site/public/visual/kith-sequence*`. The optional regeneration script is
 `node explorer/scripts/build-media-sample.mjs` and requires an installed ffmpeg.
@@ -147,7 +156,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.27"
+G="github:sass-maker/ui-library#v0.1.28"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -157,9 +166,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.27&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.27&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.27&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.28&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.28&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.28&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -182,6 +191,25 @@ export default defineConfig({ integrations: [react()] });
 ```
 
 Fonts: the theme ships Latin-only, weight-clamped woff2 subsets (about 50 KB on a Gallery page, about 105 KB on a Workbench paper page; `@font-face` is lazy and `Base.astro` preloads only the display font). Characters outside Latin fall back to the system font; add your own `@font-face` for other scripts. Regenerate with `pnpm --filter @saas-maker/ui fonts:build`.
+
+The explorer’s **Foundations → Tokens → Font Pairings** compares four curated
+web pairings on the same Kith landing and interactive asset library. Copy the
+page font configuration or CSS role variables directly:
+
+| Direction | Display / accent | Interface |
+| --- | --- | --- |
+| Editorial | Instrument Sans / Instrument Serif italic | Instrument Sans |
+| Calm product | Newsreader / Newsreader italic | Manrope |
+| Expressive | Bricolage Grotesque, upright | Geist |
+| Technical | IBM Plex Sans, upright | IBM Plex Sans; Geist Mono for identifiers |
+
+These fonts are free and open source under SIL OFL 1.1. Their licenses ship in
+`packages/ui/src/fonts/licenses/`; `sources.json` records pinned package versions,
+asset sizes and hashes. New variable font files are copied unmodified from
+Fontsource 5.3.0. Manrope and Bricolage are upright only; use the supplied real
+serif italic or an upright accent. Fontsource packages are build-time asset
+sources, with no additional runtime JavaScript. The **Font Impact** bench compares
+all ten families at equal sizes and lets you inspect system fallbacks and numerals.
 
 Styles: `Base.astro` imports only `@saas-maker/ui/theme.css` (tokens, fonts
 and base styles). `GalleryPage`, `WorkbenchPage` and `ConsolePage` each import
@@ -288,7 +316,7 @@ All color roles and radius are required; fonts and each font role are optional.
 Colors accept solid `#rgb`/`#rrggbb`, `rgb()` and `oklch()` values. Resolve
 `var()`, dynamic colors and transparency in the app first. Radius accepts px,
 rem or `0`. Font names are `figtree`, `newsreader`, `instrument-serif`,
-`fraunces`, `geist`, `geist-mono` and `system`; no unbundled font can be named.
+`fraunces`, `geist`, `instrument-sans`, `manrope`, `bricolage-grotesque`, `ibm-plex-sans`, `geist-mono` and `system`; no unbundled font can be named.
 Sans also maps long-form text; display also maps heading accents. App fonts
 win over `page.fonts`. Explicit `page.tokens` win last.
 
@@ -370,9 +398,11 @@ JavaScript; a small inline script adds `aria-invalid` and an alert message.
 The form navigates with a GET query parameter and adds no React hydration.
 
 `page.fonts` independently sets `display`, `text`, and `accent` to `figtree`,
-`newsreader`, `instrument-serif`, `fraunces`, or `geist`. `accentStyle` is
-`italic` or `normal`; write `*phrase*` for an accent. All italic faces are real,
-bundled Latin subsets; font synthesis is disabled for overridden accents.
+`newsreader`, `instrument-serif`, `fraunces`, `geist`, `instrument-sans`, `manrope`,
+`bricolage-grotesque`, or `ibm-plex-sans`. `accentStyle` is
+`italic` or `normal`; write `*phrase*` for an accent. Manrope and Bricolage
+accents resolve to upright; other italic faces are real bundled Latin assets.
+Font synthesis is disabled for overridden accents.
 Newsreader uses its fixed display/text optical sizes. `text` overrides both
 `--font-sans` and `--font-text`; omitted roles retain theme defaults.
 `display` overrides `--font-display` and its supported weight; `accent` sets
@@ -644,12 +674,12 @@ Framework references: [Astro server islands](https://docs.astro.build/en/guides/
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.27")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.28")
 // ...
 ContentView().smTheme(.gallery.dark.brand(Color("Brand")))
 ```
 
-The Swift package bundles the same fonts as the web theme (Figtree, Newsreader,
+The Swift package bundles the original six web families (Figtree, Newsreader,
 Geist, Geist Mono, Instrument Serif, Fraunces; SIL OFL, licenses in
 `swift/Sources/SaaSMakerUI/Fonts/Licenses`) and follows the theme's lowercase
 voice for headings and buttons.
@@ -696,7 +726,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.27&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.28&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

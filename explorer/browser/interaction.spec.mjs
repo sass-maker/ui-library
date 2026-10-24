@@ -3,6 +3,165 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { noOverflow, openStory } from './helpers.mjs';
 
+test('curated font pairings load real faces and preserve the working collection', async ({ page }) => {
+  await openStory(page, 'foundations-tokens--font-pairings');
+  const preview = page.getByTestId('font-pairing-preview');
+  await preview.getByRole('button', { name: 'Brand', exact: true }).click();
+  for (const [label, id, family] of [
+    ['Editorial', 'editorial', 'Instrument Sans Variable'],
+    ['Calm product', 'calm', 'Manrope Variable'],
+    ['Expressive', 'expressive', 'Geist Variable'],
+    ['Technical', 'technical', 'IBM Plex Sans Variable'],
+  ]) {
+    await page.getByRole('group', { name: 'Choose a font pairing' }).getByRole('button', { name: new RegExp(`^${label}`) }).click();
+    await expect(preview).toHaveAttribute('data-pairing', id);
+    await expect(preview).toHaveCSS('font-family', new RegExp(family));
+    await expect(preview.getByRole('button', { name: 'Brand', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(preview.getByText('The long way home.webp', { exact: true })).toHaveCount(0);
+    const art = await preview.getByAltText('Two people walking along Kith’s illustrated coastal path').boundingBox();
+    const landing = await preview.getByRole('region', { name: 'Kith landing preview' }).boundingBox();
+    expect(art.x + art.width).toBeLessThanOrEqual(landing.x + landing.width + 1);
+    await noOverflow(page);
+  }
+  const faces = await page.evaluate(async () => {
+    const samples = [
+      ['Instrument Sans Variable', 'normal'], ['Instrument Sans Variable', 'italic'],
+      ['Manrope Variable', 'normal'], ['Bricolage Grotesque Variable', 'normal'],
+      ['IBM Plex Sans Variable', 'normal'], ['IBM Plex Sans Variable', 'italic'],
+    ];
+    return Promise.all(samples.map(async ([family, style]) => {
+      const loaded = await document.fonts.load(`${style} 400 20px "${family}"`);
+      const context = document.createElement('canvas').getContext('2d');
+      context.font = `${style} 400 20px "${family}", monospace`;
+      const actual = context.measureText('Remember the people, Il1 O0 0123456789').width;
+      context.font = `${style} 400 20px monospace`;
+      return { family, style, loaded: loaded.length, difference: Math.abs(actual - context.measureText('Remember the people, Il1 O0 0123456789').width) };
+    }));
+  });
+  for (const face of faces) {
+    expect(face.loaded, `${face.family} ${face.style} loads a declared face`).toBeGreaterThan(0);
+    expect(face.difference, `${face.family} ${face.style} renders beyond fallback`).toBeGreaterThan(0.1);
+  }
+});
+
+test('the media gallery supports keyboard browsing and isolates offscreen links', async ({ page }) => {
+  await openStory(page, 'motion-carousel--in-context');
+  const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  await expect(gallery.getByRole('group', { name: 'The long way home.', exact: true })).toBeVisible();
+  await expect(gallery.getByRole('link', { name: 'Explore Kith', exact: true })).toHaveCount(1);
+  await expect(gallery.getByRole('button', { name: 'Next slide', exact: true })).toHaveCSS('opacity', '1');
+  for (const button of await gallery.getByRole('button').all()) {
+    const size = await button.boundingBox();
+    expect(size.width).toBeGreaterThanOrEqual(44);
+    expect(size.height).toBeGreaterThanOrEqual(44);
+  }
+  await frame.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
+  await expect(gallery.getByRole('link', { name: 'Explore Kith', exact: true })).toHaveCount(1);
+  await expect(gallery.locator('button[aria-label="Go to slide 2"]')).toHaveAttribute('aria-current', 'true');
+  await page.keyboard.press('End');
+  await expect(gallery.getByRole('status')).toHaveText('Slide 4 of 4');
+  await expect(gallery.getByRole('button', { name: 'Next slide', exact: true })).toBeDisabled();
+  await page.keyboard.press('Home');
+  await expect(gallery.getByRole('status')).toHaveText('Slide 1 of 4');
+  const next = gallery.getByRole('button', { name: 'Next slide', exact: true });
+  await next.focus();
+  await page.keyboard.press('Enter');
+  await expect(next).toBeFocused();
+  await next.click();
+  await next.click();
+  await expect(gallery.getByRole('status')).toHaveText('Slide 4 of 4');
+  await noOverflow(page);
+});
+
+test('a carousel measures gaps, stays aligned on resize and recovers an empty collection', async ({ page }) => {
+  await openStory(page, 'motion-carousel--responsive-collection', 'theme:paper;mode:light;motion:reduced');
+  const gallery = page.getByRole('group', { name: 'Responsive artwork', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  await frame.focus();
+  await page.keyboard.press('End');
+  const last = gallery.locator('[data-slot="carousel-slide"]').last();
+  await expect.poll(async () => Math.abs((await last.boundingBox()).x + (await last.boundingBox()).width - (await frame.boundingBox()).x - (await frame.boundingBox()).width)).toBeLessThan(2);
+  await expect(gallery.getByRole('button', { name: 'Next slide', exact: true })).toBeDisabled();
+  const resizedWidth = page.viewportSize().width === 390 ? 1440 : 390;
+  await page.setViewportSize({ width: resizedWidth, height: 900 });
+  // Chromium can acknowledge emulation before painting the new media query.
+  // Send input once the new one/two-frame layout is actually rendered.
+  await expect.poll(() => frame.evaluate(element => Math.round(element.clientWidth / element.querySelector('[data-slot="carousel-slide"]').offsetWidth))).toBe(resizedWidth < 640 ? 1 : 2);
+  await frame.focus();
+  await page.keyboard.press('End');
+  await expect.poll(async () => Math.abs((await last.boundingBox()).x + (await last.boundingBox()).width - (await frame.boundingBox()).x - (await frame.boundingBox()).width)).toBeLessThan(2);
+  for (let i = 0; i < 5; i++) await page.getByRole('button', { name: 'Remove last artwork', exact: true }).click();
+  await expect(gallery.getByRole('status')).toHaveText('No slides');
+  await expect(gallery.getByRole('button', { name: 'Next slide', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Restore artwork', exact: true }).click();
+  await expect(gallery.getByRole('status')).toHaveText('Slide 1 of 5');
+  await expect(gallery.getByRole('link', { name: 'Inspect Coastal walk', exact: true })).toBeVisible();
+  await noOverflow(page);
+});
+
+test('a carousel follows right to left direction without changing button meaning', async ({ page }) => {
+  await openStory(page, 'motion-carousel--right-to-left', 'theme:paper;mode:light;motion:reduced');
+  const gallery = page.getByRole('group', { name: 'Right to left gallery', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  await frame.focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
+  const second = gallery.getByRole('group', { name: '2 of 3', exact: true });
+  await expect.poll(async () => Math.abs((await second.boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThan(2);
+  await gallery.getByRole('button', { name: 'Next slide', exact: true }).click();
+  await expect(gallery.getByRole('status')).toHaveText('Slide 3 of 3');
+  await noOverflow(page);
+});
+
+test('swipe navigation and live reduced motion keep the selected frame aligned', async ({ page }) => {
+  await openStory(page, 'motion-carousel--in-context');
+  const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  await frame.scrollIntoViewIfNeeded();
+  const box = await frame.boundingBox();
+  await page.mouse.move(box.x + box.width * 0.75, box.y + 80);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.2, box.y + 80, { steps: 8 });
+  await page.mouse.up();
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await gallery.getByRole('button', { name: 'Next slide', exact: true }).click();
+  await expect(gallery.getByRole('status')).toHaveText('Slide 3 of 4');
+  const current = gallery.getByRole('group', { name: 'Stories worth keeping.', exact: true });
+  await expect.poll(async () => Math.abs((await current.boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThan(2);
+  await noOverflow(page);
+});
+
+test('a touch gallery preserves vertical page scrolling and accepts a horizontal swipe', async ({ page, context, browserName }) => {
+  test.skip(browserName !== 'chromium' || page.viewportSize().width !== 390, 'Native touch input uses Chromium’s emulated touchscreen.');
+  await openStory(page, 'motion-carousel--in-context');
+  const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  await frame.scrollIntoViewIfNeeded();
+  const session = await context.newCDPSession(page);
+  const swipe = async (from, to) => {
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...from, id: 0 }] });
+    for (let step = 1; step <= 8; step++) {
+      await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: from.x + (to.x - from.x) * step / 8, y: from.y + (to.y - from.y) * step / 8, id: 0 }] });
+      await page.waitForTimeout(16);
+    }
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  };
+  let box = await frame.boundingBox();
+  const before = await page.evaluate(() => scrollY);
+  await swipe({ x: box.x + box.width / 2, y: box.y + 180 }, { x: box.x + box.width / 2, y: box.y + 60 });
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + 30);
+  await expect(gallery.getByRole('status')).toHaveText('Slide 1 of 4');
+  await frame.scrollIntoViewIfNeeded();
+  box = await frame.boundingBox();
+  await swipe({ x: box.x + box.width * 0.8, y: box.y + 80 }, { x: box.x + box.width * 0.2, y: box.y + 80 });
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
+  await session.detach();
+});
+
 // Reuse the explorer's installed accessibility engine; no second version or
 // network-loaded checker. Keep review-needed findings in the test artifact.
 const explorerRequire = createRequire(new URL('../package.json', import.meta.url));
@@ -38,6 +197,23 @@ async function accessibleStory(page, testInfo, scope) {
 }
 
 for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+  test(`font pairing code is keyboard scrollable and accessible in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    await openStory(page, 'foundations-tokens--font-pairings', `theme:${theme};mode:${mode}`);
+    const css = page.getByRole('region', { name: 'React and CSS applications configuration' });
+    await css.focus();
+    await expect(css).toBeFocused();
+    await accessibleStory(page, testInfo, 'font-pairings');
+  });
+
+  test(`the media gallery meets automated accessibility checks in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    await openStory(page, 'motion-carousel--in-context', `theme:${theme};mode:${mode}`);
+    await accessibleStory(page, testInfo, 'media-gallery');
+    await page.locator('[data-slot="carousel-viewport"]').focus();
+    await page.keyboard.press('End');
+    await accessibleStory(page, testInfo, 'media-gallery-screen');
+  });
   test(`the catalog and its detail meet automated accessibility checks in ${mode} mode`, async ({ page }, testInfo) => {
     test.setTimeout(45_000);
     await openStory(page, 'start-here-catalog--all-modules', `theme:${theme};mode:${mode}`);
@@ -332,7 +508,7 @@ test('materials follow live reduced-motion preference and keyboard selection', a
 
 test('font comparisons measure live layout and retain usable inputs with fallbacks', async ({ page }) => {
   await openStory(page, 'foundations-tokens--font-impact');
-  await expect(page.getByTestId('font-measurement')).toHaveCount(4);
+  await expect(page.getByTestId('font-measurement')).toHaveCount(10);
   await expect(page.getByTestId('font-measurement').first()).toContainText('body lines');
   for (const input of await page.getByRole('textbox', { name: 'Public repository' }).all()) {
     expect(await input.evaluate(element => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(page.viewportSize().width < 768 ? 16 : 14);

@@ -10,6 +10,8 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  "aria-label": ariaLabel,
+  "aria-labelledby": labelledBy,
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
   const values = React.useMemo(
@@ -41,8 +43,8 @@ function Slider({
       </SliderPrimitive.Track>
       {values.map((_, index) => (
         <SliderPrimitive.Thumb
-          aria-label={props["aria-label"] ? `${props["aria-label"]}${values.length > 1 ? ` ${index === 0 ? "minimum" : index === values.length - 1 ? "maximum" : index + 1}` : ""}` : undefined}
-          aria-labelledby={props["aria-labelledby"]}
+          aria-label={ariaLabel ? `${ariaLabel}${values.length > 1 ? ` ${index === 0 ? "minimum" : index === values.length - 1 ? "maximum" : index + 1}` : ""}` : undefined}
+          aria-labelledby={labelledBy}
           data-slot="slider-thumb"
           key={index}
           className="block size-4 shrink-0 rounded-full border border-primary bg-background shadow-sm transition-[color,box-shadow] hover:ring-4 hover:ring-ring/50 focus-visible:ring-4 focus-visible:ring-ring/50 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"

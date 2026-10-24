@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/ui",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "private": true,
   "type": "module",
   "description": "SaaS Maker UI: shadcn/ui components, theme presets and page blocks shared across Fleet products.",
@@ -125,6 +125,10 @@
     "happy-dom": "20.9.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "@tailwindcss/node": "4.3.3"
+    "@tailwindcss/node": "4.3.3",
+    "@fontsource-variable/instrument-sans": "5.3.0",
+    "@fontsource-variable/manrope": "5.3.0",
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource-variable/ibm-plex-sans": "5.3.0"
   }
 }

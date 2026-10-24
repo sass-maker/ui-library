@@ -70,13 +70,13 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
     </header>}
     <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
       {!showHeader && action && <div className="flex w-full justify-end">{action}</div>}
-      <div className="flex max-w-full gap-1 overflow-x-auto" aria-label="Collections">
+      <div className="flex max-w-full gap-1 overflow-x-auto" role="group" aria-label="Collections">
         {collections.map(item => <button type="button" key={item} aria-pressed={currentCollection === item} onClick={() => setCollection(item)}
           className={cn("relative min-h-11 shrink-0 rounded-md px-3 py-2 text-[0.8125rem] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring", currentCollection === item ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground")}>{item}</button>)}
       </div>
       <div className="flex w-full items-center gap-2 sm:w-auto">
         <SearchField label="Search files" value={query} onValueChange={setQuery} placeholder="Search files…" className="min-w-0 flex-1 sm:w-56" />
-        <div className="flex shrink-0 rounded-lg border border-border bg-background p-1" aria-label="File view">
+        <div className="flex shrink-0 rounded-lg border border-border bg-background p-1" role="group" aria-label="File view">
           <Button variant={view === "grid" ? "secondary" : "ghost"} size="icon-sm" aria-label="Grid view" aria-pressed={view === "grid"} onClick={() => setView("grid")}><Grid2X2 /></Button>
           <Button variant={view === "list" ? "secondary" : "ghost"} size="icon-sm" aria-label="List view" aria-pressed={view === "list"} onClick={() => setView("list")}><List /></Button>
         </div>
