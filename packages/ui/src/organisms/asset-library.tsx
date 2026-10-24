@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { FolderOpen, Grid2X2, List, SearchX, X, ImageIcon, FileText, ArrowUpRight } from "lucide-react";
 import { Button } from "../components/button";
@@ -36,7 +36,9 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
   const opener = useRef<HTMLButtonElement | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const region = useRef<HTMLElement>(null);
-  const focusLibrary = () => (heading.current ?? region.current)?.focus({ preventScroll: true });
+  const focusLibrary = () => { const target = heading.current ?? region.current; if (target?.getClientRects().length) target.focus({ preventScroll: true }); };
+  const focusFrame = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(focusFrame.current), []);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [collection, setCollection] = useState("All files");
@@ -49,9 +51,11 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
   const currentCollection = collections.includes(collection) ? collection : "All files";
   const visible = useMemo(() => files.filter(file => (currentCollection === "All files" || file.collection === currentCollection) && file.name.toLowerCase().includes(query.trim().toLowerCase())), [files, currentCollection, query]);
   const remove = (ids: string[]) => {
-    focusLibrary();
     onRemove?.(ids);
     setSelected(previous => new Set([...previous].filter(id => !ids.includes(id))));
+    // A modal action menu must release its focus trap before we restore focus.
+    cancelAnimationFrame(focusFrame.current);
+    focusFrame.current = requestAnimationFrame(focusLibrary);
   };
   const select = (id: string, value: boolean) => setSelected(previous => {
     const next = new Set(previous);

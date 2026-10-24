@@ -5,6 +5,8 @@ for (const width of [390, 820, 1440]) {
   for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
     const suffix = `${width}-${theme}-${mode}`;
     const globals = `theme:${theme};mode:${mode};motion:reduced`;
+    test.describe(suffix, () => {
+      test.use({ hasTouch: width <= 820, isMobile: width <= 820 });
     test(`first run ${suffix}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
       await openStory(page, 'start-here-workspace--first-run-to-workspace', globals);
@@ -85,6 +87,7 @@ for (const width of [390, 820, 1440]) {
       await page.getByRole('link', { name: 'Kith for iPhone', exact: true }).scrollIntoViewIfNeeded();
       await noOverflow(page);
       await expect(page).toHaveScreenshot(`media-${suffix}.png`, { fullPage: true });
+    });
     });
   }
 }
