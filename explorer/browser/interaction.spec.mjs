@@ -95,7 +95,7 @@ test('catalog rows and command search open real examples with reliable dialog fo
 test('a table retry restores the collection and keeps focus in the named region', async ({ page }) => {
   await openStory(page, 'data-data-table--failure-recovery');
   await expect(page.getByRole('alert')).toContainText('The example request was interrupted.');
-  await page.getByRole('button', { name: 'Try again', exact: true }).click();
+  await page.getByRole('button', { name: /^try again$/i }).click();
   await expect(page.getByRole('region', { name: 'Recoverable module request', exact: true })).toBeFocused();
   await expect(page.getByText('Accordion', { exact: true })).toBeVisible();
   await noOverflow(page);
@@ -157,6 +157,13 @@ test('a connected workspace previews, removes and restores local files', async (
   await page.getByRole('button', { name: 'Undo removal', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Preview Release notes.md', exact: true })).toBeVisible();
   await expect(page.getByRole('status').filter({ hasText: '1 file restored.' })).toBeFocused();
+  const menu = page.getByRole('button', { name: 'Actions for Release notes.md', exact: true });
+  await menu.click();
+  await page.getByRole('menuitem', { name: 'Open preview', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Release notes.md', exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('Release notes.md');
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeFocused();
   await noOverflow(page);
 });
 

@@ -30,7 +30,7 @@ export type FileCardProps = {
 export function FileCard({ file, selected, onSelectedChange, onOpen, onRemove, view = "grid" }: FileCardProps) {
   const checkboxId = useId();
   const menuTrigger = useRef<HTMLButtonElement>(null);
-  const removedFromMenu = useRef(false);
+  const afterMenuClose = useRef<(() => void) | null>(null);
   const Icon = file.kind === "image" ? ImageIcon : FileText;
   const list = view === "list";
   return <article data-selected={selected} className={cn("group/file relative min-w-0 overflow-hidden rounded-xl border bg-card text-card-foreground transition-[border-color,box-shadow] duration-150", selected ? "border-brand ring-1 ring-brand/20" : "border-border hover:border-foreground/25", list && "flex items-center gap-4 rounded-lg p-3")}>
@@ -48,9 +48,16 @@ export function FileCard({ file, selected, onSelectedChange, onOpen, onRemove, v
       <p className="mt-1 truncate text-xs leading-relaxed text-muted-foreground">{file.size} <span aria-hidden>·</span> {file.updated}</p>
     </div>
     <DropdownMenu><DropdownMenuTrigger asChild><Button ref={menuTrigger} variant="ghost" size="icon-sm" aria-label={`Actions for ${file.name}`} className={cn("shrink-0", !list && "absolute bottom-4 right-2 bg-card")}><MoreHorizontal /></Button></DropdownMenuTrigger>
-      <DropdownMenuContent align="end" onCloseAutoFocus={event => { if (removedFromMenu.current) { event.preventDefault(); removedFromMenu.current = false; } }}><DropdownMenuItem onSelect={() => { if (menuTrigger.current) onOpen(menuTrigger.current); }}>Open preview</DropdownMenuItem>
+      <DropdownMenuContent align="end" onCloseAutoFocus={event => {
+        const action = afterMenuClose.current;
+        if (!action) return;
+        event.preventDefault(); afterMenuClose.current = null;
+        // Release the menu's modal focus scope before opening another overlay
+        // or removing its trigger, including during an animated close.
+        action();
+      }}><DropdownMenuItem onSelect={() => { afterMenuClose.current = () => { if (menuTrigger.current) onOpen(menuTrigger.current); }; }}>Open preview</DropdownMenuItem>
         <DropdownMenuItem onSelect={() => onSelectedChange(!selected)}>{selected ? "Deselect file" : "Select file"}</DropdownMenuItem>
-        {onRemove && <DropdownMenuItem variant="destructive" onSelect={() => { removedFromMenu.current = true; onRemove(); }}>Remove file</DropdownMenuItem>}
+        {onRemove && <DropdownMenuItem variant="destructive" onSelect={() => { afterMenuClose.current = onRemove; }}>Remove file</DropdownMenuItem>}
       </DropdownMenuContent>
     </DropdownMenu>
   </article>;
