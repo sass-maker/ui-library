@@ -272,11 +272,11 @@ function PanelContent({ panel, prefix, plans, name, onNameChange, planId, onPlan
 }) {
     if (panel === 0) {
         return (<div className="flex flex-col gap-4">
-        <Heading title="Name your workspace" note="Use at least two characters. You can change this later."/>
+        <Heading title="Name your workspace" note="Use at least two characters. You can change this later." noteId={`${prefix}-name-hint`}/>
         <label htmlFor={`${prefix}-name`} className="sr-only">
           Workspace name
         </label>
-        <input id={`${prefix}-name`} data-autofocus value={name} onChange={(e) => onNameChange(e.target.value)} placeholder="Acme Inc" maxLength={80} autoComplete="organization" className="h-11 min-w-0 w-full rounded-xl bg-background px-3.5 text-base md:text-[15px] [@media(pointer:coarse)]:text-base text-foreground shadow-md outline-hidden placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground"/>
+        <input id={`${prefix}-name`} aria-describedby={`${prefix}-name-hint`} data-autofocus value={name} onChange={(e) => onNameChange(e.target.value)} placeholder="Acme Inc" minLength={2} maxLength={80} autoComplete="organization" className="h-11 min-w-0 w-full rounded-xl bg-background px-3.5 text-base md:text-[15px] [@media(pointer:coarse)]:text-base text-foreground shadow-md outline-hidden placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground"/>
       </div>);
     }
     if (panel === 1) {
@@ -334,16 +334,17 @@ function PanelContent({ panel, prefix, plans, name, onNameChange, planId, onPlan
     </div>);
 }
 
-function Heading({ title, note, focusable, }: {
+function Heading({ title, note, noteId, focusable, }: {
     title: string;
     note: string;
+    noteId?: string;
     focusable?: boolean;
 }) {
     return (<div className="flex flex-col gap-1.5">
       <h3 tabIndex={focusable ? -1 : undefined} data-autofocus={focusable ? "" : undefined} className="text-[20px] font-medium text-foreground outline-hidden">
         {title}
       </h3>
-      <p className="text-[15px] text-muted-foreground">{note}</p>
+      <p id={noteId} className="text-[15px] text-muted-foreground">{note}</p>
     </div>);
 }
 

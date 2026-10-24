@@ -94,7 +94,7 @@ export function AppShell({
           </div>
           <div className="flex shrink-0 items-center gap-1">
           {mobileActions}
-          <button type="button" popoverTarget={drawerId} aria-label="Open navigation" className="inline-flex size-11 items-center justify-center rounded-md outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring">
+          <button type="button" popoverTarget={drawerId} aria-label="Open navigation" className="inline-flex size-11 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-accent active:bg-accent focus-visible:ring-2 focus-visible:ring-ring">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-5" aria-hidden>
               <path d="M4 7h16M4 12h16M4 17h16" />
             </svg>
@@ -106,7 +106,7 @@ export function AppShell({
             popover="auto"
             className="fixed inset-y-0 left-0 m-0 h-dvh w-72 max-w-[85vw] flex-col border-r border-sidebar-border bg-sidebar p-0 pb-[env(safe-area-inset-bottom)] text-foreground shadow-xl backdrop:bg-black/30 [&:popover-open]:flex"
           >
-            <div className="flex items-center justify-between border-b border-sidebar-border pr-2">{brandRow}<button type="button" popoverTarget={drawerId} popoverTargetAction="hide" aria-label="Close navigation" className="inline-flex size-11 shrink-0 items-center justify-center rounded-md outline-none hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-5" aria-hidden><path d="m6 6 12 12M18 6 6 18" /></svg></button></div>
+            <div className="flex items-center justify-between border-b border-sidebar-border pr-2">{brandRow}<button type="button" popoverTarget={drawerId} popoverTargetAction="hide" aria-label="Close navigation" className="inline-flex size-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-sidebar-accent active:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-5" aria-hidden><path d="m6 6 12 12M18 6 6 18" /></svg></button></div>
             {navList}
             {secondary && <div className="px-3 pb-3">{secondary}</div>}
             {userRow}

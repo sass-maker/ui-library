@@ -68,7 +68,7 @@ export function SearchTrigger({ label = "Search", className }: { label?: string;
       aria-label={`${label} ⌘K`}
       aria-keyshortcuts="Meta+K Control+K"
       className={cn(
-        "inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-md border border-input bg-background px-2.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:w-64",
+        "inline-flex touch-manipulation select-none min-h-11 min-w-11 items-center justify-center gap-2 rounded-md border border-input bg-background px-2.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent active:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:w-64",
         className,
       )}
     >
