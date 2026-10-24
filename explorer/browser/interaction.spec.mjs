@@ -3,6 +3,117 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { noOverflow, openStory } from './helpers.mjs';
 
+test('the expressive button has one accessible name and supports keyboard activation', async ({ page }) => {
+  await openStory(page, 'effects-interactive-hover-button--playground');
+  const button = page.getByRole('button', { name: 'Explore components', exact: true });
+  await button.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('Example action selected', { exact: true })).toBeVisible();
+  await expect(button).toBeFocused();
+  await noOverflow(page);
+});
+
+test('a dialog saves the actual name, discards cancelled drafts and focuses invalid input', async ({ page }) => {
+  await openStory(page, 'overlays-dialog--playground');
+  const trigger = page.getByRole('button', { name: 'Edit project', exact: true });
+  await trigger.click();
+  const dialog = page.getByRole('dialog', { name: 'Edit project', exact: true });
+  const name = dialog.getByRole('textbox', { name: 'Project name', exact: true });
+  await name.fill('   ');
+  await dialog.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await expect(name).toBeFocused();
+  await expect(name).toHaveAttribute('aria-invalid', 'true');
+  await name.fill('  Kith release review  ');
+  await dialog.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect(page.getByRole('status')).toHaveText('Kith release review');
+  await trigger.click();
+  await name.fill('Discard this draft');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await trigger.click();
+  await expect(name).toHaveValue('Kith release review');
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+});
+
+test('the sheet inspector applies real properties and contains a nested select', async ({ page }) => {
+  await openStory(page, 'overlays-sheet--playground');
+  const trigger = page.getByRole('button', { name: 'Open inspector', exact: true });
+  await trigger.click();
+  const sheet = page.getByRole('dialog', { name: 'Button inspector', exact: true });
+  const close = sheet.getByRole('button', { name: 'Close', exact: true });
+  const target = await close.boundingBox();
+  expect(target.width).toBeGreaterThanOrEqual(44);
+  expect(target.height).toBeGreaterThanOrEqual(44);
+  await sheet.getByRole('combobox', { name: 'Variant', exact: true }).click();
+  await page.getByRole('option', { name: 'Outline', exact: true }).click();
+  await sheet.getByRole('switch', { name: 'Disabled', exact: true }).click();
+  await expect(sheet.getByRole('button', { name: 'Continue', exact: true })).toBeDisabled();
+  await sheet.getByRole('button', { name: 'Done', exact: true }).click();
+  await expect(sheet).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect(page.getByRole('status')).toHaveText('Outline variant · Disabled');
+  await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeDisabled();
+  await noOverflow(page);
+});
+
+test('menu actions update the actual local collection and retain keyboard focus', async ({ page }) => {
+  await openStory(page, 'overlays-dropdown-menu--playground');
+  const trigger = page.getByRole('button', { name: 'Project actions', exact: true });
+  await trigger.click();
+  const pin = page.getByRole('menuitemcheckbox', { name: 'Pin in quick access', exact: true });
+  if (await page.evaluate(() => matchMedia('(pointer:coarse)').matches)) await expect.poll(async () => (await pin.boundingBox()).height).toBeGreaterThanOrEqual(43.99);
+  await expect(page.locator('#storybook-root')).not.toHaveAttribute('aria-hidden', 'true');
+  await pin.click();
+  await expect(trigger).toBeFocused();
+  await expect(page.getByText('Active collection · Pinned', { exact: true })).toBeVisible();
+  await trigger.click();
+  await page.getByRole('menuitem', { name: 'Move to', exact: true }).click();
+  await page.getByRole('menuitemradio', { name: 'Review', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Moved to Review.');
+  await expect(page.getByText('Review collection · Pinned', { exact: true })).toBeVisible();
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+});
+
+test('an empty table provides a working filter recovery and keeps focus', async ({ page }) => {
+  await openStory(page, 'data-data-table--empty');
+  await expect(page.getByRole('heading', { name: 'No matching modules', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Clear filter', exact: true }).click();
+  await expect(page.getByRole('searchbox', { name: 'Filter example modules', exact: true })).toBeFocused();
+  await expect(page.getByRole('row').filter({ has: page.getByText('Accordion', { exact: true }) })).toBeVisible();
+  await noOverflow(page);
+});
+
+test('composition inputs and notes share their tracks and inline links stay text-flush', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'start-here-composition--from-atom-to-organism');
+  const inputs = await page.locator('.composition-pieces input').evaluateAll(items => items.map(item => item.getBoundingClientRect().top));
+  const notes = await page.locator('.composition-pieces .composition-note code').evaluateAll(items => items.map(item => item.getBoundingClientRect().top));
+  expect(Math.abs(inputs[0] - inputs[1])).toBeLessThan(1);
+  expect(Math.abs(notes[0] - notes[1])).toBeLessThan(1);
+  await openStory(page, 'start-here-overview--explore');
+  expect(await page.getByRole('link', { name: 'See how it fits together', exact: true }).evaluate(element => parseFloat(getComputedStyle(element).paddingLeft))).toBe(0);
+});
+
+test('the paged catalog shows a complete page and makes horizontal overflow explicit', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'start-here-catalog--all-modules');
+  const region = page.getByRole('region', { name: 'Component catalog', exact: true });
+  await expect(page.locator('tr[data-row]')).toHaveCount(12);
+  const geometry = await region.evaluate(element => ({ scroll: element.scrollHeight, height: element.clientHeight }));
+  expect(geometry.scroll - geometry.height).toBeLessThanOrEqual(1);
+  await page.setViewportSize({ width: 390, height: 900 });
+  await expect(region).toHaveAttribute('data-scroll-right', 'true');
+  await expect(page.getByText('Scroll horizontally for more columns.', { exact: true })).toBeVisible();
+  await region.evaluate(element => { element.scrollLeft = element.scrollWidth; });
+  await expect(region).toHaveAttribute('data-scroll-left', 'true');
+  await expect(region).not.toHaveAttribute('data-scroll-right');
+  await noOverflow(page);
+});
+
 test('curated font pairings load real faces and preserve the working collection', async ({ page }) => {
   await openStory(page, 'foundations-tokens--font-pairings');
   const preview = page.getByTestId('font-pairing-preview');
@@ -192,7 +303,9 @@ async function accessibleStory(page, testInfo, scope) {
     let audit;
     while (!audit) {
       try {
-        audit = await window.axe.run(document.querySelector('#storybook-root'), { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } });
+        // Radix overlays are portalled beside the story root. Auditing only
+        // that root would inspect the hidden background instead of the dialog.
+        audit = await window.axe.run(document.body, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } });
       } catch (error) {
         if (!String(error).includes('Axe is already running') || performance.now() >= deadline) throw error;
         await new Promise(resolve => requestAnimationFrame(resolve));
@@ -206,6 +319,18 @@ async function accessibleStory(page, testInfo, scope) {
 }
 
 for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+  test(`shared overlays include their portal content in accessibility checks in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    for (const [story, trigger, scope] of [
+      ['overlays-dialog--playground', 'Edit project', 'dialog'],
+      ['overlays-sheet--playground', 'Open inspector', 'sheet'],
+      ['overlays-dropdown-menu--playground', 'Project actions', 'menu'],
+    ]) {
+      await openStory(page, story, `theme:${theme};mode:${mode}`);
+      await page.getByRole('button', { name: trigger, exact: true }).click();
+      await accessibleStory(page, testInfo, `${scope}-${mode}`);
+    }
+  });
   test(`font pairing code is keyboard scrollable and accessible in ${mode} mode`, async ({ page }, testInfo) => {
     test.setTimeout(45_000);
     await openStory(page, 'foundations-tokens--font-pairings', `theme:${theme};mode:${mode}`);

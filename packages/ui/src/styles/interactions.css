@@ -1,0 +1,28 @@
+/* A row may be visually compact on desktop while remaining easy to acquire
+ * with a finger. Shared slots also cover controls mounted through a portal.
+ */
+@layer components {
+  :is([data-slot="dropdown-menu-content"], [data-slot="dropdown-menu-sub-content"],
+      [data-slot="context-menu-content"], [data-slot="context-menu-sub-content"],
+      [data-slot="menubar-content"], [data-slot="menubar-sub-content"],
+      [data-slot="popover-content"], [data-slot="hover-card-content"],
+      [data-slot="select-content"]) {
+    overscroll-behavior: contain;
+  }
+  @media (pointer: coarse) {
+    :is([data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-checkbox-item"],
+        [data-slot="dropdown-menu-radio-item"], [data-slot="dropdown-menu-sub-trigger"],
+        [data-slot="context-menu-item"], [data-slot="context-menu-checkbox-item"],
+        [data-slot="context-menu-radio-item"], [data-slot="context-menu-sub-trigger"],
+        [data-slot="menubar-item"], [data-slot="menubar-checkbox-item"],
+        [data-slot="menubar-radio-item"], [data-slot="menubar-sub-trigger"],
+        [data-slot="select-item"], [data-slot="command-item"],
+        [data-slot="select-trigger"], [data-slot="toggle"],
+        [data-slot="toggle-group-item"], [data-slot="menubar-trigger"]) {
+      min-height: 44px;
+    }
+    :is([data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="menubar-trigger"]) {
+      min-width: 44px;
+    }
+  }
+}

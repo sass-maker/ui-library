@@ -40,6 +40,13 @@ Repeated initialization and live OS reduced-motion changes are supported.
 React components use the shared reduced-motion hook; application save/upload
 callbacks remain responsible for real completion.
 
+Anchored surfaces share a 150 ms entrance and 100 ms exit. Dialogs use
+220/140 ms, drawers use 260/180 ms, and command search opens immediately.
+Overlays constrain long content to the available viewport; menus and form
+controls have roomier targets on coarse pointers. Dropdown and context menus
+default to non-modal interaction; pass `modal={true}` when outside interaction
+must be blocked. Dialogs retain modal focus containment.
+
 `pnpm registry:sync` builds registry items and the explorer catalog from actual source imports;
 `pnpm registry:check` catches stale copied dependencies before publication.
 
@@ -156,7 +163,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.29"
+G="github:sass-maker/ui-library#v0.1.30"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -166,9 +173,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.29&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.29&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.29&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.30&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.30&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.30&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -741,7 +748,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.29&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.30&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

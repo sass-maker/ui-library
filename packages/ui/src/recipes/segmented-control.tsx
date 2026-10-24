@@ -112,14 +112,14 @@ export function SegmentedControl({ options, value, onChange, label, className, }
                     tabRefs.current.set(option, el);
                 else
                     tabRefs.current.delete(option);
-            }} type="button" role="radio" aria-checked={option === value} tabIndex={option === value ? 0 : -1} onClick={() => select(option, false)} className="flex h-8 items-center rounded-full px-4 text-sm font-medium text-muted-foreground transition-[color] duration-150 ease-out outline-hidden hover:text-foreground">
+            }} type="button" role="radio" aria-checked={option === value} tabIndex={option === value ? 0 : -1} onClick={() => select(option, false)} className="flex h-8 items-center [@media(pointer:coarse)]:h-11 rounded-full px-4 text-sm font-medium text-muted-foreground transition-[color] duration-150 ease-out outline-hidden hover:text-foreground">
           {option}
         </button>))}
 
       {/* An inverted copy of the row, clipped to the selected option. Moving
             the clip recolors each label exactly as the pill's edge crosses it. */}
       <motion.div ref={overlayRef} aria-hidden style={{ clipPath }} className="pointer-events-none invisible absolute inset-0 flex rounded-full bg-foreground p-1 text-background">
-        {options.map((option) => (<span key={option} className="flex h-8 items-center px-4 text-sm font-medium">
+        {options.map((option) => (<span key={option} className="flex h-8 items-center [@media(pointer:coarse)]:h-11 px-4 text-sm font-medium">
             {option}
           </span>))}
       </motion.div>

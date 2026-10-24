@@ -6,6 +6,10 @@ import { useState } from "react";
 import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/data-table";
+import { SearchField } from "@saas-maker/ui/molecules/search-field";
+import { EmptyState } from "@saas-maker/ui/molecules/empty-state";
+import { useRef } from "react";
+import { SearchX } from "lucide-react";
 
 const meta = { id: "data-data-table", title: "Organisms/Data/Data table", component: C.DataTable, parameters: {"docs": {"description": {"component": "A sortable, paginated collection with selection, column visibility and explicit loading, empty and recoverable error states.\n\nImport from `@saas-maker/ui/organisms/data-table`. Compare the six presets, light and dark modes, reduced motion, and viewport sizes using the toolbar."}}} } satisfies Meta;
 export default meta;
@@ -23,7 +27,15 @@ const stateColumns: C.DataColumn<(typeof moduleCatalog)[number]>[] = [
   { id: "layer", header: "Layer", value: item => item.layer },
 ];
 export const Loading: Story = { render: () => <C.DataTable label="Loading module request" data={[]} columns={stateColumns} getRowId={item => item.id} status="loading" skeletonRows={5} /> };
-export const Empty: Story = { render: () => <C.DataTable label="Empty module request" data={[]} columns={stateColumns} getRowId={item => item.id} empty="No modules match this view. Clear a filter or choose another collection." /> };
+export const Empty: Story = { render: function Render() {
+  const [query, setQuery] = useState("No matching module");
+  const filter = useRef<HTMLInputElement>(null);
+  const data = moduleCatalog.slice(0, 5).filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
+  return <div className="story-stack"><SearchField ref={filter} label="Filter example modules" value={query} onValueChange={setQuery} placeholder="Find a module…" />
+    <C.DataTable label="Empty module request" data={data} columns={stateColumns} getRowId={item => item.id}
+      empty={<EmptyState icon={<SearchX />} title="No matching modules" description="Try another name, or clear the filter to bring the collection back." primaryAction={{ label: "Clear filter", onClick: () => { setQuery(""); filter.current?.focus(); } }} />} />
+  </div>;
+} };
 export const FailureRecovery: Story = { render: function Render() {
   const [failed, setFailed] = useState(true);
   return <div className="story-stack"><C.DataTable label="Recoverable module request" data={moduleCatalog.slice(0, 5)} columns={stateColumns} getRowId={item => item.id} status={failed ? "error" : "ready"} error="The example request was interrupted. The existing data is retained." onRetry={() => setFailed(false)} /><p className="story-caption">Simulated request state with bundled catalog data. No network request is made. Retry restores the collection and keeps focus in the table.</p></div>;

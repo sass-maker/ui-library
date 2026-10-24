@@ -24,7 +24,7 @@ export function InputField({ label, description, error, optional, id, containerC
   const describedBy = [props["aria-describedby"], description ? `${fieldId}-hint` : "", error ? `${fieldId}-error` : ""].filter(Boolean).join(" ") || undefined;
   return <div className={cn("grid gap-2", containerClassName)}>
     <div className="flex items-baseline justify-between gap-4">
-      <Label htmlFor={fieldId} className="text-sm font-medium">{label}</Label>
+      <Label htmlFor={fieldId}>{label}</Label>
       {optional && <span className="text-xs text-muted-foreground">Optional</span>}
     </div>
     <Input {...props} id={fieldId} aria-describedby={describedBy} aria-invalid={error ? true : props["aria-invalid"]} />

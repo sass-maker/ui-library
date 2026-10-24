@@ -26,6 +26,11 @@
           "path": "packages/ui/src/styles/effects.css",
           "type": "registry:file",
           "target": "src/styles/effects.css"
+        },
+        {
+          "path": "packages/ui/src/styles/interactions.css",
+          "type": "registry:file",
+          "target": "src/styles/interactions.css"
         }
       ]
     },
@@ -534,6 +539,11 @@
           "target": "src/components/fleet/components/button.tsx"
         },
         {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -970,6 +980,11 @@
           "target": "src/components/fleet/components/dialog.tsx"
         },
         {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -1005,6 +1020,11 @@
           "path": "packages/ui/src/components/context-menu.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/context-menu.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1061,6 +1081,11 @@
           "target": "src/components/fleet/components/dropdown-menu.tsx"
         },
         {
+          "path": "packages/ui/src/components/empty-state.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/empty-state.tsx"
+        },
+        {
           "path": "packages/ui/src/components/pagination.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/pagination.tsx"
@@ -1069,6 +1094,11 @@
           "path": "packages/ui/src/components/skeleton.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/skeleton.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1112,6 +1142,11 @@
           "path": "packages/ui/src/components/dialog.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/dialog.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1185,6 +1220,11 @@
           "path": "packages/ui/src/components/dropdown-menu.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/dropdown-menu.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1310,6 +1350,11 @@
           "path": "packages/ui/src/components/hover-card.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/hover-card.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1544,6 +1589,11 @@
           "target": "src/components/fleet/components/menubar.tsx"
         },
         {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -1659,6 +1709,11 @@
           "path": "packages/ui/src/components/popover.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/popover.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1879,6 +1934,11 @@
           "target": "src/components/fleet/components/select.tsx"
         },
         {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -1950,6 +2010,11 @@
           "path": "packages/ui/src/components/sheet.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/sheet.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -2309,6 +2374,11 @@
           "path": "packages/ui/src/components/tooltip.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/tooltip.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -3999,6 +4069,11 @@
           "target": "src/components/fleet/effects/hero-video-dialog.tsx"
         },
         {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -4322,6 +4397,11 @@
           "target": "src/components/fleet/components/responsive-image.tsx"
         },
         {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -4629,6 +4709,11 @@
           "target": "src/components/fleet/lib/motion.ts"
         },
         {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
           "path": "packages/ui/src/lib/use-reduced-motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/use-reduced-motion.ts"
@@ -4817,6 +4902,11 @@
           "path": "packages/ui/src/components/checkbox.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/checkbox.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/empty-state.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/empty-state.tsx"
         },
         {
           "path": "packages/ui/src/components/progress.tsx",

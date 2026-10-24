@@ -88,9 +88,9 @@ describe("resource states", () => {
     act(() => vi.advanceTimersByTime(1));
     expect(container.querySelector('[data-slot="resource-boundary"] > div').style.visibility).toBe("visible");
     update(view({ status: "empty", data: [] }));
-    expect(container.textContent).toContain("nothing here yet");
+    expect(container.textContent).toContain("Nothing here yet");
     update(view({ status: "empty", data: [], isRevalidating: true }));
-    expect(container.textContent).toContain("nothing here yet");
+    expect(container.textContent).toContain("Nothing here yet");
     expect(container.querySelector("[data-ready]")).toBeNull();
     update(view({ status: "error", error: new Error("fail") }));
     expect(container.querySelector('[role="alert"]')).not.toBeNull();
