@@ -31,8 +31,8 @@ export const Empty: Story = { render: function Render() {
   const [query, setQuery] = useState("No matching module");
   const filter = useRef<HTMLInputElement>(null);
   const data = moduleCatalog.slice(0, 5).filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
-  return <div className="story-stack"><SearchField ref={filter} label="Filter example modules" value={query} onValueChange={setQuery} placeholder="Find a module…" />
-    <C.DataTable label="Empty module request" data={data} columns={stateColumns} getRowId={item => item.id}
+  return <div className="story-stack"><C.DataTable label="Empty module request" data={data} columns={stateColumns} getRowId={item => item.id}
+      toolbar={() => <SearchField ref={filter} label="Filter example modules" value={query} onValueChange={setQuery} placeholder="Find a module…" className="w-full max-w-sm" />}
       empty={<EmptyState icon={<SearchX />} title="No matching modules" description="Try another name, or clear the filter to bring the collection back." primaryAction={{ label: "Clear filter", onClick: () => { setQuery(""); filter.current?.focus(); } }} />} />
   </div>;
 } };
