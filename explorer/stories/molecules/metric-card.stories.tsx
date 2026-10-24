@@ -19,12 +19,12 @@ export default meta;
 type Story = StoryObj;
 
 export const Metrics: Story = { render: function Render() {
-  const [week, setWeek] = useState(false);
-  return <div className="w-full max-w-4xl space-y-5"><div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm font-medium">Review activity</p><Button variant="outline" size="sm" onClick={() => setWeek(!week)}>{week ? "This week" : "Last week"}</Button></div><div className="grid gap-4 sm:grid-cols-3">{sampleMetrics.map((metric, index) => <MetricCard key={metric.label} {...metric} value={week ? metric.value : ["16", "10", "50%"][index]} />)}</div><p className="story-caption">Illustrative metrics. Changing periods cross-fades values without shifting the card geometry.</p></div>;
+  const [read, setRead] = useState(false);
+  return <div className="w-full max-w-4xl space-y-5"><div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm font-medium">Review activity</p><Button variant="outline" size="sm" onClick={() => setRead(!read)}>{read ? "Reset unread" : "Mark feedback read"}</Button></div><div className="grid gap-4 sm:grid-cols-3">{sampleMetrics.map((metric, index) => <MetricCard key={metric.label} {...metric} value={read && index === 2 ? "0" : metric.value} />)}</div><p className="story-caption">Counts come from the sample files, checklist and inbox. Marking feedback read cross-fades the unread count.</p></div>;
 } };
 
 
 export const Controls: StoryObj<typeof MetricCard> = {
-  args: { label: "Components reviewed", value: "24", detail: "Illustrative workspace data", trend: { direction: "up", label: "8 reviewed this week" }, series: [2,4,3,7,6,11,12,15,14,19,24] },
+  args: { ...sampleMetrics[0] },
   render: args => <div className="w-full max-w-sm"><MetricCard {...args} /></div>,
 };

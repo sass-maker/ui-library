@@ -200,6 +200,13 @@ it works inside an application panel as well as a landing page. Images accept
 `previewFocalPoint` and caller-supplied `previewText`; `AssetLibrary` presents
 that excerpt in the preview dialog without fetching document contents.
 
+`ProjectOverview` supports a plain embedded surface, an optional header and a
+product-specific `focus` slot above its compact metric strip. `MetricCard` also
+exposes `variant="inline"` for shared surfaces. Inbox and settings organisms
+accept `showHeader={false}` when the application already owns the page title.
+The explorer’s workspace connects artwork decisions to its checklist, inbox,
+activity and a single-step undo; counts are derived from local state.
+
 The explorer’s **Foundations → Tokens → Font Pairings** compares four curated
 web pairings on the same Kith landing and interactive asset library. Copy the
 page font configuration or CSS role variables directly:

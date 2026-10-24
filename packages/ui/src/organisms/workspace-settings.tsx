@@ -34,6 +34,7 @@ function validatePreferences(values: WorkspacePreferences) {
 
 export type WorkspaceSettingsProps = {
   onSave: (values: WorkspacePreferences) => Promise<void>;
+  showHeader?: boolean;
   className?: string;
 } & (
   | { initial: WorkspacePreferences; value?: never; onValuesChange?: never }
@@ -41,7 +42,7 @@ export type WorkspaceSettingsProps = {
 );
 
 export function WorkspaceSettings(props: WorkspaceSettingsProps) {
-  const { onSave, className } = props;
+  const { onSave, showHeader = true, className } = props;
   const scope = useId();
   const reduced = useReducedMotion();
   const [localValues, setLocalValues] = useState(props.value ?? props.initial);
@@ -66,11 +67,12 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
   const submitButton = useRef<HTMLButtonElement>(null);
   const saveStatus = useRef<HTMLDivElement>(null);
   const returnFocus = useRef(false);
+  const submitOrigin = useRef<Element | null>(null);
   useEffect(() => {
     if (!returnFocus.current || (save.kind !== "saved" && save.kind !== "error")) return;
     returnFocus.current = false;
     if (!submitButton.current?.getClientRects().length) return;
-    if (document.activeElement !== document.body && document.activeElement !== submitButton.current) return;
+    if (document.activeElement !== document.body && document.activeElement !== submitButton.current && document.activeElement !== submitOrigin.current) return;
     (save.kind === "error" ? submitButton.current : saveStatus.current)?.focus({ preventScroll: true });
   }, [save.kind]);
   const update = <K extends keyof WorkspacePreferences>(key: K, value: WorkspacePreferences[K]) => {
@@ -85,7 +87,10 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
     if (errors.name || errors.email) { focusInvalid.current = true; setTab(0); setSave({ kind: "invalid" }); return; }
     const original = values;
     const submitted = { ...values, name: values.name.trim(), email: values.email.trim() };
-    returnFocus.current = event.currentTarget.contains(document.activeElement);
+    // Safari pointer clicks can submit without focusing the button. Treat the
+    // unchanged origin as ours, but never pull focus back after the user moves.
+    submitOrigin.current = document.activeElement;
+    returnFocus.current = event.currentTarget.contains(document.activeElement) || (event.nativeEvent as SubmitEvent).submitter === submitButton.current;
     setSave({ kind: "saving" });
     try {
       await onSave(submitted);
@@ -100,8 +105,8 @@ export function WorkspaceSettings(props: WorkspaceSettingsProps) {
     }
   };
   return <section className={cn("@container overflow-hidden rounded-2xl border border-border bg-card text-card-foreground", className)} aria-label="Workspace settings">
-    <header className="border-b border-border px-5 py-6 sm:px-8"><div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground"><Settings2 aria-hidden className="size-3.5" />Workspace / Settings</div>
-      <div className="flex flex-wrap items-center gap-3"><h2 className="text-2xl font-semibold tracking-tight">Workspace settings</h2>{dirty && <Badge variant="outline">Unsaved changes</Badge>}</div>
+    <header className={cn("border-b border-border px-5 py-6 sm:px-8", !showHeader && "sr-only")}><div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground"><Settings2 aria-hidden className="size-3.5" />Workspace / Settings</div>
+      <div className="flex flex-wrap items-center gap-3"><h2 className="font-display text-2xl leading-tight tracking-tight">Workspace settings</h2>{dirty && <Badge variant="outline">Unsaved changes</Badge>}</div>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Manage workspace details and email preferences.</p>
     </header>
     <form onSubmit={submit} noValidate>

@@ -65,7 +65,7 @@ export function AssetLibrary({ state, title = "Asset library", description = "A 
   return <section ref={region} tabIndex={-1} className={cn("@container overflow-hidden rounded-2xl border border-border bg-card text-card-foreground outline-none", className)} aria-label={title}>
     {showHeader && <header className="flex flex-wrap items-start justify-between gap-5 border-b border-border px-5 py-6 sm:px-8">
       <div><div className="mb-3 flex items-center gap-2 text-xs font-medium text-muted-foreground"><FolderOpen aria-hidden className="size-3.5" />Workspace / Library</div>
-        <h2 ref={heading} tabIndex={-1} className="text-2xl font-semibold tracking-tight outline-none">{title}</h2><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">{description}</p></div>
+        <h2 ref={heading} tabIndex={-1} className="font-display text-2xl leading-tight tracking-tight outline-none">{title}</h2><p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">{description}</p></div>
       {action && <div className="sm:pt-6">{action}</div>}
     </header>}
     <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">

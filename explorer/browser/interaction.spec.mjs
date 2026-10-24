@@ -234,6 +234,8 @@ for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
   });
   test(`workspace and first-run forms meet automated accessibility checks in ${mode} mode`, async ({ page }, testInfo) => {
     test.setTimeout(45_000);
+    await openStory(page, 'start-here-overview--explore', `theme:${theme};mode:${mode}`);
+    await accessibleStory(page, testInfo, 'home-compositions');
     await openStory(page, 'start-here-workspace--complete-workflow', `theme:${theme};mode:${mode}`);
     await accessibleStory(page, testInfo, 'workspace');
     await workspaceSection(page, 'Settings');
@@ -313,7 +315,7 @@ test('a table retry restores the collection and keeps focus in the named region'
 async function workspaceSection(page, label) {
   if (page.viewportSize().width < 1024) await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
   await page.getByRole('link', { name: new RegExp(`^${label}(?: \\d+)?$`) }).click();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(label);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(label === 'Overview' ? 'Kith’s October release.' : label);
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
 }
 
@@ -381,6 +383,80 @@ test('a connected workspace previews, removes and restores local files', async (
   await noOverflow(page);
 });
 
+test('home composition tabs retain decisions and share the actual inbox and files', async ({ page }) => {
+  await openStory(page, 'start-here-overview--explore');
+  await page.getByRole('button', { name: 'Approve The long way home.webp', exact: true }).click();
+  await page.getByRole('button', { name: 'Request changes to The long way home.webp', exact: true }).click();
+  await page.getByLabel('What should change?', { exact: true }).fill('Leave room above the walkers.');
+  await page.getByRole('button', { name: 'Save note', exact: true }).click();
+  await page.getByRole('tab', { name: 'Inbox', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Changes requested: The long way home/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Mark all read', exact: true }).click();
+  await page.getByRole('tab', { name: 'Overview', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeVisible();
+  await expect(page.getByRole('checkbox', { name: 'Approve the coastal cover', exact: true })).not.toBeChecked();
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(page.getByRole('checkbox', { name: 'Approve the coastal cover', exact: true })).toBeChecked();
+  await page.getByRole('tab', { name: 'Assets', exact: true }).click();
+  await page.getByLabel('Select The long way home.webp', { exact: true }).check();
+  await page.getByRole('button', { name: 'Remove selected', exact: true }).click();
+  await page.getByRole('tab', { name: 'Overview', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Approved The long way home.webp', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('checkbox', { name: 'Approve the coastal cover', exact: true })).toHaveCount(0);
+  await page.getByRole('tab', { name: 'Inbox', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Changes requested: The long way home/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Mark all read', exact: true })).toBeDisabled();
+  await noOverflow(page);
+});
+
+test('artwork decisions connect checklist, inbox, counts and a narrowly scoped undo', async ({ page }) => {
+  await openStory(page, 'start-here-workspace--complete-workflow');
+  const approved = page.getByRole('heading', { name: 'Approved', exact: true }).locator('..');
+  const changes = page.getByRole('heading', { name: 'Needs changes', exact: true }).locator('..');
+  const unread = page.getByRole('heading', { name: 'Unread', exact: true }).locator('..');
+  const task = page.getByRole('checkbox', { name: 'Approve the coastal cover', exact: true });
+  await expect(approved.getByText('0/3', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Approve The long way home.webp', exact: true }).click();
+  await expect(task).toBeChecked();
+  await expect(approved.getByText('1/3', { exact: true })).toBeVisible();
+  const request = page.getByRole('button', { name: 'Request changes to The long way home.webp', exact: true });
+  await request.click();
+  const dialog = page.getByRole('dialog', { name: 'Request changes', exact: true });
+  await dialog.getByRole('button', { name: 'Save note', exact: true }).click();
+  await expect(dialog.getByLabel('What should change?', { exact: true })).toBeFocused();
+  await expect(dialog).toContainText('Add a note before saving.');
+  await dialog.getByLabel('What should change?', { exact: true }).fill('Keep more space around the walkers.');
+  await dialog.getByRole('button', { name: 'Save note', exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await expect(request).toBeFocused();
+  await expect(task).not.toBeChecked();
+  await expect(approved.getByText('0/3', { exact: true })).toBeVisible();
+  await expect(changes.getByText('1', { exact: true })).toBeVisible();
+  await expect(unread.getByText('2', { exact: true })).toBeVisible();
+  await workspaceSection(page, 'Inbox');
+  await expect(page.getByRole('button', { name: /Changes requested: The long way home/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Mark all read', exact: true }).click();
+  await workspaceSection(page, 'Overview');
+  await expect(unread.getByText('0', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(task).toBeChecked();
+  await expect(approved.getByText('1/3', { exact: true })).toBeVisible();
+  await expect(changes.getByText('0', { exact: true })).toBeVisible();
+  await expect(unread.getByText('0', { exact: true })).toBeVisible();
+  await workspaceSection(page, 'Inbox');
+  await expect(page.getByRole('button', { name: /Changes requested: The long way home/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Mark all read', exact: true })).toBeDisabled();
+  await page.getByText('Controls', { exact: true }).click();
+  await page.getByRole('button', { name: 'Reset example data', exact: true }).click();
+  await page.getByText('Controls', { exact: true }).click();
+  await workspaceSection(page, 'Overview');
+  await expect(task).not.toBeChecked();
+  await expect(approved.getByText('0/3', { exact: true })).toBeVisible();
+  await expect(unread.getByText('2', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Undo', exact: true })).toHaveCount(0);
+  await noOverflow(page);
+});
+
 test('a tablet inbox survives narrow reflow and restores focus after filtering', async ({ page }) => {
   await page.setViewportSize({ width: 820, height: 1000 });
   await openStory(page, 'start-here-workspace--complete-workflow');
@@ -392,6 +468,19 @@ test('a tablet inbox survives narrow reflow and restores focus after filtering',
   await page.getByRole('button', { name: 'Inbox', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Inbox', exact: true, level: 2 })).toBeFocused();
   await expect(page.getByRole('button', { name: /Arjun Patel/ })).toBeVisible();
+  await noOverflow(page);
+});
+
+test('workspace navigation preserves focus moved during a pending settings save', async ({ page }) => {
+  await openStory(page, 'start-here-workspace--complete-workflow');
+  await workspaceSection(page, 'Settings');
+  await page.getByLabel('Workspace name', { exact: true }).fill('Kith review studio');
+  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Saving…', exact: true })).toBeVisible();
+  const search = page.getByRole('button', { name: 'Jump to a section ⌘K', exact: true });
+  await search.focus();
+  await expect(page.getByRole('status').filter({ hasText: 'All changes saved.' })).toBeVisible();
+  await expect(search).toBeFocused();
   await noOverflow(page);
 });
 

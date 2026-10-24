@@ -15,4 +15,4 @@ const meta = { component: ProjectOverview, title: "Organisms/Workspaces/Project 
 export default meta;
 type Story = StoryObj;
 
-export const Overview: Story = { parameters: { docs: { source: { code: sourceSnippets.ProjectOverviewExample, type: "code", language: "tsx" } } }, render: () => <div className="w-full space-y-4"><ProjectOverviewExample /><p className="story-caption">Illustrative review-workspace data. Toggle the checklist to see the composed progress state.</p></div> };
+export const Overview: Story = { parameters: { docs: { source: { code: sourceSnippets.ProjectOverviewExample, type: "code", language: "tsx" } } }, render: () => <div className="w-full space-y-4"><ProjectOverviewExample variant="plain" /><p className="story-caption">Approve artwork or request changes. Decisions update the checklist, counts and recent activity.</p></div> };
