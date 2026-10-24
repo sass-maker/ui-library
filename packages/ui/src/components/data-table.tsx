@@ -539,7 +539,10 @@ function DataTable<T extends RowData>({
                     aria-current={selected || undefined}
                     tabIndex={onRowClick ? (i === focusIndex ? 0 : -1) : undefined}
                     onClick={onRowClick ? event => {
-                      if (event.target instanceof Element && event.target.closest("a,button,input,select,textarea,summary,[role=button],[role=combobox],[role=checkbox],[role=switch],[role=radio],[contenteditable]:not([contenteditable=false])")) return
+                      // React portal events bubble through their owning row too.
+                      // A menu or dialog action must not also open that record.
+                      if (!(event.target instanceof Node) || !event.currentTarget.contains(event.target)) return
+                      if (event.target instanceof Element && event.target.closest("a,button,input,select,textarea,summary,[role=button],[role=combobox],[role=checkbox],[role=switch],[role=radio],[role=menuitem],[role=menuitemcheckbox],[role=menuitemradio],[role=option],[contenteditable]:not([contenteditable=false])")) return
                       setFocusIndex(i)
                       onRowClick(row.original)
                     } : undefined}

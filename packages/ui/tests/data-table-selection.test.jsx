@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import React, { act, Profiler } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
+import { createPortal } from "react-dom";
 import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DataTable } from "../src/components/data-table";
@@ -22,6 +23,16 @@ afterEach(() => { for (const { root, container } of roots.splice(0)) { act(() =>
 const checks = container => [...container.querySelectorAll('tbody [role="checkbox"]')];
 
 describe("controlled DataTable selection", () => {
+  it("keeps portalled row actions from also opening the owning record", () => {
+    const open = vi.fn(), action = vi.fn();
+    const { container } = mount(<DataTable {...base} data={data.slice(0, 2)} onRowClick={open}
+      columns={[{ ...columns[0], cell: row => <>{row.name}{createPortal(<div role="menuitem" tabIndex={0} data-row-action={row.id} onClick={action}>Preview {row.name}</div>, document.body)}</> }]} />);
+    act(() => document.querySelector('[data-row-action="0"]').click());
+    expect(action).toHaveBeenCalledTimes(1);
+    expect(open).not.toHaveBeenCalled();
+    act(() => container.querySelector("tr[data-row]").click());
+    expect(open).toHaveBeenCalledWith(data[0]);
+  });
   it("lets nested cell controls own their keys while retaining row navigation", () => {
     const open = vi.fn();
     const { container } = mount(<DataTable {...base} data={data.slice(0, 2)} onRowClick={open}
