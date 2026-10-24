@@ -18,13 +18,44 @@ export type ResponsiveImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "wi
 
 /** Native picture selection, reserved geometry and an explicit failure state. */
 export function ResponsiveImage({ src, ...props }: ResponsiveImageProps) {
-  return <Image key={JSON.stringify([src, props.srcSet, props.sources])} src={src} {...props} />;
+  return <Image key={JSON.stringify([src, props.srcSet, props.sizes, props.sources])} src={src} {...props} />;
 }
 
 function Image({ src, alt, width, height, sources, focalPoint = "50% 50%", wideFocalPoint = focalPoint, className, imageClassName, style, onLoad, onError, loading = "lazy", decoding = "async", ...props }: ResponsiveImageProps) {
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const ref = useRef<HTMLImageElement>(null);
-  useEffect(() => { if (ref.current?.complete) setState(ref.current.naturalWidth ? "ready" : "error"); }, []);
+  useEffect(() => {
+    const image = ref.current;
+    if (!image) return;
+    const sync = () => { if (image.complete) setState(image.naturalWidth ? "ready" : "error"); };
+    sync();
+    if (!sources?.length && !props.srcSet) return;
+    let frame = 0;
+    let revision = 0;
+    let active = true;
+    // Environment-driven source changes can suppress the native error event.
+    // Check the selected resource after layout, including a slow failed decode.
+    const inspect = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const current = ++revision;
+        const settle = () => { if (active && current === revision) sync(); };
+        if (image.complete) settle();
+        else void image.decode().then(settle, settle);
+      });
+    };
+    const queries = [...new Set(sources?.map(source => source.media).filter((media): media is string => !!media))].map(media => matchMedia(media));
+    for (const query of queries) query.addEventListener("change", inspect);
+    window.addEventListener("resize", inspect, { passive: true });
+    return () => {
+      active = false;
+      revision++;
+      cancelAnimationFrame(frame);
+      for (const query of queries) query.removeEventListener("change", inspect);
+      window.removeEventListener("resize", inspect);
+    };
+    // Resource props are part of the parent's key; a new matrix remounts Image.
+  }, []);
   return <span aria-hidden={alt === "" ? true : undefined} data-media-state={state} className={cn("relative block overflow-hidden bg-muted", className)} style={{ aspectRatio: `${width} / ${height}`, ...style }}>
     <picture aria-hidden={state === "error" ? true : undefined}>
       {sources?.map(source => <source key={`${source.media ?? ""}:${source.srcSet}`} {...source} />)}
