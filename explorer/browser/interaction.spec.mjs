@@ -119,6 +119,7 @@ test('video is deliberate, plays real frames and respects live reduced motion', 
   await openStory(page, 'start-here-media--primitives');
   const video = page.locator('video');
   await expect(video).not.toHaveAttribute('src');
+  await expect(video).toHaveAttribute('aria-hidden', 'true');
   expect(movies).toEqual([]);
   const play = page.getByRole('button', { name: 'Play Kith screen sequence', exact: true });
   await play.focus();
@@ -126,6 +127,7 @@ test('video is deliberate, plays real frames and respects live reduced motion', 
   await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
   expect(movies.length).toBeGreaterThan(0);
   await expect(video).toHaveAttribute('controls', '');
+  await expect(video).toHaveAttribute('aria-hidden', 'false');
   await expect(video).toBeFocused();
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
