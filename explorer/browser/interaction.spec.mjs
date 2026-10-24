@@ -18,7 +18,18 @@ async function accessibleStory(page, testInfo, scope) {
   await page.evaluate(() => Promise.all(document.getAnimations().filter(animation => animation.effect?.getComputedTiming().endTime !== Infinity).map(animation => animation.finished.catch(() => {}))));
   if (!await page.evaluate(() => !!window.axe)) await page.addScriptTag({ path: axeSource });
   const result = await page.evaluate(async () => {
-    const audit = await window.axe.run(document.querySelector('#storybook-root'), { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } });
+    // The Storybook addon can still be inspecting the newly opened story.
+    // Serialize engine access; actual accessibility findings are never retried.
+    const deadline = performance.now() + 8000;
+    let audit;
+    while (!audit) {
+      try {
+        audit = await window.axe.run(document.querySelector('#storybook-root'), { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } });
+      } catch (error) {
+        if (!String(error).includes('Axe is already running') || performance.now() >= deadline) throw error;
+        await new Promise(resolve => requestAnimationFrame(resolve));
+      }
+    }
     const summarize = items => items.map(item => ({ id: item.id, impact: item.impact, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) }));
     return { engine: window.axe.version, violations: summarize(audit.violations), incomplete: summarize(audit.incomplete) };
   });
