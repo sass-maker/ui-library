@@ -411,6 +411,12 @@ test('home composition tabs retain decisions and share the actual inbox and file
 
 test('artwork decisions connect checklist, inbox, counts and a narrowly scoped undo', async ({ page }) => {
   await openStory(page, 'start-here-workspace--complete-workflow');
+  const initialViewport = page.viewportSize();
+  await page.setViewportSize({ width: 820, height: 1000 });
+  const review = page.getByRole('group', { name: 'Artwork waiting for review', exact: true });
+  await expect(review.locator('[data-slot="carousel-slide"]:not([inert])')).toHaveCount(3);
+  await expect.poll(() => review.getByRole('button').evaluateAll(buttons => buttons.every(button => button.scrollWidth <= button.clientWidth + 1))).toBe(true);
+  await page.setViewportSize(initialViewport);
   const approved = page.getByRole('heading', { name: 'Approved', exact: true }).locator('..');
   const changes = page.getByRole('heading', { name: 'Needs changes', exact: true }).locator('..');
   const unread = page.getByRole('heading', { name: 'Unread', exact: true }).locator('..');

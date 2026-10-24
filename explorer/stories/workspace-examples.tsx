@@ -56,15 +56,15 @@ function ReviewCard({ item, onApprove, onRequestChanges }: {
   const titleId = useId();
   const { file, status } = item;
   const approved = status === "approved";
-  return <article aria-labelledby={titleId} className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
+  return <article aria-labelledby={titleId} className="@container/review-card flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
     <ResponsiveImage src={item.src} alt={item.alt} width={item.width} height={item.height} focalPoint={file.previewFocalPoint} style={{ aspectRatio: "4 / 3" }}
       className={item.fit === "contain" ? "bg-surface" : undefined} imageClassName={item.fit === "contain" ? "object-contain py-3" : undefined} />
     <div className="flex flex-1 flex-col gap-2 p-4">
       <div className="flex flex-wrap items-start justify-between gap-2"><h4 id={titleId} className="min-w-0 break-words text-sm font-medium leading-snug">{file.name}</h4><ReviewStatusBadge status={status} /></div>
       <p className="text-xs text-muted-foreground">{file.collection} · {file.size}</p>
-      <div className="mt-auto flex flex-wrap gap-2 pt-2">
-        <Button variant={approved ? "secondary" : "default"} aria-disabled={approved || undefined} aria-label={`${approved ? "Approved" : "Approve"} ${file.name}`} className="min-h-11 flex-1 aria-disabled:cursor-default" onClick={() => { if (!approved) onApprove(file); }}><Check />{approved ? "Approved" : "Approve"}</Button>
-        <Button variant="outline" aria-label={`Request changes to ${file.name}`} className="min-h-11 flex-1" onClick={event => onRequestChanges(file, event.currentTarget)}><PencilLine />Request changes</Button>
+      <div className="mt-auto grid grid-cols-1 gap-2 pt-2 @min-[360px]/review-card:grid-cols-[auto_1fr]">
+        <Button variant={approved ? "secondary" : "default"} aria-disabled={approved || undefined} aria-label={`${approved ? "Approved" : "Approve"} ${file.name}`} className="min-h-11 min-w-0 w-full whitespace-normal aria-disabled:cursor-default" onClick={() => { if (!approved) onApprove(file); }}><Check />{approved ? "Approved" : "Approve"}</Button>
+        <Button variant="outline" aria-label={`Request changes to ${file.name}`} className="min-h-11 min-w-0 w-full whitespace-normal" onClick={event => onRequestChanges(file, event.currentTarget)}><PencilLine />Request changes</Button>
       </div>
     </div>
   </article>;
@@ -320,7 +320,7 @@ export function CompleteWorkspaceExample({ sourceAction, initialName = samplePre
       onNavigate={href => navigate(href.replace("#workspace-", ""))}
       mobileActions={<SearchTrigger label="Jump to a section" className="size-11 border-transparent p-0 sm:w-11 [&>span]:hidden [&>kbd]:hidden" />}
       secondary={<div className="rounded-xl border border-sidebar-border p-4"><p className="text-xs font-medium">The story behind the work</p><p className="mt-2 text-xs leading-relaxed text-muted-foreground">See these same assets in a finished product page.</p><a target="_top" href="./?path=/story/start-here-media--complete-page" className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-sm text-xs font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring">Explore Kith<ArrowUpRight aria-hidden className="size-3.5" /></a></div>}
-      user={{ name: "Your local workspace", detail: "No sign-in or upload required" }}>
+      user={{ name: "Your local workspace", detail: "No sign-in needed" }}>
       <header className="hidden flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-5 lg:flex lg:px-8"><div className="flex items-center gap-2 text-xs text-muted-foreground"><BookOpen aria-hidden className="size-3.5" /><span>Kith</span><span aria-hidden>/</span><span>{section.label}</span></div><SearchTrigger label="Jump to a section" className="min-h-11" /></header>
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-7 sm:px-8 lg:px-10 lg:pt-10">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div><h1 ref={heading} tabIndex={-1} className="font-display text-3xl leading-tight outline-none sm:text-4xl">{section.label === "Overview" ? "Kith’s October release." : section.label}</h1><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">{section.description}</p></div>{view === "overview" && <Button variant="outline" onClick={() => navigate("assets")}>Browse release assets<ArrowRight /></Button>}</div>
