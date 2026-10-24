@@ -68,7 +68,7 @@ export function SearchTrigger({ label = "Search", className }: { label?: string;
       aria-label={`${label} ⌘K`}
       aria-keyshortcuts="Meta+K Control+K"
       className={cn(
-        "inline-flex h-9 items-center gap-2 rounded-md border border-input bg-background px-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:w-64",
+        "inline-flex touch-manipulation select-none min-h-11 min-w-11 items-center justify-center gap-2 rounded-md border border-input bg-background px-2.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent active:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:w-64",
         className,
       )}
     >
@@ -104,12 +104,17 @@ export function SearchPalette({
 }) {
   const [innerOpen, setInnerOpen] = React.useState(false);
   const open = openProp ?? innerOpen;
+  const opener = React.useRef<HTMLElement | null>(null);
   const setOpen = React.useCallback(
     (v: boolean) => {
+      if (v && !open) {
+        const active = document.activeElement;
+        opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
+      }
       onOpenChange?.(v);
       if (openProp === undefined) setInnerOpen(v);
     },
-    [onOpenChange, openProp],
+    [onOpenChange, openProp, open],
   );
 
   React.useEffect(() => {
@@ -203,7 +208,17 @@ export function SearchPalette({
       onOpenChange={setOpen}
       title="Search"
       description={placeholder}
-      showCloseButton={false}
+      showCloseButton
+      contentProps={{ onCloseAutoFocus: event => {
+        event.preventDefault();
+        const active = document.activeElement;
+        const content = event.target instanceof HTMLElement ? event.target : null;
+        // A selected result may already have moved focus into the next view.
+        if (active instanceof HTMLElement && active !== document.body && !content?.contains(active)) return;
+        const target = opener.current?.isConnected && opener.current.getClientRects().length ? opener.current
+          : [...document.querySelectorAll<HTMLElement>("[data-search-trigger]")].find(element => element.getClientRects().length);
+        target?.focus({ preventScroll: true });
+      } }}
       commandProps={{ shouldFilter: false, loop: true, label: "Search" }}
     >
       <CommandInput placeholder={placeholder} value={query} onValueChange={setQuery} />

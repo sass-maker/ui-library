@@ -18,7 +18,7 @@ export function SearchField({ label, value, onValueChange, className, ...props }
       onChange={event => onValueChange(event.target.value)}
       className="h-10 pl-9 pr-10 [&::-webkit-search-cancel-button]:appearance-none" />
     {value && <button type="button" aria-label={`Clear ${label.toLowerCase()}`}
-      className="absolute right-1 top-1 flex size-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+      className="absolute right-1 top-1 flex size-8 [@media(pointer:coarse)]:right-0 [@media(pointer:coarse)]:top-0 [@media(pointer:coarse)]:size-11 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
       onClick={event => { onValueChange(""); event.currentTarget.parentElement?.querySelector("input")?.focus(); }}>
       <X aria-hidden className="size-3.5" />
     </button>}

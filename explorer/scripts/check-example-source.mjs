@@ -3,10 +3,12 @@ import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { buildExampleSources } from "./example-source.ts";
+import { moduleCatalog } from "../stories/module-catalog-data.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const snippets = buildExampleSources();
 const files = new Map(Object.entries(snippets).map(([name, source]) => [path.join(root, "__copyable_" + name + ".tsx"), source]));
+moduleCatalog.forEach((entry, index) => files.set(path.join(root, `__catalog_import_${index}.tsx`), `${entry.importStatement}\nvoid ${entry.importName};\n`));
 const options = { strict: true, noEmit: true, skipLibCheck: true, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, moduleResolution: ts.ModuleResolutionKind.Bundler, types: ["react"] };
 const host = ts.createCompilerHost(options);
 const sourceFile = host.getSourceFile.bind(host);
@@ -32,3 +34,4 @@ function checkReferences(directory) {
 }
 checkReferences(path.join(root, "stories"));
 console.log(Object.keys(snippets).length + " standalone source examples compile with their real dependencies.");
+console.log(`${moduleCatalog.length} catalog imports resolve to actual runtime exports.`);

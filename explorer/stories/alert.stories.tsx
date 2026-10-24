@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/alert";
 
-const meta = { id: "feedback-alert", title: "Molecules/Feedback/Alert", component: C.Alert, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/alert`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "feedback-alert", title: "Molecules/Feedback/Alert", component: C.Alert, parameters: {"docs": {"description": {"component": "An in-page message that keeps a warning, result or next step close to its context.\n\nImport from `@saas-maker/ui/components/alert`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

@@ -11,7 +11,7 @@ import { sampleFiles, samplePreferences, sampleMessages, sampleMetrics, sampleTa
 
 import { AssetLibraryExample, ProjectOverviewExample } from "../workspace-examples";
 
-const meta = { component: ProjectOverview, title: "Organisms/Workspaces/Project overview", parameters: { docs: { description: { component: "Import from `@saas-maker/ui/organisms/project-overview`. A complete section composed from shared molecules and atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
+const meta = { component: ProjectOverview, title: "Organisms/Workspaces/Project overview", parameters: { docs: { description: { component: "A project summary that brings metrics, an interactive checklist and recent activity into one section.\n\nImport from `@saas-maker/ui/organisms/project-overview`. A complete section composed from shared molecules and atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

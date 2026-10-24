@@ -11,7 +11,7 @@ import { sampleFiles, samplePreferences, sampleMessages, sampleMetrics, sampleTa
 
 import { AssetLibraryExample, ProjectOverviewExample } from "../workspace-examples";
 
-const meta = { component: AssetLibrary, title: "Organisms/Workspaces/Asset library", parameters: { docs: { description: { component: "Import from `@saas-maker/ui/organisms/asset-library`. A complete section composed from shared molecules and atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
+const meta = { component: AssetLibrary, title: "Organisms/Workspaces/Asset library", parameters: { docs: { description: { component: "A searchable file library with collections, grid and list views, selection, previews and recoverable loading states.\n\nImport from `@saas-maker/ui/organisms/asset-library`. A complete section composed from shared molecules and atoms. Examples use local illustrative data. Try the interactions and compare themes, viewport sizes, and reduced motion." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

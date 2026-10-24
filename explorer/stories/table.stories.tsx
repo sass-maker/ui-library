@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/table";
 
-const meta = { id: "data-table", title: "Atoms/Data/Table", component: C.Table, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/table`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "data-table", title: "Atoms/Data/Table", component: C.Table, parameters: {"docs": {"description": {"component": "Semantic table structure for related rows and columns, with headers, captions and consistent cell spacing.\n\nImport from `@saas-maker/ui/components/table`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

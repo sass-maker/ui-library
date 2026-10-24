@@ -40,14 +40,17 @@ Repeated initialization and live OS reduced-motion changes are supported.
 React components use the shared reduced-motion hook; application save/upload
 callbacks remain responsible for real completion.
 
-`pnpm registry:sync` builds registry items from their actual transitive imports;
+`pnpm registry:sync` builds registry items and the explorer catalog from actual source imports;
 `pnpm registry:check` catches stale copied dependencies before publication.
 
 ## Explore the library
 
 The deployed [Fleet UI explorer](https://sass-maker.github.io/ui-library/) runs
 Storybook with live source, composition examples, theme and light/dark controls,
-responsive viewports, reduced motion, and accessibility inspection.
+responsive viewports, reduced motion, and accessibility inspection. The catalog
+adds a complete data workspace: filter modules, collect imports, inspect their
+registry dependency pins and open the matching examples. Catalog imports are
+compiled and example IDs are checked against the built explorer.
 
 ```sh
 pnpm storybook        # http://localhost:6006
@@ -74,6 +77,21 @@ The `UI library and explorer` workflow checks pull requests and deploys the
 static explorer to GitHub Pages on main. To restore a verified revision, rerun
 its successful main workflow. This first publication can be withdrawn by
 disabling Pages; product consumers keep their pinned Git tags.
+
+## Connected workspace
+
+Start here → Workspace composes the same organisms into a complete local app.
+Search sections with ⌘K/Ctrl+K, retain drafts across navigation and browser Back,
+preview local images, remove/undo files, read feedback and retry failed settings
+saves. The first-run example connects the setup form to that same workspace,
+carrying the chosen name through the handoff. Each source toolbar copies a standalone example. No file or account data
+is sent to a server.
+
+`AppShell` accepts `onNavigate` for client routers and `mobileActions` for header
+controls. `AssetLibrary` accepts `showHeader={false}` inside an existing page
+header. Workspace organisms reflow to their available container width. Shared
+buttons expand to 44px on coarse pointers, and fields retain 16px text on touch
+tablets.
 
 ## Media-led compositions
 
@@ -129,7 +147,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.26"
+G="github:sass-maker/ui-library#v0.1.27"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -139,9 +157,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.26&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.26&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.26&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.27&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.27&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.27&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -626,7 +644,7 @@ Framework references: [Astro server islands](https://docs.astro.build/en/guides/
 ## Mac / iOS app
 
 ```swift
-.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.26")
+.package(url: "https://github.com/sass-maker/ui-library", from: "0.1.27")
 // ...
 ContentView().smTheme(.gallery.dark.brand(Color("Brand")))
 ```
@@ -678,7 +696,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.26&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.27&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```
