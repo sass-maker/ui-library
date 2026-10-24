@@ -69,7 +69,7 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
     /** Continue into the created workspace; omitted examples can still start over. */
     onComplete?: (value: { name: string; plan: string }) => void;
     completeLabel?: string;
-    /** Start keeps embedded forms beside their introduction; end anchors the actions in isolated demos. */
+    /** Start follows document flow; end reserves the tallest step to anchor actions in isolated demos. */
     anchor?: "start" | "end";
     className?: string;
 }) {
@@ -170,11 +170,10 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
     const primary = panel === 2 ? "Create" : panel === "done" ? doneLabel : "Continue";
     const content = (p: Panel, prefix: string) => (<PanelContent panel={p} prefix={prefix} plans={plans} name={name} onNameChange={setName} planId={planId} onPlanChange={setPlanId} plan={plan} reduceMotion={reduceMotion}/>);
     return (
-    // The card grows up from a fixed bottom, so Back and Continue never move
-    // under the cursor. An invisible copy holding every step at once reserves
-    // the tallest height, which keeps the outer box a constant size.
+    // End anchoring reserves the tallest step so actions stay under the cursor.
+    // Embedded forms can follow document flow without a blank reserved area.
     <div className={cn("grid min-w-0 w-[420px] max-w-full grid-cols-1", className)}>
-      <div aria-hidden inert className="invisible col-start-1 row-start-1 flex min-w-0 flex-col overflow-hidden">
+      {anchor === "end" && <div aria-hidden inert className="invisible col-start-1 row-start-1 flex min-w-0 flex-col overflow-hidden">
         <Header stepIndex={stepIndex}/>
         <div className="grid min-w-0 grid-cols-1">
           {([0, 1, 2, "done"] as const).map((p) => (<div key={p} className="col-start-1 row-start-1 p-6">
@@ -182,7 +181,7 @@ export function MultiStepForm({ plans, onCreate, onComplete, completeLabel = "Op
             </div>))}
         </div>
         <Footer canGoBack={false} valid={false} primary={busy ? "Creating…" : primary} completeLabel={doneLabel} onBack={() => { }}/>
-      </div>
+      </div>}
 
       <form noValidate aria-busy={busy} aria-label="Create a workspace" className={cn("col-start-1 row-start-1 flex min-w-0 flex-col overflow-hidden rounded-[20px] bg-surface shadow-md", anchor === "start" ? "self-start" : "self-end")} onSubmit={(e) => {
             e.preventDefault();
