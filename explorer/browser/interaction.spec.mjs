@@ -2589,3 +2589,127 @@ test('normal marquee translates with inert copies and preserves reverse and hove
     await noOverflow(page);
   }
 });
+
+
+test('slider targets accept off-center input without enlarging the visible control', async ({ page, context, browserName }, testInfo) => {
+  const evidence = [];
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) for (const orientation of ['horizontal', 'vertical']) {
+    await page.goto(`/iframe.html?id=inputs-slider--playground&viewMode=story&args=orientation:${orientation}&globals=theme:${theme};mode:${mode};motion:reduced`);
+    const slider = page.locator('[data-slot="slider"]').first();
+    await expect(slider).toHaveAttribute('data-orientation', orientation);
+    await page.evaluate(() => document.fonts.ready);
+    await slider.scrollIntoViewIfNeeded();
+    const minimum = slider.getByRole('slider', { name: 'Score range minimum', exact: true });
+    const box = await slider.boundingBox(), thumb = await minimum.boundingBox();
+    expect(thumb.width).toBe(16); expect(thumb.height).toBe(16);
+    const coarse = await page.evaluate(() => matchMedia('(pointer: coarse)').matches);
+    const track = await slider.locator('[data-slot="slider-track"]').boundingBox();
+    expect(orientation === 'horizontal' ? track.height : track.width).toBe(6);
+    if (coarse) expect(orientation === 'horizontal' ? box.height : box.width).toBeGreaterThanOrEqual(44);
+    const cdp = coarse && browserName === 'chromium' ? await context.newCDPSession(page) : null;
+    const gesture = async (from, to = from) => {
+      if (cdp) {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...from, id: 0 }] });
+        if (to !== from) for (let step = 1; step <= 8; step++) {
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: from.x + (to.x - from.x) * step / 8, y: from.y + (to.y - from.y) * step / 8, id: 0 }] });
+          await page.waitForTimeout(16);
+        }
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      } else {
+        await page.mouse.move(from.x, from.y); await page.mouse.down();
+        if (to !== from) await page.mouse.move(to.x, to.y, { steps: 8 });
+        await page.mouse.up();
+      }
+    };
+    const point = fraction => orientation === 'horizontal'
+      ? { x: box.x + box.width * fraction, y: box.y + box.height / 2 + (coarse ? 16 : 0) }
+      : { x: box.x + box.width / 2 + (coarse ? 16 : 0), y: box.y + box.height * (1 - fraction) };
+    await gesture(point(.35));
+    await expect(minimum).toHaveAttribute('aria-valuenow', '35');
+    const current = await minimum.boundingBox();
+    await gesture({ x: current.x + current.width / 2, y: current.y + current.height / 2 }, point(.55));
+    await expect.poll(async () => Number(await minimum.getAttribute('aria-valuenow'))).toBeGreaterThanOrEqual(54);
+    await expect.poll(async () => Number(await minimum.getAttribute('aria-valuenow'))).toBeLessThanOrEqual(56);
+    await minimum.focus();
+    const beforeKey = Number(await minimum.getAttribute('aria-valuenow'));
+    await page.keyboard.press(orientation === 'horizontal' ? 'ArrowRight' : 'ArrowUp');
+    await expect(minimum).toHaveAttribute('aria-valuenow', String(beforeKey + 1));
+    const disabled = page.locator('[data-slot="slider"]').nth(1), disabledBox = await disabled.boundingBox();
+    await gesture({ x: disabledBox.x + disabledBox.width * .8, y: disabledBox.y + disabledBox.height / 2 });
+    await expect(disabled.getByRole('slider')).toHaveAttribute('aria-valuenow', '50');
+    evidence.push({ theme, orientation, coarse, input: cdp ? 'native touch' : 'native mouse', box, thumb, track });
+    if (cdp) await cdp.detach();
+    await noOverflow(page);
+  }
+  await testInfo.attach('slider-effective-targets', { body: JSON.stringify(evidence), contentType: 'application/json' });
+});
+
+test('isolated examples expose selected states and complete their advertised local actions', async ({ page }) => {
+  test.setTimeout(45_000);
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    const globals = `theme:${theme};mode:${mode};motion:reduced`;
+    await openStory(page, 'feedback-autosave-status--playground', globals);
+    const states = page.getByRole('group', { name: 'Autosave demo state', exact: true });
+    await expect(states.getByRole('button', { name: 'unsaved', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await states.getByRole('button', { name: 'saving', exact: true }).click();
+    await expect(states.getByRole('button', { name: 'saving', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(states.getByRole('button', { name: 'unsaved', exact: true })).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.getByText('Saving', { exact: true })).toBeVisible();
+    await states.getByRole('button', { name: 'saved', exact: true }).click();
+    await expect(page.getByText('All changes saved', { exact: true })).toHaveAttribute('aria-live', 'polite');
+    await noOverflow(page);
+    await openStory(page, 'interactions-segmented-control--playground', globals);
+    const group = page.getByRole('radiogroup', { name: 'Library view', exact: true });
+    expect(await group.evaluate(node => node.getBoundingClientRect().right - [...node.querySelectorAll('[role="radio"]')].at(-1).getBoundingClientRect().right)).toBeLessThanOrEqual(8);
+    await group.getByRole('radio', { name: 'Components', exact: true }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(group.getByRole('radio', { name: 'Patterns', exact: true })).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByRole('status')).toHaveText('Patterns');
+    await noOverflow(page);
+    await openStory(page, 'data-storage-meter--playground', globals);
+    const clear = page.getByRole('button', { name: 'Clear cache', exact: true });
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) expect((await clear.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    await clear.click();
+    await expect(page.getByText('Freed 12.0 GB', { exact: true })).toBeVisible();
+    await expect(page.getByText('Cache cleared, 62.0 GB of 100 GB used', { exact: true })).toHaveAttribute('aria-live', 'polite');
+    await page.getByRole('button', { name: 'Undo', exact: true }).click();
+    await expect(clear).toBeVisible();
+    await expect(page.getByText('74.0 GB', { exact: true })).toBeVisible();
+    await noOverflow(page);
+    await openStory(page, 'organisms-workspaces-asset-library--files-empty', globals);
+    const library = page.getByRole('region', { name: 'Asset library', exact: true });
+    await expect(library.getByRole('status')).toHaveText('0 of 0 files');
+    await library.getByRole('button', { name: 'Add example file', exact: true }).click();
+    await expect(library.getByRole('status')).toHaveText('1 of 1 files');
+    await expect(library.getByRole('heading', { name: 'Room for your next idea', exact: true })).toHaveCount(0);
+    await library.getByRole('button', { name: 'Reset example', exact: true }).click();
+    await expect(library.getByRole('status')).toHaveText('0 of 0 files');
+    await expect(library.getByRole('button', { name: 'Add example file', exact: true })).toBeVisible();
+    await noOverflow(page);
+  }
+});
+
+test('short video play copy leaves portrait artwork clear and keeps the full accessible title', async ({ page }, testInfo) => {
+  const evidence = [];
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'atoms-media--playback', `theme:${theme};mode:${mode};motion:reduced`);
+    const play = page.getByRole('button', { name: 'Play Kith screen sequence', exact: true });
+    await expect(play).toHaveText('Play');
+    const button = await play.boundingBox();
+    expect(button.height).toBeGreaterThanOrEqual(44);
+    const poster = await page.locator('video').evaluate(async node => {
+      const image = new Image(); image.src = node.poster; await image.decode();
+      const box = node.getBoundingClientRect(), scale = Math.min(box.width / image.naturalWidth, box.height / image.naturalHeight);
+      return { x: box.x + (box.width - image.naturalWidth * scale) / 2, y: box.y + (box.height - image.naturalHeight * scale) / 2, width: image.naturalWidth * scale, height: image.naturalHeight * scale, preload: node.preload, sourceCount: node.querySelectorAll('source').length };
+    });
+    expect(button.x + button.width).toBeLessThanOrEqual(poster.x);
+    expect(poster.preload).toBe('none'); expect(poster.sourceCount).toBe(0);
+    await play.focus(); await page.keyboard.press('Enter');
+    await expect(page.getByRole('button', { name: 'Play Kith screen sequence', exact: true })).toHaveCount(0);
+    await expect(page.locator('video')).toHaveJSProperty('controls', true);
+    await expect(page.locator('video source')).toHaveCount(2);
+    evidence.push({ theme, button, poster });
+    await noOverflow(page);
+  }
+  await testInfo.attach('unobscured-video-poster', { body: JSON.stringify(evidence), contentType: 'application/json' });
+});

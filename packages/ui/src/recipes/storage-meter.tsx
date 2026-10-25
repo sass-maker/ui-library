@@ -155,7 +155,7 @@ export function StorageMeter({ capacity, categories, cleanable, focus: controlle
               {cleared ? `Freed ${gb(cleanGb)}` : `${gb(cleanGb)} can be cleared`}
             </motion.p>
           </AnimatePresence>
-          <button type="button" onClick={() => setCleared(!cleared)} className="h-9 shrink-0 rounded-full bg-foreground px-4 text-[13px] font-medium text-background outline-hidden transition-[scale,opacity] duration-150 ease-out hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-foreground active:scale-[0.96]">
+          <button type="button" onClick={() => setCleared(!cleared)} className="h-9 [@media(pointer:coarse)]:min-h-11 shrink-0 rounded-full bg-foreground px-4 text-[13px] font-medium text-background outline-hidden transition-[scale,opacity] duration-150 ease-out hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-foreground active:scale-[0.96]">
             {cleared ? "Undo" : "Clear cache"}
           </button>
         </div>)}
