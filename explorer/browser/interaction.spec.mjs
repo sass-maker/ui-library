@@ -1249,6 +1249,31 @@ test('reduced motion retains orbit positions and removes delayed hero entrances'
   }
 });
 
+// Keep setup frames, then finish from observed paint/copy settlement rather than
+// a pre-click clock: native actionability can consume much of a fixed window.
+async function samplePopoverUntilSettled(page, name) {
+  await page.evaluate(name => {
+    window[name] = []; window[`${name}Done`] = false;
+    const started = performance.now(), keys = ['x', 'y', 'width', 'height'];
+    let previous, settledFrames = 0;
+    const rect = node => {
+      if (!node) return null;
+      const box = node.getBoundingClientRect(), style = getComputedStyle(node);
+      return { x: box.x, y: box.y, width: box.width, height: box.height, opacity: Number(style.opacity), visibility: style.visibility, transform: style.transform, origin: style.getPropertyValue('--radix-popover-content-transform-origin').trim(), scale: style.scale, pointerEvents: style.pointerEvents };
+    };
+    const sample = () => {
+      const content = document.querySelector('[data-slot="morphing-popover-content"]');
+      const paint = rect(document.querySelector('[data-slot="morphing-popover-surface"]')), foreground = rect(content?.querySelector(':scope > .relative'));
+      const settled = paint?.visibility === 'visible' && paint.opacity === 1 && paint.transform === 'none' && foreground?.visibility === 'visible' && foreground.opacity === 1;
+      settledFrames = settled ? previous && keys.every(key => Math.abs(paint[key] - previous[key]) < .01) ? settledFrames + 1 : 1 : 0;
+      previous = settled ? paint : undefined;
+      window[name].push({ t: performance.now() - started, trigger: rect(document.querySelector('[data-slot="morphing-popover-trigger"]')), content: rect(content), positioner: rect(content?.parentElement), paint, foreground, settledFrames });
+      if (settledFrames < 3 && performance.now() - started < 5000) requestAnimationFrame(sample); else window[`${name}Done`] = true;
+    };
+    requestAnimationFrame(sample);
+  }, name);
+}
+
 test('morphing popover paints its opening path around stable anchors and reduces immediately', async ({ page }, testInfo) => {
   test.setTimeout(60_000);
   const evidence = [];
@@ -1260,20 +1285,7 @@ test('morphing popover paints its opening path around stable anchors and reduces
     await trigger.scrollIntoViewIfNeeded();
     const anchor = await trigger.boundingBox();
     // Start before the real click; waiting for settlement would let static paint pass.
-    await page.evaluate(() => {
-      window.popoverOpening = []; window.popoverOpeningDone = false;
-      const started = performance.now(), rect = node => {
-        if (!node) return null;
-        const box = node.getBoundingClientRect(), style = getComputedStyle(node);
-        return { x: box.x, y: box.y, width: box.width, height: box.height, opacity: Number(style.opacity), visibility: style.visibility, transform: style.transform, origin: style.getPropertyValue('--radix-popover-content-transform-origin').trim() };
-      };
-      const sample = () => {
-        const content = document.querySelector('[data-slot="morphing-popover-content"]');
-        window.popoverOpening.push({ t: performance.now() - started, trigger: rect(document.querySelector('[data-slot="morphing-popover-trigger"]')), content: rect(content), positioner: rect(content?.parentElement), paint: rect(document.querySelector('[data-slot="morphing-popover-surface"]')), foreground: rect(content?.querySelector(':scope > .relative')) });
-        if (performance.now() - started < 650) requestAnimationFrame(sample); else window.popoverOpeningDone = true;
-      };
-      requestAnimationFrame(sample);
-    });
+    await samplePopoverUntilSettled(page, 'popoverOpening');
     await trigger.click();
     await page.waitForFunction(() => window.popoverOpeningDone);
     const samples = await page.evaluate(() => window.popoverOpening);
@@ -1281,6 +1293,7 @@ test('morphing popover paints its opening path around stable anchors and reduces
     await expect(panel).toBeVisible();
     const final = await panel.boundingBox(), paint = await surface.boundingBox();
     await testInfo.attach(`popover-opening-${preference}-${edge ? 'edge' : 'center'}-frames`, { body: JSON.stringify({ preference, edge, anchor, final, samples }), contentType: 'application/json' });
+    expect(samples.at(-1).settledFrames).toBeGreaterThanOrEqual(3);
     const geometry = node => JSON.stringify(['x', 'y', 'width', 'height'].map(key => Math.round(node[key] * 100) / 100));
     const visible = samples.filter(sample => sample.paint?.visibility === 'visible' && sample.paint.opacity > 0);
     expect(visible.length).toBeGreaterThan(2);
@@ -1414,7 +1427,8 @@ for (const timing of ['nested', 'physical']) test(`popover completion contains $
     const trigger = page.getByRole('button', { name: 'Library details', exact: true }), panel = page.getByRole('dialog');
     const foreground = page.locator('[data-slot="morphing-popover-content"] > .relative');
     const captureOpening = async label => {
-      await page.evaluate(() => {
+      if (timing === 'physical') await samplePopoverUntilSettled(page, 'popoverCompletion');
+      else await page.evaluate(() => {
         window.popoverCompletion = []; window.popoverCompletionDone = false;
         const started = performance.now(), rect = node => {
           if (!node) return null;
@@ -1431,6 +1445,7 @@ for (const timing of ['nested', 'physical']) test(`popover completion contains $
       await trigger.click(); await page.waitForFunction(() => window.popoverCompletionDone);
       const samples = await page.evaluate(() => window.popoverCompletion);
       await testInfo.attach(`${timing}-${preference}-${label}-frames`, { body: JSON.stringify(samples), contentType: 'application/json' });
+      if (timing === 'physical') expect(samples.at(-1).settledFrames).toBeGreaterThanOrEqual(3);
       const visible = samples.filter(sample => sample.foreground?.visibility === 'visible' && sample.foreground.opacity > 0);
       expect(visible.length).toBeGreaterThan(2); expect(visible.at(-1).foreground.opacity).toBe(1);
       for (const { paint, foreground } of visible) {
@@ -1527,6 +1542,80 @@ test('popover entrance recovers from resize and same-layout keyboard rerenders',
     await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
     await expect.poll(() => page.evaluate(() => window.popoverPendingFrames())).toBe(0);
     await noOverflow(page);
+  }
+});
+
+test('popover styling survives snapped openings without revealing during delayed projection', async ({ page }, testInfo) => {
+  test.setTimeout(90_000);
+  await page.addInitScript(() => {
+    const request = window.requestAnimationFrame.bind(window), cancel = window.cancelAnimationFrame.bind(window), pending = new Set();
+    window.requestAnimationFrame = callback => { const handle = request(time => { pending.delete(handle); callback(time); }); pending.add(handle); return handle; };
+    window.cancelAnimationFrame = handle => { pending.delete(handle); cancel(handle); };
+    window.popoverPendingFrames = () => pending.size;
+  });
+  const viewport = page.viewportSize();
+  const startSampling = () => samplePopoverUntilSettled(page, 'popoverStyling');
+  for (const paintStyle of ['border', 'inset', 'scale']) for (const timing of ['configured', 'physical', 'delayed']) {
+    await page.emulateMedia({ reducedMotion: 'no-preference' }); await page.setViewportSize(viewport);
+    await page.goto(`/iframe.html?id=motion-morphing-popover--playground&args=paintStyle:${paintStyle};surfaceTiming:${timing}&globals=theme:paper;mode:light;motion:user`);
+    await expect(page.locator('[data-popover-ownership]')).toHaveAttribute('data-paint-style', paintStyle);
+    const trigger = page.getByRole('button', { name: 'Library details', exact: true }), panel = page.getByRole('dialog');
+    const surface = page.locator('[data-slot="morphing-popover-surface"]'), foreground = page.locator('[data-slot="morphing-popover-content"] > .relative');
+    await startSampling(); await trigger.click(); await surface.waitFor();
+    if (timing === 'delayed') {
+      // A stationary delayed projection is not settled: its projection transform is still active.
+      await page.waitForFunction(() => window.popoverStyling.filter(sample => sample.paint?.transform !== 'none' && sample.paint).length >= 5);
+      await expect(foreground).toHaveCSS('opacity', '0'); await expect(foreground).toHaveCSS('pointer-events', 'none');
+    }
+    await page.setViewportSize({ ...viewport, width: viewport.width === 1440 ? 1400 : viewport.width - 10 });
+    await page.waitForFunction(() => window.popoverStylingDone);
+    const samples = await page.evaluate(() => window.popoverStyling);
+    await testInfo.attach(`popover-styling-${paintStyle}-${timing}`, { body: JSON.stringify(samples), contentType: 'application/json' });
+    expect(samples.at(-1).settledFrames).toBeGreaterThanOrEqual(3);
+    await expect(foreground).toHaveCSS('opacity', '1'); await expect(foreground).toHaveCSS('pointer-events', 'auto');
+    const final = samples.at(-1), visible = samples.filter(sample => sample.foreground?.visibility === 'visible' && sample.foreground.opacity > 0);
+    expect(visible.length).toBeGreaterThan(2);
+    for (const { paint, foreground } of visible) {
+      expect(paint).not.toBeNull();
+      expect(foreground.x).toBeGreaterThanOrEqual(paint.x - 1); expect(foreground.y).toBeGreaterThanOrEqual(paint.y - 1);
+      expect(foreground.x + foreground.width).toBeLessThanOrEqual(paint.x + paint.width + 1);
+      expect(foreground.y + foreground.height).toBeLessThanOrEqual(paint.y + paint.height + 1);
+    }
+    if (paintStyle === 'border') {
+      expect(final.content.width - final.paint.width).toBeCloseTo(2, 0);
+      expect(final.paint.x - final.content.x).toBeCloseTo(1, 0);
+    } else if (paintStyle === 'inset') {
+      expect(final.paint.width - final.content.width).toBeCloseTo(8, 0);
+      expect(final.content.x - final.paint.x).toBeCloseTo(4, 0);
+    } else {
+      expect(final.paint.scale).toBe('1.05'); expect(final.paint.transform).toBe('none');
+      expect(final.paint.width / final.content.width).toBeCloseTo(1.05, 2);
+    }
+    await page.getByRole('button', { name: 'Close', exact: true }).click();
+    await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+    await expect.poll(() => page.evaluate(() => window.popoverPendingFrames())).toBe(0);
+    await noOverflow(page);
+  }
+  for (const paintStyle of ['border', 'inset', 'scale']) for (const preference of ['os', 'explorer']) {
+    await page.emulateMedia({ reducedMotion: preference === 'os' ? 'reduce' : 'no-preference' }); await page.setViewportSize(viewport);
+    await page.goto(`/iframe.html?id=motion-morphing-popover--playground&args=paintStyle:${paintStyle};surfaceTiming:delayed&globals=theme:paper;mode:light;motion:${preference === 'explorer' ? 'reduced' : 'user'}`);
+    const trigger = page.getByRole('button', { name: 'Library details', exact: true });
+    await startSampling(); await trigger.click(); await page.waitForFunction(() => window.popoverStylingDone);
+    const samples = await page.evaluate(() => window.popoverStyling);
+    await testInfo.attach(`popover-styling-${paintStyle}-${preference}`, { body: JSON.stringify(samples), contentType: 'application/json' });
+    expect(samples.at(-1).settledFrames).toBeGreaterThanOrEqual(3);
+    const visible = samples.filter(sample => sample.foreground?.visibility === 'visible' && sample.foreground.opacity > 0);
+    expect(visible.length).toBeGreaterThan(2); expect(new Set(visible.map(sample => sample.foreground.opacity))).toEqual(new Set([1]));
+    for (const { paint, foreground } of visible) {
+      expect(paint).not.toBeNull();
+      expect(foreground.x).toBeGreaterThanOrEqual(paint.x - 1); expect(foreground.y).toBeGreaterThanOrEqual(paint.y - 1);
+      expect(foreground.x + foreground.width).toBeLessThanOrEqual(paint.x + paint.width + 1);
+      expect(foreground.y + foreground.height).toBeLessThanOrEqual(paint.y + paint.height + 1);
+    }
+    const paints = samples.filter(sample => sample.paint?.visibility === 'visible' && sample.paint.opacity > 0);
+    expect(new Set(paints.map(sample => JSON.stringify(['x', 'y', 'width', 'height'].map(key => Math.round(sample.paint[key] * 100) / 100)))).size).toBe(1);
+    await page.keyboard.press('Escape'); await expect(page.getByRole('dialog')).toHaveCount(0); await expect(trigger).toBeFocused();
+    await expect.poll(() => page.evaluate(() => window.popoverPendingFrames())).toBe(0);
   }
 });
 

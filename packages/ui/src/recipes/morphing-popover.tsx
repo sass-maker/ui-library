@@ -64,11 +64,12 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
       const box = target.getBoundingClientRect(), painted = paint.getBoundingClientRect();
       const keys = ["x", "y", "width", "height"] as const;
       const visible = targetStyle.visibility === "visible" && paintStyle.visibility === "visible" && Number(paintStyle.opacity) > 0 && box.width > 0 && box.height > 0 && box.bottom > 0 && box.right > 0 && box.top < innerHeight && box.left < innerWidth;
-      const matches = visible && paintStyle.transform === "none" && keys.every(key => Math.abs(painted[key] - box[key]) < .5);
-      // Two matching rendered paints distinguish stable settlement from a crossing.
+      const matches = visible && paintStyle.transform === "none" && painted.width > 0 && painted.height > 0;
+      // Projection must be at identity, not merely moving slowly or waiting on a delay.
+      // Compare paint with itself: public border/inset/scale styling can differ from Content.
       const prior = previous;
-      if (matches && prior && keys.every(key => Math.abs(prior[key] - box[key]) < .5)) complete();
-      previous = matches ? box : undefined;
+      if (matches && prior && keys.every(key => Math.abs(prior[key] - painted[key]) < .5)) complete();
+      previous = matches ? painted : undefined;
     };
     entrance.complete = complete;
     if (reduced) complete();
