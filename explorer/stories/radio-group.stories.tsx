@@ -8,4 +8,4 @@ const meta = { id: "inputs-radio-group", title: "Atoms/Inputs/Radio group", comp
 export default meta;
 type Story = StoryObj;
 
-export const Playground: Story = { render: function Render() { return <C.RadioGroup defaultValue="weekly" aria-label="Review cadence" className="gap-4">{["daily","weekly","monthly"].map(value => <label className="story-row" key={value}><C.RadioGroupItem value={value} />{value}</label>)}</C.RadioGroup>; } };
+export const Playground: Story = { render: function Render() { return <fieldset className="story-stack max-w-sm"><legend className="story-label mb-5">Review cadence</legend><C.RadioGroup defaultValue="weekly" aria-label="Review cadence" className="gap-4">{["daily","weekly","monthly"].map(value => <label className="story-row" key={value}><C.RadioGroupItem value={value} />{value[0].toUpperCase() + value.slice(1)}</label>)}</C.RadioGroup></fieldset>; } };

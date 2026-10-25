@@ -3,6 +3,36 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { noOverflow, openStory } from './helpers.mjs';
 
+test('shimmer actions retain readable text and distinct boundaries in both themes', async ({ page }, testInfo) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'effects-shimmer-button--playground', `theme:${theme};mode:${mode}`);
+    const button = page.getByRole('button', { name: 'Explore components', exact: true });
+    const contrast = await button.evaluate(node => {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      const rgb = color => { context.clearRect(0, 0, 1, 1); context.fillStyle = color; context.fillRect(0, 0, 1, 1); return [...context.getImageData(0, 0, 1, 1).data]; };
+      const luminance = color => color.slice(0, 3).map(v => { const c = v / 255; return c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; }).reduce((sum, c, i) => sum + c * [.2126, .7152, .0722][i], 0);
+      const ratio = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+      const painted = element => {
+        const layers = [];
+        for (let current = element; current; current = current.parentElement) layers.unshift(rgb(getComputedStyle(current).backgroundColor));
+        return layers.reduce((under, over) => over.slice(0, 3).map((value, i) => value * over[3] / 255 + under[i] * (1 - over[3] / 255)), [255, 255, 255]);
+      };
+      const background = painted(node);
+      return { text: ratio(rgb(getComputedStyle(node).color), background), boundary: ratio(background, painted(node.closest('.example-stage'))) };
+    });
+    await testInfo.attach(`shimmer-contrast-${theme}`, { body: JSON.stringify(contrast), contentType: 'application/json' });
+    expect(contrast.text).toBeGreaterThanOrEqual(4.5);
+    expect(contrast.boundary).toBeGreaterThanOrEqual(3);
+    await button.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByText('Example action selected', { exact: true })).toBeVisible();
+    await expect(button).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
 test('reorder priorities keep complete titles and descriptions readable through keyboard and pointer moves', async ({ page }) => {
   await openStory(page, 'interactions-reorder-list--in-context');
   const list = page.getByRole('list', { name: 'Release priorities', exact: true });

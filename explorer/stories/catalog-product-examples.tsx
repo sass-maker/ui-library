@@ -20,7 +20,7 @@ import { ResourceBoundary } from "@saas-maker/ui/blocks/resource-boundary";
 const codeVetterReadme = "https://github.com/Codevetter/codevetter/blob/efb6744aaf0a229f6e0d24aac61bffaad636477e/README.md";
 
 export function CodeVetterCapabilityGrid() {
-  return <section className="w-full max-w-5xl space-y-8">
+  return <section className="w-full space-y-8">
     <header className="max-w-2xl">
       <p className="eyebrow mb-4 text-brand-ink">CodeVetter / A review is a starting point</p>
       <h2 className="font-display text-3xl sm:text-4xl">Keep the finding.<br /><em className="text-brand-ink">Show the proof.</em></h2>

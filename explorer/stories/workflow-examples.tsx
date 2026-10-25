@@ -88,7 +88,7 @@ export function MediaContext() {
       </Carousel.CarouselItem>)}</Carousel.CarouselContent>
       <footer className="grid grid-cols-[1fr_auto] items-center gap-4 border-t border-border px-6 py-2 sm:grid-cols-[1fr_auto_1fr] sm:px-8"><span aria-hidden className="font-mono text-xs tabular-nums text-muted-foreground">{String(index + 1).padStart(2, "0")} <span className="mx-1 opacity-50">/</span> {String(moments.length).padStart(2, "0")}</span><Carousel.CarouselIndicator className="static inset-auto hidden w-auto sm:flex" /><Carousel.CarouselNavigation className="static inset-auto w-auto translate-y-0 justify-self-end gap-2 p-0" /></footer>
     </Carousel.Carousel>
-    <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Swipe or use the controls. Keyboard: focus the frame, then use ← →, Home or End. Nothing advances automatically.</p>
+    <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Swipe or use the controls. Keyboard: focus the frame, then use <span className="whitespace-nowrap">← →</span>, Home or End. Nothing advances automatically.</p>
   </section>;
 }
 export function ComparisonContext() {

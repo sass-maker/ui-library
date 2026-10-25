@@ -41,7 +41,7 @@ export function ProjectDetailsContext() {
         <InlineEdit label="Release name" value={name} onSave={value=>{setName(value);setState("unsaved");}} placeholder="Name this release" className="text-2xl font-semibold tracking-tight" />
         <label className="mt-5 block text-xs font-medium text-muted-foreground" htmlFor="context-description">Release notes</label>
         <Textarea id="context-description" value={description} onChange={event=>{setDescription(event.target.value);setState("unsaved");}} className="mt-2 min-h-24 resize-none text-sm leading-relaxed" />
-        <div className="mt-6"><TagInput label="Release tags" tags={tags} onTagsChange={value=>{setTags(value);setState("unsaved");}} /></div>
+        <div className="mt-6"><TagInput className="w-full" fieldClassName="border border-input bg-transparent shadow-xs" label="Release tags" tags={tags} onTagsChange={value=>{setTags(value);setState("unsaved");}} /></div>
       </div>
       <footer className="flex flex-wrap items-center justify-between gap-5 border-t border-border px-6 py-4 sm:px-7"><AvatarStack label="Illustrative collaborators" people={[{name:"Maya Chen"},{name:"Arjun Patel"},{name:"Leah Martin"},{name:"You"}]} max={3} />
         <MorphingButton label="Save release" onSave={async()=>{setState("saving");await new Promise(resolve=>setTimeout(resolve,900));if(reject){setState("unsaved");throw new Error("Local example failure");}setState("saved");setSavedAt(Date.now());}} />

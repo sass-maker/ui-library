@@ -57,6 +57,14 @@ decorative surface moves. Use `className` for layout and foreground text, and
 `surfaceClassName` for background, border and shadow styling. When upgrading a
 previously styled morph, move those paint utilities to `surfaceClassName`.
 
+`ShimmerButton` uses the theme’s primary surface and foreground by default.
+An explicit `background` retains the original white-text convention;
+`className` and `shimmerColor` can customize that pairing.
+
+`TagInput` uses `className` for the outer label/field group and
+`fieldClassName` for the editable field surface. Use `className="w-full"`
+to align it with other form fields while retaining the standalone default.
+
 `KanbanBoard` fills its container, retaining 260px minimum lanes by default in a local
 horizontal scroll area. `className` styles the grid, including custom columns,
 height and gaps; custom column templates supply their own track minimums.
