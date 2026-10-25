@@ -13,11 +13,19 @@ import { moduleCatalog } from "./module-catalog-data";
 type CatalogModule = (typeof moduleCatalog)[number];
 const catalogLayers = ["All modules", "Atoms", "Molecules", "Organisms"] as const;
 
+function CompactModule({ item }: { item: CatalogModule }) {
+  return <div className="grid min-w-0 gap-2 py-1">
+    <span className="font-medium">{item.name}</span>
+    <code className="break-words font-mono text-xs leading-relaxed text-muted-foreground">{item.importPath.split("/").map((part, index, parts) => <Fragment key={index}>{part}{index < parts.length - 1 && <>/<wbr /></>}</Fragment>)}</code>
+    <span className="text-xs leading-relaxed text-muted-foreground">{item.layer.replace(/s$/, "")} · {item.section.split(" / ").slice(1).join(" / ")}</span>
+  </div>;
+}
+
 const catalogColumns: DataColumn<CatalogModule>[] = [
-  { id: "name", header: "Module", value: item => item.name, hideable: false, minWidth: "clamp(10rem,20vw,14rem)", cell: item => <div className="py-1"><span className="block font-medium">{item.name}</span><span className="mt-1 block text-xs text-muted-foreground">{item.section.split(" / ").slice(1).join(" / ")}</span></div> },
-  { id: "layer", header: "Layer", value: item => item.layer, cell: item => <span className="text-xs text-muted-foreground">{item.layer.replace(/s$/, "")}</span> },
-  { id: "import", header: "Import path", value: item => item.importPath, minWidth: "14rem", className: "w-full max-w-0", cell: item => <code title={item.importPath} className="block truncate text-xs text-muted-foreground">{item.importPath}</code> },
-  { id: "packages", header: "Packages", value: item => item.dependencies.length, align: "right" },
+  { id: "name", header: "Module", value: item => item.name, hideable: false, minWidth: "clamp(10rem,20vw,14rem)", compactCell: item => <CompactModule item={item} />, cell: item => <div className="py-1"><span className="block font-medium">{item.name}</span><span className="mt-1 block text-xs text-muted-foreground">{item.section.split(" / ").slice(1).join(" / ")}</span></div> },
+  { id: "layer", header: "Layer", value: item => item.layer, collapseInCompact: true, cell: item => <span className="text-xs text-muted-foreground">{item.layer.replace(/s$/, "")}</span> },
+  { id: "import", header: "Import path", value: item => item.importPath, collapseInCompact: true, minWidth: "14rem", className: "w-full max-w-0", cell: item => <code title={item.importPath} className="block truncate text-xs text-muted-foreground">{item.importPath}</code> },
+  { id: "packages", header: "Packages", value: item => item.dependencies.length, collapseInCompact: true, align: "right" },
 ];
 
 export function ModuleCatalogExample({ sourceCode }: { sourceCode?: string } = {}) {
@@ -66,7 +74,7 @@ export function ModuleCatalogExample({ sourceCode }: { sourceCode?: string } = {
         if (!next) return;
         setLayer(next); setQuery(""); requestAnimationFrame(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); });
       }}
-      actions={sourceCode && <div className="flex items-center gap-2 text-xs text-muted-foreground"><span>Copy example</span><CopyButton value={sourceCode} label="Copy module browser source" className="[&_button]:size-11" /></div>}
+      actions={sourceCode && <CopyButton value={sourceCode} text="Copy source" />}
       sidebarFooter={<div className="space-y-3"><p>One source, from atom to complete workflow.</p><a target="_top" href="./?path=/story/start-here-workspace--complete-workflow" className="inline-flex min-h-11 items-center gap-2 rounded-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring">Explore the workspace<ArrowUpRight aria-hidden className="size-3.5" /></a></div>}>
       <div className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-4">
         <SearchField ref={filter} label="Filter modules" placeholder="Name, purpose or import path…" value={query} onValueChange={setQuery} className="w-full sm:max-w-xs xl:max-w-sm" />

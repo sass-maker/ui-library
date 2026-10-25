@@ -163,7 +163,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.30"
+G="github:sass-maker/ui-library#v0.1.31"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -173,9 +173,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.30&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.30&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.30&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.31&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.31&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.31&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -603,6 +603,13 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 shared header. Sorting, visibility and row data continue to use each leaf
 column's `id`.
 
+For narrow containers, an ungrouped `DataTable` can give its identifying
+column a `compactCell(row)` renderer and mark supporting columns
+`collapseInCompact: true`. Below 40rem of available table width, the
+identifying cell stacks the important details. **Columns → Show all columns**
+restores the full table; horizontal overflow then has a cue above the header.
+Selection, sorting, export and row details keep the same data and handlers.
+
 ## Loading states
 
 Show a same-shape placeholder within 300 ms; delay it about 150 ms to avoid
@@ -748,7 +755,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.30&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.31&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

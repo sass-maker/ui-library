@@ -143,7 +143,7 @@ function CarouselContent({ children, className, viewportClassName, transition }:
     event.preventDefault();
     setIndex(target);
   }}>
-    <motion.div initial={false} animate={{ transform: `translateX(${(geometry.rtl ? 1 : -1) * position}px)` }} transition={reduced ? { duration: 0 } : transition ?? motionTiming.layout}>
+    <motion.div initial={false} animate={{ transform: `translateX(${(geometry.rtl ? 1 : -1) * position}px)` }} transition={reduced ? { duration: 0 } : transition ?? motionTiming.content}>
       <motion.div ref={track} data-slot="carousel-track" drag={disableDrag || geometry.maxIndex === 0 ? false : 'x'} dragConstraints={{ left: 0, right: 0 }} dragElastic={reduced ? 0 : 1} dragMomentum={false} dragTransition={{ bounceStiffness: 500, bounceDamping: 45 }} style={{ x: dragX, touchAction: 'pan-y pinch-zoom' }} onDragStart={() => viewport.current?.focus({ preventScroll: true })} onDragEnd={(_, info) => {
         const distance = info.offset.x * (geometry.rtl ? -1 : 1);
         const velocity = info.velocity.x * (geometry.rtl ? -1 : 1);

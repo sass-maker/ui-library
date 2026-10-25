@@ -47,6 +47,19 @@ test('the sheet inspector applies real properties and contains a nested select',
   const target = await close.boundingBox();
   expect(target.width).toBeGreaterThanOrEqual(44);
   expect(target.height).toBeGreaterThanOrEqual(44);
+  const originalViewport = page.viewportSize();
+  const pagePreview = page.locator('#storybook-root').getByRole('button', { name: 'Continue', exact: true, includeHidden: true });
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect.poll(async () => {
+      const preview = await pagePreview.boundingBox();
+      const panel = await sheet.boundingBox();
+      const clear = preview.x + preview.width <= panel.x + 1;
+      const covered = preview.x >= panel.x - 1 && preview.x + preview.width <= panel.x + panel.width + 1;
+      return width < 640 ? clear || covered : clear;
+    }, { message: `the page preview is whole or fully covered at${width}px` }).toBe(true);
+  }
+  await page.setViewportSize(originalViewport);
   await sheet.getByRole('combobox', { name: 'Variant', exact: true }).click();
   await page.getByRole('option', { name: 'Outline', exact: true }).click();
   await sheet.getByRole('switch', { name: 'Disabled', exact: true }).click();
@@ -106,14 +119,43 @@ test('the paged catalog shows a complete page and makes horizontal overflow expl
   const geometry = await region.evaluate(element => ({ scroll: element.scrollHeight, height: element.clientHeight }));
   expect(geometry.scroll - geometry.height).toBeLessThanOrEqual(1);
   await page.setViewportSize({ width: 390, height: 900 });
+  await expect(region).not.toHaveAttribute('data-scroll-right');
+  const first = page.locator('tr[data-row]').first();
+  await expect(first.locator('code:visible')).toHaveText('@saas-maker/ui/molecules/accordion');
+  const rowSize = await first.boundingBox();
+  expect(rowSize.x + rowSize.width).toBeLessThanOrEqual(390);
+  await page.getByRole('button', { name: 'Columns', exact: true }).click();
+  await page.getByRole('menuitemcheckbox', { name: 'Show all columns', exact: true }).click();
+  await page.keyboard.press('Escape');
   await expect(region).toHaveAttribute('data-scroll-right', 'true');
-  await expect(page.getByText('Scroll horizontally for more columns.', { exact: true })).toBeVisible();
+  const cue = page.getByText('Scroll horizontally for more columns.', { exact: true });
+  await expect(cue).toBeVisible();
+  const cuePosition = await cue.boundingBox();
+  const tablePosition = await region.boundingBox();
+  expect(cuePosition.y + cuePosition.height).toBeLessThanOrEqual(tablePosition.y);
   await page.getByRole('checkbox', { name: 'Select Accordion', exact: true }).check();
   const actions = await Promise.all(['Download view', 'Columns'].map(name => page.getByRole('button', { name, exact: true }).boundingBox()));
   expect(Math.abs(actions[0].y - actions[1].y), 'selection keeps primary table actions on one line').toBeLessThan(1);
   await region.evaluate(element => { element.scrollLeft = element.scrollWidth; });
   await expect(region).toHaveAttribute('data-scroll-left', 'true');
   await expect(region).not.toHaveAttribute('data-scroll-right');
+  await noOverflow(page);
+});
+
+test('the visible catalog source action confirms clipboard success and failure without shifting', async ({ page }) => {
+  await openStory(page, 'start-here-catalog--all-modules');
+  const copy = page.getByRole('button', { name: 'Copy source', exact: true });
+  const initial = await copy.boundingBox();
+  expect(initial.height).toBeGreaterThanOrEqual(44);
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async value => { window.__sourceClipboard = value; } } }));
+  await copy.click();
+  await expect.poll(() => page.evaluate(() => window.__sourceClipboard)).toContain('ModuleCatalogExample');
+  await expect(page.locator('[aria-live="polite"]').filter({ hasText: /^Copied$/ })).toHaveCount(1);
+  expect((await copy.boundingBox()).width).toBe(initial.width);
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async () => { throw new Error('Clipboard denied'); } } }));
+  await copy.click();
+  await expect(page.locator('[aria-live="polite"]').filter({ hasText: /^Couldn't copy$/ })).toHaveCount(1);
+  expect((await copy.boundingBox()).width).toBe(initial.width);
   await noOverflow(page);
 });
 
@@ -215,6 +257,50 @@ test('the media gallery supports keyboard browsing and isolates offscreen links'
   await next.click();
   await next.click();
   await expect(gallery.getByRole('status')).toHaveText('Slide 4 of 4');
+  await noOverflow(page);
+});
+
+for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+test(`the media gallery keeps its caption action level across all slides and breakpoints in ${mode} mode`, async ({ page }) => {
+  await openStory(page, 'motion-carousel--in-context', `theme:${theme};mode:${mode};motion:reduced`);
+  const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    // Browser resize completion can precede responsive style recalculation.
+    // Qualify the committed breakpoint before comparing slide positions.
+    await expect(gallery.locator('h3').first()).toHaveCSS('font-size', width < 640 ? '24px' : '30px');
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await frame.focus();
+    await page.keyboard.press('Home');
+    const positions = [];
+    for (let slide = 0; slide < 4; slide++) {
+      await expect(gallery.getByRole('status')).toHaveText(`Slide ${slide + 1} of 4`);
+      const link = gallery.getByRole('link', { name: 'Explore Kith', exact: true });
+      positions.push(await link.evaluate(element => element.getBoundingClientRect().top - element.closest('[data-slot="carousel-viewport"]').getBoundingClientRect().top));
+      if (slide < 3) await page.keyboard.press('ArrowRight');
+    }
+    expect(Math.max(...positions) - Math.min(...positions), `CTA stays level at${width}px`).toBeLessThanOrEqual(1);
+    await noOverflow(page);
+  }
+});
+}
+
+test('the narrow review strip peeks imagery while keeping inactive copy and actions out of view', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'start-here-overview--explore', 'theme:paper;mode:light;motion:reduced');
+  const gallery = page.getByRole('group', { name: 'Artwork waiting for review', exact: true });
+  const slides = gallery.locator('[data-slot="carousel-slide"]');
+  await expect(slides.first()).not.toHaveAttribute('aria-hidden');
+  await expect(slides.first().locator('[data-review-details]')).toHaveCSS('opacity', '1');
+  await expect(slides.nth(1)).toHaveAttribute('inert');
+  await expect(slides.nth(1).locator('[data-review-details]')).toHaveCSS('opacity', '0');
+  await expect(gallery.getByText('01 / 03', { exact: true })).toBeVisible();
+  await gallery.getByRole('button', { name: 'Next slide', exact: true }).click();
+  await expect(gallery.getByRole('status').filter({ hasText: 'Slide 2 of 3' })).toBeVisible();
+  await expect(slides.nth(1).locator('[data-review-details]')).toHaveCSS('opacity', '1');
+  await expect(slides.first().locator('[data-review-details]')).toHaveCSS('opacity', '0');
+  await expect(gallery.getByText('02 / 03', { exact: true })).toBeVisible();
   await noOverflow(page);
 });
 
