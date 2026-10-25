@@ -184,7 +184,7 @@ for (const width of [390, 820, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
         await openStory(page, 'foundations-tokens--product-personality', globals);
         const preview = page.getByTestId('product-personality-preview');
-        for (const [name, preset] of [['Editorial', 'paper'], ['Technical', 'signal'], ['Warm', 'hearth']]) {
+        for (const [name, preset] of [['Editorial', 'paper'], ['Technical', 'ink'], ['Warm', 'hearth']]) {
           await page.getByRole('group', { name: 'Product personality', exact: true }).getByRole('button', { name: new RegExp(`^${name}`) }).click();
           await page.evaluate(() => document.fonts.ready);
           if (width <= 820) await preview.scrollIntoViewIfNeeded();

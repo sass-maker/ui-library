@@ -8,7 +8,7 @@ import { cn } from "@saas-maker/ui/lib/utils";
 
 const personalities = [
   { id: "paper", name: "Editorial", description: "Warm paper, Newsreader headings, restrained corners." },
-  { id: "signal", name: "Technical", description: "Cool surfaces, precise sans type, a sharper working rhythm." },
+  { id: "ink", name: "Technical", description: "Dark surfaces, precise sans type, a sharper working rhythm." },
   { id: "hearth", name: "Warm", description: "Softer surfaces and a warmer accent for a more personal product." },
 ] as const;
 
