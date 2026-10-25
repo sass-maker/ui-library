@@ -116,11 +116,14 @@ interaction recording.
 - `@saas-maker/ui/organisms/media-sequence`: keyboard-accessible product chapters.
 
 Molecules → Motion → Carousel includes a copyable Kith artwork gallery,
-a responsive collection with live removal/restoration, and an RTL example.
+a responsive collection with live removal/restoration, an RTL example, and a
+controlled-selection example that can freeze the parent’s selected artwork.
 Navigation and slide selectors have 44px targets. Focus the frame for arrow,
 Home and End navigation; controls keep focus as slides change. Offscreen
 slides are inert, geometry follows actual widths and gaps on resize, and
 reduced motion follows the live preference. The gallery never auto-advances.
+Swipe release settles from the actual pointer position; an ignored selection
+request returns to the parent’s current frame.
 `Carousel` accepts a descriptive `label`, controlled `index`/`onIndexChange`,
 or `initialIndex`; `CarouselItem` accepts an optional slide `label`.
 

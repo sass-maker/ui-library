@@ -369,10 +369,15 @@ test('a carousel measures gaps, stays aligned on resize and recovers an empty co
 });
 
 test('a carousel follows right to left direction without changing button meaning', async ({ page }) => {
-  await openStory(page, 'motion-carousel--right-to-left', 'theme:paper;mode:light;motion:reduced');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'motion-carousel--right-to-left');
   const gallery = page.getByRole('group', { name: 'Right to left gallery', exact: true });
   const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  const release = await sampleCarouselRelease(page, frame, 1, .2, .7);
+  expectSettledRelease(release);
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
   await frame.focus();
+  await page.keyboard.press('Home');
   await page.keyboard.press('ArrowLeft');
   await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
   const second = gallery.getByRole('group', { name: '2 of 3', exact: true });
