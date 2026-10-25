@@ -1270,7 +1270,58 @@ test('morphing popover settles around a stable positioner in normal and reduced 
   }
 });
 
-test('a decorative video backdrop loads deliberately, pauses offscreen and follows live motion preferences', async ({ page }) => {
+test('a decorative video backdrop loads deliberately, pauses offscreen and follows live motion preferences', async ({ page }, testInfo) => {
+  await page.addInitScript(() => {
+    const history = window.__backdropEvents = [];
+    const record = (kind, media, detail = {}) => {
+      const backdrop = media?.closest('[data-media-backdrop]') ?? document.querySelector('[data-media-backdrop]');
+      if (media && !media.closest('[data-media-backdrop]')) return;
+      const element = media ?? backdrop?.querySelector('video');
+      history.push({ kind, time: performance.now(), hidden: document.hidden, visibility: document.visibilityState,
+        scrollY: window.scrollY, paused: element?.paused, currentTime: element?.currentTime,
+        readyState: element?.readyState, networkState: element?.networkState, phase: backdrop?.dataset.mediaBackdrop, ...detail });
+      if (history.length > 120) history.shift();
+    };
+    const play = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function (...args) {
+      record('play-call', this);
+      const result = Reflect.apply(play, this, args);
+      result.then(() => record('play-resolved', this), error => record('play-rejected', this, { error: error.name, message: error.message }));
+      return result;
+    };
+    const pause = HTMLMediaElement.prototype.pause;
+    HTMLMediaElement.prototype.pause = function (...args) {
+      record('pause-call', this, { stack: new Error().stack?.split('\n').slice(0, 4).join('\n') });
+      return Reflect.apply(pause, this, args);
+    };
+    const Observer = window.IntersectionObserver;
+    window.IntersectionObserver = class extends Observer {
+      constructor(callback, options) {
+        super((entries, observer) => {
+          for (const entry of entries) if (entry.target.matches('[data-media-backdrop]')) {
+            record('intersection', entry.target.querySelector('video'), { entryTime: entry.time, intersecting: entry.isIntersecting,
+              top: entry.boundingClientRect.top, bottom: entry.boundingClientRect.bottom });
+          }
+          callback(entries, observer);
+        }, options);
+      }
+    };
+    for (const event of ['play', 'playing', 'pause', 'error', 'waiting', 'canplay']) {
+      document.addEventListener(event, notification => {
+        if (notification.target instanceof HTMLMediaElement) record(event, notification.target);
+      }, true);
+    }
+    document.addEventListener('visibilitychange', () => record('visibilitychange'));
+    document.addEventListener('click', event => {
+      const backdrop = event.target.closest?.('[data-media-backdrop]');
+      if (backdrop) {
+        const bounds = backdrop.getBoundingClientRect();
+        record('click', backdrop.querySelector('video'), { action: event.target.closest('button')?.textContent,
+          top: bounds.top, bottom: bounds.bottom, innerHeight: window.innerHeight });
+      }
+    }, true);
+  });
+  try {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const requests = [];
   page.on('request', request => { if (request.url().includes('hobby-horizon.mp4')) requests.push(request.url()); });
@@ -1297,6 +1348,12 @@ test('a decorative video backdrop loads deliberately, pauses offscreen and follo
   await expect(video).toHaveJSProperty('paused', true);
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
   await noOverflow(page);
+  } catch (error) {
+    const history = await page.evaluate(() => window.__backdropEvents ?? []);
+    console.log('Backdrop event history: ' + JSON.stringify(history));
+    await testInfo.attach('backdrop-event-history', { body: JSON.stringify(history, null, 2), contentType: 'application/json' });
+    throw error;
+  }
 });
 
 test('background controls reconcile delayed media events with actual playback', async ({ page }) => {
