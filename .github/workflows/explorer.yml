@@ -37,6 +37,11 @@ jobs:
       - name: Browser interactions and approved visual baselines
         if: ${{ !inputs.updateVisuals }}
         run: pnpm test:browser
+      - name: Check media interaction boundaries before visual candidates
+        if: ${{ inputs.updateVisuals }}
+        run: |
+          pnpm exec playwright test explorer/browser/interaction.spec.mjs --grep "a decorative video backdrop|background controls reconcile delayed|background autoplay respects|background video failure"
+          pnpm exec playwright test explorer/browser/interaction.spec.mjs --grep "a decorative video backdrop" --project=webkit-390 --project=webkit-1440 --repeat-each=6 --retries=0
       - name: Generate candidate baselines for review
         if: ${{ inputs.updateVisuals }}
         # Review actual renders, including changes within the comparison tolerance.

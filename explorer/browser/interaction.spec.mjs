@@ -1288,15 +1288,78 @@ test('a decorative video backdrop loads deliberately, pauses offscreen and follo
   await expect(video).toHaveJSProperty('paused', true);
   await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
   await expect(video).toHaveJSProperty('paused', false);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
   await page.evaluate(() => { document.body.style.paddingBottom = '120vh'; window.scrollTo(0, document.body.scrollHeight); });
   await expect(video).toHaveJSProperty('paused', true);
   await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(backdrop).toBeInViewport();
   await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
   await expect(video).toHaveJSProperty('paused', false);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(video).toHaveJSProperty('paused', true);
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
   await noOverflow(page);
+});
+
+test('background controls reconcile delayed media events with actual playback', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'molecules-media-media-backdrop--video-cover', 'theme:paper;mode:light;motion:user');
+  const backdrop = page.getByRole('region', { name: 'Live adventure preview', exact: true });
+  const video = backdrop.locator('video');
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  // A queued event can describe an earlier state; the element owns the current state.
+  await video.evaluate(element => element.pause());
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await video.evaluate(element => {
+    const trigger = element.closest('[data-media-backdrop]').querySelector('button');
+    if (trigger.textContent.trim() !== 'Play background video') throw new Error('The visible control must request Play.');
+    // Native playback may resume before its queued event updates the rendered control.
+    void element.play().catch(() => {});
+    trigger.click();
+  });
+  await expect(video).toHaveJSProperty('paused', false);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
+  await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  // A native re-entry resume cannot override an explicit controller pause.
+  await video.evaluate(element => element.play().catch(() => {}));
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await video.evaluate(async element => {
+    element.dispatchEvent(new Event('play', { bubbles: true }));
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
+  await video.evaluate(async element => {
+    element.dispatchEvent(new Event('pause', { bubbles: true }));
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
+  await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).focus();
+  await video.evaluate(element => {
+    element.dataset.playEvents = '0';
+    element.addEventListener('play', () => { element.dataset.playEvents = String(Number(element.dataset.playEvents) + 1); });
+  });
+  await page.evaluate(() => { document.body.style.paddingBottom = '120vh'; window.scrollTo(0, document.body.scrollHeight); });
+  await expect.poll(() => backdrop.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await page.keyboard.press('Enter');
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(video).toHaveAttribute('data-play-events', '0');
 });
 
 test('background autoplay respects reduced motion and data saving before fetching video', async ({ page }) => {
