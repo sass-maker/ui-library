@@ -2,13 +2,13 @@
 /** Morphing surface adapted from ibelick/motion-primitives, MIT.
  * See THIRD_PARTY_NOTICES.md. Fleet retains Radix popover keyboard/focus behavior.
  */
-import { createContext, useContext, useId, type ReactNode } from "react";
+import { createContext, useContext, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Popover as Primitive } from "radix-ui";
 import { LayoutGroup, motion, type Transition } from "motion/react";
 import { cn } from "../lib/utils";
 import { useReducedMotion } from "../lib/use-reduced-motion";
 
-const Context = createContext("");
+const Context = createContext<{ id: string; open: boolean; ready: boolean; setReady: (ready: boolean) => void }>({ id: "", open: false, ready: false, setReady: () => {} });
 type Part = { children?: ReactNode; className?: string };
 type SurfacePart = Part & {
   /** Paint the animated surface; className styles the stable layout/foreground. */
@@ -16,13 +16,17 @@ type SurfacePart = Part & {
 };
 const settle = { type: "spring", duration: .25, bounce: 0 } as const;
 
-export function MorphingPopover({ children, open, onOpenChange }: { children: ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) {
+export function MorphingPopover({ children, open: controlled, onOpenChange }: { children: ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const id = useId();
-  return <Context.Provider value={id}><Primitive.Root open={open} onOpenChange={onOpenChange}><LayoutGroup id={id}>{children}</LayoutGroup></Primitive.Root></Context.Provider>;
+  const [local, setLocal] = useState(false);
+  const [ready, setReady] = useState(false);
+  const open = controlled ?? local;
+  useLayoutEffect(() => { if (!open) setReady(false); }, [open]);
+  return <Context.Provider value={{ id, open, ready: open && ready, setReady }}><Primitive.Root open={open} onOpenChange={next => { if (controlled === undefined) setLocal(next); onOpenChange?.(next); }}><LayoutGroup id={id}>{children}</LayoutGroup></Primitive.Root></Context.Provider>;
 }
 
 export function MorphingPopoverTrigger({ children, className, surfaceClassName }: SurfacePart) {
-  const id = useContext(Context);
+  const { id } = useContext(Context);
   const reduced = useReducedMotion();
   // Radix measures this button. Project only its decorative layer, never the
   // anchor itself: measuring a moving anchor feeds the morph back into placement.
@@ -33,13 +37,29 @@ export function MorphingPopoverTrigger({ children, className, surfaceClassName }
 }
 
 export function MorphingPopoverContent({ children, className, surfaceClassName, side = "bottom", align = "start", transition }: SurfacePart & { children: ReactNode; side?: "top" | "bottom" | "left" | "right"; align?: "start" | "center" | "end"; transition?: Transition }) {
-  const id = useContext(Context);
+  const { id, open, ready, setReady } = useContext(Context);
   const reduced = useReducedMotion();
-  return <Primitive.Portal><Primitive.Content data-slot="morphing-popover-content" side={side} align={align} sideOffset={8} collisionPadding={16}
+  const content = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (!open) return;
+    let frame = 0, cancelled = false;
+    const check = () => {
+      if (cancelled) return;
+      // Wait for public placement data before the next React commit mounts the paint.
+      if (content.current && getComputedStyle(content.current).getPropertyValue("--radix-popover-content-transform-origin").trim()) {
+        setReady(true);
+        return;
+      }
+      frame = requestAnimationFrame(check);
+    };
+    frame = requestAnimationFrame(check);
+    return () => { cancelled = true; cancelAnimationFrame(frame); };
+  }, [open, setReady]);
+  return <Primitive.Portal><Primitive.Content ref={content} data-slot="morphing-popover-content" side={side} align={align} sideOffset={8} collisionPadding={16}
     className={cn("relative z-50 w-80 max-w-[calc(100vw-2rem)] rounded-xl p-5 text-popover-foreground outline-none", className)}>
-    <motion.div data-slot="morphing-popover-surface" aria-hidden initial={false} layoutId={reduced ? undefined : `${id}-surface`} transition={reduced ? { duration: 0 } : transition ?? settle}
-      className={cn("pointer-events-none absolute inset-0 rounded-[inherit] border border-border bg-popover shadow-lg", surfaceClassName)} />
-    <motion.div className="relative" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .16 }}>{children}</motion.div>
+    {ready && <motion.div data-slot="morphing-popover-surface" aria-hidden initial={false} layoutId={reduced ? undefined : `${id}-surface`} transition={reduced ? { duration: 0 } : transition ?? settle}
+      className={cn("pointer-events-none absolute inset-0 rounded-[inherit] border border-border bg-popover shadow-lg", surfaceClassName)} />}
+    <motion.div className="relative" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: ready ? 1 : 0 }} transition={{ duration: reduced ? 0 : .16, delay: reduced || !ready ? 0 : (transition?.delay ?? 0) + (transition?.visualDuration ?? transition?.duration ?? settle.duration) }}>{children}</motion.div>
   </Primitive.Content></Primitive.Portal>;
 }
 
