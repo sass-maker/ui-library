@@ -10,6 +10,20 @@
     overscroll-behavior: contain;
   }
   @media (pointer: coarse) {
+    [data-slot="slider"][data-orientation="horizontal"] {
+      min-height: 44px;
+    }
+    [data-slot="slider"][data-orientation="vertical"] {
+      min-width: 44px;
+    }
+    [data-slot="slider-thumb"] {
+      position: relative;
+    }
+    [data-slot="slider-thumb"]::after {
+      content: "";
+      position: absolute;
+      inset: -14px;
+    }
     [data-slot="tabs-list"] {
       min-height: 50px;
     }

@@ -8,6 +8,8 @@ import { useReducedMotion } from "../lib/use-reduced-motion";
 export type VideoSource = { src: string; type: string };
 export type VideoProps = {
   title: string;
+  /** Short visible play copy; the accessible name always includes the title. */
+  playLabel?: string;
   poster: string;
   sources: VideoSource[];
   width?: number;
@@ -22,7 +24,7 @@ export function Video(props: VideoProps) {
   return <VideoPlayback key={props.sources.map(source => `${source.type}:${source.src}`).join("\n")} {...props} />;
 }
 
-function VideoPlayback({ title, poster, sources, width = 1280, height = 800, className, captions }: VideoProps) {
+function VideoPlayback({ title, playLabel, poster, sources, width = 1280, height = 800, className, captions }: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const [activated, setActivated] = useState(false);
@@ -61,9 +63,9 @@ function VideoPlayback({ title, poster, sources, width = 1280, height = 800, cla
     </video>
     {buffering && !failed && <span role="status" className="pointer-events-none absolute left-4 top-4 rounded-full bg-black/75 px-3 py-1.5 text-xs text-white">Loading video…</span>}
     {(!activated || failed) && <div className={cn("absolute inset-0 flex items-end p-5 sm:p-7", failed && "bg-gradient-to-t from-black/75 via-black/30 to-transparent")}>
-      <button ref={trigger} type="button" onClick={() => { failedSources.current.clear(); setFailed(false); setBuffering(true); setActivated(true); if (activated) setAttempt(value => value + 1); }}
+      <button ref={trigger} type="button" aria-label={`${failed ? "Retry" : "Play"} ${title}`} onClick={() => { failedSources.current.clear(); setFailed(false); setBuffering(true); setActivated(true); if (activated) setAttempt(value => value + 1); }}
         className="inline-flex min-h-11 touch-manipulation select-none items-center gap-3 rounded-full border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-neutral-950 shadow-sm outline-none active:bg-neutral-200 focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-        {failed ? <RotateCcw aria-hidden className="size-4" /> : <Play aria-hidden className="size-4 fill-current" />}{failed ? `Retry ${title}` : `Play ${title}`}
+        {failed ? <RotateCcw aria-hidden className="size-4" /> : <Play aria-hidden className="size-4 fill-current" />}{failed ? `Retry ${title}` : playLabel ?? `Play ${title}`}
       </button>
       {failed && <span role="status" className="ml-4 max-w-48 text-sm text-white">The video couldn’t load. Try again.</span>}
     </div>}
