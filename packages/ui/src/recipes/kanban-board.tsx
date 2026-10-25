@@ -124,6 +124,19 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
 }) {
     const reduceMotion = !!useReducedMotion();
     const boardRef = useRef<HTMLDivElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [overflow, setOverflow] = useState(false);
+    useEffect(() => {
+        const viewport = scrollRef.current;
+        const board = boardRef.current;
+        if (!viewport || !board) return;
+        const measure = () => setOverflow(viewport.scrollWidth > viewport.clientWidth + 1);
+        const observer = new ResizeObserver(measure);
+        observer.observe(viewport);
+        observer.observe(board);
+        measure();
+        return () => observer.disconnect();
+    }, []);
     const slots = useRef(new Map<string, HTMLLIElement>());
     const buttons = useRef(new Map<string, HTMLButtonElement>());
     const lists = useRef<(HTMLUListElement | null)[]>([]);
@@ -150,6 +163,7 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
     const tilt = useSpring(tiltTarget, { stiffness: 400, damping: 30 });
     // Only for the release velocity.
     const pointerY = useMotionValue(0);
+    const restoreFocus = useRef<string | null>(null);
     const release = useRef<{
         id: string;
         left: number;
@@ -260,11 +274,13 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
             settle(r.id, r.velocity);
         }
         // Focus rides along when a card moves to another list and remounts.
-        if (held) {
-            const button = buttons.current.get(held.id);
+        const focusTarget = restoreFocus.current ?? held?.id;
+        if (focusTarget) {
+            const button = buttons.current.get(focusTarget);
             if (button && document.activeElement !== button) {
                 button.focus({ preventScroll: true });
             }
+            restoreFocus.current = null;
         }
     });
     useEffect(() => () => session.current?.stop(), []);
@@ -289,6 +305,7 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
                 velocity: { x: pointerX.getVelocity(), y: pointerY.getVelocity() },
             };
         }
+        restoreFocus.current = s.id;
         if (cancelled && h)
             latest.current.onChange(h.before);
         setHeld(null);
@@ -393,6 +410,7 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
     const cancel = () => {
         if (!held)
             return;
+        restoreFocus.current = held.id;
         onChange(held.before);
         setHeld(null);
         settle(held.id);
@@ -466,7 +484,10 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
         : columns.flatMap((c) => c.cards)[0]?.id;
     return (<MotionConfig reducedMotion="user">
       <LayoutGroup id={group}>
-        <div ref={boardRef} role="group" aria-label={label} className={cn("relative grid h-[380px] w-[600px] max-w-full grid-cols-3 gap-3", pointerDragging && "cursor-grabbing select-none [&_*]:cursor-grabbing", className)}>
+        <div className={cn("min-w-0 w-[608px] max-w-full", className)}>
+        {overflow && <p id={`${instructions}-scroll`} className="mb-3 text-xs leading-relaxed text-muted-foreground">Scroll horizontally to explore all lanes. Arrow keys move between tasks.</p>}
+        <div ref={scrollRef} role="region" aria-label={`${label} lanes`} aria-describedby={overflow ? `${instructions}-scroll` : undefined} tabIndex={overflow ? 0 : -1} className="overflow-x-auto overscroll-x-contain rounded-[18px] p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <div ref={boardRef} role="group" aria-label={label} style={{ minWidth: Math.max(1, columns.length) * 200, gridTemplateColumns: `repeat(${Math.max(1, columns.length)}, minmax(0, 1fr))` }} className={cn("relative grid h-[380px] w-full gap-3", pointerDragging && "cursor-grabbing select-none [&_*]:cursor-grabbing")}>
           {columns.map((column, c) => (<div key={column.id} 
         // Concentric with the cards: 18 = 10 radius + 8 padding.
         className="flex min-w-0 flex-col rounded-[18px] bg-surface p-2">
@@ -476,7 +497,7 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
               </div>
               <ul ref={(node) => {
                 lists.current[c] = node;
-            }} aria-label={column.title} className="flex flex-1 flex-col gap-2">
+            }} aria-label={column.title} className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
                 {column.cards.map((card) => (<Card key={card.id} card={card} values={valuesFor(card.id)} held={held?.id === card.id ? held.mode : null} tabbable={card.id === tabStop} describedBy={instructions} slotRef={(node) => {
                     if (node)
                         slots.current.set(card.id, node);
@@ -487,7 +508,16 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
                         buttons.current.set(card.id, node);
                     else
                         buttons.current.delete(card.id);
-                }} onPointerDown={(e) => onPointerDown(card.id, e)} onKeyDown={(e) => onKeyDown(card.id, e)} onFocus={() => setFocusId(card.id)} onBlur={() => onBlur(card.id)}/>))}
+                }} onPointerDown={(e) => onPointerDown(card.id, e)} onKeyDown={(e) => onKeyDown(card.id, e)} onFocus={() => {
+                    setFocusId(card.id);
+                    const viewport = scrollRef.current;
+                    const button = buttons.current.get(card.id);
+                    if (!viewport || !button) return;
+                    const view = viewport.getBoundingClientRect();
+                    const bounds = button.getBoundingClientRect();
+                    if (bounds.left < view.left + 8) viewport.scrollLeft += bounds.left - view.left - 8;
+                    else if (bounds.right > view.right - 8) viewport.scrollLeft += bounds.right - view.right + 8;
+                }} onBlur={() => onBlur(card.id)}/>))}
               </ul>
             </div>))}
           <p id={instructions} className="sr-only">
@@ -497,6 +527,8 @@ export function KanbanBoard({ columns, onChange, label, className, }: {
           <p className="sr-only" aria-live="assertive" aria-atomic>
             {announcement}
           </p>
+        </div>
+        </div>
         </div>
       </LayoutGroup>
     </MotionConfig>);
@@ -520,7 +552,7 @@ function Card({ card, values, held, tabbable, describedBy, slotRef, buttonRef, o
     // not also animate or the card would drift off the pointer. A card held
     // from the keyboard keeps its layoutId, so it glides between columns.
     const byPointer = held === "pointer";
-    return (<motion.li ref={slotRef} layout={byPointer ? false : "position"} layoutId={byPointer ? undefined : card.id} transition={LAYOUT} className={cn("h-11 shrink-0 rounded-[10px]", 
+    return (<motion.li ref={slotRef} layout={byPointer ? false : "position"} layoutId={byPointer ? undefined : card.id} transition={LAYOUT} className={cn("h-16 shrink-0 rounded-[10px]",
         // The drop placeholder: the slot shows through once the card leaves it.
         held &&
             "bg-foreground/[0.03] outline-1 -outline-offset-1 outline-foreground/20 outline-dashed")}>
@@ -534,7 +566,7 @@ function Card({ card, values, held, tabbable, describedBy, slotRef, buttonRef, o
         // Lifted already reads as pressed; don't shrink under the lift.
         held && "active:scale-100")}>
         <motion.span aria-hidden style={{ opacity: values.lift, boxShadow: LIFTED_SHADOW }} className="pointer-events-none absolute inset-0 rounded-[inherit]"/>
-        <span className="relative truncate">{card.title}</span>
+        <span className="relative line-clamp-2 leading-snug">{card.title}</span>
       </motion.button>
     </motion.li>);
 }

@@ -1304,6 +1304,26 @@ export const moduleCatalog = [
     ]
   },
   {
+    "id": "molecules/media-backdrop",
+    "name": "Media Backdrop",
+    "layer": "Molecules",
+    "family": "molecules",
+    "description": "Original artwork and optional silent film, with a readable foreground that belongs to the product.",
+    "section": "Molecules / Media",
+    "importPath": "@saas-maker/ui/molecules/media-backdrop",
+    "importName": "MediaBackdrop",
+    "importStatement": "import { MediaBackdrop } from \"@saas-maker/ui/molecules/media-backdrop\";",
+    "sourcePath": "packages/ui/src/molecules/media-backdrop.tsx",
+    "sourceRef": "v0.1.31",
+    "storyId": "molecules-media-media-backdrop--video-cover",
+    "registryName": "media-backdrop",
+    "dependencies": [
+      "clsx@2.1.1",
+      "lucide-react@1.48.0",
+      "tailwind-merge@3.7.0"
+    ]
+  },
+  {
     "id": "molecules/media-frame",
     "name": "Media Frame",
     "layer": "Molecules",

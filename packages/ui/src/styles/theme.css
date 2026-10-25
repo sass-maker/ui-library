@@ -507,6 +507,10 @@
   animation: hero-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: var(--d, 0ms);
 }
+[data-motion="reduced"] .hero-in { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-in { animation: none; }
+}
 
 /* ── Motion ─────────────────────────────────────────────────────────────
    Scroll motion lives in src/lib/motion.ts (the Motion library), driven by

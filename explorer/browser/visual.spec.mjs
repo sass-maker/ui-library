@@ -215,6 +215,44 @@ for (const width of [390, 820, 1440]) {
           await expect(page).toHaveScreenshot(`media-status-${suffix}.png`);
         }
       });
+      test(`catalog state finishes ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        for (const [name, id] of [
+          ['kanban', 'interactions-kanban-board--playground'],
+          ['navigation', 'navigation-navigation-menu--playground'],
+          ['orbit', 'effects-orbiting-circles--playground'],
+          ['context', 'overlays-context-menu--playground'],
+          ['morphing-popover', 'motion-morphing-popover--in-context'],
+        ]) {
+          await openStory(page, id, globals);
+          if (name === 'navigation') {
+            await page.getByRole('button', { name: 'Explore', exact: true }).focus();
+            await page.keyboard.press('Enter');
+            await page.keyboard.press('ArrowDown');
+            await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toBeVisible();
+          }
+          if (name === 'context') {
+            await page.locator('[data-slot="context-menu-trigger"]').focus();
+            await page.keyboard.press('Shift+F10');
+            await expect(page.getByRole('menu')).toBeVisible();
+          }
+          if (name === 'morphing-popover') {
+            await page.getByRole('button', { name: 'Share collection', exact: true }).click();
+            await expect(page.getByRole('dialog')).toBeVisible();
+          }
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`finish-${name}-${suffix}.png`, { fullPage: width > 820, animations: 'allow' });
+        }
+      });
+      test(`image and video backdrops ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        for (const kind of ['image', 'video']) {
+          await openStory(page, `molecules-media-media-backdrop--${kind}-cover`, globals);
+          await expect.poll(() => page.locator('[data-media-backdrop] img').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`backdrop-${kind}-${suffix}.png`, { fullPage: width > 820 });
+        }
+      });
     });
   }
 }

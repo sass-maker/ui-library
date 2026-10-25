@@ -1,0 +1,16 @@
+{
+  "description": "Original silent cinematic background from the Live product. Poster and video are used without alteration.",
+  "sourceRepository": "https://github.com/Significant-Hobbies/live",
+  "sourceRevision": "17830f1b88e54e35c5e7e618f53c27fcd1de7246",
+  "license": "MIT; Copyright 2026 Sarthak Agrawal. See LIVE_MEDIA_LICENSE.txt.",
+  "sources": [
+    {
+      "path": "public/hero/hobby-horizon.mp4",
+      "sha256": "2d3744f021878ab1a8592d611112ea6b8d5631660e761a5da2e2e2e1a5e36aae"
+    },
+    {
+      "path": "public/hero/hobby-horizon-poster.webp",
+      "sha256": "b8ecc9e32159f434e0ce476a3f03629bfb1c79ec270d4906df59c7474b2248e0"
+    }
+  ]
+}

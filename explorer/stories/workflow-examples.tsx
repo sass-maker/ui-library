@@ -19,7 +19,7 @@ import { sampleFiles } from "./composition-fixtures";
 export function UploadContext() {
   const [reject,setReject]=useState(false);
   return <section className="w-full max-w-xl rounded-2xl border border-border bg-card p-6 sm:p-7"><div className="mb-6"><p className="mb-2 text-xs text-muted-foreground">Kith / Asset library</p><h2 className="text-xl font-semibold tracking-tight">Add release assets</h2><p className="mt-3 text-sm leading-relaxed text-muted-foreground">A useful upload keeps the filename, progress, and a way back in view.</p></div>
-    <FileDropzone accept="image/*,.pdf,.md,.txt" maxSize={5*1024*1024} hint="Images, PDF, Markdown or text · up to 5 MB" onUpload={async(_file,{signal,onProgress})=>{
+    <FileDropzone accept="image/*,.pdf,.md,.txt" maxSize={5*1024*1024} hint="Images, PDF, Markdown or text" onUpload={async(_file,{signal,onProgress})=>{
       await new Promise<void>((resolve,rejectPromise)=>{
         let progress=0;
         const stop=()=>{clearInterval(timer);signal.removeEventListener("abort",abort);};

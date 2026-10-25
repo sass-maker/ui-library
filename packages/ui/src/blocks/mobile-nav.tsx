@@ -14,7 +14,7 @@ export function MobileNav({ brand, links, actions }: { brand: string; links: Nav
         type="button"
         popoverTarget={`nav-${id}`}
         aria-label="Open menu"
-        className="inline-flex size-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-accent"
+        className="inline-flex size-11 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-accent"
       >
         <MenuIcon className="size-5" />
       </button>
@@ -30,7 +30,7 @@ export function MobileNav({ brand, links, actions }: { brand: string; links: Nav
             popoverTarget={`nav-${id}`}
             popoverTargetAction="hide"
             aria-label="Close menu"
-            className="inline-flex size-10 items-center justify-center rounded-lg hover:bg-accent"
+            className="inline-flex size-11 items-center justify-center rounded-lg hover:bg-accent"
           >
             <XIcon className="size-5" />
           </button>

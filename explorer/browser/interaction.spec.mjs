@@ -1055,3 +1055,225 @@ test('the complete media page connects real screens, playback and truthful beta 
   await noOverflow(page);
   expect(external).toEqual([]);
 });
+
+
+test('readable kanban lanes preserve keyboard movement, cancellation and focus on narrow screens', async ({ page }) => {
+  await openStory(page, 'interactions-kanban-board--playground', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Example component workflow', exact: true });
+  const viewport = page.getByRole('region', { name: 'Example component workflow lanes', exact: true });
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect.poll(() => board.getByRole('button').evaluateAll(buttons => buttons.every(button => {
+      const title = button.querySelector('span:last-child');
+      return title.scrollWidth <= title.clientWidth + 1 && title.scrollHeight <= title.clientHeight + 1;
+    }))).toBe(true);
+    await noOverflow(page);
+  }
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await expect(page.getByText('Scroll horizontally to explore all lanes. Arrow keys move between tasks.', { exact: true })).toBeVisible();
+  const task = board.getByRole('button', { name: 'Review upstream API', exact: true });
+  await task.focus();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('ArrowRight');
+  await expect(board.getByRole('list', { name: 'Adapt', exact: true }).getByRole('button', { name: 'Review upstream API', exact: true })).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(board.getByRole('list', { name: 'Verify', exact: true }).getByRole('button', { name: 'Review upstream API', exact: true })).toBeFocused();
+  await expect.poll(async () => {
+    const view = await viewport.boundingBox();
+    const card = await task.boundingBox();
+    return card.x >= view.x && card.x + card.width <= view.x + view.width;
+  }).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(board.getByRole('list', { name: 'Research', exact: true }).getByRole('button', { name: 'Review upstream API', exact: true })).toBeFocused();
+  await expect(task).not.toHaveAttribute('aria-pressed', 'true');
+  await noOverflow(page);
+});
+
+test('an opened navigation menu stays inside the viewport as its anchor resizes', async ({ page }) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'navigation-navigation-menu--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const trigger = page.getByRole('button', { name: 'Explore', exact: true });
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('ArrowDown');
+    const panel = page.locator('[data-slot="navigation-menu-viewport"]');
+    await expect(panel).toBeVisible();
+    const initialWidth = page.viewportSize().width;
+    await expect.poll(async () => {
+      const box = await panel.boundingBox();
+      return box && box.x >= 15 && box.x + box.width <= initialWidth - 15;
+    }).toBe(true);
+    await expect.poll(() => page.evaluate(() => window.innerWidth)).toBe(initialWidth);
+    for (const width of [390, 820, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      await expect.poll(async () => {
+        const box = await panel.boundingBox();
+        return box && box.x >= 15 && box.x + box.width <= width - 15;
+      }).toBe(true);
+      await expect(page.getByRole('link', { name: 'Source and installation', exact: true })).toBeVisible();
+      await noOverflow(page);
+    }
+    await page.keyboard.press('Escape');
+    await expect(trigger).toBeFocused();
+  }
+});
+
+test('context actions open from the keyboard and return focus after dismissal', async ({ page }) => {
+  await openStory(page, 'overlays-context-menu--playground');
+  const trigger = page.locator('[data-slot="context-menu-trigger"]');
+  await trigger.focus();
+  await expect(trigger).toBeFocused();
+  await page.keyboard.press('Shift+F10');
+  await expect(page.getByRole('menu')).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Unavailable action', exact: true })).toHaveAttribute('data-disabled', '');
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+});
+
+test('reduced motion retains orbit positions and removes delayed hero entrances', async ({ page }) => {
+  for (const [preference, motion] of [['reduce', 'user'], ['no-preference', 'reduced']]) {
+    await page.emulateMedia({ reducedMotion: preference });
+    await openStory(page, 'effects-orbiting-circles--playground', `theme:paper;mode:light;motion:${motion}`);
+    const positions = await page.locator('.animate-orbit').evaluateAll(elements => elements.map(element => {
+      const box = element.getBoundingClientRect();
+      return { x: Math.round(box.x), y: Math.round(box.y), animation: getComputedStyle(element).animationName };
+    }));
+    expect(positions).toHaveLength(5);
+    expect(new Set(positions.map(point => `${point.x},${point.y}`)).size).toBe(5);
+    expect(positions.every(point => point.animation === 'none')).toBe(true);
+    await openStory(page, 'blocks-hero--playground', `theme:paper;mode:light;motion:${motion}`);
+    expect(await page.locator('.hero-in').evaluateAll(elements => elements.every(element => getComputedStyle(element).animationName === 'none' && ['none', 'blur(0px)'].includes(getComputedStyle(element).filter)))).toBe(true);
+    await noOverflow(page);
+  }
+});
+
+test('morphing popover settles around a stable positioner in normal and reduced motion', async ({ page }) => {
+  for (const reduced of [false, true]) {
+    await page.emulateMedia({ reducedMotion: reduced ? 'reduce' : 'no-preference' });
+    await openStory(page, 'motion-morphing-popover--in-context', `theme:paper;mode:light;motion:${reduced ? 'reduced' : 'user'}`);
+    await page.getByRole('button', { name: 'Share collection', exact: true }).click();
+    const panel = page.getByRole('dialog');
+    const surface = page.locator('[data-slot="morphing-popover-surface"]');
+    await expect(panel).toBeVisible();
+    await expect.poll(async () => {
+      const outer = await panel.boundingBox();
+      const inner = await surface.boundingBox();
+      return Math.max(Math.abs(outer.x - inner.x), Math.abs(outer.y - inner.y), Math.abs(outer.width - inner.width), Math.abs(outer.height - inner.height));
+    }).toBeLessThan(1);
+    const bounds = await panel.boundingBox();
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.y).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(page.viewportSize().width);
+    expect(bounds.y + bounds.height).toBeLessThanOrEqual(page.viewportSize().height);
+    const samples = await surface.evaluate(element => new Promise(resolve => {
+      const start = performance.now(), samples = [];
+      function sample() {
+        const box = element.getBoundingClientRect();
+        samples.push({ x: box.x, y: box.y, width: box.width, height: box.height });
+        if (performance.now() - start < 350) requestAnimationFrame(sample); else resolve(samples);
+      }
+      sample();
+    }));
+    for (const key of ['x', 'y', 'width', 'height']) expect(Math.max(...samples.map(sample => sample[key])) - Math.min(...samples.map(sample => sample[key]))).toBeLessThan(1);
+    await expect(page.getByRole('heading', { name: 'Share collection', exact: true })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: 'Share collection', exact: true })).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
+test('a decorative video backdrop loads deliberately, pauses offscreen and follows live motion preferences', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const requests = [];
+  page.on('request', request => { if (request.url().includes('hobby-horizon.mp4')) requests.push(request.url()); });
+  await openStory(page, 'molecules-media-media-backdrop--video-cover', 'theme:paper;mode:light;motion:user');
+  const backdrop = page.getByRole('region', { name: 'Live adventure preview', exact: true });
+  const video = backdrop.locator('video');
+  await expect.poll(() => backdrop.locator('img').evaluate(image => image.complete && image.naturalWidth === 1280)).toBe(true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  expect(requests).toHaveLength(0);
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
+  await expect(video).toHaveJSProperty('muted', true);
+  await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', true);
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
+  await page.evaluate(() => { document.body.style.paddingBottom = '120vh'; window.scrollTo(0, document.body.scrollHeight); });
+  await expect(video).toHaveJSProperty('paused', true);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await noOverflow(page);
+});
+
+test('background autoplay respects reduced motion and data saving before fetching video', async ({ page }) => {
+  const requests = [];
+  page.on('request', request => { if (request.url().includes('hobby-horizon.mp4')) requests.push(request.url()); });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openStory(page, 'molecules-media-media-backdrop--automatic-video', 'theme:ink;mode:dark;motion:user');
+  await expect(page.getByRole('button', { name: 'Play background video', exact: true })).toBeVisible();
+  await expect(page.locator('video source')).toHaveCount(0);
+  expect(requests).toHaveLength(0);
+  await page.addInitScript(() => {
+    const connection = new EventTarget();
+    connection.saveData = true;
+    Object.defineProperty(navigator, 'connection', { value: connection });
+  });
+  await page.goto('about:blank');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'molecules-media-media-backdrop--automatic-video', 'theme:ink;mode:dark;motion:user');
+  await expect(page.getByRole('button', { name: 'Play background video', exact: true })).toBeVisible();
+  await expect(page.locator('video source')).toHaveCount(0);
+  expect(requests).toHaveLength(0);
+  await noOverflow(page);
+});
+
+test('background video failure preserves the artwork and content and can recover', async ({ page }) => {
+  await page.route(/hobby-horizon\.mp4/, route => route.abort());
+  await openStory(page, 'molecules-media-media-backdrop--video-cover');
+  await page.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Video unavailable. The artwork stays visible.');
+  await expect(page.getByRole('region', { name: 'Live adventure preview', exact: true }).getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('[data-media-backdrop] img')).toBeVisible();
+  await page.unroute(/hobby-horizon\.mp4/);
+  await page.getByRole('button', { name: 'Retry background video', exact: true }).click();
+  await expect.poll(() => page.locator('video').evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  await expect(page.getByRole('button', { name: 'Pause background video', exact: true })).toBeVisible();
+  await noOverflow(page);
+});
+
+test('backdrop foreground tokens keep ordinary shared controls readable across product themes', async ({ page }) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark'], ['hearth', 'light']]) {
+    await openStory(page, 'molecules-media-media-backdrop--image-cover', `theme:${theme};mode:${mode};motion:reduced`);
+    const backdrop = page.getByRole('region', { name: 'Kith coastal artwork', exact: true });
+    const colors = await backdrop.locator('[data-slot="button"]').evaluateAll(buttons => buttons.map(button => {
+      const style = getComputedStyle(button);
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d');
+      const luminance = color => {
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        const values = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3).map(value => {
+          const channel = value / 255;
+          return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+        });
+        return values[0] * .2126 + values[1] * .7152 + values[2] * .0722;
+      };
+      const text = luminance(style.color), background = luminance(style.getPropertyValue('--background'));
+      return { variant: button.dataset.variant, contrast: (Math.max(text, background) + .05) / (Math.min(text, background) + .05) };
+    }));
+    expect(colors.map(color => color.variant)).toEqual(['outline', 'ghost']);
+    expect(colors.every(color => color.contrast >= 7)).toBe(true);
+    await backdrop.locator('[data-variant="outline"]').focus();
+    await expect(backdrop.locator('[data-variant="outline"]')).toBeFocused();
+    await noOverflow(page);
+  }
+});

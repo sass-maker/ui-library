@@ -4,7 +4,7 @@ import ts from "typescript";
 import type { Plugin } from "vite";
 
 const directory = new URL("../stories/", import.meta.url);
-const helperNames = ["recipe-examples.tsx", "workflow-examples.tsx", "workspace-examples.tsx", "system-examples.tsx", "media-examples.tsx", "module-catalog-examples.tsx"];
+const helperNames = ["recipe-examples.tsx", "workflow-examples.tsx", "workspace-examples.tsx", "system-examples.tsx", "media-examples.tsx", "backdrop-examples.tsx", "module-catalog-examples.tsx"];
 const fixtureNames = ["composition-fixtures.ts", "module-catalog-data.ts"];
 const read = (name: string) => ts.createSourceFile(name, readFileSync(new URL(name, directory), "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 
