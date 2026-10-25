@@ -1277,3 +1277,64 @@ test('backdrop foreground tokens keep ordinary shared controls readable across p
     await noOverflow(page);
   }
 });
+
+test('tab labels fit inside their indicators with touch-sized controls', async ({ page }) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'navigation-tabs--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const tabs = page.getByRole('tablist');
+    for (const width of [390, 820, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      const geometry = await tabs.getByRole('tab').evaluateAll(elements => elements.map(element => {
+        const box = element.getBoundingClientRect(), range = document.createRange();
+        range.selectNodeContents(element);
+        const text = range.getBoundingClientRect();
+        return { left: text.left - box.left, right: box.right - text.right };
+      }));
+      expect(geometry.every(box => box.left >= 7 && box.right >= 7)).toBe(true);
+      await noOverflow(page);
+    }
+    await page.getByRole('tab', { name: 'Components', exact: true }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('tab', { name: 'Tokens', exact: true })).toBeFocused();
+    await expect(page.getByRole('tabpanel')).toContainText('Shared color');
+  }
+});
+
+test('closed avatar stacks leave every fallback initial unobscured', async ({ page }) => {
+  for (const motion of ['user', 'reduced']) {
+    await openStory(page, 'motion-morphing-popover--in-context', `theme:paper;mode:light;motion:${motion}`);
+    const stack = page.getByRole('toolbar', { name: 'Collection collaborators', exact: true });
+    const labels = await stack.getByRole('button').evaluateAll(buttons => buttons.map(button => {
+      const label = button.querySelector('span[aria-hidden]'), range = document.createRange();
+      range.selectNodeContents(label);
+      const box = range.getBoundingClientRect();
+      return { text: label.textContent, visible: [box.left + .5, box.right - .5].every(x => document.elementFromPoint(x, box.top + box.height / 2)?.closest('button') === button) };
+    }));
+    expect(labels.map(label => label.text)).toEqual(['MC', 'AP', 'LM']);
+    expect(labels.every(label => label.visible)).toBe(true);
+    await stack.getByRole('button').first().focus();
+    await page.keyboard.press('End');
+    await expect(stack.getByRole('button', { name: /Leah Martin/ })).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
+test('collapsed search controls have a visible label or a compact footprint', async ({ page }) => {
+  await openStory(page, 'blocks-search-palette--playground');
+  const trigger = page.getByRole('button', { name: 'Search components ⌘K', exact: true });
+  await expect(trigger.getByText('Search components', { exact: true })).toBeVisible();
+  await trigger.focus();
+  await page.keyboard.press('Control+k');
+  await expect(page.getByRole('dialog', { name: 'Search', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await openStory(page, 'motion-dynamic-toolbar--playground');
+  const search = page.getByRole('button', { name: 'Search components', exact: true });
+  const wrapperWidth = await search.evaluate(element => element.parentElement.getBoundingClientRect().width);
+  expect(wrapperWidth).toBeLessThanOrEqual((await search.boundingBox()).width + 32);
+  await search.click();
+  await expect(page.getByRole('searchbox', { name: 'Search components', exact: true })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(search).toBeFocused();
+  await noOverflow(page);
+});

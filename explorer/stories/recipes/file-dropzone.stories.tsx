@@ -10,7 +10,7 @@ import * as C from '@saas-maker/ui/recipes/file-dropzone';
 const meta={id: "interactions-file-dropzone", title: "Molecules/Patterns/File dropzone",parameters:{docs:{description:{component:"Keep selection, upload progress, cancellation, failure, and retry distinct. The application supplies the transport.\n\nImport from `@saas-maker/ui/recipes/file-dropzone`. The Playground isolates the API; In Context shows it composed into a local product example. Attribution and pinned upstream source are retained in THIRD_PARTY_NOTICES.md and packages/ui/upstream.json."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
-export const Playground:Story={render:function Render(){const [files,setFiles]=useState<string[]>([]);return <div className="story-stack"><C.FileDropzone accept=".json,.txt,.md" maxSize={2*1024*1024} onFiles={files=>setFiles(files.map(file=>file.name))} hint="JSON, text or Markdown"/><p className="story-caption">Selection only. No file contents are transmitted.</p><output>{files.join(", ")}</output></div>;}};
+export const Playground:Story={render:function Render(){const [files,setFiles]=useState<string[]>([]);return <div className="story-stack"><C.FileDropzone accept=".json,.txt,.md" maxSize={2*1024*1024} onFiles={files=>setFiles(files.map(file=>file.name))} hint="JSON, text or Markdown."/><p className="story-caption">Selection only. No file contents are transmitted.</p><output>{files.join(", ")}</output></div>;}};
 
 export const UploadLifecycle:Story={render:function Render(){
  const job=useRef<{resolve:()=>void;reject:(error:Error)=>void;progress:(percent:number)=>void}|null>(null);

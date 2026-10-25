@@ -10,6 +10,6 @@ const meta = { id: "inputs-input", title: "Atoms/Inputs/Input", component: C.Inp
 export default meta;
 type Story = StoryObj;
 
-export const Playground: Story = { render: function Render() { return <div className="story-stack max-w-sm"><label className="story-label">project name<C.Input className="mt-2" placeholder="App Health" /></label><label className="story-label">invalid input<C.Input className="mt-2" aria-invalid aria-describedby="name-error" defaultValue="" /><span id="name-error" className="text-destructive">Enter a project name.</span></label><C.Input aria-label="Read-only project" readOnly value="UI Library" /><C.Input aria-label="Unavailable field" disabled placeholder="unavailable" /></div>; } };
+export const Playground: Story = { render: function Render() { return <div className="story-stack max-w-sm"><label className="story-label">Project name<C.Input className="mt-2" placeholder="App Health" /></label><label className="story-label">Invalid input<C.Input className="mt-2" aria-invalid aria-describedby="name-error" defaultValue="" /><span id="name-error" className="text-destructive">Enter a project name.</span></label><C.Input aria-label="Read-only project" readOnly value="UI Library" /><C.Input aria-label="Unavailable field" disabled placeholder="Unavailable" /></div>; } };
 
 export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.FoundationFormExample, type: "code", language: "tsx" } } }, render: () => <FoundationFormExample /> };

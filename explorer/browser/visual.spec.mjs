@@ -223,6 +223,10 @@ for (const width of [390, 820, 1440]) {
           ['orbit', 'effects-orbiting-circles--playground'],
           ['context', 'overlays-context-menu--playground'],
           ['morphing-popover', 'motion-morphing-popover--in-context'],
+          ['tabs', 'navigation-tabs--playground'],
+          ['avatars', 'data-avatar-stack--playground'],
+          ['search', 'blocks-search-palette--playground'],
+          ['dynamic-toolbar', 'motion-dynamic-toolbar--playground'],
         ]) {
           await openStory(page, id, globals);
           if (name === 'navigation') {
@@ -251,6 +255,25 @@ for (const width of [390, 820, 1440]) {
           await expect.poll(() => page.locator('[data-media-backdrop] img').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
           await noOverflow(page);
           await expect(page).toHaveScreenshot(`backdrop-${kind}-${suffix}.png`, { fullPage: width > 820 });
+        }
+      });
+      test(`original product media examples ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        for (const [name, id] of [
+          ['hero', 'blocks-hero--playground'],
+          ['frames', 'blocks-frames--playground'],
+          ['gallery', 'blocks-gallery--playground'],
+          ['video-dialog', 'effects-hero-video-dialog--playground'],
+          ['comparison', 'motion-image-comparison--playground'],
+        ]) {
+          await openStory(page, id, globals);
+          await expect.poll(() => page.locator('img').evaluateAll(images => images.length > 0 && images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`product-${name}-${suffix}.png`, { fullPage: width > 820 });
+          if (width <= 820 && ['hero', 'gallery'].includes(name)) {
+            await page.locator('img').last().scrollIntoViewIfNeeded();
+            await expect(page).toHaveScreenshot(`product-${name}-media-${suffix}.png`);
+          }
         }
       });
     });

@@ -11,11 +11,11 @@ export type ErrorStateProps = EmptyStateProps & {
 
 export function ErrorState({ title, description, icon, primaryAction, onRetry, detail, offline = false, className, ...props }: ErrorStateProps) {
   return <div {...props} data-slot="error-state" role="alert" className={cn("min-w-0", className)}>
-    <EmptyState title={title ?? (offline ? "you're offline" : "could not load this view")}
-      description={description ?? (offline ? "check your connection, then try again." : "please try again in a moment.")}
-      icon={icon} primaryAction={primaryAction ?? (onRetry ? <Button variant="outline" size="sm" onClick={onRetry}>try again</Button> : undefined)} />
+    <EmptyState title={title ?? (offline ? "You’re offline" : "Could not load this view")}
+      description={description ?? (offline ? "Check your connection, then try again." : "Please try again in a moment.")}
+      icon={icon} primaryAction={primaryAction ?? (onRetry ? <Button variant="outline" size="sm" onClick={onRetry}>Try again</Button> : undefined)} />
     {detail && <details className="mx-auto -mt-6 max-w-sm px-6 pb-6 text-xs text-muted-foreground">
-      <summary className="cursor-pointer">details</summary>
+      <summary className="cursor-pointer">Details</summary>
       <p className="mt-2 whitespace-pre-wrap break-words">{detail}</p>
     </details>}
   </div>
