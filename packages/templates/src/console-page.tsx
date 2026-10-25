@@ -102,7 +102,7 @@ export function ConsolePage({ brand, nav, breadcrumbs, title, titleRef, descript
           <div className="flex h-14 items-center gap-3 px-4 md:px-8">
             <div className="flex min-w-0 flex-1 items-center gap-2 lg:hidden">{brandLink}</div>
             {breadcrumbs && <Breadcrumbs items={breadcrumbs} className="hidden min-w-0 flex-1 lg:block" />}
-            {search && <SearchTrigger label={search.label} className="ml-auto" />}
+            {search && <SearchTrigger label={search.label} mobileCompact className="ml-auto" />}
             <button
               type="button"
               popoverTarget={drawerId}

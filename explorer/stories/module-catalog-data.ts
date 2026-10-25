@@ -1223,6 +1223,7 @@ export const moduleCatalog = [
     "registryName": "kanban-board",
     "dependencies": [
       "clsx@2.1.1",
+      "lucide-react@1.48.0",
       "motion@13.4.3",
       "tailwind-merge@3.7.0"
     ]

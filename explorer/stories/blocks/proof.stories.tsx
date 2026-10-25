@@ -1,3 +1,5 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
+import { VerifiedSizingContext } from "../catalog-product-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
 import { Button } from '@saas-maker/ui/components/button';
@@ -8,3 +10,5 @@ const meta={id: "blocks-proof", title: "Organisms/Blocks/Proof",parameters:{docs
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-stack"><C.StatusPill tone="neutral">Example evidence</C.StatusPill><C.CodeBlock label="Local command" code="pnpm storybook"/><C.DiffBlock file="button.tsx" lines={[{kind:"del",text:"<button>Save</button>"},{kind:"add",text:"<Button>Save</Button>"}]}/></div>;}};
+
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.VerifiedSizingContext, type: "code", language: "tsx" } } }, render: () => <VerifiedSizingContext /> };

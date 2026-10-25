@@ -1,3 +1,5 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
+import { ProductNotesContext , ProductNotesListExample } from "../catalog-product-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
 import { Button } from '@saas-maker/ui/components/button';
@@ -7,4 +9,6 @@ import * as C from '@saas-maker/ui/blocks/quote-list';
 const meta={id: "blocks-quote-list", title: "Organisms/Blocks/Quote list",parameters:{docs:{description:{component:"Group attributed quotations while keeping their sources and context visible.\n\nImport from `@saas-maker/ui/blocks/quote-list`. Compare presets, color modes, motion preferences and viewport widths using the toolbar. Upstream attribution is retained in THIRD_PARTY_NOTICES.md."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
-export const Playground:Story={render:function Render(){return <C.QuoteList items={[{id:"a",quote:"Example quoted text for inspecting the row layout.",speaker:{verified:false},source:{label:"Illustrative source"},date:"2026-10-23",type:"Example"},{id:"b",quote:"A second example with a timestamp.",speaker:{verified:false},timestamp:{seconds:854},source:{label:"Illustrative recording"}}]}/>;}};
+export const Playground: Story = { render: () => <ProductNotesListExample /> };
+
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.ProductNotesContext, type: "code", language: "tsx" } } }, render: () => <ProductNotesContext /> };

@@ -187,6 +187,11 @@ export function RecordDetail({
   const headingRef = React.useRef<HTMLHeadingElement>(null);
   // Where focus was before the panel took it (usually the row that opened it).
   const returnTo = React.useRef<HTMLElement | null>(null);
+  React.useLayoutEffect(() => {
+    if (!open) return;
+    const from = document.activeElement;
+    if (from instanceof HTMLElement && from !== document.body && !from.closest("[data-record-detail]")) returnTo.current = from;
+  }, [open]);
   React.useEffect(() => {
     if (!desktop) return;
     if (open) {
@@ -235,7 +240,14 @@ export function RecordDetail({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className={cn("max-h-[88dvh] gap-0 overflow-y-auto rounded-t-2xl", className)}>
+      <SheetContent side="bottom" onCloseAutoFocus={event => {
+        const target = returnTo.current;
+        returnTo.current = null;
+        if (target?.isConnected) {
+          event.preventDefault();
+          target.focus({ preventScroll: true });
+        }
+      }} className={cn("max-h-[88dvh] gap-0 overflow-y-auto rounded-t-2xl", className)}>
         <div className="sticky top-0 z-10 bg-background px-5 pb-4 pt-6 pr-12">
           <SheetTitle className="font-display text-2xl normal-case">{title}</SheetTitle>
           {subtitle ? <SheetDescription className="mt-1">{subtitle}</SheetDescription> : <SheetDescription className="sr-only">Record detail</SheetDescription>}

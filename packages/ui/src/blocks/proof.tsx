@@ -13,7 +13,7 @@ const toneClass: Record<Tone, string> = {
 
 export function StatusPill({ tone = "neutral", children, className }: { tone?: Tone; children: React.ReactNode; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[0.6875rem] font-medium", toneClass[tone], className)}>
+    <span className={cn("inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[0.6875rem] font-medium", toneClass[tone], className)}>
       <span aria-hidden className="size-1.5 rounded-full bg-current" />
       {children}
     </span>

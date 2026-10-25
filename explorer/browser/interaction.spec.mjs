@@ -1423,3 +1423,260 @@ test('image comparison exposes a visible handle that follows native input', asyn
   expect(value).toBeLessThan(80);
   await noOverflow(page);
 });
+
+test('kanban pointer overlays cross lane clips and follow unequal scroll offsets', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const queue = board.getByRole('list', { name: 'Queue', exact: true });
+  const active = board.getByRole('list', { name: 'Active', exact: true });
+  const card = board.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  const overlay = board.locator('[data-kanban-overlay="moving"]');
+  await expect.poll(() => board.evaluate(node => ({ height: node.clientHeight, gap: getComputedStyle(node).gap }))).toEqual({ height: 520, gap: '24px' });
+  const initialOrder = await board.getByRole('list').evaluateAll(lists => lists.map(list => [...list.querySelectorAll('button')].map(button => button.textContent.trim())));
+  await queue.evaluate(list => { list.scrollTop = 72; });
+  await expect.poll(() => queue.evaluate(list => list.scrollTop)).toBe(72);
+  const source = await card.boundingBox();
+  await page.mouse.move(source.x + source.width / 2, source.y + source.height / 2);
+  await page.mouse.down();
+  // Before the lane threshold, the moving body's left edge crosses its lane.
+  await page.mouse.move(source.x + source.width / 2 - 40, source.y + source.height / 2);
+  await expect(overlay).toBeVisible();
+  expect(await overlay.evaluate(node => {
+    const bounds = node.getBoundingClientRect();
+    return !node.closest('ul') && node.contains(document.elementFromPoint(bounds.left + 2, bounds.top + bounds.height / 2));
+  })).toBe(true);
+  await expect(card).toHaveCount(1);
+  const target = await queue.boundingBox();
+  const x = target.x + target.width / 2;
+  const y = target.y + 32;
+  await page.mouse.move(x, y, { steps: 6 });
+  await expect.poll(() => queue.getByRole('button').allTextContents()).toEqual([
+    'Queued task 1', 'Move between scrolled lanes', 'Queued task 2', 'Queued task 3',
+    'Queued task 4', 'Queued task 5', 'Queued task 6', 'Queued task 7', 'Queued task 8',
+  ]);
+  await expect.poll(() => overlay.evaluate((node, point) => {
+    const box = node.getBoundingClientRect();
+    return Math.max(Math.abs(box.top + box.height / 2 - point.y), Math.abs(box.left + box.width / 2 - point.x));
+  }, { x, y })).toBeLessThan(1);
+  const beforeScroll = await overlay.boundingBox();
+  await queue.evaluate(list => { list.scrollTop = 0; });
+  await expect.poll(async () => {
+    const box = await overlay.boundingBox();
+    return Math.abs(box.x - beforeScroll.x) <= 2 && Math.abs(box.y - beforeScroll.y) <= 2;
+  }).toBe(true);
+  await expect(queue.getByRole('button').first()).toHaveText('Move between scrolled lanes');
+  await page.keyboard.press('Escape');
+  await page.mouse.up();
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await expect.poll(() => board.getByRole('list').evaluateAll(lists => lists.map(list => [...list.querySelectorAll('button')].map(button => button.textContent.trim())))).toEqual(initialOrder);
+  // A committed drop uses the same scrolled insertion position.
+  await queue.evaluate(list => { list.scrollTop = 72; });
+  const again = await card.boundingBox();
+  await page.mouse.move(again.x + again.width / 2, again.y + again.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(x, y, { steps: 6 });
+  await page.mouse.up();
+  await expect(queue.getByRole('button').nth(1)).toHaveText('Move between scrolled lanes');
+  await expect(active.getByRole('button')).toHaveCount(0);
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await noOverflow(page);
+});
+
+test('kanban keyboard moves reveal below-fold cards and preserve grid overrides on narrow screens', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const queue = board.getByRole('list', { name: 'Queue', exact: true });
+  const card = queue.getByRole('button', { name: 'Queued task 1', exact: true });
+  await card.focus();
+  await page.keyboard.press('Space');
+  for (let i = 0; i < 7; i++) await page.keyboard.press('ArrowDown');
+  await expect(queue.getByRole('button').last()).toHaveText('Queued task 1');
+  await expect(card).toBeFocused();
+  await expect.poll(() => card.evaluate(button => {
+    const card = button.closest('li').getBoundingClientRect();
+    const lane = button.closest('ul').getBoundingClientRect();
+    return card.top >= lane.top - 1 && card.bottom <= lane.bottom + 1;
+  })).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(queue.getByRole('button').first()).toHaveText('Queued task 1');
+  await expect(card).toBeFocused();
+  await expect.poll(() => queue.evaluate(list => list.scrollTop)).toBe(0);
+  await noOverflow(page);
+});
+
+test('kanban ignores another pointer and cancels the active pointer without losing cards', async ({ page }) => {
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const card = board.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  const original = await board.getByRole('list').evaluateAll(lists => lists.map(list => list.textContent));
+  const bounds = await card.boundingBox();
+  const point = { clientX: bounds.x + bounds.width / 2, clientY: bounds.y + bounds.height / 2, pointerType: 'touch', bubbles: true };
+  await card.locator('[data-kanban-drag-handle]').dispatchEvent('pointerdown', { ...point, pointerId: 41, button: 0 });
+  const send = (type, fields) => page.evaluate(({ type, fields }) => window.dispatchEvent(new PointerEvent(type, fields)), { type, fields });
+  await send('pointermove', { ...point, pointerId: 41, clientX: point.clientX - 35 });
+  const overlay = board.locator('[data-kanban-overlay="moving"]');
+  await expect(overlay).toBeVisible();
+  const heldBox = await overlay.boundingBox();
+  await send('pointermove', { ...point, pointerId: 42, clientX: point.clientX + 200 });
+  await send('pointerup', { ...point, pointerId: 42 });
+  await expect(overlay).toBeVisible();
+  const afterOtherPointer = await overlay.boundingBox();
+  expect(Math.abs(afterOtherPointer.x - heldBox.x)).toBeLessThanOrEqual(1);
+  await send('pointercancel', { ...point, pointerId: 41 });
+  await expect(overlay).toHaveCount(0);
+  await expect.poll(() => board.getByRole('list').evaluateAll(lists => lists.map(list => list.textContent))).toEqual(original);
+  await expect(card).toBeFocused();
+  await expect(board.getByRole('button')).toHaveCount(10);
+});
+
+test('kanban keeps a held card under a stationary pointer when its horizontal viewport scrolls', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const viewport = page.getByRole('region', { name: 'Scrollable workflow lanes', exact: true });
+  const card = board.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  await card.focus();
+  const box = await card.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 - 20, box.y + box.height / 2);
+  const overlay = board.locator('[data-kanban-overlay="moving"]');
+  await expect(overlay).toBeVisible();
+  const before = await overlay.boundingBox();
+  const scrollBefore = await viewport.evaluate(node => node.scrollLeft);
+  await viewport.evaluate(node => { node.scrollLeft += 30; });
+  await expect.poll(() => viewport.evaluate(node => node.scrollLeft)).toBeGreaterThan(scrollBefore + 20);
+  await expect.poll(async () => {
+    const after = await overlay.boundingBox();
+    return Math.abs(after.x - before.x) <= 2 && Math.abs(after.y - before.y) <= 2;
+  }).toBe(true);
+  await page.keyboard.press('Escape');
+  await page.mouse.up();
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await noOverflow(page);
+});
+
+test('kanban returning overlay can be picked up before it settles', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'interactions-kanban-board--playground', 'theme:paper;mode:light;motion:user');
+  const board = page.getByRole('group', { name: 'Example component workflow', exact: true });
+  const card = board.getByRole('button', { name: 'Review upstream API', exact: true });
+  await board.evaluate(node => node.addEventListener('pointerdown', event => { window.kanbanTestPointerId = event.pointerId; }, { once: true }));
+  const box = await card.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 55, box.y + box.height / 2 + 100, { steps: 6 });
+  await page.mouse.up();
+  const overlay = board.locator('[data-kanban-overlay="a"]');
+  await expect(overlay).toBeVisible();
+  // Hit and press in the same browser task: a spring can move between protocol calls.
+  const returning = await overlay.evaluate(node => {
+    const bounds = node.getBoundingClientRect();
+    const x = bounds.left + bounds.width / 2, y = bounds.top + bounds.height / 2;
+    const target = document.elementFromPoint(x, y);
+    if (!node.contains(target)) throw new Error('Returning card is clipped at its center');
+    target.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId: window.kanbanTestPointerId, pointerType: 'mouse', button: 0, buttons: 1, clientX: x, clientY: y }));
+    return { x, y };
+  });
+  const pressed = await overlay.boundingBox();
+  await page.mouse.move(returning.x + 8, returning.y);
+  await expect(card).toHaveAttribute('aria-pressed', 'true');
+  const lifted = await overlay.boundingBox();
+  expect(Math.abs(lifted.x - pressed.x - 8)).toBeLessThan(8);
+  expect(Math.abs(lifted.y - pressed.y)).toBeLessThan(8);
+  await page.keyboard.press('Escape');
+  await page.mouse.up();
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await expect(board.getByRole('button')).toHaveCount(4);
+  await expect(card).toHaveCount(1);
+});
+
+test('product artwork examples keep selection, source metadata and recovery usable', async ({ page }) => {
+  await openStory(page, 'blocks-record-detail--in-context');
+  const row = page.getByRole('button', { name: 'Inspect Keep the small things', exact: true });
+  await row.click();
+  const detail = page.viewportSize().width >= 1024
+    ? page.getByRole('complementary', { name: 'Record detail', exact: true })
+    : page.getByRole('dialog');
+  await expect(detail.getByRole('heading', { name: 'Keep the small things', exact: true })).toBeVisible();
+  await expect(detail).toContainText('1536 × 1024px');
+  const art = detail.getByRole('img', { name: 'Kith memory book with a photograph and coffee', exact: true });
+  await expect.poll(() => art.evaluate(image => image.complete && image.naturalWidth === 1536 && image.naturalHeight === 1024)).toBe(true);
+  await expect(detail.getByRole('link', { name: 'github.com', exact: true })).toHaveAttribute('href', /site\/public\/demo\/kith/);
+  await page.keyboard.press('Escape');
+  await expect(detail).toHaveCount(0);
+  await expect(row).toBeFocused();
+  await page.getByRole('button', { name: 'Error', exact: true }).click();
+  await expect(page.getByText('Could not load this view', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Try again', exact: true }).click();
+  await expect(row).toBeVisible();
+  await page.getByRole('button', { name: 'Empty', exact: true }).click();
+  await expect(row).toHaveCount(0);
+  await page.getByRole('button', { name: 'Restore example artwork', exact: true }).click();
+  await expect(row).toBeVisible();
+  await noOverflow(page);
+});
+
+test('selected product notes retain their exact source and custom popover paint is exposed', async ({ page }) => {
+  await openStory(page, 'blocks-quote-list--in-context');
+  const notes = page.getByRole('list', { name: 'CodeVetter product notes', exact: true });
+  await notes.getByRole('button').nth(1).click();
+  const selected = page.getByRole('complementary', { name: 'Selected excerpt', exact: true });
+  await expect(selected).toContainText('The product should prefer narrow, evidence-backed loops over broad "code intelligence" surfaces.');
+  await expect(selected.getByRole('link', { name: 'Read the original text', exact: true })).toHaveAttribute('href', /efb6744aaf0a229f6e0d24aac61bffaad636477e\/README.md#product-direction$/);
+  await noOverflow(page);
+  await openStory(page, 'motion-morphing-popover--playground');
+  const trigger = page.getByRole('button', { name: 'Library details', exact: true });
+  const paint = page.locator('[data-slot="morphing-popover-trigger-surface"]');
+  await expect(paint).toHaveClass(/bg-primary/);
+  expect(await paint.evaluate(node => getComputedStyle(node).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
+  await trigger.click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.locator('[data-slot="morphing-popover-surface"]')).toHaveClass(/shadow-sm/);
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+});
+
+test('kanban touch pans the lane from card bodies and drags only from its handle', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'Trusted touch dispatch uses the Chromium DevTools protocol.');
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const queue = page.getByRole('list', { name: 'Queue', exact: true });
+  const active = page.getByRole('list', { name: 'Active', exact: true });
+  const original = await queue.getByRole('button').allTextContents();
+  const box = await queue.boundingBox();
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: true });
+  const gesture = async (from, to) => {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...from, id: 1 }] });
+    for (let i = 1; i <= 8; i++) {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: from.x + (to.x - from.x) * i / 8, y: from.y + (to.y - from.y) * i / 8, id: 1 }] });
+      await page.waitForTimeout(20);
+    }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  };
+  const start = { x: box.x + box.width / 4, y: box.y + 180 };
+  await gesture(start, { x: start.x, y: start.y - 120 });
+  await expect.poll(() => queue.evaluate(list => list.scrollTop)).toBeGreaterThan(40);
+  await expect(queue.getByRole('button')).toHaveText(original);
+  await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
+  const visible = await queue.getByRole('button').evaluateAll(buttons => {
+    const lane = buttons[0].closest('ul').getBoundingClientRect();
+    return buttons.find(button => { const r = button.getBoundingClientRect(); return r.top >= lane.top + 2 && r.bottom <= lane.bottom - 2; }).textContent.trim();
+  });
+  const handle = queue.getByRole('button', { name: visible, exact: true }).locator('[data-kanban-drag-handle]');
+  const grip = await handle.boundingBox(), destination = await active.boundingBox();
+  await gesture({ x: grip.x + grip.width / 2, y: grip.y + grip.height / 2 }, { x: destination.x + destination.width / 2, y: destination.y + 32 });
+  await expect(active.getByRole('button', { name: visible, exact: true })).toHaveCount(1);
+  await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
+  await expect(page.getByRole('group', { name: 'Scrollable workflow', exact: true }).getByRole('button')).toHaveCount(10);
+  await cdp.detach();
+});

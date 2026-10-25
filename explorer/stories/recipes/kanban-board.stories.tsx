@@ -13,3 +13,15 @@ type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [columns,setColumns]=useState([{id:"research",title:"Research",cards:[{id:"a",title:"Review upstream API"},{id:"b",title:"Check source license"}]},{id:"adapt",title:"Adapt",cards:[{id:"c",title:"Use semantic tokens"}]},{id:"verify",title:"Verify",cards:[{id:"d",title:"Test keyboard controls"}]}]);return <C.KanbanBoard label="Example component workflow" columns={columns} onChange={setColumns}/>;}};
 
 export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.BoardContext, type: "code", language: "tsx" } } }, render: () => <BoardContext /> };
+
+// A controlled consumer with unequal lane scroll offsets and grid overrides.
+export const ScrollableLanes: Story = {
+    render: function Render() {
+        const [columns, setColumns] = useState<C.KanbanColumn[]>([
+            { id: "queue", title: "Queue", cards: Array.from({ length: 8 }, (_, i) => ({ id: `queued-${i + 1}`, title: `Queued task ${i + 1}` })) },
+            { id: "active", title: "Active", cards: [{ id: "moving", title: "Move between scrolled lanes" }] },
+            { id: "done", title: "Done", cards: [{ id: "finished", title: "Finished task" }] },
+        ]);
+        return <C.KanbanBoard label="Scrollable workflow" columns={columns} onChange={setColumns} className="h-[520px] gap-6" />;
+    },
+};

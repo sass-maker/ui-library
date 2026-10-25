@@ -60,7 +60,7 @@ export function openSearchPalette() {
  * Header button that opens the palette. Works without hydration: the
  * palette listens for clicks on `[data-search-trigger]`.
  */
-export function SearchTrigger({ label = "Search", compact = false, className }: { label?: string; compact?: boolean; className?: string }) {
+export function SearchTrigger({ label = "Search", compact = false, mobileCompact = false, className }: { label?: string; compact?: boolean; mobileCompact?: boolean; className?: string }) {
   return (
     <button
       type="button"
@@ -74,7 +74,7 @@ export function SearchTrigger({ label = "Search", compact = false, className }: 
       )}
     >
       <SearchIcon className="size-4 shrink-0" aria-hidden />
-      {!compact && <><span className="flex-1 truncate text-left">{label}</span><Kbd className="hidden sm:inline-flex">⌘K</Kbd></>}
+      {!compact && <><span className={cn("flex-1 truncate text-left", mobileCompact && "hidden sm:inline")}>{label}</span><Kbd className="hidden sm:inline-flex">⌘K</Kbd></>}
     </button>
   );
 }

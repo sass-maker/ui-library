@@ -18,7 +18,7 @@ The explorer follows the same dependency direction as the source:
 
 - **Atoms** — 21 primitives: inputs, actions, type-level labels, feedback and media.
   Import from `@saas-maker/ui/atoms/button` (and the other named atom exports).
-- **Molecules** — 77 focused compositions and effects, including labeled fields,
+- **Molecules** — 78 focused compositions and effects, including labeled fields,
   search, file cards, settings rows and existing interaction recipes.
   New compositions live under `@saas-maker/ui/molecules/*`; existing
   `components/*` and `recipes/*` imports keep working.
@@ -46,6 +46,16 @@ Overlays constrain long content to the available viewport; menus and form
 controls have roomier targets on coarse pointers. Dropdown and context menus
 default to non-modal interaction; pass `modal={true}` when outside interaction
 must be blocked. Dialogs retain modal focus containment.
+
+`ContextMenuTrigger` is focusable by default: Shift+F10 or the Context Menu key
+opens it from the keyboard. Pass `tabIndex={-1}` when an enclosing interface
+manages its focus order. `SearchTrigger` shows its label by default; use
+`mobileCompact` for a compact phone header and `compact` for an icon at every width.
+
+`MorphingPopover` keeps its measured anchor and content stationary while the
+decorative surface moves. Use `className` for layout and foreground text, and
+`surfaceClassName` for background, border and shadow styling. When upgrading a
+previously styled morph, move those paint utilities to `surfaceClassName`.
 
 `pnpm registry:sync` builds registry items and the explorer catalog from actual source imports;
 `pnpm registry:check` catches stale copied dependencies before publication.
