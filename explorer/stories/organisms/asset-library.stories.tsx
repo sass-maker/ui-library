@@ -19,7 +19,12 @@ export const Files: Story = { parameters: { docs: { source: { code: sourceSnippe
 
 export const FilesLoading: Story = { render: () => <AssetLibrary state={{ kind: "loading" }} /> };
 
-export const FilesEmpty: Story = { render: () => <AssetLibrary state={{ kind: "ready", files: [] }} /> };
+export const FilesEmpty: Story = { render: function Render() {
+  const [files, setFiles] = useState<typeof sampleFiles>([]);
+  return <AssetLibrary state={{ kind: "ready", files }} action={files.length
+    ? <Button variant="outline" onClick={() => setFiles([])}><RotateCcw />Reset example</Button>
+    : <Button onClick={() => setFiles(sampleFiles.slice(0, 1))}><Upload />Add example file</Button>} />;
+} };
 
 export const FilesError: Story = { render: function Render() { const [failed, setFailed] = useState(true); return <AssetLibrary state={failed ? { kind: "error", message: "The example connection was interrupted. Your files are still safe.", onRetry: () => setFailed(false) } : { kind: "ready", files: sampleFiles }} />; } };
 
