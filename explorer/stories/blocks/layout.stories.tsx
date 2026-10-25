@@ -7,4 +7,4 @@ import * as C from '@saas-maker/ui/blocks/layout';
 const meta={id: "blocks-layout", title: "Organisms/Blocks/Layout",parameters:{docs:{description:{component:"Align page sections, fact rows and action groups on a consistent reading measure.\n\nImport from `@saas-maker/ui/blocks/layout`. Compare presets, color modes, motion preferences and viewport widths using the toolbar. Upstream attribution is retained in THIRD_PARTY_NOTICES.md."}}}} satisfies Meta;
 export default meta;
 type Story=StoryObj;
-export const Playground:Story={render:function Render(){return <C.Container><C.Section size="compact"><C.SectionHeader eyebrow="Foundations" title="One shared measure" lede="Consistent page padding, type and spacing."/><C.FactRow items={["Token-driven", "Responsive", "Composable"]}/></C.Section></C.Container>;}};
+export const Playground:Story={render:function Render(){return <C.Container><C.Section size="compact"><C.SectionHeader eyebrow="Foundations" title="One shared measure" lede="Consistent page padding, type and spacing."/><C.FactRow className="mt-8" items={["Token-driven", "Responsive", "Composable"]}/></C.Section></C.Container>;}};

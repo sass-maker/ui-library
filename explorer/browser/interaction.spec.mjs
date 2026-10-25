@@ -1330,11 +1330,96 @@ test('collapsed search controls have a visible label or a compact footprint', as
   await expect(trigger).toBeFocused();
   await openStory(page, 'motion-dynamic-toolbar--playground');
   const search = page.getByRole('button', { name: 'Search components', exact: true });
-  const wrapperWidth = await search.evaluate(element => element.parentElement.getBoundingClientRect().width);
+  const wrapperWidth = await search.evaluate(element => element.closest('[data-slot="dynamic-toolbar"]').getBoundingClientRect().width);
   expect(wrapperWidth).toBeLessThanOrEqual((await search.boundingBox()).width + 32);
   await search.click();
   await expect(page.getByRole('searchbox', { name: 'Search components', exact: true })).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(search).toBeFocused();
+  await noOverflow(page);
+});
+
+test('expanding search preserves foreground proportions through interruption', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'motion-dynamic-toolbar--playground', 'theme:paper;mode:light;motion:user');
+  const toolbar = page.locator('[data-slot="dynamic-toolbar"]');
+  await toolbar.evaluate(element => {
+    window.toolbarMotion = { done: false, samples: [] };
+    element.addEventListener('click', () => {
+      const start = performance.now();
+      const frame = () => {
+        const svg = element.querySelector('button svg'), input = element.querySelector('input');
+        window.toolbarMotion.samples.push({
+          icon: svg.getBoundingClientRect().width,
+          width: element.getBoundingClientRect().width,
+          inputScale: input ? input.getBoundingClientRect().width / parseFloat(getComputedStyle(input).width) : 1,
+        });
+        if (performance.now() - start < 650) requestAnimationFrame(frame);
+        else window.toolbarMotion.done = true;
+      };
+      requestAnimationFrame(frame);
+    }, { once: true });
+  });
+  await page.getByRole('button', { name: 'Search components', exact: true }).click();
+  // Reverse the live surface projection, then reopen before it settles.
+  await page.waitForTimeout(90);
+  await page.getByRole('searchbox', { name: 'Search components', exact: true }).press('Escape');
+  await page.waitForTimeout(50);
+  await page.getByRole('button', { name: 'Search components', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.toolbarMotion.done)).toBe(true);
+  const samples = await page.evaluate(() => window.toolbarMotion.samples);
+  expect(samples.length).toBeGreaterThan(5);
+  expect(samples.every(sample => sample.icon >= 15.5 && sample.icon <= 16.5)).toBe(true);
+  expect(samples.every(sample => sample.inputScale >= .98 && sample.inputScale <= 1.02)).toBe(true);
+  expect(Math.max(...samples.map(sample => sample.width)) - Math.min(...samples.map(sample => sample.width))).toBeGreaterThan(50);
+  await expect(page.getByRole('searchbox', { name: 'Search components', exact: true })).toBeFocused();
+  await noOverflow(page);
+});
+
+test('ruled feature grids retain the section surface in incomplete rows', async ({ page }) => {
+  test.setTimeout(45000);
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1200 });
+    for (const columns of [2, 3, 4]) {
+      await page.goto(`/iframe.html?id=blocks-features--playground&args=columns:${columns};count:5&globals=theme:paper;mode:light;motion:reduced`);
+      const grid = page.getByRole('list');
+      await expect(grid.getByRole('listitem')).toHaveCount(5);
+      const cells = await grid.getByRole('listitem').evaluateAll(elements => elements.map(element => ({
+        top: parseFloat(getComputedStyle(element).borderTopWidth),
+        left: parseFloat(getComputedStyle(element).borderLeftWidth),
+      })));
+      const actualColumns = width < 640 ? 1 : width < 1024 ? 2 : columns;
+      expect(cells).toEqual(cells.map((_, index) => ({ top: index >= actualColumns ? 1 : 0, left: index % actualColumns ? 1 : 0 })));
+      // An absent cell must show the surrounding section, not a border-colored block.
+      await expect(grid).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      await noOverflow(page);
+    }
+  }
+});
+
+test('image comparison exposes a visible handle that follows native input', async ({ page }) => {
+  await openStory(page, 'motion-image-comparison--in-context');
+  const slider = page.getByRole('slider', { name: 'Compare images', exact: true });
+  const handle = page.locator('[data-slot="comparison-handle"]');
+  await expect(handle).toBeVisible();
+  const handleBox = await handle.boundingBox();
+  expect(handleBox.width).toBeGreaterThanOrEqual(36);
+  expect(handleBox.height).toBeGreaterThanOrEqual(36);
+  for (const [key, value] of [['Home', 0], ['ArrowRight', 1], ['End', 100], ['ArrowLeft', 99]]) {
+    await slider.press(key);
+    await expect(slider).toHaveValue(String(value));
+    await expect.poll(async () => {
+      const track = await slider.boundingBox(), grip = await handle.boundingBox();
+      return Math.abs(grip.x + grip.width / 2 - track.x - track.width * value / 100);
+    }).toBeLessThan(1.5);
+  }
+  const track = await slider.boundingBox();
+  await page.mouse.move(track.x + track.width / 2, track.y + track.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(track.x + track.width * .75, track.y + track.height / 2, { steps: 4 });
+  await page.mouse.up();
+  const value = Number(await slider.inputValue());
+  expect(value).toBeGreaterThan(70);
+  expect(value).toBeLessThan(80);
   await noOverflow(page);
 });

@@ -227,6 +227,7 @@ for (const width of [390, 820, 1440]) {
           ['avatars', 'data-avatar-stack--playground'],
           ['search', 'blocks-search-palette--playground'],
           ['dynamic-toolbar', 'motion-dynamic-toolbar--playground'],
+          ['features', 'blocks-features--playground'],
         ]) {
           await openStory(page, id, globals);
           if (name === 'navigation') {

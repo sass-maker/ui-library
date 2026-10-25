@@ -6,6 +6,7 @@
 'use client';
 import { cn } from '../lib/utils';
 import { useState, createContext, useContext } from 'react';
+import { ArrowLeftRight } from 'lucide-react';
 import {
   motion,
   MotionValue,
@@ -133,7 +134,7 @@ const ImageComparisonSlider = ({
   className,
   children,
 }: {
-  className: string;
+  className?: string;
   children?: React.ReactNode;
 }) => {
   const { motionSliderPosition } = useContext(ImageComparisonContext)!;
@@ -142,12 +143,13 @@ const ImageComparisonSlider = ({
 
   return (
     <motion.div
-      className={cn('absolute bottom-0 top-0 w-1 cursor-ew-resize', className)}
+      aria-hidden
+      className={cn('pointer-events-none absolute bottom-0 top-0 w-0.5 -translate-x-1/2 bg-white/90', className)}
       style={{
         left,
       }}
     >
-      {children}
+      {children === undefined ? <span data-slot="comparison-handle" className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-sm"><ArrowLeftRight className="size-4" /></span> : children}
     </motion.div>
   );
 };
