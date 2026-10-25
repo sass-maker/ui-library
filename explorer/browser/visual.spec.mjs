@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { fileURLToPath } from 'node:url';
 import { noOverflow, openStory } from './helpers.mjs';
 
 for (const width of [390, 820, 1440]) {
@@ -236,11 +235,13 @@ for (const width of [390, 820, 1440]) {
         }))).toBe(true);
         await expect(viewport).toHaveCSS('opacity', '1');
         await expect(viewport.locator('[data-slot="navigation-menu-content"]')).toHaveCSS('opacity', '1');
+        // Focusing during Radix's first size measurement can scroll its overflow-hidden
+        // viewport by the two border pixels. Capture the same resting scroll origin.
+        await viewport.evaluate(element => element.scrollTo(0, 0));
+        await expect.poll(() => viewport.evaluate(element => [element.scrollLeft, element.scrollTop])).toEqual([0, 0]);
         await noOverflow(page);
-        // Canonicalize the resting endpoint without a retained animation/compositor layer.
         await expect(page).toHaveScreenshot(`finish-navigation-${suffix}.png`, {
           fullPage: width > 820, animations: 'disabled',
-          stylePath: fileURLToPath(new URL('./navigation-snapshot.css', import.meta.url)),
         });
       });
       test(`catalog state finishes ${suffix}`, async ({ page }) => {
