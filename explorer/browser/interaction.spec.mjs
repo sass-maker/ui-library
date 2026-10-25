@@ -2624,8 +2624,15 @@ test('slider targets accept off-center input without enlarging the visible contr
     const point = fraction => orientation === 'horizontal'
       ? { x: box.x + box.width * fraction, y: box.y + box.height / 2 + (coarse ? 16 : 0) }
       : { x: box.x + box.width / 2 + (coarse ? 16 : 0), y: box.y + box.height * (1 - fraction) };
-    await gesture(point(.35));
-    await expect(minimum).toHaveAttribute('aria-valuenow', '35');
+    const hits = await page.evaluate(points => points.map(point => {
+      const node = document.elementFromPoint(point.x, point.y);
+      return { point, slot: node?.getAttribute('data-slot'), thumb: node?.closest('[role="slider"]')?.getAttribute('aria-label') ?? null, insideSlider: !!node?.closest('[data-slot="slider"]') };
+    }), [point(.35), point(.4)]);
+    await testInfo.attach(`slider-input-hit-${theme}-${orientation}`, { body: JSON.stringify({ box, thumb, coarse, hits }), contentType: 'application/json' });
+    // Seeking targets the track; padded thumb hits intentionally grab without jumping.
+    expect(hits[1].insideSlider).toBe(true); expect(hits[1].thumb).toBe(null);
+    await gesture(point(.4));
+    await expect(minimum).toHaveAttribute('aria-valuenow', '40');
     const current = await minimum.boundingBox();
     await gesture({ x: current.x + current.width / 2, y: current.y + current.height / 2 }, point(.55));
     await expect.poll(async () => Number(await minimum.getAttribute('aria-valuenow'))).toBeGreaterThanOrEqual(54);
