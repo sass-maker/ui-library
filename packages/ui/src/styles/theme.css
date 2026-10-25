@@ -16,7 +16,9 @@
  * product changes identity through tokens and imagery, never by forking a
  * component.
  */
-:root {
+/* A scoped preset starts from the same complete defaults as a document.
+   Aliases must resolve here, not to the enclosing product's computed values. */
+:root, [data-theme] {
   --surface-backdrop-gradient: linear-gradient(135deg, color-mix(in oklch, var(--brand-soft) 65%, transparent), transparent 65%);
   --surface-backdrop-glow: radial-gradient(ellipse at 75% 12%, color-mix(in oklch, var(--brand) 12%, transparent), transparent 65%);
   --surface-backdrop-grid: linear-gradient(color-mix(in oklch, var(--border) 45%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklch, var(--border) 45%, transparent) 1px, transparent 1px);
@@ -45,6 +47,7 @@
   --brand-soft: oklch(0.95 0.03 264);
   /* Brand as text on the page background; light brands set a deeper ink. */
   --brand-ink: var(--brand);
+  --accent-ink: var(--brand);
 
   --background: oklch(0.993 0 0);
   --foreground: oklch(0.17 0.005 270);

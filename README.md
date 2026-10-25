@@ -207,6 +207,8 @@ form, with copyable setup and a product action wrapper.
   portalled dialogs/menus inherit one identity. Product CSS loaded after the
   theme can override semantic color roles, font roles and `--radius`. Keep
   foreground/background token pairs together and verify their contrast.
+  Embedded previews can set both attributes on their boundary; each preset
+  resets its default roles so a parent product's fonts and accents cannot leak.
 - Use existing `variant`, `size`, `className` and `data-slot` hooks for repeatable
   visual choices. `Button` exports `buttonVariants`; `asChild` preserves native
   links when an action navigates. A product wrapper should forward the shared
