@@ -1479,7 +1479,7 @@ for (const timing of ['nested', 'physical']) test(`popover completion contains $
   }
 });
 
-test('popover entrance recovers from resize and same-layout keyboard rerenders', async ({ page }, testInfo) => {
+test('popover entrance recovers from resize and preserves visible keyboard edits', async ({ page }, testInfo) => {
   test.setTimeout(90_000);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.addInitScript(() => {
@@ -1514,6 +1514,8 @@ test('popover entrance recovers from resize and same-layout keyboard rerenders',
     if (action === 'resize') await page.setViewportSize({ ...viewport, width: viewport.width === 1440 ? 1400 : viewport.width - 10 });
     else {
       await expect(page.getByRole('textbox', { name: 'Collection note' })).toBeFocused();
+      // Autofocus remains Radix-owned; edits wait until the foreground is revealed.
+      await expect(foreground).toHaveCSS('opacity', '1');
       await page.keyboard.type('Keep');
       await expect(page.locator('[data-popover-ownership]')).toHaveAttribute('data-note', 'Keep');
     }
@@ -1617,6 +1619,53 @@ test('popover styling survives snapped openings without revealing during delayed
     await page.keyboard.press('Escape'); await expect(page.getByRole('dialog')).toHaveCount(0); await expect(trigger).toBeFocused();
     await expect.poll(() => page.evaluate(() => window.popoverPendingFrames())).toBe(0);
   }
+});
+
+test('popover hidden foreground blocks activation and editing until revealed', async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.addInitScript(() => {
+    const request = window.requestAnimationFrame.bind(window), cancel = window.cancelAnimationFrame.bind(window), pending = new Set();
+    window.requestAnimationFrame = callback => { const handle = request(time => { pending.delete(handle); callback(time); }); pending.add(handle); return handle; };
+    window.cancelAnimationFrame = handle => { pending.delete(handle); cancel(handle); };
+    window.popoverPendingFrames = () => pending.size;
+  });
+  await page.goto('/iframe.html?id=motion-morphing-popover--playground&args=surfaceTiming:configured;surfaceDuration:2;surfaceDelay:1;interactive:true&globals=theme:paper;mode:light;motion:user');
+  const fixture = page.locator('[data-popover-ownership]');
+  await expect(fixture).toHaveAttribute('data-surface-duration', '2');
+  await expect(fixture).toHaveAttribute('data-surface-delay', '1');
+  const trigger = page.getByRole('button', { name: 'Library details', exact: true }), panel = page.getByRole('dialog');
+  const surface = page.locator('[data-slot="morphing-popover-surface"]'), foreground = page.locator('[data-slot="morphing-popover-content"] > .relative');
+  const input = page.getByRole('textbox', { name: 'Collection note', exact: true }), close = page.getByRole('button', { name: 'Close', exact: true });
+  const tab = testInfo.project.name.startsWith('webkit') ? 'Alt+Tab' : 'Tab';
+  const back = testInfo.project.name.startsWith('webkit') ? 'Alt+Shift+Tab' : 'Shift+Tab';
+  const snapshot = label => page.evaluate(label => {
+    const node = document.querySelector('[data-slot="morphing-popover-content"] > .relative');
+    return { label, opacity: node && getComputedStyle(node).opacity, activeTag: document.activeElement?.tagName, activeText: document.activeElement?.textContent, input: document.querySelector('input')?.value, requests: document.querySelector('[data-popover-ownership]')?.getAttribute('data-open-requests') };
+  }, label);
+  await trigger.click(); await surface.waitFor(); await expect(foreground).toHaveCSS('opacity', '0');
+  await expect(input).toBeFocused();
+  await page.keyboard.press(tab); await expect(close).toBeFocused();
+  await page.keyboard.press('Enter'); await page.keyboard.press('Space');
+  await testInfo.attach('hidden-keyboard-activation', { body: JSON.stringify(await snapshot('after-hidden-Enter-Space')), contentType: 'application/json' });
+  await expect(panel).toHaveCount(1); await expect(close).toBeFocused(); await expect(foreground).toHaveCSS('opacity', '0');
+  await page.keyboard.press(back); await expect(input).toBeFocused();
+  await page.keyboard.type('x');
+  await testInfo.attach('hidden-keyboard-edit', { body: JSON.stringify(await snapshot('after-hidden-typing')), contentType: 'application/json' });
+  await expect(input).toHaveValue(''); await expect(foreground).toHaveCSS('opacity', '0');
+  await expect(foreground).toHaveCSS('opacity', '1');
+  await page.keyboard.type('Keep'); await expect(input).toHaveValue('Keep'); await expect(fixture).toHaveAttribute('data-note', 'Keep');
+  await testInfo.attach('visible-keyboard-editor', { body: await page.screenshot({ animations: 'allow' }), contentType: 'image/png' });
+  await page.keyboard.press(tab); await expect(close).toBeFocused(); await page.keyboard.press('Space');
+  await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+  await trigger.click(); await expect(input).toBeFocused(); await expect(foreground).toHaveCSS('opacity', '1');
+  await expect(input).toHaveValue('Keep'); await page.keyboard.press(tab); await expect(close).toBeFocused(); await page.keyboard.press('Enter');
+  await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+  await trigger.click(); await surface.waitFor(); await expect(foreground).toHaveCSS('opacity', '0');
+  await page.keyboard.press('Escape'); await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+  await expect(fixture).toHaveAttribute('data-open-requests', 'true,false,true,false,true,false');
+  await expect.poll(() => page.evaluate(() => window.popoverPendingFrames())).toBe(0);
+  await noOverflow(page);
 });
 
 test('popover ownership preserves callbacks, dismissal, external close and clean reopen', async ({ page }, testInfo) => {
