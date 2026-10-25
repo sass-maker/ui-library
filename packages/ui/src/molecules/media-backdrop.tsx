@@ -24,7 +24,7 @@ export type MediaBackdropProps = {
 };
 
 const layoutStyles: Record<NonNullable<MediaBackdropProps["layout"]>, {
-  root: string; poster: string; video: string; gradient: string; content: string; controls: string;
+  root: string; poster: string; video: string; gradient: string; content: string; controls: string; transport: string; label: string;
 }> = {
   cover: {
     root: "flex min-h-[30rem] flex-col justify-end",
@@ -33,6 +33,8 @@ const layoutStyles: Record<NonNullable<MediaBackdropProps["layout"]>, {
     gradient: "absolute inset-0",
     content: "relative",
     controls: "relative",
+    transport: "",
+    label: "",
   },
   stacked: {
     root: "grid min-h-0 grid-cols-1 grid-rows-[auto_auto]",
@@ -41,6 +43,8 @@ const layoutStyles: Record<NonNullable<MediaBackdropProps["layout"]>, {
     gradient: "hidden",
     content: "relative col-start-1 col-end-2 row-start-2 row-end-3",
     controls: "absolute inset-x-0 bottom-0 col-start-1 col-end-2 row-start-1 row-end-2",
+    transport: "max-sm:size-11 max-sm:justify-center max-sm:p-0",
+    label: "sr-only sm:not-sr-only",
   },
 };
 
@@ -143,9 +147,9 @@ function BackdropPlayback({ poster, posterSize, layout = "cover", sources = [], 
     <div aria-hidden className={cn("pointer-events-none bg-gradient-to-t from-black/90 via-black/65 to-black/10", styles.gradient)} />
     <div className={cn("p-6 sm:p-10 lg:p-14", styles.content, contentClassName)}>{children}</div>
     {sources.length > 0 && <div className={cn("flex flex-wrap items-center gap-3 px-6 pb-6 sm:px-10 sm:pb-8 lg:px-14", styles.controls)}>
-      <button type="button" onClick={toggle} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/35 bg-black/55 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm outline-none transition-colors hover:bg-black/75 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950">
+      <button type="button" onClick={toggle} className={cn("inline-flex min-h-11 items-center gap-2 rounded-full border border-white/35 bg-black/55 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm outline-none transition-colors hover:bg-black/75 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950", styles.transport)}>
         {failed ? <RotateCcw aria-hidden className="size-3.5" /> : playing ? <Pause aria-hidden className="size-3.5" /> : <Play aria-hidden className="size-3.5" />}
-        {failed ? "Retry background video" : playing ? "Pause background video" : "Play background video"}
+        <span className={styles.label}>{failed ? "Retry background video" : playing ? "Pause background video" : "Play background video"}</span>
       </button>
       {failed && <p role="status" className="text-xs text-white">Video unavailable. The artwork stays visible.</p>}
     </div>}

@@ -68,6 +68,7 @@ export function InlineEdit({ label, value, onSave, placeholder, multiline = fals
         clearTimeout(savedTimer.current);
         savedTimer.current = setTimeout(() => setSaved(false), SAVED_FOR);
     };
+    // The in-flow mirror alone sizes the grid; editors overlay its exact box.
     // Identical box, padding, font and line-height for the display and the
     // editor, so the swap doesn't move a single glyph.
     const box = cn("col-start-1 row-start-1 block w-full rounded-lg py-1 pr-9 pl-2 text-left", multiline ? "whitespace-pre-wrap break-words" : "truncate whitespace-pre", className);
@@ -82,8 +83,8 @@ export function InlineEdit({ label, value, onSave, placeholder, multiline = fals
     className={cn(box, "cursor-text outline-hidden transition-[background-color] duration-150 ease-out", "hover:bg-foreground/[0.04] focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground", editing && "invisible", empty && "text-muted-foreground")}>
         <span className="sr-only">Edit {label}: </span>
         {/* While editing, it mirrors the draft so a textarea grows with it.
-            The trailing space keeps a new empty line from collapsing. */}
-        {editing ? `${draft} ` : empty ? placeholder : value}
+            A zero-width sentinel keeps a new empty line from collapsing without widening it. */}
+        {editing ? `${draft}\u200b` : empty ? placeholder : value}
       </button>
 
       {editing &&
@@ -97,7 +98,7 @@ export function InlineEdit({ label, value, onSave, placeholder, multiline = fals
                         e.preventDefault();
                         finish(false, true);
                     }
-                }} className={cn(box, "h-full resize-none overflow-hidden bg-background text-foreground ring-[1.5px] ring-foreground/25 outline-hidden placeholder:text-muted-foreground")}/>) : (<input ref={fieldRef} aria-label={label} value={draft} placeholder={placeholder} onChange={(e) => setDraft(e.target.value)} onBlur={() => finish(true, false)} onKeyDown={(e) => {
+                }} className={cn(box, "absolute inset-0 min-w-0 h-full resize-none overflow-hidden bg-background text-foreground ring-[1.5px] ring-foreground/25 outline-hidden placeholder:text-muted-foreground")}/>) : (<input ref={fieldRef} aria-label={label} value={draft} placeholder={placeholder} onChange={(e) => setDraft(e.target.value)} onBlur={() => finish(true, false)} onKeyDown={(e) => {
                     if (e.key === "Enter") {
                         e.preventDefault();
                         finish(true, true);
@@ -106,12 +107,12 @@ export function InlineEdit({ label, value, onSave, placeholder, multiline = fals
                         e.preventDefault();
                         finish(false, true);
                     }
-                }} className={cn(box, "h-full bg-background text-foreground ring-[1.5px] ring-foreground/25 outline-hidden placeholder:text-muted-foreground")}/>))}
+                }} className={cn(box, "absolute inset-0 min-w-0 h-full bg-background text-foreground ring-[1.5px] ring-foreground/25 outline-hidden placeholder:text-muted-foreground")}/>))}
 
-      {/* Pencil on hover or focus, a check right after saving. Pinned to the
+      {/* Pencil on hover, focus or no-hover devices; a check right after saving. Pinned to the
             first line's height so it stays put as the text grows. */}
       <span aria-hidden className={cn("pointer-events-none absolute top-1 right-1.5 grid size-6 place-items-center text-muted-foreground", editing && "invisible")}>
-        <SwapIcon visible={!saved} reduceMotion={reduceMotion} className="opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100 group-has-[:focus-visible]:opacity-100">
+        <SwapIcon visible={!saved} reduceMotion={reduceMotion} className="opacity-0 transition-opacity duration-150 ease-out [@media(hover:none)]:opacity-100 group-hover:opacity-100 group-has-[:focus-visible]:opacity-100">
           <path d="M9.75 3.75 12.25 6.25M3.25 12.75l.6-2.6 6.9-6.9a1.25 1.25 0 0 1 1.77 0l.73.73a1.25 1.25 0 0 1 0 1.77l-6.9 6.9Z"/>
         </SwapIcon>
         <SwapIcon visible={saved} reduceMotion={reduceMotion} className="text-foreground">
