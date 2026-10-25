@@ -2679,8 +2679,8 @@ test('isolated examples expose selected states and complete their advertised loc
     await clear.click();
     await expect(page.getByText('Freed 12.0 GB', { exact: true })).toBeVisible();
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    await expect(page.getByText('12.0 GB can be cleared', { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Cache 12.0 GB', exact: true })).toHaveCount(0);
+    expect(await page.getByText('12.0 GB can be cleared', { exact: true }).count()).toBe(0);
+    expect(await page.getByRole('button', { name: 'Cache 12.0 GB', exact: true }).count()).toBe(0);
     await expect(page.getByText('Cache cleared, 62.0 GB of 100 GB used', { exact: true })).toHaveAttribute('aria-live', 'polite');
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(clear).toBeVisible();
