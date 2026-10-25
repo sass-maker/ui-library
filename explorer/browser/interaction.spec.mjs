@@ -1270,58 +1270,7 @@ test('morphing popover settles around a stable positioner in normal and reduced 
   }
 });
 
-test('a decorative video backdrop loads deliberately, pauses offscreen and follows live motion preferences', async ({ page }, testInfo) => {
-  await page.addInitScript(() => {
-    const history = window.__backdropEvents = [];
-    const record = (kind, media, detail = {}) => {
-      const backdrop = media?.closest('[data-media-backdrop]') ?? document.querySelector('[data-media-backdrop]');
-      if (media && !media.closest('[data-media-backdrop]')) return;
-      const element = media ?? backdrop?.querySelector('video');
-      history.push({ kind, time: performance.now(), hidden: document.hidden, visibility: document.visibilityState,
-        scrollY: window.scrollY, paused: element?.paused, currentTime: element?.currentTime,
-        readyState: element?.readyState, networkState: element?.networkState, phase: backdrop?.dataset.mediaBackdrop, ...detail });
-      if (history.length > 120) history.shift();
-    };
-    const play = HTMLMediaElement.prototype.play;
-    HTMLMediaElement.prototype.play = function (...args) {
-      record('play-call', this);
-      const result = Reflect.apply(play, this, args);
-      result.then(() => record('play-resolved', this), error => record('play-rejected', this, { error: error.name, message: error.message }));
-      return result;
-    };
-    const pause = HTMLMediaElement.prototype.pause;
-    HTMLMediaElement.prototype.pause = function (...args) {
-      record('pause-call', this, { stack: new Error().stack?.split('\n').slice(0, 4).join('\n') });
-      return Reflect.apply(pause, this, args);
-    };
-    const Observer = window.IntersectionObserver;
-    window.IntersectionObserver = class extends Observer {
-      constructor(callback, options) {
-        super((entries, observer) => {
-          for (const entry of entries) if (entry.target.matches('[data-media-backdrop]')) {
-            record('intersection', entry.target.querySelector('video'), { entryTime: entry.time, intersecting: entry.isIntersecting,
-              top: entry.boundingClientRect.top, bottom: entry.boundingClientRect.bottom });
-          }
-          callback(entries, observer);
-        }, options);
-      }
-    };
-    for (const event of ['play', 'playing', 'pause', 'error', 'waiting', 'canplay']) {
-      document.addEventListener(event, notification => {
-        if (notification.target instanceof HTMLMediaElement) record(event, notification.target);
-      }, true);
-    }
-    document.addEventListener('visibilitychange', () => record('visibilitychange'));
-    document.addEventListener('click', event => {
-      const backdrop = event.target.closest?.('[data-media-backdrop]');
-      if (backdrop) {
-        const bounds = backdrop.getBoundingClientRect();
-        record('click', backdrop.querySelector('video'), { action: event.target.closest('button')?.textContent,
-          top: bounds.top, bottom: bounds.bottom, innerHeight: window.innerHeight });
-      }
-    }, true);
-  });
-  try {
+test('a decorative video backdrop loads deliberately, pauses offscreen and follows live motion preferences', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const requests = [];
   page.on('request', request => { if (request.url().includes('hobby-horizon.mp4')) requests.push(request.url()); });
@@ -1339,21 +1288,22 @@ test('a decorative video backdrop loads deliberately, pauses offscreen and follo
   await expect(video).toHaveJSProperty('paused', true);
   await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
   await expect(video).toHaveJSProperty('paused', false);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
   await page.evaluate(() => { document.body.style.paddingBottom = '120vh'; window.scrollTo(0, document.body.scrollHeight); });
   await expect(video).toHaveJSProperty('paused', true);
   await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(backdrop).toBeInViewport();
   await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
   await expect(video).toHaveJSProperty('paused', false);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(video).toHaveJSProperty('paused', true);
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
   await noOverflow(page);
-  } catch (error) {
-    const history = await page.evaluate(() => window.__backdropEvents ?? []);
-    console.log('Backdrop event history: ' + JSON.stringify(history));
-    await testInfo.attach('backdrop-event-history', { body: JSON.stringify(history, null, 2), contentType: 'application/json' });
-    throw error;
-  }
 });
 
 test('background controls reconcile delayed media events with actual playback', async ({ page }) => {
@@ -1365,6 +1315,22 @@ test('background controls reconcile delayed media events with actual playback', 
   await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
   // A queued event can describe an earlier state; the element owns the current state.
   await video.evaluate(element => element.pause());
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await video.evaluate(element => {
+    const trigger = element.closest('[data-media-backdrop]').querySelector('button');
+    if (trigger.textContent.trim() !== 'Play background video') throw new Error('The visible control must request Play.');
+    // Native playback may resume before its queued event updates the rendered control.
+    void element.play().catch(() => {});
+    trigger.click();
+  });
+  await expect(video).toHaveJSProperty('paused', false);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
+  await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  // A native re-entry resume cannot override an explicit controller pause.
+  await video.evaluate(element => element.play().catch(() => {}));
   await expect(video).toHaveJSProperty('paused', true);
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
   await video.evaluate(async element => {
