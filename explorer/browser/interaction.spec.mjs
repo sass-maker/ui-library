@@ -49,15 +49,18 @@ test('the sheet inspector applies real properties and contains a nested select',
   expect(target.height).toBeGreaterThanOrEqual(44);
   const originalViewport = page.viewportSize();
   const pagePreview = page.locator('#storybook-root').getByRole('button', { name: 'Continue', exact: true, includeHidden: true });
+  const pageTrigger = page.locator('#storybook-root').getByRole('button', { name: 'Open inspector', exact: true, includeHidden: true });
   for (const width of [390, 820, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
     await expect.poll(async () => {
-      const preview = await pagePreview.boundingBox();
       const panel = await sheet.boundingBox();
-      const clear = preview.x + preview.width <= panel.x + 1;
-      const covered = preview.x >= panel.x - 1 && preview.x + preview.width <= panel.x + panel.width + 1;
-      return width < 640 ? clear || covered : clear;
-    }, { message: `the page preview is whole or fully covered at${width}px` }).toBe(true);
+      const controls = await Promise.all([pagePreview, pageTrigger].map(control => control.boundingBox()));
+      return controls.every(control => {
+        const clear = control.x + control.width <= panel.x + 1;
+        const covered = control.x >= panel.x - 1 && control.x + control.width <= panel.x + panel.width + 1;
+        return width < 640 ? clear || covered : clear;
+      });
+    }, { message: `the page controls are whole or fully covered at${width}px` }).toBe(true);
   }
   await page.setViewportSize(originalViewport);
   await sheet.getByRole('combobox', { name: 'Variant', exact: true }).click();
