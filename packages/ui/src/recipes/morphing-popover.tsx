@@ -41,20 +41,39 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
   const { id, open, ready, setReady } = useContext(Context);
   const reduced = useReducedMotion();
   const content = useRef<HTMLDivElement>(null);
+  const surface = useRef<HTMLDivElement>(null);
   const [settled, setSettled] = useState(false);
-  const entrance = useMemo(() => ({ started: false, cancelled: false }), [open, ready, reduced]);
+  const entrance = useMemo<{ cancelled: boolean; complete?: () => void }>(() => ({ cancelled: false }), [open, ready, reduced]);
   useLayoutEffect(() => {
-    if (!open || !ready) { setSettled(false); return; }
-    entrance.started = false;
     entrance.cancelled = false;
-    // Layout animation starts in Motion's update phase. After rendering, a
-    // missing start means this opening has no projection animation to await.
-    const revealIfIdle = () => {
-      if (!entrance.cancelled && !entrance.started) setSettled(true);
+    if (!open || !ready) { setSettled(false); return () => { entrance.cancelled = true; }; }
+    let finished = false, previous: DOMRect | undefined;
+    const complete = () => {
+      if (entrance.cancelled || finished) return;
+      finished = true;
+      cancelFrame(observe);
+      setSettled(true);
     };
-    if (reduced) setSettled(true);
-    else frame.postRender(revealIfIdle);
-    return () => { entrance.cancelled = true; cancelFrame(revealIfIdle); };
+    // Resize and no-layout updates can snap Motion's projection without calling
+    // onLayoutAnimationComplete. Observe only entrance paint, after Motion renders.
+    const observe = () => {
+      if (entrance.cancelled || finished) { cancelFrame(observe); return; }
+      const target = content.current, paint = surface.current;
+      if (!target || !paint) { previous = undefined; return; }
+      const targetStyle = getComputedStyle(target), paintStyle = getComputedStyle(paint);
+      const box = target.getBoundingClientRect(), painted = paint.getBoundingClientRect();
+      const keys = ["x", "y", "width", "height"] as const;
+      const visible = targetStyle.visibility === "visible" && paintStyle.visibility === "visible" && Number(paintStyle.opacity) > 0 && box.width > 0 && box.height > 0 && box.bottom > 0 && box.right > 0 && box.top < innerHeight && box.left < innerWidth;
+      const matches = visible && paintStyle.transform === "none" && keys.every(key => Math.abs(painted[key] - box[key]) < .5);
+      // Two matching rendered paints distinguish stable settlement from a crossing.
+      const prior = previous;
+      if (matches && prior && keys.every(key => Math.abs(prior[key] - box[key]) < .5)) complete();
+      previous = matches ? box : undefined;
+    };
+    entrance.complete = complete;
+    if (reduced) complete();
+    else frame.postRender(observe, true);
+    return () => { entrance.cancelled = true; entrance.complete = undefined; cancelFrame(observe); };
   }, [open, ready, reduced, entrance]);
   const reveal = ready && (reduced || settled);
   useLayoutEffect(() => {
@@ -74,9 +93,8 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
   }, [open, setReady]);
   return <Primitive.Portal><Primitive.Content ref={content} data-slot="morphing-popover-content" side={side} align={align} sideOffset={8} collisionPadding={16}
     className={cn("relative z-50 w-80 max-w-[calc(100vw-2rem)] rounded-xl p-5 text-popover-foreground outline-none", className)}>
-    {ready && <motion.div data-slot="morphing-popover-surface" aria-hidden initial={false} layoutId={reduced ? undefined : `${id}-surface`} transition={reduced ? { duration: 0 } : transition ?? settle}
-      onLayoutAnimationStart={() => { if (!entrance.cancelled) entrance.started = true; }}
-      onLayoutAnimationComplete={() => { if (!entrance.cancelled) setSettled(true); }}
+    {ready && <motion.div ref={surface} data-slot="morphing-popover-surface" aria-hidden initial={false} layoutId={reduced ? undefined : `${id}-surface`} transition={reduced ? { duration: 0 } : transition ?? settle}
+      onLayoutAnimationComplete={() => entrance.complete?.()}
       className={cn("pointer-events-none absolute inset-0 rounded-[inherit] border border-border bg-popover shadow-lg", surfaceClassName)} />}
     <motion.div className={cn("relative", !reveal && "pointer-events-none")} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: reveal ? 1 : 0 }} transition={{ duration: reduced ? 0 : .16 }}>{children}</motion.div>
   </Primitive.Content></Primitive.Portal>;
