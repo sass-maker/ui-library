@@ -1299,6 +1299,28 @@ test('a decorative video backdrop loads deliberately, pauses offscreen and follo
   await noOverflow(page);
 });
 
+test('background controls reconcile delayed media events with actual playback', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'molecules-media-media-backdrop--video-cover', 'theme:paper;mode:light;motion:user');
+  const backdrop = page.getByRole('region', { name: 'Live adventure preview', exact: true });
+  const video = backdrop.locator('video');
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  // A queued event can describe an earlier state; the element owns the current state.
+  await video.evaluate(element => element.pause());
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await video.evaluate(element => element.dispatchEvent(new Event('play', { bubbles: true })));
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
+  await video.evaluate(element => element.dispatchEvent(new Event('pause', { bubbles: true })));
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
+  await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+});
+
 test('background autoplay respects reduced motion and data saving before fetching video', async ({ page }) => {
   const requests = [];
   page.on('request', request => { if (request.url().includes('hobby-horizon.mp4')) requests.push(request.url()); });

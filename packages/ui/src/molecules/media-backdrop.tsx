@@ -27,6 +27,7 @@ export function MediaBackdrop(props: MediaBackdropProps) {
 function BackdropPlayback({ poster, sources = [], children, label, autoPlay = false, focalPoint = "50% 50%", className, contentClassName }: MediaBackdropProps) {
   const root = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const visibilityObserver = useRef<IntersectionObserver | null>(null);
   const autoAttempted = useRef(false);
   const failures = useRef(new Set<string>());
   const reduced = useReducedMotion();
@@ -49,15 +50,16 @@ function BackdropPlayback({ poster, sources = [], children, label, autoPlay = fa
     if (!element) return;
     const observer = new IntersectionObserver(([entry]) => {
       setVisible(entry.isIntersecting);
-      if (!entry.isIntersecting) video.current?.pause();
+      if (!entry.isIntersecting) { video.current?.pause(); setPlaying(false); }
     });
+    visibilityObserver.current = observer;
     observer.observe(element);
-    const hidden = () => { if (document.hidden) video.current?.pause(); };
+    const hidden = () => { if (document.hidden) { video.current?.pause(); setPlaying(false); } };
     document.addEventListener("visibilitychange", hidden);
-    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", hidden); video.current?.pause(); };
+    return () => { observer.disconnect(); visibilityObserver.current = null; document.removeEventListener("visibilitychange", hidden); video.current?.pause(); };
   }, []);
   useEffect(() => {
-    if (reduced || saveData) video.current?.pause();
+    if (reduced || saveData) { video.current?.pause(); setPlaying(false); }
   }, [reduced, saveData]);
   useEffect(() => {
     if (!autoPlay || !sources.length || autoAttempted.current || !visible || reduced || saveData || document.hidden) return;
@@ -74,7 +76,9 @@ function BackdropPlayback({ poster, sources = [], children, label, autoPlay = fa
 
   const toggle = () => {
     autoAttempted.current = true;
-    if (playing) { video.current?.pause(); return; }
+    if (!failed && video.current && !video.current.paused) { video.current.pause(); setPlaying(false); return; }
+    // A click happens in view; discard queued observations from the previous offscreen position.
+    visibilityObserver.current?.takeRecords();
     failures.current.clear();
     setFailed(false);
     if (!activated) setActivated(true);
@@ -86,7 +90,7 @@ function BackdropPlayback({ poster, sources = [], children, label, autoPlay = fa
     <img src={poster} alt="" aria-hidden fetchPriority="high" className="absolute inset-0 size-full object-cover" style={{ objectPosition: focalPoint }} />
     {sources.length > 0 && <video key={attempt} ref={video} aria-hidden tabIndex={-1} muted loop playsInline preload="none" poster={poster}
       className={cn("pointer-events-none absolute inset-0 size-full object-cover", !reduced && "transition-opacity duration-300", playing && !failed ? "opacity-100" : "opacity-0")}
-      style={{ objectPosition: focalPoint }} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => { setFailed(true); setPlaying(false); }}>
+      style={{ objectPosition: focalPoint }} onPlay={event => setPlaying(!event.currentTarget.paused)} onPause={event => setPlaying(!event.currentTarget.paused)} onError={() => { setFailed(true); setPlaying(false); }}>
       {activated && sources.map(source => <source key={source.src} {...source} onError={() => { failures.current.add(source.src); if (failures.current.size === sources.length) { setFailed(true); setPlaying(false); } }} />)}
     </video>}
     <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/65 to-black/10" />

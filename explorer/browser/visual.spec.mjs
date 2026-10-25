@@ -235,6 +235,11 @@ for (const width of [390, 820, 1440]) {
             await page.keyboard.press('Enter');
             await page.keyboard.press('ArrowDown');
             await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toBeVisible();
+            await page.locator('[data-slot="navigation-menu-viewport"]').evaluate(async element => {
+              await Promise.all(element.getAnimations({ subtree: true })
+                .filter(animation => animation.effect?.getTiming().iterations !== Infinity)
+                .map(animation => animation.finished.catch(() => {})));
+            });
           }
           if (name === 'context') {
             await page.locator('[data-slot="context-menu-trigger"]').focus();
