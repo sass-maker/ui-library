@@ -1,0 +1,8 @@
+/* Screenshot-only endpoint; the test first verifies real focus, opacity and transforms. */
+[data-slot="navigation-menu-viewport"],
+[data-slot="navigation-menu-content"] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}

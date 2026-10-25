@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { fileURLToPath } from 'node:url';
 import { noOverflow, openStory } from './helpers.mjs';
 
 for (const width of [390, 820, 1440]) {
@@ -239,7 +240,7 @@ for (const width of [390, 820, 1440]) {
         // Canonicalize the resting endpoint without a retained animation/compositor layer.
         await expect(page).toHaveScreenshot(`finish-navigation-${suffix}.png`, {
           fullPage: width > 820, animations: 'disabled',
-          style: '[data-slot="navigation-menu-viewport"], [data-slot="navigation-menu-content"] { animation: none !important; transition: none !important; transform: none !important; opacity: 1 !important; }',
+          stylePath: fileURLToPath(new URL('./navigation-snapshot.css', import.meta.url)),
         });
       });
       test(`catalog state finishes ${suffix}`, async ({ page }) => {
