@@ -18,7 +18,7 @@ jobs:
   build:
     # Retained visual baselines were reviewed on Ubuntu 24.04.
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
