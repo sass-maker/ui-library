@@ -2678,6 +2678,9 @@ test('isolated examples expose selected states and complete their advertised loc
     if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) expect((await clear.boundingBox()).height).toBeGreaterThanOrEqual(44);
     await clear.click();
     await expect(page.getByText('Freed 12.0 GB', { exact: true })).toBeVisible();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await expect(page.getByText('12.0 GB can be cleared', { exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Cache 12.0 GB', exact: true })).toHaveCount(0);
     await expect(page.getByText('Cache cleared, 62.0 GB of 100 GB used', { exact: true })).toHaveAttribute('aria-live', 'polite');
     await page.getByRole('button', { name: 'Undo', exact: true }).click();
     await expect(clear).toBeVisible();
@@ -2719,4 +2722,10 @@ test('short video play copy leaves portrait artwork clear and keeps the full acc
     await noOverflow(page);
   }
   await testInfo.attach('unobscured-video-poster', { body: JSON.stringify(evidence), contentType: 'application/json' });
+  await page.goto('/iframe.html?id=atoms-media--playback&args=playLabel:Watch&globals=theme:paper;mode:light;motion:reduced');
+  const watch = page.getByRole('button', { name: 'Watch Kith screen sequence', exact: true });
+  await expect(watch).toHaveText('Watch');
+  await watch.focus(); await page.keyboard.press('Enter');
+  await expect(page.locator('video')).toHaveJSProperty('controls', true);
+  await expect(page.locator('video source')).toHaveCount(2);
 });

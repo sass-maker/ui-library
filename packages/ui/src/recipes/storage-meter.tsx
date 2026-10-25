@@ -86,7 +86,7 @@ export function StorageMeter({ capacity, categories, cleanable, focus: controlle
       {/* The headline is the readout: the total, or whatever you point at. */}
       <div className="relative h-12">
         <AnimatePresence initial={false} mode="popLayout">
-          <motion.div key={active?.id ?? "total"} initial={{ opacity: 0, y: 4, filter: "blur(4px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -4, filter: "blur(4px)", transition: { duration: 0.12 } }} transition={swap}>
+          <motion.div key={active?.id ?? "total"} initial={{ opacity: 0, y: 4, filter: "blur(4px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -4, filter: "blur(4px)", transition: { duration: reduceMotion ? 0 : 0.12 } }} transition={swap}>
             <p className="text-[12px] font-medium text-muted-foreground">
               {active ? active.name : "Storage"}
             </p>
@@ -119,7 +119,7 @@ export function StorageMeter({ capacity, categories, cleanable, focus: controlle
             // Squashes under the press, then hands over to its shards.
             animate={crushed && !reduceMotion
                     ? { scaleY: 0.45, scaleX: 1.04, opacity: 0 }
-                    : { scaleY: 1, scaleX: 1, opacity: 1 }} transition={crushed
+                    : { scaleY: 1, scaleX: 1, opacity: 1 }} transition={reduceMotion ? { duration: 0 } : crushed
                     ? {
                         duration: CRUSH,
                         ease: [0.55, 0, 1, 0.45],
@@ -139,7 +139,7 @@ export function StorageMeter({ capacity, categories, cleanable, focus: controlle
         <AnimatePresence initial={false}>
           {shown
             .filter((c) => c.gb > 0)
-            .map((c) => (<motion.li key={c.id} layout="position" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.15 } }} transition={swap}>
+            .map((c) => (<motion.li key={c.id} layout="position" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: reduceMotion ? 0 : 0.15 } }} transition={swap}>
                 <button type="button" onPointerEnter={() => setHover(c.id)} onPointerLeave={() => setHover(null)} onFocus={() => setHover(c.id)} onBlur={() => setHover(null)} className={cn("flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] outline-hidden transition-[background-color,opacity] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground", focus === c.id && "bg-surface", focus && focus !== c.id && "opacity-50")}>
                   <span aria-hidden className="size-2 shrink-0 rounded-full" style={{ background: c.color }}/>
                   <span className="flex-1 text-foreground">{c.name}{" "}</span>
@@ -151,7 +151,7 @@ export function StorageMeter({ capacity, categories, cleanable, focus: controlle
 
       {cleanable && (<div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-4">
           <AnimatePresence initial={false} mode="popLayout">
-            <motion.p key={cleared ? "done" : "offer"} initial={{ opacity: 0, filter: "blur(4px)" }} animate={{ opacity: 1, filter: "blur(0px)" }} exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.12 } }} transition={swap} className="text-[13px] text-muted-foreground">
+            <motion.p key={cleared ? "done" : "offer"} initial={{ opacity: 0, filter: "blur(4px)" }} animate={{ opacity: 1, filter: "blur(0px)" }} exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: reduceMotion ? 0 : 0.12 } }} transition={swap} className="text-[13px] text-muted-foreground">
               {cleared ? `Freed ${gb(cleanGb)}` : `${gb(cleanGb)} can be cleared`}
             </motion.p>
           </AnimatePresence>
