@@ -382,22 +382,79 @@ test('a carousel follows right to left direction without changing button meaning
   await noOverflow(page);
 });
 
-test('swipe navigation and live reduced motion keep the selected frame aligned', async ({ page }) => {
+async function sampleCarouselRelease(page, frame, targetIndex, from, to, hold = 0) {
+  await frame.scrollIntoViewIfNeeded();
+  const box = await frame.boundingBox();
+  await page.mouse.move(box.x + box.width * from, box.y + 80);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * to, box.y + 80, { steps: 8 });
+  if (hold) await page.waitForTimeout(hold); // A deliberate hold removes fling velocity.
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await frame.evaluate((element, index) => {
+    window.__carouselRelease = null;
+    document.addEventListener('pointerup', () => {
+      const target = element.querySelectorAll('[data-slot="carousel-slide"]')[index];
+      const start = performance.now(), samples = [];
+      function sample() {
+        samples.push({ ms: performance.now() - start, remaining: target.getBoundingClientRect().left - element.getBoundingClientRect().left });
+        if (performance.now() - start < 450) requestAnimationFrame(sample);
+        else window.__carouselRelease = samples;
+      }
+      sample();
+    }, { once: true, capture: true });
+  }, targetIndex);
+  await page.mouse.up();
+  await expect.poll(() => page.evaluate(() => !!window.__carouselRelease)).toBe(true);
+  return page.evaluate(() => window.__carouselRelease);
+}
+
+function expectSettledRelease(samples) {
+  const direction = samples[0].remaining < 0 ? -1 : 1;
+  const remaining = samples.map(sample => sample.remaining * direction);
+  expect(Math.min(...remaining), 'release never overshoots the selected frame').toBeGreaterThanOrEqual(-1);
+  expect(Math.max(...remaining), 'release never rebounds away from the target').toBeLessThanOrEqual(Math.abs(samples[0].remaining) + 1);
+  expect(Math.max(...samples.filter(sample => sample.ms >= 300).map(sample => Math.abs(sample.remaining))), 'release settles within300ms').toBeLessThanOrEqual(1);
+}
+
+test('swipe release stays continuous, settles without rebound and follows live reduced motion', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await openStory(page, 'motion-carousel--in-context');
   const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
   const frame = gallery.locator('[data-slot="carousel-viewport"]');
-  await frame.scrollIntoViewIfNeeded();
-  const box = await frame.boundingBox();
-  await page.mouse.move(box.x + box.width * 0.75, box.y + 80);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.2, box.y + 80, { steps: 8 });
-  await page.mouse.up();
+  const advance = await sampleCarouselRelease(page, frame, 1, .8, .3);
+  expectSettledRelease(advance);
   await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
+  const width = (await frame.boundingBox()).width;
+  const snapBack = await sampleCarouselRelease(page, frame, 1, .6, .6 - Math.min(30, width * .08) / width, 140);
+  expectSettledRelease(snapBack);
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
+  await expect(frame).toBeFocused();
+  await testInfo.attach('carousel-release-trajectories', { body: JSON.stringify({ advance, snapBack }), contentType: 'application/json' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await gallery.getByRole('button', { name: 'Next slide', exact: true }).click();
   await expect(gallery.getByRole('status')).toHaveText('Slide 3 of 4');
   const current = gallery.getByRole('group', { name: 'Stories worth keeping.', exact: true });
   await expect.poll(async () => Math.abs((await current.boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThan(2);
+  await noOverflow(page);
+});
+
+test('a controlled carousel preserves a frozen owner and retargets interrupted navigation', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'motion-carousel--controlled-selection');
+  const gallery = page.getByRole('group', { name: 'Controlled release artwork', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
+  await expect.poll(async () => Math.abs((await gallery.locator('[data-slot="carousel-slide"]').nth(1).boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThanOrEqual(1);
+  await page.getByRole('button', { name: 'Freeze selection', exact: true }).click();
+  const rejected = await sampleCarouselRelease(page, frame, 1, .8, .3);
+  expectSettledRelease(rejected);
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
+  await page.getByRole('button', { name: 'Unlock selection', exact: true }).click();
+  await gallery.getByRole('button', { name: 'Go to slide 1', exact: true }).click();
+  await gallery.getByRole('button', { name: 'Go to slide 3', exact: true }).click();
+  await expect(gallery.getByRole('status')).toHaveText('Slide 3 of 3');
+  await page.setViewportSize({ width: page.viewportSize().width === 390 ? 1440 : 390, height: 1000 });
+  await expect.poll(async () => Math.abs((await gallery.locator('[data-slot="carousel-slide"]').last().boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThanOrEqual(1);
   await noOverflow(page);
 });
 

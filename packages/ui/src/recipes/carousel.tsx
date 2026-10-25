@@ -7,7 +7,7 @@
 'use client';
 
 import { Children, createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
-import { motion, useMotionValue, type Transition } from 'motion/react';
+import { motion, useAnimationControls, useMotionValue, type Transition } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motionTiming } from '../lib/motion';
@@ -97,9 +97,23 @@ function CarouselContent({ children, className, viewportClassName, transition }:
   const viewport = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const dragX = useMotionValue(0);
+  const settle = useAnimationControls();
+  const dragging = useRef(false);
+  const initialized = useRef(false);
+  const [releaseSequence, setReleaseSequence] = useState(0);
   const items = Children.toArray(children);
   const count = items.length;
   const position = Math.min(geometry.offsets[index] ?? 0, geometry.travel);
+  useLayoutEffect(() => {
+    if (!geometry.width || dragging.current) return;
+    const transform = `translateX(${(geometry.rtl ? 1 : -1) * position}px)`;
+    if (!initialized.current) {
+      settle.set({ transform });
+      initialized.current = true;
+    } else {
+      void settle.start({ transform, transition: reduced ? { duration: 0 } : transition ?? motionTiming.content });
+    }
+  }, [settle, position, geometry.width, geometry.rtl, reduced, transition, releaseSequence]);
   const measure = useCallback(() => {
     const container = viewport.current;
     const content = track.current;
@@ -143,11 +157,25 @@ function CarouselContent({ children, className, viewportClassName, transition }:
     event.preventDefault();
     setIndex(target);
   }}>
-    <motion.div initial={false} animate={{ transform: `translateX(${(geometry.rtl ? 1 : -1) * position}px)` }} transition={reduced ? { duration: 0 } : transition ?? motionTiming.content}>
-      <motion.div ref={track} data-slot="carousel-track" drag={disableDrag || geometry.maxIndex === 0 ? false : 'x'} dragConstraints={{ left: 0, right: 0 }} dragElastic={reduced ? 0 : 1} dragMomentum={false} dragTransition={{ bounceStiffness: 500, bounceDamping: 45 }} style={{ x: dragX, touchAction: 'pan-y pinch-zoom' }} onDragStart={() => viewport.current?.focus({ preventScroll: true })} onDragEnd={(_, info) => {
+    <motion.div initial={false} animate={settle}>
+      <motion.div ref={track} data-slot="carousel-track" drag={disableDrag || geometry.maxIndex === 0 ? false : 'x'} dragConstraints={reduced ? { left: 0, right: 0 } : undefined} dragElastic={reduced ? 0 : 1} dragMomentum={false} style={{ x: dragX, touchAction: 'pan-y pinch-zoom' }} onDragStart={() => {
+        dragging.current = true;
+        settle.stop();
+        viewport.current?.focus({ preventScroll: true });
+      }} onDragEnd={(_, info) => {
+        // Hand the actual on-screen position to one animator. Rebounding the
+        // drag offset while moving to a slide makes the two transforms compete.
+        const stage = track.current?.parentElement;
+        if (stage) {
+          const current = new DOMMatrixReadOnly(getComputedStyle(stage).transform).m41;
+          settle.set({ transform: `translateX(${current + dragX.get()}px)` });
+        }
+        dragX.jump(0);
+        dragging.current = false;
         const distance = info.offset.x * (geometry.rtl ? -1 : 1);
         const velocity = info.velocity.x * (geometry.rtl ? -1 : 1);
         if (Math.abs(distance) > Math.min(60, geometry.width * 0.15) || (Math.abs(distance) > 8 && Math.abs(velocity) > 500)) setIndex(index + (distance < 0 ? 1 : -1));
+        setReleaseSequence(sequence => sequence + 1);
       }} onDragStartCapture={event => event.preventDefault()} className={cn('relative flex items-stretch', !disableDrag && count > 1 && 'cursor-grab active:cursor-grabbing', className)}>
         {items.map((child, i) => {
           const start = geometry.offsets[i] ?? 0;
