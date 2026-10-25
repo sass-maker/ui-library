@@ -136,16 +136,25 @@ export function KanbanBoard({ columns, onChange, label, className, wrapperClassN
     const boardRef = useRef<HTMLDivElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [overflow, setOverflow] = useState(false);
+    const [scrollEdges, setScrollEdges] = useState({ left: false, right: false });
     useEffect(() => {
         const viewport = scrollRef.current;
         const board = boardRef.current;
         if (!viewport || !board) return;
-        const measure = () => setOverflow(viewport.scrollWidth > viewport.clientWidth + 1);
+        const measure = () => {
+            setOverflow(viewport.scrollWidth > viewport.clientWidth + 1);
+            const view = viewport.getBoundingClientRect();
+            const content = board.getBoundingClientRect();
+            const left = content.left < view.left - 1;
+            const right = content.right > view.right + 1;
+            setScrollEdges(current => current.left === left && current.right === right ? current : { left, right });
+        };
         const observer = new ResizeObserver(measure);
         observer.observe(viewport);
         observer.observe(board);
         measure();
-        return () => observer.disconnect();
+        viewport.addEventListener("scroll", measure, { passive: true });
+        return () => { observer.disconnect(); viewport.removeEventListener("scroll", measure); };
     }, []);
     const slots = useRef(new Map<string, HTMLLIElement>());
     const buttons = useRef(new Map<string, HTMLButtonElement>());
@@ -648,8 +657,8 @@ export function KanbanBoard({ columns, onChange, label, className, wrapperClassN
     return (<MotionConfig reducedMotion="user">
         <div className={cn("min-w-0 w-full max-w-full", wrapperClassName)}>
         {overflow && <p id={`${instructions}-scroll`} className="mb-3 text-xs leading-relaxed text-muted-foreground">Scroll horizontally to explore all lanes. Arrow keys move between tasks.</p>}
-        <div ref={scrollRef} role="region" aria-label={`${label} lanes`} aria-describedby={overflow ? `${instructions}-scroll` : undefined} tabIndex={overflow ? 0 : -1} className="overflow-x-auto overscroll-x-contain rounded-[18px] p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        <div ref={boardRef} role="group" aria-label={label} style={{ minWidth: "min-content", "--kanban-cols": `repeat(${Math.max(1, columns.length)}, minmax(260px, 1fr))` } as React.CSSProperties} className={cn("relative mx-auto grid h-[380px] w-full grid-cols-[var(--kanban-cols)] gap-3", className, pointerDragging && "cursor-grabbing select-none [&_*]:cursor-grabbing")}>
+        <div ref={scrollRef} role="region" aria-label={`${label} lanes`} aria-describedby={overflow ? `${instructions}-scroll` : undefined} tabIndex={overflow ? 0 : -1} style={{ maskImage: scrollEdges.left && scrollEdges.right ? "linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent)" : scrollEdges.left ? "linear-gradient(to right, transparent, black 24px)" : scrollEdges.right ? "linear-gradient(to right, black calc(100% - 24px), transparent)" : undefined }} className="overflow-x-auto overscroll-x-contain rounded-[18px] p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <div ref={boardRef} role="group" aria-label={label} style={{ minWidth: "min-content", "--kanban-cols": `repeat(${Math.max(1, columns.length)}, minmax(var(--kanban-lane-min, 260px), 1fr))` } as React.CSSProperties} className={cn("relative mx-auto grid h-[380px] w-full grid-cols-[var(--kanban-cols)] gap-3", className, pointerDragging && "cursor-grabbing select-none [&_*]:cursor-grabbing")}>
           {columns.map((column, c) => (<div key={column.id} 
         // Concentric with the cards: 18 = 10 radius + 8 padding.
         className="flex min-h-0 min-w-0 flex-col rounded-[18px] bg-surface p-2">

@@ -172,6 +172,8 @@ export function RecordDetail({
   children,
   actions,
   desktopQuery = "(min-width: 1024px)",
+  focusHeading = true,
+  presentation = "auto",
   className,
 }: {
   open: boolean;
@@ -181,9 +183,14 @@ export function RecordDetail({
   children: React.ReactNode;
   actions?: React.ReactNode;
   desktopQuery?: string;
+  /** Focus the desktop heading after selection. Disable for an initially visible summary; modal sheet focus is always managed. */
+  focusHeading?: boolean;
+  /** Let a responsive parent own presentation and open state together. */
+  presentation?: "auto" | "panel" | "sheet";
   className?: string;
 }) {
-  const desktop = useMediaQuery(desktopQuery);
+  const matchesDesktop = useMediaQuery(desktopQuery);
+  const desktop = presentation === "auto" ? matchesDesktop : presentation === "panel";
   const headingRef = React.useRef<HTMLHeadingElement>(null);
   // Where focus was before the panel took it (usually the row that opened it).
   const returnTo = React.useRef<HTMLElement | null>(null);
@@ -197,14 +204,14 @@ export function RecordDetail({
     if (open) {
       const from = document.activeElement;
       if (from instanceof HTMLElement && from !== document.body && !from.closest("[data-record-detail]")) returnTo.current = from;
-      headingRef.current?.focus({ preventScroll: true });
+      if (focusHeading) headingRef.current?.focus({ preventScroll: true });
     } else if (returnTo.current) {
       // The panel unmounted with focus inside it, so focus fell to <body>: put it back.
       const target = returnTo.current;
       returnTo.current = null;
       if (target.isConnected && (document.activeElement === document.body || !document.activeElement)) target.focus({ preventScroll: true });
     }
-  }, [open, desktop, title]);
+  }, [open, desktop, title, focusHeading]);
 
   const body = (
     <div className="flex flex-col gap-6 px-5 pb-8">

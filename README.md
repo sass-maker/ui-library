@@ -57,10 +57,17 @@ decorative surface moves. Use `className` for layout and foreground text, and
 `surfaceClassName` for background, border and shadow styling. When upgrading a
 previously styled morph, move those paint utilities to `surfaceClassName`.
 
-`KanbanBoard` fills its container, retaining 260px minimum lanes in a local
+`KanbanBoard` fills its container, retaining 260px minimum lanes by default in a local
 horizontal scroll area. `className` styles the grid, including custom columns,
-height and gaps; `wrapperClassName` styles the outer container. Touch users can
+height and gaps; custom column templates supply their own track minimums.
+`--kanban-lane-min` can tune responsive density without replacing the template.
+`wrapperClassName` styles the outer container. Touch users can
 pan from card bodies and drag from the visible handle.
+
+`RecordDetail` chooses a desktop panel or phone sheet from `desktopQuery`. A parent
+that coordinates responsive selection can set `presentation="panel"` or `"sheet"`
+explicitly. Use `focusHeading={false}` for an initially visible desktop summary;
+a selection can enable heading focus, while sheets always manage modal focus.
 
 `pnpm registry:sync` builds registry items and the explorer catalog from actual source imports;
 `pnpm registry:check` catches stale copied dependencies before publication.

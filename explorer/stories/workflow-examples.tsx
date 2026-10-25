@@ -44,8 +44,8 @@ const initialBoard: KanbanColumn[] = [
 ];
 export function BoardContext() {
   const [columns,setColumns]=useState(initialBoard);
-  return <section className="w-full max-w-5xl rounded-2xl border border-border bg-card p-5 sm:p-7"><header className="mb-7 flex flex-wrap items-start justify-between gap-5"><div><p className="mb-2 text-xs text-muted-foreground">Kith / Release planning</p><h2 className="text-xl font-semibold tracking-tight">October release board</h2><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">Move a card by hand, or pick it up with Space and move it with the arrow keys. Escape returns it to where you started.</p></div><Button variant="outline" size="sm" onClick={()=>setColumns(initialBoard)}><RotateCcw />Reset board</Button></header>
-    <KanbanBoard columns={columns} onChange={setColumns} label="Kith release board" /><p className="mt-5 text-xs text-muted-foreground">Illustrative work items. Changes stay in this example.</p>
+  return <section className="@container/board w-full max-w-5xl rounded-2xl border border-border bg-card p-5 sm:p-4 lg:p-7"><header className="mb-7 flex flex-wrap items-start justify-between gap-5"><div><p className="mb-2 text-xs text-muted-foreground">Kith / Release planning</p><h2 className="text-xl font-semibold tracking-tight">October release board</h2><p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">Move a card by hand, or pick it up with Space and move it with the arrow keys. Escape returns it to where you started.</p></div><Button variant="outline" size="sm" onClick={()=>setColumns(initialBoard)}><RotateCcw />Reset board</Button></header>
+    <KanbanBoard columns={columns} onChange={setColumns} label="Kith release board" className="@[44.75rem]/board:[--kanban-lane-min:228px] @[50.75rem]/board:[--kanban-lane-min:260px]" /><p className="mt-5 text-xs text-muted-foreground">Illustrative work items. Changes stay in this example.</p>
   </section>;
 }
 export function PricingContext() {

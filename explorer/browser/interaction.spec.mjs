@@ -1613,14 +1613,25 @@ test('product artwork examples keep selection, source metadata and recovery usab
   await page.keyboard.press('Escape');
   await expect(detail).toHaveCount(0);
   await expect(row).toBeFocused();
+  const boundary = page.locator('[data-slot="resource-boundary"]');
+  const readyHeight = (await boundary.boundingBox()).height;
+  const keepsGeometry = async () => expect.poll(async () => Math.abs((await boundary.boundingBox()).height - readyHeight)).toBeLessThanOrEqual(1);
   await page.getByRole('button', { name: 'Error', exact: true }).click();
-  await expect(page.getByText('Could not load this view', { exact: true })).toBeVisible();
+  await expect(page.getByText('Artwork could not load', { exact: true })).toBeVisible();
+  await keepsGeometry();
   await page.getByRole('button', { name: 'Try again', exact: true }).click();
   await expect(row).toBeVisible();
   await page.getByRole('button', { name: 'Empty', exact: true }).click();
   await expect(row).toHaveCount(0);
+  await keepsGeometry();
   await page.getByRole('button', { name: 'Restore example artwork', exact: true }).click();
   await expect(row).toBeVisible();
+  await page.getByRole('button', { name: 'Loading', exact: true }).click();
+  await expect(page.getByLabel('Loading release artwork', { exact: true })).toBeVisible();
+  await keepsGeometry();
+  await page.getByRole('button', { name: 'Ready', exact: true }).click();
+  await expect(row).toBeVisible();
+  await keepsGeometry();
   await noOverflow(page);
 });
 
@@ -1702,6 +1713,9 @@ test('kanban responsive geometry gives ordinary titles room and honors consumer 
     }));
     expect(titles).toHaveLength(7);
     expect(titles.every(title => title.fullHeight <= title.visibleHeight + 1)).toBe(true);
+    if (width === 820) {
+      await expect.poll(() => board.evaluate(node => node.parentElement.scrollWidth - node.parentElement.clientWidth)).toBeLessThanOrEqual(1);
+    }
     if (width === 1440) {
       const widths = await board.evaluate(node => ({ board: node.clientWidth, container: node.parentElement.clientWidth }));
       expect(widths.board).toBeGreaterThan(widths.container - 12);
@@ -1776,4 +1790,57 @@ test('artwork detail keeps its title and image throughout the phone exit animati
   expect(samples.length).toBeGreaterThan(0);
   expect(samples.every(sample => sample.title === 'Keep the small things' && sample.image)).toBe(true);
   await expect(page.getByRole('button', { name: 'Inspect Keep the small things', exact: true })).toBeFocused();
+});
+
+test('detail examples keep initial focus and do not open a phone modal on breakpoint changes', async ({ page }) => {
+  for (const [story, rowName, listName] of [
+    ['blocks-record-detail--in-context', 'Inspect Keep the small things', null],
+    ['blocks-quote-list--in-context', null, 'CodeVetter product notes'],
+  ]) {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await openStory(page, story);
+    await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toBeVisible();
+    expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true);
+    await page.evaluate(() => {
+      window.unrequestedSheets = [];
+      window.resizeSheetObserver = new MutationObserver(() => {
+        if (document.querySelector('[data-slot="sheet-content"][data-state="open"]')) window.unrequestedSheets.push(performance.now());
+      });
+      window.resizeSheetObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-state'] });
+    });
+    await page.setViewportSize({ width: 390, height: 1000 });
+    await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toHaveCount(0);
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    const unrequested = await page.evaluate(() => { window.resizeSheetObserver.disconnect(); return window.unrequestedSheets; });
+    expect(unrequested).toEqual([]);
+    const row = rowName ? page.getByRole('button', { name: rowName, exact: true }) : page.getByRole('list', { name: listName, exact: true }).getByRole('button').nth(1);
+    await row.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toBeVisible();
+    await page.setViewportSize({ width: 390, height: 1000 });
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  }
+});
+
+test('phone detail close controls stay visible and hit-test above sticky headers', async ({ page }) => {
+  for (const width of [390, 820]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await openStory(page, 'blocks-record-detail--in-context');
+    const row = page.getByRole('button', { name: 'Inspect Keep the small things', exact: true });
+    await row.click();
+    const dialog = page.getByRole('dialog', { name: 'Keep the small things', exact: true });
+    const close = dialog.getByRole('button', { name: 'Close', exact: true });
+    await expect(close).toBeVisible();
+    await expect.poll(() => close.evaluate(button => { const r = button.getBoundingClientRect(); return button.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); })).toBe(true);
+    await close.click();
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await noOverflow(page);
+  }
 });
