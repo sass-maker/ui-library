@@ -1628,9 +1628,13 @@ test('selected product notes retain their exact source and custom popover paint 
   await openStory(page, 'blocks-quote-list--in-context');
   const notes = page.getByRole('list', { name: 'CodeVetter product notes', exact: true });
   await notes.getByRole('button').nth(1).click();
-  const selected = page.getByRole('complementary', { name: 'Selected excerpt', exact: true });
+  const selected = page.viewportSize().width >= 1024
+    ? page.getByRole('complementary', { name: 'Record detail', exact: true })
+    : page.getByRole('dialog');
   await expect(selected).toContainText('The product should prefer narrow, evidence-backed loops over broad "code intelligence" surfaces.');
   await expect(selected.getByRole('link', { name: 'Read the original text', exact: true })).toHaveAttribute('href', /efb6744aaf0a229f6e0d24aac61bffaad636477e\/README.md#product-direction$/);
+  await page.keyboard.press('Escape');
+  await expect(notes.getByRole('button').nth(1)).toBeFocused();
   await noOverflow(page);
   await openStory(page, 'motion-morphing-popover--playground');
   const trigger = page.getByRole('button', { name: 'Library details', exact: true });
@@ -1668,6 +1672,12 @@ test('kanban touch pans the lane from card bodies and drags only from its handle
   await expect.poll(() => queue.evaluate(list => list.scrollTop)).toBeGreaterThan(40);
   await expect(queue.getByRole('button')).toHaveText(original);
   await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
+  const viewport = page.getByRole('region', { name: 'Scrollable workflow lanes', exact: true });
+  const scrollBefore = await viewport.evaluate(node => node.scrollLeft);
+  const sideways = { x: box.x + box.width / 4, y: box.y + 180 };
+  await gesture(sideways, { x: sideways.x - 80, y: sideways.y });
+  await expect.poll(() => viewport.evaluate(node => node.scrollLeft)).toBeGreaterThan(scrollBefore + 20);
+  await expect(queue.getByRole('button')).toHaveText(original);
   const visible = await queue.getByRole('button').evaluateAll(buttons => {
     const lane = buttons[0].closest('ul').getBoundingClientRect();
     return buttons.find(button => { const r = button.getBoundingClientRect(); return r.top >= lane.top + 2 && r.bottom <= lane.bottom - 2; }).textContent.trim();
@@ -1679,4 +1689,91 @@ test('kanban touch pans the lane from card bodies and drags only from its handle
   await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
   await expect(page.getByRole('group', { name: 'Scrollable workflow', exact: true }).getByRole('button')).toHaveCount(10);
   await cdp.detach();
+});
+
+test('kanban responsive geometry gives ordinary titles room and honors consumer column templates', async ({ page }) => {
+  await openStory(page, 'interactions-kanban-board--in-context');
+  const board = page.getByRole('group', { name: 'Kith release board', exact: true });
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1100 });
+    const titles = await board.getByRole('button').evaluateAll(buttons => buttons.map(button => {
+      const text = button.querySelector('span.line-clamp-2');
+      return { label: text.textContent, fullHeight: text.scrollHeight, visibleHeight: text.clientHeight };
+    }));
+    expect(titles).toHaveLength(7);
+    expect(titles.every(title => title.fullHeight <= title.visibleHeight + 1)).toBe(true);
+    if (width === 1440) {
+      const widths = await board.evaluate(node => ({ board: node.clientWidth, container: node.parentElement.clientWidth }));
+      expect(widths.board).toBeGreaterThan(widths.container - 12);
+    }
+    await noOverflow(page);
+  }
+  await page.goto('/iframe.html?id=interactions-kanban-board--scrollable-lanes&args=wideFirst:true&globals=theme:paper;mode:light;motion:reduced');
+  const custom = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  await expect.poll(() => custom.evaluate(node => {
+    const tracks = getComputedStyle(node).gridTemplateColumns.split(' ').map(parseFloat);
+    return tracks.length === 3 && Math.abs(tracks[0] / tracks[1] - 2) < .02 && Math.abs(tracks[1] - tracks[2]) < 1;
+  })).toBe(true);
+});
+
+test('kanban cleans up a card removed by its controlled parent during a drag', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes');
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const card = page.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  const box = await card.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 - 25, box.y + box.height / 2);
+  await expect(page.locator('[data-kanban-overlay="moving"]')).toBeVisible();
+  // A controlled parent update can arrive independently of the held pointer.
+  await page.getByRole('button', { name: 'Remove active task', exact: true }).dispatchEvent('click');
+  await expect(card).toHaveCount(0);
+  await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
+  await page.mouse.up();
+  await page.getByRole('button', { name: 'Restore example', exact: true }).click();
+  await expect(card).toBeVisible();
+  await expect(card).toHaveCSS('opacity', '1');
+  await card.focus();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Space');
+  await expect(card).toBeFocused();
+  await expect(page.getByRole('list', { name: 'Done', exact: true }).getByRole('button')).toHaveCount(2);
+  await page.keyboard.press('Space');
+  await page.getByRole('button', { name: 'Remove active task', exact: true }).dispatchEvent('click');
+  await expect(card).toHaveCount(0);
+  await page.getByRole('button', { name: 'Restore example', exact: true }).click();
+  await expect(card).toBeVisible();
+  await expect.poll(() => card.evaluate(button => {
+    const body = button.getBoundingClientRect(), slot = button.closest('li').getBoundingClientRect();
+    return Math.abs(body.width - slot.width) + Math.abs(body.height - slot.height);
+  })).toBeLessThan(.5);
+  expect(errors).toEqual([]);
+  await noOverflow(page);
+});
+
+test('artwork detail keeps its title and image throughout the phone exit animation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'blocks-record-detail--in-context', 'theme:paper;mode:light;motion:user');
+  await page.getByRole('button', { name: 'Inspect Keep the small things', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Keep the small things', exact: true });
+  await expect(dialog).toBeVisible();
+  await dialog.evaluate(node => {
+    window.artworkExit = { done: false, samples: [] };
+    const frame = () => {
+      if (!node.isConnected) { window.artworkExit.done = true; return; }
+      if (node.dataset.state === 'closed') window.artworkExit.samples.push({ title: node.querySelector('h2')?.textContent, image: !!node.querySelector('img') });
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  });
+  await page.keyboard.press('Escape');
+  await expect.poll(() => page.evaluate(() => window.artworkExit.done)).toBe(true);
+  const samples = await page.evaluate(() => window.artworkExit.samples);
+  expect(samples.length).toBeGreaterThan(0);
+  expect(samples.every(sample => sample.title === 'Keep the small things' && sample.image)).toBe(true);
+  await expect(page.getByRole('button', { name: 'Inspect Keep the small things', exact: true })).toBeFocused();
 });

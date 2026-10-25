@@ -362,7 +362,7 @@ export function KanbanBoard({ columns, onChange, label, className, wrapperClassN
     const onPointerDown = (id: string, event: React.PointerEvent) => {
         if (event.button !== 0 || session.current)
             return;
-        // Keep vertical touch panning native; a visible handle opts into dragging.
+        // Keep touch panning native in both directions; a visible handle opts into dragging.
         if (event.pointerType === "touch" && !(event.target as Element).closest("[data-kanban-drag-handle], [data-kanban-overlay]"))
             return;
         if (held)
@@ -605,6 +605,42 @@ export function KanbanBoard({ columns, onChange, label, className, wrapperClassN
             for (const v of values.values()) Object.values(v).forEach(value => value.stop());
         };
     }, [values]);
+    // Controlled parents can remove work items while a drag is active (for
+    // example, after a live update). Cancel that session without restoring the
+    // stale pre-drag snapshot or leaving its visual copy above the board.
+    useLayoutEffect(() => {
+        const ids = new Set(columns.flatMap(column => column.cards.map(card => card.id)));
+        const active = session.current;
+        if (active && !ids.has(active.id)) {
+            active.stop();
+            session.current = null;
+        }
+        if (release.current && !ids.has(release.current.id)) release.current = null;
+        let changed = false;
+        for (const card of floating.current.values()) {
+            if (ids.has(card.id)) continue;
+            card.generation++;
+            const v = values.get(card.id);
+            if (v) Object.values(v).forEach(value => value.stop());
+            floating.current.delete(card.id);
+            values.delete(card.id);
+            changed = true;
+        }
+        if (changed) setFloatingCards([...floating.current.values()]);
+        if (held && !ids.has(held.id)) {
+            const removedValues = values.get(held.id);
+            if (removedValues) Object.values(removedValues).forEach(value => value.stop());
+            values.delete(held.id);
+            const removedTitle = title(held.id, held.before);
+            setHeld(null);
+            setAnnouncement(`${removedTitle} is no longer on this board.`);
+            const next = columns.flatMap(column => column.cards)[0];
+            if (next) {
+                setFocusId(next.id);
+                buttons.current.get(next.id)?.focus({ preventScroll: true });
+            }
+        }
+    }, [columns]);
     const pointerDragging = held?.mode === "pointer";
     const tabStop = columns.some((c) => c.cards.some((card) => card.id === focusId))
         ? focusId
@@ -613,7 +649,7 @@ export function KanbanBoard({ columns, onChange, label, className, wrapperClassN
         <div className={cn("min-w-0 w-full max-w-full", wrapperClassName)}>
         {overflow && <p id={`${instructions}-scroll`} className="mb-3 text-xs leading-relaxed text-muted-foreground">Scroll horizontally to explore all lanes. Arrow keys move between tasks.</p>}
         <div ref={scrollRef} role="region" aria-label={`${label} lanes`} aria-describedby={overflow ? `${instructions}-scroll` : undefined} tabIndex={overflow ? 0 : -1} className="overflow-x-auto overscroll-x-contain rounded-[18px] p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        <div ref={boardRef} role="group" aria-label={label} style={{ minWidth: Math.max(1, columns.length) * 200, gridTemplateColumns: `repeat(${Math.max(1, columns.length)}, minmax(0, 1fr))` }} className={cn("relative mx-auto grid h-[380px] w-[600px] gap-3", className, pointerDragging && "cursor-grabbing select-none [&_*]:cursor-grabbing")}>
+        <div ref={boardRef} role="group" aria-label={label} style={{ minWidth: "min-content", "--kanban-cols": `repeat(${Math.max(1, columns.length)}, minmax(260px, 1fr))` } as React.CSSProperties} className={cn("relative mx-auto grid h-[380px] w-full grid-cols-[var(--kanban-cols)] gap-3", className, pointerDragging && "cursor-grabbing select-none [&_*]:cursor-grabbing")}>
           {columns.map((column, c) => (<div key={column.id} 
         // Concentric with the cards: 18 = 10 radius + 8 padding.
         className="flex min-h-0 min-w-0 flex-col rounded-[18px] bg-surface p-2">
@@ -678,7 +714,7 @@ function Card({ card, floating, values, held, tabbable, describedBy, slotRef, bu
       <motion.button ref={buttonRef} type="button" tabIndex={tabbable ? 0 : -1} aria-describedby={describedBy} aria-pressed={held ? true : undefined} style={{
             opacity: floating ? 0 : 1,
             scale: floating ? 1 : scale,
-        }} onPointerDown={onPointerDown} onKeyDown={onKeyDown} onFocus={onFocus} onBlur={onBlur} className={cn("relative flex size-full cursor-grab touch-pan-y items-center rounded-[10px] bg-background px-3 text-left text-sm text-foreground shadow-md outline-hidden select-none", "transition-[scale] duration-150 ease-out active:scale-[0.96] motion-reduce:transition-none", "focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-1 focus-visible:outline-foreground",
+        }} onPointerDown={onPointerDown} onKeyDown={onKeyDown} onFocus={onFocus} onBlur={onBlur} className={cn("relative flex size-full cursor-grab touch-manipulation items-center rounded-[10px] bg-background px-3 text-left text-sm text-foreground shadow-md outline-hidden select-none", "transition-[scale] duration-150 ease-out active:scale-[0.96] motion-reduce:transition-none", "focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-1 focus-visible:outline-foreground",
         // Lifted already reads as pressed; don't shrink under the lift.
         held && "active:scale-100")}>
         <motion.span aria-hidden style={{ opacity: values.lift, boxShadow: LIFTED_SHADOW }} className="pointer-events-none absolute inset-0 rounded-[inherit]"/>

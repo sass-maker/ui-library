@@ -57,6 +57,11 @@ decorative surface moves. Use `className` for layout and foreground text, and
 `surfaceClassName` for background, border and shadow styling. When upgrading a
 previously styled morph, move those paint utilities to `surfaceClassName`.
 
+`KanbanBoard` fills its container, retaining 260px minimum lanes in a local
+horizontal scroll area. `className` styles the grid, including custom columns,
+height and gaps; `wrapperClassName` styles the outer container. Touch users can
+pan from card bodies and drag from the visible handle.
+
 `pnpm registry:sync` builds registry items and the explorer catalog from actual source imports;
 `pnpm registry:check` catches stale copied dependencies before publication.
 
