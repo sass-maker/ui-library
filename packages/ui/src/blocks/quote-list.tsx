@@ -121,10 +121,10 @@ function Meta({ item }: { item: QuoteItem }) {
       </span>,
     );
   return (
-    <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+    <p className="mt-1.5 text-xs text-muted-foreground">
       {parts.map((p, i) => (
         <React.Fragment key={i}>
-          {i > 0 && <span aria-hidden>·</span>}
+          {i > 0 && <span aria-hidden>{"\u00a0·\u00a0"}</span>}
           {p}
         </React.Fragment>
       ))}

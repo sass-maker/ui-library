@@ -50,6 +50,7 @@ export function Marquee({
   return (
     <div
       {...props}
+      data-slot="marquee"
       className={cn(
         "group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]",
         {
@@ -64,6 +65,7 @@ export function Marquee({
         .map((_, i) => (
           <div
             key={i}
+            data-slot="marquee-content"
             aria-hidden={i > 0 || undefined}
             inert={i > 0 || undefined}
             className={cn("flex shrink-0 justify-around gap-(--gap)", {

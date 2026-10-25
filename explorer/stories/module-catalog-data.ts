@@ -148,7 +148,7 @@ export const moduleCatalog = [
     "name": "App",
     "layer": "Organisms",
     "family": "blocks",
-    "description": "Compose a product workspace with navigation, a top bar and a responsive content area.",
+    "description": "Compose a dashboard with a page header, summary card, empty state and area chart. Open the complete workspace example for navigation and a top bar.",
     "section": "Organisms / Blocks",
     "importPath": "@saas-maker/ui/blocks/app",
     "importName": "AppShell",

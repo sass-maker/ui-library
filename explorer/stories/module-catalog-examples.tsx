@@ -13,10 +13,14 @@ import { moduleCatalog } from "./module-catalog-data";
 type CatalogModule = (typeof moduleCatalog)[number];
 const catalogLayers = ["All modules", "Atoms", "Molecules", "Organisms"] as const;
 
+function ModuleImportPath({ path }: { path: string }) {
+  return <code title={path} className="block whitespace-normal font-mono text-xs leading-relaxed text-muted-foreground">{path.split("/").map((part, index, parts) => <Fragment key={index}><span className="whitespace-nowrap">{part}{index < parts.length - 1 && "/"}</span>{index < parts.length - 1 && <wbr />}</Fragment>)}</code>;
+}
+
 function CompactModule({ item }: { item: CatalogModule }) {
   return <div className="grid min-w-0 gap-2 py-1">
     <span className="font-medium">{item.name}</span>
-    <code className="font-mono text-xs leading-relaxed text-muted-foreground">{item.importPath.split("/").map((part, index, parts) => <Fragment key={index}><span className="whitespace-nowrap">{part}{index < parts.length - 1 && "/"}</span>{index < parts.length - 1 && <wbr />}</Fragment>)}</code>
+    <ModuleImportPath path={item.importPath} />
     <span className="text-xs leading-relaxed text-muted-foreground">{item.layer.replace(/s$/, "")} · {item.section.split(" / ").slice(1).join(" / ")}</span>
   </div>;
 }
@@ -24,7 +28,7 @@ function CompactModule({ item }: { item: CatalogModule }) {
 const catalogColumns: DataColumn<CatalogModule>[] = [
   { id: "name", header: "Module", value: item => item.name, hideable: false, minWidth: "clamp(10rem,20vw,14rem)", compactCell: item => <CompactModule item={item} />, cell: item => <div className="py-1"><span className="block font-medium">{item.name}</span><span className="mt-1 block text-xs text-muted-foreground">{item.section.split(" / ").slice(1).join(" / ")}</span></div> },
   { id: "layer", header: "Layer", value: item => item.layer, collapseInCompact: true, cell: item => <span className="text-xs text-muted-foreground">{item.layer.replace(/s$/, "")}</span> },
-  { id: "import", header: "Import path", value: item => item.importPath, collapseInCompact: true, minWidth: "14rem", className: "w-full max-w-0", cell: item => <code title={item.importPath} className="block truncate text-xs text-muted-foreground">{item.importPath}</code> },
+  { id: "import", header: "Import path", value: item => item.importPath, collapseInCompact: true, minWidth: "14rem", className: "w-full max-w-0", cell: item => <ModuleImportPath path={item.importPath} /> },
   { id: "packages", header: "Packages", value: item => item.dependencies.length, collapseInCompact: true, align: "right" },
 ];
 

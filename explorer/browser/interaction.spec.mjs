@@ -212,6 +212,24 @@ test('the paged catalog shows a complete page and makes horizontal overflow expl
   await expect(region).toHaveAttribute('data-scroll-left', 'true');
   await expect(region).not.toHaveAttribute('data-scroll-right');
   await noOverflow(page);
+  for (const width of [820, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await openStory(page, 'data-data-table--in-context');
+    const imports = page.locator('tr[data-row] code:visible');
+    await expect(imports).toHaveCount(12);
+    const fragments = await imports.evaluateAll(codes => codes.flatMap(code => {
+      const box = code.getBoundingClientRect(), walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT), fragments = [];
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!node.textContent.trim()) continue;
+        const range = document.createRange(); range.selectNodeContents(node);
+        for (const rect of range.getClientRects()) fragments.push({ text: node.textContent, left: rect.left - box.left, right: box.right - rect.right, top: rect.top - box.top, bottom: box.bottom - rect.bottom });
+      }
+      return fragments;
+    }));
+    expect(fragments.length).toBeGreaterThanOrEqual(12);
+    expect(fragments.every(fragment => fragment.left >= -1 && fragment.right >= -1 && fragment.top >= -1 && fragment.bottom >= -1)).toBe(true);
+    await noOverflow(page);
+  }
 });
 
 test('the visible catalog source action confirms clipboard success and failure without shifting', async ({ page }) => {
@@ -1270,6 +1288,169 @@ test('morphing popover settles around a stable positioner in normal and reduced 
   }
 });
 
+test('stacked transport stays compact on phones without losing native media actions', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    for (const layout of ['stacked-video', 'video-cover']) {
+      await openStory(page, `molecules-media-media-backdrop--${layout}`, `theme:${theme};mode:${mode};motion:user`);
+      const backdrop = page.getByRole('region', { name: 'Live adventure preview', exact: true });
+      const play = backdrop.getByRole('button', { name: 'Play background video', exact: true });
+      const box = await play.boundingBox();
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      if (layout === 'stacked-video' && page.viewportSize().width < 640) {
+        expect(box.width).toBeGreaterThanOrEqual(44);
+        expect(box.width).toBeLessThanOrEqual(48);
+      } else {
+        expect(box.width).toBeGreaterThan(80);
+      }
+      await play.click();
+      const video = backdrop.locator('video');
+      await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(.15);
+      const pause = backdrop.getByRole('button', { name: 'Pause background video', exact: true });
+      if (layout === 'stacked-video' && page.viewportSize().width < 640) expect((await pause.boundingBox()).width).toBeCloseTo(box.width, 0);
+      await pause.click();
+      await expect(video).toHaveJSProperty('paused', true);
+      await expect(play).toBeVisible();
+      await testInfo.attach(`transport-${theme}-${layout}`, { body: JSON.stringify({ width: box.width, height: box.height, paused: await video.evaluate(element => element.paused), currentTime: await video.evaluate(element => element.currentTime) }), contentType: 'application/json' });
+    }
+  }
+});
+
+test('inline edit exposes its touch affordance and preserves keyboard save and cancel', async ({ page }, testInfo) => {
+  await openStory(page, 'interactions-inline-edit--playground', 'theme:paper;mode:light;motion:reduced');
+  const button = page.getByRole('button', { name: /^Edit Project name:/ });
+  const pencil = button.locator('..').locator('svg').nth(0), saved = button.locator('..').locator('svg').nth(1);
+  const opacity = locator => locator.evaluate(element => {
+    let opacity = 1;
+    for (let node = element; node; node = node.parentElement) opacity *= Number(getComputedStyle(node).opacity);
+    return opacity;
+  });
+  const noHover = await page.evaluate(() => matchMedia('(hover:none)').matches);
+  await expect.poll(() => opacity(pencil)).toBe(noHover ? 1 : 0);
+  const initialOpacity = await opacity(pencil);
+  if (!noHover) {
+    await button.hover();
+    await expect.poll(() => opacity(pencil)).toBe(1);
+    await page.mouse.move(0, 0);
+  }
+  const before = await button.boundingBox();
+  await button.focus();
+  await page.keyboard.press('Enter');
+  const editor = page.getByRole('textbox', { name: 'Project name', exact: true });
+  await expect(editor).toBeFocused();
+  const editing = await editor.boundingBox();
+  for (const key of ['width', 'height', 'x', 'y']) expect(Math.abs(editing[key] - before[key])).toBeLessThan(1);
+  await editor.fill('Discard this draft');
+  await page.keyboard.press('Escape');
+  await expect(button).toBeFocused();
+  await expect(button).toHaveAccessibleName('Edit Project name: Fleet UI library');
+  await expect(editor).toHaveCount(0);
+  await page.keyboard.press('Enter');
+  await editor.fill('A thoughtful library');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Edit Project name: A thoughtful library', exact: true })).toBeFocused();
+  await expect.poll(() => opacity(saved)).toBe(1);
+  await expect.poll(() => opacity(pencil)).toBe(0);
+  await expect.poll(() => opacity(saved)).toBe(0);
+  await expect.poll(() => opacity(pencil)).toBe(1);
+  await testInfo.attach('inline-edit-affordance', { body: JSON.stringify({ noHover, initialOpacity, before, editing }), contentType: 'application/json' });
+  await noOverflow(page);
+  await page.goto('/iframe.html?id=interactions-inline-edit--playground&args=multiline:true&globals=theme:paper;mode:light;motion:reduced');
+  await page.getByRole('button', { name: /^Edit Project name:/ }).waitFor();
+  await page.evaluate(() => document.fonts.ready);
+  const multilineButton = page.getByRole('button', { name: /^Edit Project name:/ });
+  const initialMultiline = await multilineButton.boundingBox();
+  await multilineButton.focus();
+  await page.keyboard.press('Enter');
+  const textarea = page.getByRole('textbox', { name: 'Project name', exact: true });
+  await expect(textarea).toBeFocused();
+  await expect(textarea).toHaveJSProperty('tagName', 'TEXTAREA');
+  const initialEditor = await textarea.boundingBox();
+  for (const key of ['width', 'height', 'x', 'y']) expect(Math.abs(initialEditor[key] - initialMultiline[key])).toBeLessThan(1);
+  await textarea.fill('First line\nSecond line\nThird line');
+  const grown = await textarea.boundingBox();
+  expect(grown.height).toBeGreaterThan(initialEditor.height + 20);
+  const mirror = await textarea.locator('..').locator('button').evaluate(element => { const box = element.getBoundingClientRect(); return { width: box.width, height: box.height }; });
+  expect(Math.abs(grown.height - mirror.height)).toBeLessThan(1);
+  expect(Math.abs(grown.width - mirror.width)).toBeLessThan(1);
+  await textarea.fill('First line\n');
+  const trailingNewline = await textarea.boundingBox();
+  const trailingMirror = await textarea.locator('..').locator('button').evaluate(element => { const box = element.getBoundingClientRect(); return { width: box.width, height: box.height }; });
+  expect(trailingNewline.height).toBeGreaterThan(initialEditor.height + 10);
+  expect(Math.abs(trailingNewline.height - trailingMirror.height)).toBeLessThan(1);
+  expect(Math.abs(trailingNewline.width - trailingMirror.width)).toBeLessThan(1);
+  const trailingMetrics = await textarea.evaluate(element => ({ clientHeight: element.clientHeight, scrollHeight: element.scrollHeight }));
+  expect(trailingMetrics.scrollHeight).toBeLessThanOrEqual(trailingMetrics.clientHeight + 1);
+  await page.keyboard.press('Escape');
+  await expect(multilineButton).toHaveAccessibleName('Edit Project name: Fleet UI library');
+  await expect(multilineButton).toBeFocused();
+  await testInfo.attach('inline-edit-multiline-growth', { body: JSON.stringify({ initialMultiline, initialEditor, grown, mirror, trailingNewline, trailingMirror, trailingMetrics }), contentType: 'application/json' });
+  await noOverflow(page);
+});
+
+test('enabled radio, switch and visible scrollbar boundaries contrast with their adjacent surfaces', async ({ page }, testInfo) => {
+  const contrast = locator => locator.evaluate(element => {
+    const context = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    const rgba = color => {
+      context.clearRect(0, 0, 1, 1); context.fillStyle = color; context.fillRect(0, 0, 1, 1);
+      return [...context.getImageData(0, 0, 1, 1).data].map((value, index) => index === 3 ? value / 255 : value);
+    };
+    const over = (top, under) => top.slice(0, 3).map((value, index) => value * top[3] + under[index] * (1 - top[3]));
+    const painted = node => {
+      const ancestors = [];
+      for (let current = node; current; current = current.parentElement) ancestors.unshift(current);
+      return ancestors.reduce((under, current) => over(rgba(getComputedStyle(current).backgroundColor), under), [255, 255, 255]);
+    };
+    const luminance = rgb => rgb.map(value => { const channel = value / 255; return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4; }).reduce((sum, value, index) => sum + value * [.2126, .7152, .0722][index], 0);
+    const ratio = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+    const style = getComputedStyle(element), stage = painted(element.parentElement), fill = painted(element), border = over(rgba(style.borderTopColor), fill);
+    return { borderStage: ratio(border, stage), borderFill: ratio(border, fill), fillStage: ratio(fill, stage), stage, fill, border, opacity: Number(style.opacity) };
+  });
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'inputs-radio-group--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const radio = page.getByRole('radio', { name: 'Daily', exact: true });
+    const radioColor = await contrast(radio);
+    expect(radioColor.borderStage).toBeGreaterThanOrEqual(3);
+    expect(radioColor.borderFill).toBeGreaterThanOrEqual(3);
+    await radio.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('radio', { name: 'Weekly', exact: true })).toBeChecked();
+    // Native disabled styling remains visibly distinct from the enabled boundary.
+    await radio.evaluate(element => { element.disabled = true; });
+    await expect(radio).toBeDisabled();
+    expect((await contrast(radio)).opacity).toBeLessThan(radioColor.opacity);
+    await openStory(page, 'inputs-switch--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const toggle = page.getByRole('switch', { name: 'Respect reduced motion', exact: true });
+    const before = await toggle.boundingBox(), thumbBefore = await toggle.locator('[data-slot="switch-thumb"]').boundingBox();
+    await toggle.focus();
+    await page.keyboard.press('Space');
+    await expect(toggle).not.toBeChecked();
+    await toggle.evaluate(element => element.blur());
+    await toggle.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished.catch(() => {}))));
+    const switchColor = await contrast(toggle);
+    expect(switchColor.borderStage).toBeGreaterThanOrEqual(3);
+    const after = await toggle.boundingBox(), thumbAfter = await toggle.locator('[data-slot="switch-thumb"]').boundingBox();
+    for (const key of ['width', 'height']) {
+      expect(after[key]).toBe(before[key]);
+      expect(thumbAfter[key]).toBe(thumbBefore[key]);
+    }
+    await expect(page.getByRole('switch', { name: 'Unavailable setting', exact: true })).toBeDisabled();
+    expect((await contrast(page.getByRole('switch', { name: 'Unavailable setting', exact: true }))).opacity).toBeLessThan(switchColor.opacity);
+    await openStory(page, 'navigation-scroll-area--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const viewport = page.locator('[data-slot="scroll-area-viewport"]');
+    await viewport.focus();
+    await page.keyboard.press('PageDown');
+    await expect.poll(() => viewport.evaluate(element => element.scrollTop)).toBeGreaterThan(0);
+    await page.locator('[data-slot="scroll-area"]').hover();
+    const thumb = page.locator('[data-slot="scroll-area-thumb"]');
+    await expect(thumb).toBeVisible();
+    const scrollbarColor = await contrast(thumb);
+    expect(scrollbarColor.fillStage).toBeGreaterThanOrEqual(3);
+    await testInfo.attach(`control-contrast-${theme}`, { body: JSON.stringify({ radio: radioColor, switch: switchColor, scrollbar: scrollbarColor }), contentType: 'application/json' });
+    await noOverflow(page);
+  }
+});
+
 test('stacked backdrop artwork stays complete and separate from foreground copy', async ({ page }) => {
   for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
     await openStory(page, 'molecules-media-media-backdrop--image-cover', `theme:${theme};mode:${mode};motion:reduced`);
@@ -1877,6 +2058,66 @@ test('product artwork examples keep selection, source metadata and recovery usab
   await expect(row).toBeVisible();
   await keepsGeometry();
   await noOverflow(page);
+  await openStory(page, 'blocks-resource-boundary--playground');
+  const selected = async name => {
+    const active = page.getByRole('button', { name, exact: true });
+    await expect(active).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('button[aria-pressed="true"]')).toHaveCount(1);
+    const inactive = page.locator('button[aria-pressed="false"]').first();
+    expect(await active.evaluate(element => getComputedStyle(element).backgroundColor)).not.toBe(await inactive.evaluate(element => getComputedStyle(element).backgroundColor));
+  };
+  await selected('Success');
+  await page.getByRole('button', { name: 'Loading', exact: true }).click();
+  await selected('Loading');
+  await expect(page.getByText('Loading component list…', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Empty', exact: true }).click();
+  await selected('Empty');
+  await expect(page.getByRole('heading', { name: 'Nothing here yet', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Error', exact: true }).click();
+  await selected('Error');
+  await expect(page.getByRole('alert')).toBeVisible();
+  await page.getByRole('button', { name: 'Try again', exact: true }).click();
+  await selected('Success');
+  await expect(page.locator('[data-slot="resource-boundary"]')).toContainText('Button');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await noOverflow(page);
+});
+
+test('quote attribution separators stay with adjacent words on phones', async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'blocks-quote-list--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const list = page.getByRole('list', { name: 'CodeVetter documentation excerpts', exact: true });
+    const geometry = await list.locator('li > p:last-child').evaluateAll(metas => {
+      const characters = element => {
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT), rects = [];
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) for (let index = 0; index < node.textContent.length; index++) {
+          if (/\s/.test(node.textContent[index])) continue;
+          const range = document.createRange(); range.setStart(node, index); range.setEnd(node, index + 1);
+          const rect = range.getBoundingClientRect();
+          if (rect.width > 1 && rect.height > 5) rects.push(rect);
+        }
+        return rects;
+      };
+      return metas.flatMap(meta => [...meta.querySelectorAll('span[aria-hidden]')].filter(span => span.textContent.includes('·')).map(separator => {
+        const range = document.createRange(), index = separator.firstChild.textContent.indexOf('·');
+        range.setStart(separator.firstChild, index); range.setEnd(separator.firstChild, index + 1);
+        const dot = range.getBoundingClientRect(), previous = characters(separator.previousElementSibling).at(-1), next = characters(separator.nextElementSibling)[0];
+        const center = rect => rect.top + rect.height / 2;
+        return { previous: Math.abs(center(dot) - center(previous)), next: Math.abs(center(dot) - center(next)) };
+      }));
+    });
+    expect(geometry.length).toBeGreaterThan(0);
+    expect(geometry.every(dot => dot.previous < 3 && dot.next < 3)).toBe(true);
+    const links = list.getByRole('link');
+    await links.first().focus();
+    await expect(links.first()).toBeFocused();
+    // Safari uses Option-Tab to include links in native keyboard navigation.
+    await page.keyboard.press(testInfo.project.name.startsWith('webkit') ? 'Alt+Tab' : 'Tab');
+    await expect(links.nth(1)).toBeFocused();
+    await testInfo.attach(`quote-separator-lines-${theme}`, { body: JSON.stringify(geometry), contentType: 'application/json' });
+    await noOverflow(page);
+  }
 });
 
 test('selected product notes retain their exact source and custom popover paint is exposed', async ({ page }) => {
@@ -2256,4 +2497,95 @@ test('collection sharing keeps its full link readable and retains the selected e
   await page.keyboard.press('Escape');
   await expect(trigger).toBeFocused();
   await noOverflow(page);
+});
+
+
+test('reduced marquee keeps every item reachable and retains first-copy DOM identity', async ({ page }, testInfo) => {
+  const measurements = [];
+  for (const width of [...new Set([page.viewportSize().width, 820])]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const vertical of [false, true]) {
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.goto(`/iframe.html?id=effects-marquee--playground&args=vertical:${vertical};reverse:true&globals=theme:paper;mode:light;motion:user`);
+      const track = page.locator(vertical ? '.animate-marquee-vertical' : '.animate-marquee').first();
+      await track.waitFor();
+      await page.evaluate(() => document.fonts.ready);
+      const root = track.locator('..');
+      const input = await track.evaluateHandle(element => {
+        const input = document.createElement('input');
+        input.setAttribute('aria-label', 'Marquee DOM identity probe');
+        input.style.cssText = 'width:100%;min-width:0;display:block';
+        element.firstElementChild.append(input);
+        return input;
+      });
+      const field = page.getByRole('textbox', { name: 'Marquee DOM identity probe' });
+      await field.fill('Keep this value');
+      await field.focus();
+      const assertReachable = async preference => {
+        await expect(field).toBeFocused();
+        await expect(field).toHaveValue('Keep this value');
+        expect(await input.evaluate(element => element === document.querySelector('input[aria-label="Marquee DOM identity probe"]'))).toBe(true);
+        const overflow = await root.evaluate(element => ({ x: getComputedStyle(element).overflowX, y: getComputedStyle(element).overflowY }));
+        const initialBounds = await track.locator(':scope > div').evaluateAll(elements => elements.map(element => { const b = element.getBoundingClientRect(); return { label: element.firstChild.textContent, left: b.left, right: b.right, top: b.top, bottom: b.bottom }; }));
+        await testInfo.attach(`marquee-${width}-${vertical ? 'vertical' : 'horizontal'}-${preference}-initial-bounds`, { body: JSON.stringify({ overflow, initialBounds, root: await root.boundingBox() }), contentType: 'application/json' });
+        const bounds = [];
+        for (const tile of await track.locator(':scope > div').all()) {
+          if (['auto', 'scroll'].includes(vertical ? overflow.y : overflow.x)) await tile.scrollIntoViewIfNeeded();
+          const result = await tile.evaluate(element => {
+            const tile = element.getBoundingClientRect(), root = element.parentElement.parentElement.getBoundingClientRect();
+            return { label: element.firstChild.textContent, tile: { left: tile.left, right: tile.right, top: tile.top, bottom: tile.bottom }, root: { left: root.left, right: root.right, top: root.top, bottom: root.bottom }, viewport: { width: innerWidth, height: innerHeight } };
+          });
+          expect(result.tile.left).toBeGreaterThanOrEqual(Math.max(0, result.root.left) - 1);
+          expect(result.tile.right).toBeLessThanOrEqual(Math.min(result.viewport.width, result.root.right) + 1);
+          expect(result.tile.top).toBeGreaterThanOrEqual(Math.max(0, result.root.top) - 1);
+          expect(result.tile.bottom).toBeLessThanOrEqual(Math.min(result.viewport.height, result.root.bottom) + 1);
+          bounds.push(result);
+        }
+        expect(bounds.map(item => item.label)).toEqual(['Components', 'Tokens', 'Motion', 'Blocks', 'Templates']);
+        await expect.poll(() => track.evaluate(element => getComputedStyle(element).animationName)).toBe('none');
+        await expect.poll(() => track.evaluate(element => getComputedStyle(element).transform)).toBe('none');
+        const visibleCopies = await root.locator(':scope > div').evaluateAll(elements => elements.filter(element => getComputedStyle(element).display !== 'none').length);
+        expect(visibleCopies).toBe(1);
+        measurements.push({ width, vertical, preference, bounds });
+        await noOverflow(page);
+      };
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await assertReachable('os');
+      await field.focus();
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await expect.poll(() => track.evaluate(element => getComputedStyle(element).animationName)).toBe(vertical ? 'sm-marquee-vertical' : 'sm-marquee');
+      await page.evaluate(() => document.documentElement.dataset.motion = 'reduced');
+      await assertReachable('explorer');
+      await field.focus();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.evaluate(() => document.documentElement.dataset.motion = 'user');
+      await assertReachable('os-with-explorer-user');
+      await input.dispose();
+    }
+  }
+  await testInfo.attach('marquee-reduced-reachability-and-dom-identity', { body: JSON.stringify(measurements), contentType: 'application/json' });
+});
+
+test('normal marquee translates with inert copies and preserves reverse and hover pause', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  for (const vertical of [false, true]) {
+    await page.goto(`/iframe.html?id=effects-marquee--playground&args=vertical:${vertical};reverse:true&globals=theme:paper;mode:light;motion:user`);
+    const track = page.locator(vertical ? '.animate-marquee-vertical' : '.animate-marquee').first();
+    await track.waitFor();
+    const root = track.locator('..');
+    await page.mouse.move(0, 0);
+    expect(await root.locator(':scope > div').count()).toBe(4);
+    for (const copy of (await root.locator(':scope > div').all()).slice(1)) {
+      await expect(copy).toHaveAttribute('aria-hidden', 'true');
+      await expect(copy).toHaveJSProperty('inert', true);
+      await expect(copy).toBeVisible();
+    }
+    expect(await track.evaluate(element => getComputedStyle(element).animationDirection)).toBe('reverse');
+    const first = await track.evaluate(element => getComputedStyle(element).transform);
+    await expect.poll(() => track.evaluate(element => getComputedStyle(element).transform)).not.toBe(first);
+    if (await page.evaluate(() => matchMedia('(hover:hover)').matches)) await root.hover();
+    else await track.evaluate(element => { const button = document.createElement('button'); button.textContent = 'Marquee focus pause probe'; element.firstElementChild.append(button); button.focus(); });
+    await expect.poll(() => track.evaluate(element => getComputedStyle(element).animationPlayState)).toBe('paused');
+    await noOverflow(page);
+  }
 });

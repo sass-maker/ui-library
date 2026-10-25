@@ -19,3 +19,25 @@
 @media (prefers-reduced-motion: reduce) {
  .animate-orbit { animation: none; transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg)); }
 }
+
+/* Keep the original child copy reachable when its repeating motion is disabled. */
+[data-motion="reduced"] [data-slot="marquee"] { overflow: auto; }
+[data-motion="reduced"] [data-slot="marquee"] > [data-slot="marquee-content"] {
+ animation: none;
+ transform: none;
+ min-width: 0;
+ width: 100%;
+}
+[data-motion="reduced"] [data-slot="marquee"] > .animate-marquee { flex-wrap: wrap; }
+[data-motion="reduced"] [data-slot="marquee"] > [aria-hidden="true"] { display: none; }
+@media (prefers-reduced-motion: reduce) {
+ :root [data-slot="marquee"] { overflow: auto; }
+ [data-slot="marquee"] > [data-slot="marquee-content"] {
+  animation: none;
+  transform: none;
+  min-width: 0;
+  width: 100%;
+ }
+ [data-slot="marquee"] > .animate-marquee { flex-wrap: wrap; }
+ [data-slot="marquee"] > [aria-hidden="true"] { display: none; }
+}
