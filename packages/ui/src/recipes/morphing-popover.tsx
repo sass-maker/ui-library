@@ -2,9 +2,10 @@
 /** Morphing surface adapted from ibelick/motion-primitives, MIT.
  * See THIRD_PARTY_NOTICES.md. Fleet retains Radix popover keyboard/focus behavior.
  */
-import { createContext, useContext, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Popover as Primitive } from "radix-ui";
 import { LayoutGroup, motion, type Transition } from "motion/react";
+import { frame, cancelFrame } from "motion";
 import { cn } from "../lib/utils";
 import { useReducedMotion } from "../lib/use-reduced-motion";
 
@@ -40,6 +41,22 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
   const { id, open, ready, setReady } = useContext(Context);
   const reduced = useReducedMotion();
   const content = useRef<HTMLDivElement>(null);
+  const [settled, setSettled] = useState(false);
+  const entrance = useMemo(() => ({ started: false, cancelled: false }), [open, ready, reduced]);
+  useLayoutEffect(() => {
+    if (!open || !ready) { setSettled(false); return; }
+    entrance.started = false;
+    entrance.cancelled = false;
+    // Layout animation starts in Motion's update phase. After rendering, a
+    // missing start means this opening has no projection animation to await.
+    const revealIfIdle = () => {
+      if (!entrance.cancelled && !entrance.started) setSettled(true);
+    };
+    if (reduced) setSettled(true);
+    else frame.postRender(revealIfIdle);
+    return () => { entrance.cancelled = true; cancelFrame(revealIfIdle); };
+  }, [open, ready, reduced, entrance]);
+  const reveal = ready && (reduced || settled);
   useLayoutEffect(() => {
     if (!open) return;
     let frame = 0, cancelled = false;
@@ -58,8 +75,10 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
   return <Primitive.Portal><Primitive.Content ref={content} data-slot="morphing-popover-content" side={side} align={align} sideOffset={8} collisionPadding={16}
     className={cn("relative z-50 w-80 max-w-[calc(100vw-2rem)] rounded-xl p-5 text-popover-foreground outline-none", className)}>
     {ready && <motion.div data-slot="morphing-popover-surface" aria-hidden initial={false} layoutId={reduced ? undefined : `${id}-surface`} transition={reduced ? { duration: 0 } : transition ?? settle}
+      onLayoutAnimationStart={() => { if (!entrance.cancelled) entrance.started = true; }}
+      onLayoutAnimationComplete={() => { if (!entrance.cancelled) setSettled(true); }}
       className={cn("pointer-events-none absolute inset-0 rounded-[inherit] border border-border bg-popover shadow-lg", surfaceClassName)} />}
-    <motion.div className="relative" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: ready ? 1 : 0 }} transition={{ duration: reduced ? 0 : .16, delay: reduced || !ready ? 0 : (transition?.delay ?? 0) + (transition?.visualDuration ?? transition?.duration ?? settle.duration) }}>{children}</motion.div>
+    <motion.div className={cn("relative", !reveal && "pointer-events-none")} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: reveal ? 1 : 0 }} transition={{ duration: reduced ? 0 : .16 }}>{children}</motion.div>
   </Primitive.Content></Primitive.Portal>;
 }
 

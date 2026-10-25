@@ -1348,7 +1348,7 @@ test('morphing popover paints its opening path around stable anchors and reduces
 
 test('popover foreground honors surface duration and interrupted reopen', async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  for (const [args, duration] of [["surfaceDuration:0", 0], ["surfaceDuration:0.45", .45], ["surfaceVisualDuration:0.35;surfaceDelay:0.1", .45]]) {
+  for (const [args, duration] of [["surfaceTiming:instant", 0], ["surfaceDuration:0", 0], ["surfaceDuration:0.45", .45], ["surfaceVisualDuration:0.35;surfaceDelay:0.1", .45]]) {
     await page.goto(`/iframe.html?id=motion-morphing-popover--playground&args=${args}&globals=theme:paper;mode:light;motion:user`);
     const trigger = page.getByRole('button', { name: 'Library details', exact: true }), panel = page.getByRole('dialog');
     await expect(trigger).toBeVisible();
@@ -1372,7 +1372,7 @@ test('popover foreground honors surface duration and interrupted reopen', async 
         const paint = document.querySelector('[data-slot="morphing-popover-surface"]'), foreground = document.querySelector('[data-slot="morphing-popover-content"] > .relative');
         const box = node => { const b = node.getBoundingClientRect(); return { x: b.x, y: b.y, width: b.width, height: b.height }; };
         if (paint && foreground) window.popoverTiming.push({ t: performance.now() - started, paint: box(paint), foreground: box(foreground), opacity: Number(getComputedStyle(foreground).opacity) });
-        if (performance.now() - started < 1000) requestAnimationFrame(sample); else window.popoverTimingDone = true;
+        if (performance.now() - started < 2000) requestAnimationFrame(sample); else window.popoverTimingDone = true;
       };
       requestAnimationFrame(sample);
     });
@@ -1391,6 +1391,71 @@ test('popover foreground honors surface duration and interrupted reopen', async 
     await page.keyboard.press('Escape'); await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
     const triggerPaint = page.locator('[data-slot="morphing-popover-trigger-surface"]');
     await expect.poll(() => triggerPaint.evaluate(node => getComputedStyle(node).transform)).toBe('none');
+    await noOverflow(page);
+  }
+});
+
+for (const timing of ['nested', 'physical']) test(`popover completion contains ${timing} transitions through interruption`, async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
+  await page.addInitScript(() => {
+    const request = window.requestAnimationFrame.bind(window), cancel = window.cancelAnimationFrame.bind(window), pending = new Set();
+    window.requestAnimationFrame = callback => { const handle = request(time => { pending.delete(handle); callback(time); }); pending.add(handle); return handle; };
+    window.cancelAnimationFrame = handle => { pending.delete(handle); cancel(handle); };
+    window.popoverPendingFrames = () => pending.size;
+  });
+  for (const preference of ['normal', 'os', 'explorer']) {
+    await page.emulateMedia({ reducedMotion: preference === 'os' ? 'reduce' : 'no-preference' });
+    await page.goto(`/iframe.html?id=motion-morphing-popover--playground&args=surfaceTiming:${timing}&globals=theme:paper;mode:light;motion:${preference === 'explorer' ? 'reduced' : 'user'}`);
+    await expect(page.locator('[data-popover-ownership]')).toHaveAttribute('data-surface-timing', timing);
+    const trigger = page.getByRole('button', { name: 'Library details', exact: true }), panel = page.getByRole('dialog');
+    const foreground = page.locator('[data-slot="morphing-popover-content"] > .relative');
+    const captureOpening = async label => {
+      await page.evaluate(() => {
+        window.popoverCompletion = []; window.popoverCompletionDone = false;
+        const started = performance.now(), rect = node => {
+          if (!node) return null;
+          const box = node.getBoundingClientRect(), style = getComputedStyle(node);
+          return { x: box.x, y: box.y, width: box.width, height: box.height, opacity: Number(style.opacity), visibility: style.visibility };
+        };
+        const sample = () => {
+          const content = document.querySelector('[data-slot="morphing-popover-content"]');
+          window.popoverCompletion.push({ t: performance.now() - started, paint: rect(document.querySelector('[data-slot="morphing-popover-surface"]')), foreground: rect(content?.querySelector(':scope > .relative')) });
+          if (performance.now() - started < 2000) requestAnimationFrame(sample); else window.popoverCompletionDone = true;
+        };
+        requestAnimationFrame(sample);
+      });
+      await trigger.click(); await page.waitForFunction(() => window.popoverCompletionDone);
+      const samples = await page.evaluate(() => window.popoverCompletion);
+      await testInfo.attach(`${timing}-${preference}-${label}-frames`, { body: JSON.stringify(samples), contentType: 'application/json' });
+      const visible = samples.filter(sample => sample.foreground?.visibility === 'visible' && sample.foreground.opacity > 0);
+      expect(visible.length).toBeGreaterThan(2); expect(visible.at(-1).foreground.opacity).toBe(1);
+      for (const { paint, foreground } of visible) {
+        expect(paint).not.toBeNull();
+        expect(foreground.x).toBeGreaterThanOrEqual(paint.x - 1); expect(foreground.y).toBeGreaterThanOrEqual(paint.y - 1);
+        expect(foreground.x + foreground.width).toBeLessThanOrEqual(paint.x + paint.width + 1);
+        expect(foreground.y + foreground.height).toBeLessThanOrEqual(paint.y + paint.height + 1);
+      }
+      if (preference !== 'normal') {
+        expect(new Set(visible.map(sample => sample.foreground.opacity))).toEqual(new Set([1]));
+        const paints = samples.filter(sample => sample.paint?.visibility === 'visible' && sample.paint.opacity > 0).map(sample => JSON.stringify(['x', 'y', 'width', 'height'].map(key => Math.round(sample.paint[key] * 100) / 100)));
+        expect(new Set(paints).size).toBe(1);
+      }
+    };
+    await captureOpening('initial'); await page.keyboard.press('Escape'); await expect(trigger).toBeFocused();
+    if (preference === 'normal') {
+      await trigger.click(); await expect(page.locator('[data-slot="morphing-popover-surface"]')).toHaveCount(1);
+      await expect(foreground).toHaveCSS('opacity', '0'); await expect(foreground).toHaveCSS('pointer-events', 'none');
+      const close = page.getByRole('button', { name: 'Close', exact: true }), box = await close.boundingBox();
+      await expect(close).toBeFocused();
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+      await expect(panel).toHaveCount(1); // Invisible controls must not receive pointer activation.
+      await page.keyboard.press('Escape'); await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+      await captureOpening('interrupted-reopen');
+      await expect(foreground).toHaveCSS('pointer-events', 'auto');
+      await page.getByRole('button', { name: 'Close', exact: true }).click(); await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+    }
+    await expect(panel).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => window.popoverPendingFrames())).toBe(0);
     await noOverflow(page);
   }
 });
