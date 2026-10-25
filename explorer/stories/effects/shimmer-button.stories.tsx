@@ -1,3 +1,5 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
+import { KithShimmerContext } from "../catalog-product-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
 import { Button } from '@saas-maker/ui/components/button';
@@ -9,3 +11,5 @@ const meta={id: "effects-shimmer-button", title: "Molecules/Effects/Shimmer butt
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){const [clicked,setClicked]=useState(false);return <div className="story-stack"><C.ShimmerButton onClick={()=>setClicked(true)}>Explore components</C.ShimmerButton><output>{clicked?"Example action selected":""}</output></div>;}};
+
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.KithShimmerContext, type: "code", language: "tsx" } } }, render: () => <KithShimmerContext /> };

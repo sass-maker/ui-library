@@ -39,3 +39,13 @@ export const sampleMetrics: MetricCardProps[] = [
   { label: "Checklist", value: `${sampleTasks.filter(task => task.complete).length}/${sampleTasks.length}`, detail: "Steps completed" },
   { label: "Unread", value: String(sampleMessages.filter(message => !message.read).length), detail: "Inbox messages" },
 ];
+
+// Original Kith demo artwork and actual app screens. Intrinsic dimensions are
+// retained so each composition can choose cover or contain deliberately.
+export const sampleArtwork = [
+  { id: "coast", title: "Coastal walk", file: "coastal-walk-v2.webp", alt: "Two people walking beside the sea", width: 760, height: 507, kind: "Illustrative artwork", fit: "cover" as const },
+  { id: "memory", title: "The memory table", file: "memory-table-v2.webp", alt: "An open memory book with a photograph and coffee", width: 1536, height: 1024, kind: "Illustrative artwork", fit: "cover" as const },
+  { id: "book", title: "A place for stories", file: "book-stage.webp", alt: "A warm still life of a book and dried flowers", width: 1024, height: 1536, kind: "Illustrative artwork", fit: "cover" as const },
+  { id: "sky", title: "Your constellation", file: "constellation.webp", alt: "Actual Kith screen showing a constellation of people", width: 603, height: 1311, kind: "Actual app screen", fit: "contain" as const },
+  { id: "begin", title: "A quiet beginning", file: "onboarding.webp", alt: "Actual Kith first-run screen for adding a person", width: 603, height: 1311, kind: "Actual app screen", fit: "contain" as const },
+];

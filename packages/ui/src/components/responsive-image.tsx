@@ -56,7 +56,7 @@ function Image({ src, alt, width, height, sources, focalPoint = "50% 50%", wideF
     };
     // Resource props are part of the parent's key; a new matrix remounts Image.
   }, []);
-  return <span aria-hidden={alt === "" ? true : undefined} data-media-state={state} className={cn("relative block overflow-hidden bg-muted", className)} style={{ aspectRatio: `${width} / ${height}`, ...style }}>
+  return <span aria-hidden={alt === "" ? true : undefined} data-media-state={state} className={cn("relative block overflow-hidden bg-muted aspect-[var(--media-aspect)]", className)} style={{ "--media-aspect": `${width} / ${height}`, ...style } as CSSProperties}>
     <picture aria-hidden={state === "error" ? true : undefined}>
       {sources?.map(source => <source key={`${source.media ?? ""}:${source.srcSet}`} {...source} />)}
       <img {...props} ref={ref} src={src} alt={alt} width={width} height={height} loading={loading} decoding={decoding}

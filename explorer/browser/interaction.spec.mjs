@@ -364,7 +364,20 @@ test('a carousel measures gaps, stays aligned on resize and recovers an empty co
   await expect(gallery.getByRole('button', { name: 'Next slide', exact: true })).toBeDisabled();
   await page.getByRole('button', { name: 'Restore artwork', exact: true }).click();
   await expect(gallery.getByRole('status')).toHaveText('Slide 1 of 5');
-  await expect(gallery.getByRole('link', { name: 'Inspect Coastal walk', exact: true })).toBeVisible();
+  const media = gallery.locator('[data-media-state]');
+  await expect.poll(() => media.evaluateAll(frames => frames.every(frame => { const r = frame.getBoundingClientRect(); return Math.abs(r.width / r.height - 4 / 3) < .01; }))).toBe(true);
+  const spacing = await gallery.evaluate(node => { const first = node.querySelector('figure').getBoundingClientRect(); const footer = node.querySelector('footer').getBoundingClientRect(); return footer.top - first.bottom; });
+  expect(spacing).toBeLessThan(32);
+  const inspect = gallery.getByRole('button', { name: 'Inspect Coastal walk', exact: true });
+  await expect(inspect).toBeVisible();
+  await inspect.click();
+  const preview = page.getByRole('dialog', { name: 'Coastal walk', exact: true });
+  await expect(preview).toContainText('760 × 507px');
+  await expect.poll(() => preview.getByRole('img').evaluate(image => image.complete && image.naturalWidth === 760 && image.naturalHeight === 507)).toBe(true);
+  await expect(preview.getByRole('link', { name: 'View the media source', exact: true })).toHaveAttribute('href', /site\/public\/demo\/kith/);
+  await page.keyboard.press('Escape');
+  await expect(preview).toHaveCount(0);
+  await expect(inspect).toBeFocused();
   await noOverflow(page);
 });
 
@@ -1829,18 +1842,128 @@ test('detail examples keep initial focus and do not open a phone modal on breakp
 });
 
 test('phone detail close controls stay visible and hit-test above sticky headers', async ({ page }) => {
-  for (const width of [390, 820]) {
-    await page.setViewportSize({ width, height: 1000 });
+  for (const [width, height] of [[390, 1000], [820, 1000], [844, 390]]) {
+    await page.setViewportSize({ width, height });
     await openStory(page, 'blocks-record-detail--in-context');
     const row = page.getByRole('button', { name: 'Inspect Keep the small things', exact: true });
     await row.click();
     const dialog = page.getByRole('dialog', { name: 'Keep the small things', exact: true });
     const close = dialog.getByRole('button', { name: 'Close', exact: true });
     await expect(close).toBeVisible();
-    await expect.poll(() => close.evaluate(button => { const r = button.getBoundingClientRect(); return button.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); })).toBe(true);
-    await close.click();
+    const closeIsTopmost = () => close.evaluate(button => { const r = button.getBoundingClientRect(); return button.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); });
+    await expect.poll(closeIsTopmost).toBe(true);
+    await dialog.evaluate(node => { node.scrollTop = node.scrollHeight; });
+    await expect.poll(closeIsTopmost).toBe(true);
+    if (height < 500) {
+      expect(await dialog.evaluate(node => node.scrollTop)).toBeGreaterThan(0);
+      await close.focus();
+      await page.keyboard.press('Enter');
+    } else await close.click();
     await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
     await expect(row).toBeFocused();
     await noOverflow(page);
   }
+});
+
+
+test('overflowing kanban retains a visible unmasked keyboard focus ring', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--in-context');
+  const lanes = page.getByRole('region', { name: 'Kith release board lanes', exact: true });
+  await expect(lanes).toHaveAttribute('tabindex', '0');
+  await page.keyboard.press('Tab');
+  await lanes.focus();
+  await expect(lanes).toBeFocused();
+  expect(await lanes.evaluate(node => node.matches(':focus-visible'))).toBe(true);
+  await expect(lanes).toHaveCSS('mask-image', 'none');
+  expect(await lanes.evaluate(node => getComputedStyle(node).boxShadow)).not.toBe('none');
+});
+
+test('artwork state recovery keeps focus on the deliberate state action', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await openStory(page, 'blocks-record-detail--in-context');
+  await page.getByRole('button', { name: 'Inspect Keep the small things', exact: true }).click();
+  await expect(page.getByRole('complementary', { name: 'Record detail', exact: true }).getByRole('heading', { name: 'Keep the small things', exact: true })).toBeFocused();
+  await page.getByRole('button', { name: 'Error', exact: true }).click();
+  const ready = page.getByRole('button', { name: 'Ready', exact: true });
+  await ready.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toBeVisible();
+  await expect(ready).toBeFocused();
+});
+
+
+test('pricing thresholds and discount explanations stay readable in narrow components', async ({ page }) => {
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1100 });
+    await openStory(page, 'data-pricing-calculator--in-context');
+    const thresholds = page.getByRole('list', { name: 'Plan thresholds', exact: true });
+    await expect(thresholds.getByRole('listitem')).toHaveText(['Growing studio · from 5 seats', 'Together at scale · from 12 seats']);
+    const boxes = await thresholds.getByRole('listitem').evaluateAll(items => items.map(item => { const r = item.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: item.scrollWidth, client: item.clientWidth }; }));
+    expect(boxes.every(box => box.width <= box.client + 1)).toBe(true);
+    expect(boxes[0].right <= boxes[1].left + 1 || boxes[0].bottom <= boxes[1].top + 1).toBe(true);
+    const slider = page.getByRole('slider', { name: 'Seats', exact: true });
+    await slider.focus();
+    await page.keyboard.press('Home');
+    for (let seat = 1; seat < 12; seat++) await page.keyboard.press('ArrowRight');
+    await expect(slider).toHaveAttribute('aria-valuetext', '12 seats');
+    const invoice = page.locator('dl');
+    await expect(invoice.getByText('Together at scale rate, $4.00 off a seat', { exact: true })).toBeVisible();
+    await expect.poll(() => invoice.locator('dt').evaluateAll(labels => labels.every(label => label.scrollWidth <= label.clientWidth + 1 && label.scrollHeight <= label.clientHeight + 1))).toBe(true);
+    await expect(invoice).toContainText('$96.00');
+    await page.getByRole('radio', { name: /Yearly/ }).click();
+    await expect(invoice).toContainText('$76.80');
+    await expect(invoice).toContainText('Billed $922 a year');
+    await noOverflow(page);
+  }
+});
+
+
+test('a contextual shimmer action opens its artwork and preserves an intrinsic button width', async ({ page }) => {
+  await openStory(page, 'effects-shimmer-button--in-context');
+  const trigger = page.getByRole('button', { name: 'Explore this artwork', exact: true });
+  expect((await trigger.boundingBox()).width).toBeLessThan(300);
+  await trigger.click();
+  const detail = page.getByRole('dialog', { name: 'Keep the small things', exact: true });
+  await expect(detail).toBeVisible();
+  await expect.poll(() => detail.getByRole('img').evaluate(image => image.complete && image.naturalWidth === 1536)).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(detail).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+  await openStory(page, 'effects-shimmer-button--playground');
+  expect((await page.getByRole('button', { name: 'Explore components', exact: true }).boundingBox()).width).toBeLessThan(300);
+});
+
+
+test('decorative effect motion keeps text stationary and stops for reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'effects-shimmer-button--in-context', 'theme:paper;mode:light;motion:user');
+  const trigger = page.getByRole('button', { name: 'Explore this artwork', exact: true });
+  const spark = trigger.locator('.animate-spin-around');
+  const before = await spark.evaluate(node => getComputedStyle(node).transform);
+  const textBefore = await trigger.boundingBox();
+  await expect.poll(() => spark.evaluate(node => getComputedStyle(node).transform)).not.toBe(before);
+  const textAfter = await trigger.boundingBox();
+  expect(Math.abs(textAfter.x - textBefore.x) + Math.abs(textAfter.y - textBefore.y) + Math.abs(textAfter.width - textBefore.width)).toBeLessThan(.5);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => spark.evaluate(node => parseFloat(getComputedStyle(node).animationDuration))).toBeLessThan(.001);
+  await page.waitForTimeout(100);
+  const reducedSpark = await spark.evaluate(node => getComputedStyle(node).transform);
+  await page.waitForTimeout(100);
+  expect(await spark.evaluate(node => getComputedStyle(node).transform)).toBe(reducedSpark);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'effects-border-beam--in-context', 'theme:paper;mode:light;motion:user');
+  const beam = page.locator('[style*="offset-path"]');
+  const heading = page.getByRole('heading', { name: 'Guard the invalid state', exact: true });
+  const headingBefore = await heading.boundingBox();
+  const offset = await beam.evaluate(node => getComputedStyle(node).offsetDistance);
+  await expect.poll(() => beam.evaluate(node => getComputedStyle(node).offsetDistance)).not.toBe(offset);
+  const headingAfter = await heading.boundingBox();
+  expect(Math.abs(headingAfter.x - headingBefore.x) + Math.abs(headingAfter.y - headingBefore.y)).toBeLessThan(.5);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(beam).toHaveCSS('offset-distance', '0%');
+  await page.waitForTimeout(150);
+  await expect(beam).toHaveCSS('offset-distance', '0%');
+  await noOverflow(page);
 });

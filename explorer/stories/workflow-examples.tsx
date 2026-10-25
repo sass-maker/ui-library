@@ -1,8 +1,9 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { ArrowRight, ArrowLeft, Check, FileText, ImageIcon, Plus, Upload, RotateCcw } from "lucide-react";
 import { Button } from "@saas-maker/ui/atoms/button";
 import { Badge } from "@saas-maker/ui/atoms/badge";
 import { InputField } from "@saas-maker/ui/molecules/input-field";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@saas-maker/ui/components/dialog";
 import { ResponsiveImage } from "@saas-maker/ui/atoms/responsive-image";
 import { FileDropzone } from "@saas-maker/ui/recipes/file-dropzone";
 import { MultiStepForm } from "@saas-maker/ui/recipes/multi-step-form";
@@ -14,7 +15,7 @@ import { TransitionPanel } from "@saas-maker/ui/recipes/transition-panel";
 import { TreeView } from "@saas-maker/ui/recipes/tree-view";
 import * as Carousel from "@saas-maker/ui/recipes/carousel";
 import * as Comparison from "@saas-maker/ui/recipes/image-comparison";
-import { sampleFiles } from "./composition-fixtures";
+import { sampleArtwork, sampleFiles } from "./composition-fixtures";
 
 export function UploadContext() {
   const [reject,setReject]=useState(false);
@@ -35,7 +36,7 @@ export function UploadContext() {
 export function OnboardingContext() {
   const [reject,setReject]=useState(false);
   return <div className="grid w-full max-w-4xl gap-8 lg:grid-cols-[.75fr_1fr] lg:items-center"><aside><Badge variant="outline">A new beginning</Badge><h2 className="mt-5 font-display text-3xl leading-tight">A little space<br /><em>for your next idea.</em></h2><p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">Start with the essentials. Keep every choice in place as you move forward, go back, or recover from a failed request.</p><ul className="mt-6 space-y-3 text-[0.8125rem]">{["Your workspace, your name","One considered step at a time","A clear way back when something fails"].map(label=><li key={label} className="flex items-center gap-2"><Check className="size-3.5 text-muted-foreground" />{label}</li>)}</ul></aside>
-    <div className="min-w-0"><MultiStepForm plans={[{id:"personal",name:"Personal",note:"A home for your own ideas",price:"Example"},{id:"studio",name:"Studio",note:"A place to build together",price:"Example"}]} onCreate={async()=>{await new Promise(resolve=>setTimeout(resolve,900));if(reject)throw new Error("The example request was interrupted. Your choices are still here.");}} /><label className="mt-5 flex items-center gap-2 text-xs text-muted-foreground"><input type="checkbox" checked={reject} onChange={event=>setReject(event.target.checked)} />Reject creation to try the recovery path</label><p className="mt-3 text-xs leading-relaxed text-muted-foreground">Illustrative setup. No account or subscription is created.</p></div></div>;
+    <div className="min-w-0"><MultiStepForm anchor="start" plans={[{id:"personal",name:"Personal",note:"A home for your own ideas",price:"Example"},{id:"studio",name:"Studio",note:"A place to build together",price:"Example"}]} onCreate={async()=>{await new Promise(resolve=>setTimeout(resolve,900));if(reject)throw new Error("The example request was interrupted. Your choices are still here.");}} /><label className="mt-5 flex items-center gap-2 text-xs text-muted-foreground"><input type="checkbox" checked={reject} onChange={event=>setReject(event.target.checked)} />Reject creation to try the recovery path</label><p className="mt-3 text-xs leading-relaxed text-muted-foreground">Illustrative setup. No account or subscription is created.</p></div></div>;
 }
 const initialBoard: KanbanColumn[] = [
   {id:"next",title:"Up next",cards:[{id:"upload",title:"Make upload recovery clearer"},{id:"empty",title:"Give empty states a little care"},{id:"mobile",title:"Review the phone layout"}]},
@@ -97,4 +98,22 @@ export function SourceTreeContext() {
   const [selected,setSelected]=useState("workspace/README.md");
   const texts: Record<string,string>={"workspace/README.md":"A small system, with clear responsibilities. Atoms provide the geometry. Molecules give them a purpose. Organisms bring the whole interaction together.","workspace/atoms/button.tsx":"The action’s geometry, focus, hover, press, and disabled state live here. Product behavior belongs in its parent.","workspace/molecules/input-field.tsx":"A label, input, description, and validation message—associated and composed once.","workspace/organisms/workspace-settings.tsx":"The complete interaction: edits, pending state, save failure, retry, and the saved result."};
   return <section className="grid w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card md:grid-cols-[.85fr_1.15fr]"><div className="border-b border-border p-5 md:border-b-0 md:border-r"><p className="mb-4 text-xs font-medium text-muted-foreground">Workspace / Source</p><TreeView label="Atomic source architecture" defaultOpen={["workspace","workspace/atoms","workspace/molecules","workspace/organisms"]} defaultSelected={selected} nodes={[{name:"workspace",children:[{name:"atoms",children:[{name:"button.tsx"}]},{name:"molecules",children:[{name:"input-field.tsx"}]},{name:"organisms",children:[{name:"workspace-settings.tsx"}]},{name:"README.md"}]}]} onSelect={setSelected} /></div><article className="p-6"><Badge variant="outline">Architecture note</Badge><h2 className="mt-5 break-all font-mono text-sm font-medium">{selected.split("/").at(-1)}</h2><p className="mt-5 text-sm leading-[1.8] text-muted-foreground">{texts[selected]??"Choose a file to see its responsibility in the system."}</p><p className="mt-7 border-t border-border pt-4 text-xs text-muted-foreground">Keyboard: arrows to navigate, Enter to select.</p></article></section>;
+}
+
+export function ArtworkCollectionContext() {
+  const [items, setItems] = useState(sampleArtwork);
+  const [selected, setSelected] = useState(sampleArtwork[0]);
+  const [open, setOpen] = useState(false);
+  const opener = useRef<HTMLButtonElement | null>(null);
+  return <Dialog open={open} onOpenChange={setOpen}><section className="w-full max-w-4xl space-y-5">
+    <header className="flex flex-wrap items-center justify-between gap-3"><div><p className="eyebrow mb-3 text-brand-ink">Kith / Release artwork</p><h2 className="font-display text-2xl sm:text-3xl">Artwork for the next chapter</h2><p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">Two frames on wider screens. Open any artwork to see the full image and its source.</p></div><Button variant="outline" onClick={() => setItems(current => current.length ? current.slice(0, -1) : sampleArtwork)}>{items.length ? "Remove last artwork" : "Restore artwork"}</Button></header>
+    <Carousel.Carousel label="Responsive artwork"><Carousel.CarouselContent className="gap-4">{items.map(item => <Carousel.CarouselItem key={item.id} label={item.title} className="sm:w-[calc((100%-1rem)/2)]"><figure className="overflow-hidden rounded-xl border border-border bg-card"><ResponsiveImage src={`./demo/kith/${item.file}`} alt={item.alt} width={item.width} height={item.height} className="aspect-[4/3] w-full bg-surface" imageClassName={item.fit === "contain" ? "object-contain p-4" : "object-cover"} /><figcaption className="p-5"><p className="text-xs text-muted-foreground">{item.kind}</p><h3 className="mt-2 text-lg font-semibold">{item.title}</h3><Button variant="link" className="mt-3 h-11 px-0" onClick={event => { opener.current = event.currentTarget; event.currentTarget.focus({ preventScroll: true }); setSelected(item); setOpen(true); }}>Inspect {item.title}<ArrowRight aria-hidden /></Button></figcaption></figure></Carousel.CarouselItem>)}</Carousel.CarouselContent><footer className="mt-3 flex items-center justify-between gap-3"><span className="text-xs text-muted-foreground">{items.length ? "Browse the collection" : "Collection empty"}</span><Carousel.CarouselIndicator className="static inset-auto hidden w-auto md:flex" /><Carousel.CarouselNavigation className="static inset-auto w-auto translate-y-0 gap-2 p-0" /></footer></Carousel.Carousel>
+    {!items.length && <p role="status" className="rounded-xl border border-dashed border-border px-6 py-10 text-sm text-muted-foreground">No artwork in this example. Restore the collection to continue browsing.</p>}
+    <p className="text-xs leading-relaxed text-muted-foreground">Original demo media retained with the library. Collection changes stay in this example.</p>
+    <DialogContent className="sm:max-w-3xl" onCloseAutoFocus={event => { if (opener.current?.isConnected) { event.preventDefault(); opener.current.focus({ preventScroll: true }); } }}>
+      <div className="pr-8"><DialogTitle>{selected.title}</DialogTitle><DialogDescription className="mt-2">{selected.kind} · {selected.width} × {selected.height}px</DialogDescription></div>
+      <img src={`./demo/kith/${selected.file}`} alt={selected.alt} width={selected.width} height={selected.height} className="max-h-[55dvh] w-full rounded-lg bg-surface object-contain" />
+      <a href="https://github.com/sass-maker/ui-library/tree/main/site/public/demo/kith" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 text-sm underline underline-offset-4">View the media source<ArrowRight aria-hidden className="size-4" /></a>
+    </DialogContent>
+  </section></Dialog>;
 }

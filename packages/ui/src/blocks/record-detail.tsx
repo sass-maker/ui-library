@@ -4,7 +4,7 @@ import * as React from "react";
 import { ArrowUpRightIcon, XIcon } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Button } from "../components/button";
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from "../components/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "../components/sheet";
 
 /** Matches a media query; false during server render and first paint. */
 export function useMediaQuery(query: string) {
@@ -247,7 +247,7 @@ export function RecordDetail({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" onCloseAutoFocus={event => {
+      <SheetContent side="bottom" showCloseButton={false} onCloseAutoFocus={event => {
         const target = returnTo.current;
         returnTo.current = null;
         if (target?.isConnected) {
@@ -255,9 +255,14 @@ export function RecordDetail({
           target.focus({ preventScroll: true });
         }
       }} className={cn("max-h-[88dvh] gap-0 overflow-y-auto rounded-t-2xl", className)}>
-        <div className="sticky top-0 z-10 bg-background px-5 pb-4 pt-6 pr-12">
-          <SheetTitle className="font-display text-2xl normal-case">{title}</SheetTitle>
-          {subtitle ? <SheetDescription className="mt-1">{subtitle}</SheetDescription> : <SheetDescription className="sr-only">Record detail</SheetDescription>}
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-3 bg-background px-5 pb-4 pt-6">
+          <div className="min-w-0 flex-1">
+            <SheetTitle className="font-display text-2xl normal-case">{title}</SheetTitle>
+            {subtitle ? <SheetDescription className="mt-1">{subtitle}</SheetDescription> : <SheetDescription className="sr-only">Record detail</SheetDescription>}
+          </div>
+          <SheetClose asChild>
+            <Button variant="ghost" size="icon" className="-mr-2 -mt-3 size-11 shrink-0 text-muted-foreground" aria-label="Close"><XIcon /></Button>
+          </SheetClose>
         </div>
         {body}
       </SheetContent>

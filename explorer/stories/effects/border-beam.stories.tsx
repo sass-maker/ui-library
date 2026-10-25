@@ -1,3 +1,5 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
+import { CodeVetterBeamContext } from "../catalog-product-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {useState,useRef} from 'react';
 import { Button } from '@saas-maker/ui/components/button';
@@ -9,3 +11,5 @@ const meta={id: "effects-border-beam", title: "Molecules/Effects/Border beam",pa
 export default meta;
 type Story=StoryObj;
 export const Playground:Story={render:function Render(){return <div className="story-panel relative grid min-h-60 place-content-center overflow-hidden"><h2 className="text-xl font-semibold">A focused edge</h2><p className="story-caption">Use sparingly on a focal surface.</p><C.BorderBeam duration={6}/></div>;}};
+
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.CodeVetterBeamContext, type: "code", language: "tsx" } } }, render: () => <CodeVetterBeamContext /> };

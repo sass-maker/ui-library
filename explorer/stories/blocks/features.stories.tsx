@@ -1,3 +1,5 @@
+import { sourceSnippets } from "virtual:fleet-example-source";
+import { KithFeaturesContext } from "../catalog-product-examples";
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ArrowRight, Box, Check } from 'lucide-react';
 import { FeatureGrid } from '@saas-maker/ui/blocks/features';
@@ -36,3 +38,5 @@ type Story = StoryObj<FeatureArgs>;
 export const Playground: Story = {
   render: args => <FeatureGrid items={items.slice(0, args.count)} columns={args.columns} variant={args.variant} />,
 };
+
+export const InContext: Story = { parameters: { docs: { source: { code: sourceSnippets.KithFeaturesContext, type: "code", language: "tsx" } } }, render: () => <KithFeaturesContext /> };
