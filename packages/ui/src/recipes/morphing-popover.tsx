@@ -2,7 +2,7 @@
 /** Morphing surface adapted from ibelick/motion-primitives, MIT.
  * See THIRD_PARTY_NOTICES.md. Fleet retains Radix popover keyboard/focus behavior.
  */
-import { createContext, useContext, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type SyntheticEvent } from "react";
 import { Popover as Primitive } from "radix-ui";
 import { LayoutGroup, motion, type Transition } from "motion/react";
 import { frame, cancelFrame } from "motion";
@@ -77,6 +77,10 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
     return () => { entrance.cancelled = true; entrance.complete = undefined; cancelFrame(observe); };
   }, [open, ready, reduced, entrance]);
   const reveal = ready && (reduced || settled);
+  // Keep Radix focus/navigation ownership, but do not activate or edit unseen controls.
+  const guardHidden = (event: SyntheticEvent) => {
+    if (!reveal) { event.preventDefault(); event.stopPropagation(); }
+  };
   useLayoutEffect(() => {
     if (!open) return;
     let frame = 0, cancelled = false;
@@ -97,7 +101,9 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
     {ready && <motion.div ref={surface} data-slot="morphing-popover-surface" aria-hidden initial={false} layoutId={reduced ? undefined : `${id}-surface`} transition={reduced ? { duration: 0 } : transition ?? settle}
       onLayoutAnimationComplete={() => entrance.complete?.()}
       className={cn("pointer-events-none absolute inset-0 rounded-[inherit] border border-border bg-popover shadow-lg", surfaceClassName)} />}
-    <motion.div className={cn("relative", !reveal && "pointer-events-none")} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: reveal ? 1 : 0 }} transition={{ duration: reduced ? 0 : .16 }}>{children}</motion.div>
+    <motion.div className={cn("relative", !reveal && "pointer-events-none")} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: reveal ? 1 : 0 }} transition={{ duration: reduced ? 0 : .16 }}
+      onKeyDownCapture={event => { if (event.key !== "Tab" && event.key !== "Escape") guardHidden(event); }}
+      onClickCapture={guardHidden} onBeforeInputCapture={guardHidden} onPasteCapture={guardHidden}>{children}</motion.div>
   </Primitive.Content></Primitive.Portal>;
 }
 
