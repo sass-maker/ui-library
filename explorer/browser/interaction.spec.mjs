@@ -260,6 +260,34 @@ test('the media gallery supports keyboard browsing and isolates offscreen links'
   await noOverflow(page);
 });
 
+for (const mode of ['light', 'dark']) {
+  test(`product personalities change identity while retaining shared component behavior in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    await openStory(page, 'foundations-tokens--product-personality', `theme:paper;mode:${mode};motion:reduced`);
+    const preview = page.getByTestId('product-personality-preview');
+    const name = preview.getByRole('textbox', { name: 'Workspace name', exact: true });
+    await name.fill('Kith · the next chapter');
+    const identities = [];
+    for (const personality of ['Editorial', 'Technical', 'Warm']) {
+      await page.getByRole('group', { name: 'Product personality', exact: true }).getByRole('button', { name: new RegExp(`^${personality}`) }).click();
+      await expect(name).toHaveValue('Kith · the next chapter');
+      identities.push(await preview.evaluate(element => ({ theme: element.dataset.theme, font: getComputedStyle(element.querySelector('h2')).fontFamily, radius: getComputedStyle(element.querySelector('button')).borderRadius, brand: getComputedStyle(element.querySelector('button')).backgroundColor })));
+      await accessibleStory(page, testInfo, `personality-${personality}-${mode}`);
+    }
+    expect(new Set(identities.map(item => item.font)).size).toBeGreaterThan(1);
+    expect(new Set(identities.map(item => item.radius)).size).toBeGreaterThan(1);
+    expect(new Set(identities.map(item => item.brand)).size).toBeGreaterThan(1);
+    await name.focus();
+    await page.keyboard.press('Enter');
+    await expect(preview.getByRole('status')).toHaveText('Saved “Kith · the next chapter” in this example.');
+    await page.getByRole('button', { name: 'Compact', exact: true }).click();
+    await expect(preview.getByRole('button', { name: 'Reset example', exact: true })).toHaveAttribute('data-variant', 'outline');
+    await preview.getByRole('button', { name: 'Reset example', exact: true }).click();
+    await expect(name).toHaveValue('Kith · October release');
+    await noOverflow(page);
+  });
+}
+
 for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
 test(`the media gallery keeps its caption action level across all slides and breakpoints in ${mode} mode`, async ({ page }) => {
   await openStory(page, 'motion-carousel--in-context', `theme:${theme};mode:${mode};motion:reduced`);

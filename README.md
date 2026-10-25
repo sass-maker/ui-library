@@ -199,6 +199,25 @@ export default defineConfig({ integrations: [react()] });
 
 Fonts: the theme ships Latin-only, weight-clamped woff2 subsets (about 50 KB on a Gallery page, about 105 KB on a Workbench paper page; `@font-face` is lazy and `Base.astro` preloads only the display font). Characters outside Latin fall back to the system font; add your own `@font-face` for other scripts. Regenerate with `pnpm --filter @saas-maker/ui fonts:build`.
 
+Products can keep their own personality. The explorer’s **Foundations → Tokens →
+Product personality** example changes presets and density on the same working
+form, with copyable setup and a product action wrapper.
+
+- Set `data-theme` and `data-mode` on `<html>` so the landing, application and
+  portalled dialogs/menus inherit one identity. Product CSS loaded after the
+  theme can override semantic color roles, font roles and `--radius`. Keep
+  foreground/background token pairs together and verify their contrast.
+- Use existing `variant`, `size`, `className` and `data-slot` hooks for repeatable
+  visual choices. `Button` exports `buttonVariants`; `asChild` preserves native
+  links when an action navigates. A product wrapper should forward the shared
+  component’s props and merge the caller’s className last with `cn`.
+- Compose children, named template slots, organism callbacks and supplied media
+  rather than copying a component. Keep product content and one-off wrappers in
+  the product; add a shared variant when several products need the same pattern.
+- Retain shared keyboard, focus, touch-target and reduced-motion behavior while
+  changing appearance. The font-pairing bench applies one pairing to both the
+  landing and a working asset library.
+
 The image spread is reusable as `GalleryEditorial` from
 `@saas-maker/ui/blocks/gallery`. It accepts title, lede, actions, primary image,
 related image/story, captions and footer. It reflows by its container width, so

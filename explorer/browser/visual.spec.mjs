@@ -180,6 +180,18 @@ for (const width of [390, 820, 1440]) {
           await expect(page).toHaveScreenshot(`fonts-end-${suffix}.png`);
         }
       });
+      test(`product personality ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        await openStory(page, 'foundations-tokens--product-personality', globals);
+        const preview = page.getByTestId('product-personality-preview');
+        for (const [name, preset] of [['Editorial', 'paper'], ['Technical', 'signal'], ['Warm', 'hearth']]) {
+          await page.getByRole('group', { name: 'Product personality', exact: true }).getByRole('button', { name: new RegExp(`^${name}`) }).click();
+          await page.evaluate(() => document.fonts.ready);
+          if (width <= 820) await preview.scrollIntoViewIfNeeded();
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`personality-${preset}-${suffix}.png`, { fullPage: width > 820 });
+        }
+      });
       test(`visual source shelf ${suffix}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 1000 });
         await openStory(page, 'start-here-visual-sources--source-shelf', globals);
