@@ -48,7 +48,9 @@ function BackdropPlayback({ poster, sources = [], children, label, autoPlay = fa
   useEffect(() => {
     const element = root.current;
     if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => {
+    const observer = new IntersectionObserver(entries => {
+      const entry = entries.at(-1);
+      if (!entry) return;
       setVisible(entry.isIntersecting);
       if (!entry.isIntersecting) { video.current?.pause(); setPlaying(false); }
     });
@@ -77,7 +79,9 @@ function BackdropPlayback({ poster, sources = [], children, label, autoPlay = fa
   const toggle = () => {
     autoAttempted.current = true;
     if (!failed && video.current && !video.current.paused) { video.current.pause(); setPlaying(false); return; }
-    // A click happens in view; discard queued observations from the previous offscreen position.
+    const bounds = root.current?.getBoundingClientRect();
+    if (document.hidden || !bounds || bounds.bottom <= 0 || bounds.top >= window.innerHeight || bounds.right <= 0 || bounds.left >= window.innerWidth) return;
+    // Explicit play in view supersedes observations from the previous offscreen position.
     visibilityObserver.current?.takeRecords();
     failures.current.clear();
     setFailed(false);

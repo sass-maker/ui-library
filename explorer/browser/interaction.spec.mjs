@@ -1310,15 +1310,33 @@ test('background controls reconcile delayed media events with actual playback', 
   await video.evaluate(element => element.pause());
   await expect(video).toHaveJSProperty('paused', true);
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
-  await video.evaluate(element => element.dispatchEvent(new Event('play', { bubbles: true })));
+  await video.evaluate(async element => {
+    element.dispatchEvent(new Event('play', { bubbles: true }));
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
   await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
   await expect(video).toHaveJSProperty('paused', false);
-  await video.evaluate(element => element.dispatchEvent(new Event('pause', { bubbles: true })));
+  await video.evaluate(async element => {
+    element.dispatchEvent(new Event('pause', { bubbles: true }));
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
   await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
   await expect(video).toHaveJSProperty('paused', true);
   await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).focus();
+  await video.evaluate(element => {
+    element.dataset.playEvents = '0';
+    element.addEventListener('play', () => { element.dataset.playEvents = String(Number(element.dataset.playEvents) + 1); });
+  });
+  await page.evaluate(() => { document.body.style.paddingBottom = '120vh'; window.scrollTo(0, document.body.scrollHeight); });
+  await expect.poll(() => backdrop.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await page.keyboard.press('Enter');
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(video).toHaveAttribute('data-play-events', '0');
 });
 
 test('background autoplay respects reduced motion and data saving before fetching video', async ({ page }) => {
