@@ -11,7 +11,7 @@ export type CodeComparisonProps = {
   renderCode?: (code: string, side: "before" | "after") => ReactNode;
 };
 export function CodeComparison({ beforeCode, afterCode, language = "text", filename = "example.tsx", className, renderCode }: CodeComparisonProps) {
-  return <div className={cn("grid min-w-0 overflow-hidden rounded-xl border border-border bg-card md:grid-cols-2", className)}>
+  return <div className={cn("grid w-full min-w-0 overflow-hidden rounded-xl border border-border bg-card md:grid-cols-2", className)}>
     {([{ side: "before", code: beforeCode }, { side: "after", code: afterCode }] as const).map(({ side, code }) =>
       <section key={side} className="min-w-0 first:border-b first:border-border md:first:border-r md:first:border-b-0">
         <div className="flex items-center gap-2 border-b border-border bg-surface px-4 py-3 text-xs">

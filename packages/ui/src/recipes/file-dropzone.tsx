@@ -94,7 +94,7 @@ export function FileDropzone({ onFiles, onUpload, accept, multiple = true, maxSi
       className={cn("relative flex min-h-56 flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed px-6 py-10 text-center outline-none transition-[border-color,background-color] duration-150 focus-visible:ring-[3px] focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50", over ? "border-brand bg-brand-soft" : "border-border bg-card hover:border-muted-foreground")}>
       <Upload aria-hidden className={cn("size-7 text-foreground transition-transform duration-150 motion-reduce:transform-none", over && "-translate-y-1")} />
       <span className="text-sm font-medium">{over ? "Release to add files" : label}</span>
-      <span id={`${id}-hint`} className="max-w-sm text-xs leading-relaxed text-muted-foreground">{hint ?? (onUpload ? "Uploads use the transport supplied by your application." : "Files are selected locally. No upload transport is connected.")}{maxSize !== undefined && ` Maximum ${size(maxSize)} per file.`}</span>
+      <span id={`${id}-hint`} className="max-w-sm text-xs leading-relaxed text-muted-foreground">{hint ?? (onUpload ? "Uploads use the transport supplied by your application." : "Files are selected locally. No upload transport is connected.")}{maxSize !== undefined && <><span aria-hidden> </span><span className="mt-1 block">Maximum {size(maxSize)} per file.</span></>}</span>
     </button>
     <input ref={input} type="file" accept={accept} multiple={multiple} disabled={disabled} hidden onChange={event => { if (event.currentTarget.files) add(event.currentTarget.files); event.currentTarget.value = ""; }} />
     {error && <p role="alert" className="text-sm text-destructive">{error}</p>}

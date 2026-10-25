@@ -180,6 +180,18 @@ for (const width of [390, 820, 1440]) {
           await expect(page).toHaveScreenshot(`fonts-end-${suffix}.png`);
         }
       });
+      test(`product personality ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        await openStory(page, 'foundations-tokens--product-personality', globals);
+        const preview = page.getByTestId('product-personality-preview');
+        for (const [name, preset] of [['Editorial', 'paper'], ['Technical', 'ink'], ['Warm', 'hearth']]) {
+          await page.getByRole('group', { name: 'Product personality', exact: true }).getByRole('button', { name: new RegExp(`^${name}`) }).click();
+          await page.evaluate(() => document.fonts.ready);
+          if (width <= 820) await preview.scrollIntoViewIfNeeded();
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`personality-${preset}-${suffix}.png`, { fullPage: width > 820 });
+        }
+      });
       test(`visual source shelf ${suffix}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 1000 });
         await openStory(page, 'start-here-visual-sources--source-shelf', globals);
@@ -201,6 +213,68 @@ for (const width of [390, 820, 1440]) {
         if (width <= 820) {
           await page.locator('#kith-status').scrollIntoViewIfNeeded();
           await expect(page).toHaveScreenshot(`media-status-${suffix}.png`);
+        }
+      });
+      test(`catalog state finishes ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        for (const [name, id] of [
+          ['kanban', 'interactions-kanban-board--playground'],
+          ['navigation', 'navigation-navigation-menu--playground'],
+          ['orbit', 'effects-orbiting-circles--playground'],
+          ['context', 'overlays-context-menu--playground'],
+          ['morphing-popover', 'motion-morphing-popover--in-context'],
+          ['tabs', 'navigation-tabs--playground'],
+          ['avatars', 'data-avatar-stack--playground'],
+          ['search', 'blocks-search-palette--playground'],
+          ['dynamic-toolbar', 'motion-dynamic-toolbar--playground'],
+          ['features', 'blocks-features--playground'],
+        ]) {
+          await openStory(page, id, globals);
+          if (name === 'navigation') {
+            await page.getByRole('button', { name: 'Explore', exact: true }).focus();
+            await page.keyboard.press('Enter');
+            await page.keyboard.press('ArrowDown');
+            await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toBeVisible();
+          }
+          if (name === 'context') {
+            await page.locator('[data-slot="context-menu-trigger"]').focus();
+            await page.keyboard.press('Shift+F10');
+            await expect(page.getByRole('menu')).toBeVisible();
+          }
+          if (name === 'morphing-popover') {
+            await page.getByRole('button', { name: 'Share collection', exact: true }).click();
+            await expect(page.getByRole('dialog')).toBeVisible();
+          }
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`finish-${name}-${suffix}.png`, { fullPage: width > 820, animations: 'allow' });
+        }
+      });
+      test(`image and video backdrops ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        for (const kind of ['image', 'video']) {
+          await openStory(page, `molecules-media-media-backdrop--${kind}-cover`, globals);
+          await expect.poll(() => page.locator('[data-media-backdrop] img').evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`backdrop-${kind}-${suffix}.png`, { fullPage: width > 820 });
+        }
+      });
+      test(`original product media examples ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        for (const [name, id] of [
+          ['hero', 'blocks-hero--playground'],
+          ['frames', 'blocks-frames--playground'],
+          ['gallery', 'blocks-gallery--playground'],
+          ['video-dialog', 'effects-hero-video-dialog--playground'],
+          ['comparison', 'motion-image-comparison--playground'],
+        ]) {
+          await openStory(page, id, globals);
+          await expect.poll(() => page.locator('img').evaluateAll(images => images.length > 0 && images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+          await noOverflow(page);
+          await expect(page).toHaveScreenshot(`product-${name}-${suffix}.png`, { fullPage: width > 820 });
+          if (width <= 820 && ['hero', 'gallery'].includes(name)) {
+            await page.locator('img').last().scrollIntoViewIfNeeded();
+            await expect(page).toHaveScreenshot(`product-${name}-media-${suffix}.png`);
+          }
         }
       });
     });

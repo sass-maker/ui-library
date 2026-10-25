@@ -8,4 +8,4 @@ const meta = { id: "inputs-label", title: "Atoms/Inputs/Label", component: C.Lab
 export default meta;
 type Story = StoryObj;
 
-export const Playground: Story = { render: function Render() { return <div className="story-stack max-w-sm"><C.Label htmlFor="project-field">Project name</C.Label><input id="project-field" className="h-10 rounded-md border border-input bg-background px-3 text-sm" placeholder="UI Library"/><p className="story-caption">A visible label stays associated with the field even when it has a value.</p></div>; } };
+export const Playground: Story = { render: function Render() { return <div className="story-stack max-w-sm"><C.Label htmlFor="project-field">Project name</C.Label><input id="project-field" className="h-10 rounded-md border border-input bg-background px-3 text-sm" defaultValue="UI Library"/><p className="story-caption">A visible label stays associated with the field even when it has a value.</p></div>; } };

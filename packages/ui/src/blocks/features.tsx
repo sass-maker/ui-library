@@ -26,16 +26,22 @@ export function FeatureGrid({
   className?: string;
 }) {
   const cols = { 2: "sm:grid-cols-2", 3: "sm:grid-cols-2 lg:grid-cols-3", 4: "sm:grid-cols-2 lg:grid-cols-4" }[columns];
+  const rules = {
+    2: "sm:[&:nth-child(n+3)]:border-t sm:[&:nth-child(2n)]:border-l",
+    3: "sm:max-lg:[&:nth-child(n+3)]:border-t sm:max-lg:[&:nth-child(2n)]:border-l lg:[&:nth-child(n+4)]:border-t lg:[&:not(:nth-child(3n+1))]:border-l",
+    4: "sm:max-lg:[&:nth-child(n+3)]:border-t sm:max-lg:[&:nth-child(2n)]:border-l lg:[&:nth-child(n+5)]:border-t lg:[&:not(:nth-child(4n+1))]:border-l",
+  }[columns];
 
   if (variant === "ruled") {
-    // Hairline grid: the 1px gaps show the border color between cells.
+    // Rules belong to occupied cells; an incomplete row keeps the section surface.
     return (
-      <ul className={cn("grid gap-px border-y border-border bg-border", cols, className)}>
+      <ul className={cn("grid border-y border-border", cols, className)}>
         {items.map((f, i) => (
           <li
             key={i}
             className={cn(
-              "flex flex-col gap-3 bg-[var(--section-bg,var(--background))] py-8 sm:px-7",
+              "flex flex-col gap-3 border-border py-8 max-sm:[&:nth-child(n+2)]:border-t sm:px-7",
+              rules,
               columns === 2 && "sm:[&:nth-child(2n+1)]:pl-0",
               columns === 3 && "sm:[&:nth-child(2n+1)]:pl-0 lg:[&:nth-child(2n+1)]:pl-7 lg:[&:nth-child(3n+1)]:pl-0",
               columns === 4 && "sm:[&:nth-child(2n+1)]:pl-0 lg:[&:nth-child(2n+1)]:pl-7 lg:[&:nth-child(4n+1)]:pl-0",

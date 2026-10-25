@@ -8,4 +8,4 @@ const meta = { id: "inputs-textarea", title: "Atoms/Inputs/Textarea", component:
 export default meta;
 type Story = StoryObj;
 
-export const Playground: Story = { render: function Render() { return <div className="story-stack max-w-lg"><label className="story-label">feedback<C.Textarea className="mt-2" placeholder="What would make this component easier to use?" /></label><C.Textarea aria-label="Unavailable feedback" disabled placeholder="unavailable" /></div>; } };
+export const Playground: Story = { render: function Render() { return <div className="story-stack max-w-lg"><label className="story-label">Feedback<C.Textarea className="mt-2" placeholder="What would make this component easier to use?" /></label><C.Textarea aria-label="Unavailable feedback" disabled placeholder="Unavailable" /></div>; } };

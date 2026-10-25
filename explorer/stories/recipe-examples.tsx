@@ -41,7 +41,7 @@ export function ProjectDetailsContext() {
         <InlineEdit label="Release name" value={name} onSave={value=>{setName(value);setState("unsaved");}} placeholder="Name this release" className="text-2xl font-semibold tracking-tight" />
         <label className="mt-5 block text-xs font-medium text-muted-foreground" htmlFor="context-description">Release notes</label>
         <Textarea id="context-description" value={description} onChange={event=>{setDescription(event.target.value);setState("unsaved");}} className="mt-2 min-h-24 resize-none text-sm leading-relaxed" />
-        <div className="mt-6"><TagInput label="Release tags" tags={tags} onTagsChange={value=>{setTags(value);setState("unsaved");}} /></div>
+        <div className="mt-6"><TagInput className="w-full" fieldClassName="border border-input bg-transparent shadow-xs" label="Release tags" tags={tags} onTagsChange={value=>{setTags(value);setState("unsaved");}} /></div>
       </div>
       <footer className="flex flex-wrap items-center justify-between gap-5 border-t border-border px-6 py-4 sm:px-7"><AvatarStack label="Illustrative collaborators" people={[{name:"Maya Chen"},{name:"Arjun Patel"},{name:"Leah Martin"},{name:"You"}]} max={3} />
         <MorphingButton label="Save release" onSave={async()=>{setState("saving");await new Promise(resolve=>setTimeout(resolve,900));if(reject){setState("unsaved");throw new Error("Local example failure");}setState("saved");setSavedAt(Date.now());}} />
@@ -59,7 +59,7 @@ export function SharingContext() {
       <MorphPopover.MorphingPopover><MorphPopover.MorphingPopoverTrigger className="flex items-center gap-2"><Share2 className="size-3.5" />Share collection</MorphPopover.MorphingPopoverTrigger><MorphPopover.MorphingPopoverContent>
         <h3 className="text-base font-semibold">Share collection</h3><p className="mt-2 text-[0.8125rem] leading-relaxed text-muted-foreground">This is a local permissions example. No access is granted.</p>
         <div className="mt-5"><label htmlFor="share-access" className="mb-2 block text-xs font-medium">Who can open this?</label><select id="share-access" value={access} onChange={event=>setAccess(event.target.value)} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Invited only</option><option>Anyone with the link</option></select></div>
-        <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-surface p-2"><code className="min-w-0 flex-1 truncate text-xs">https://example.com/collections/kith</code><CopyButton value="https://example.com/collections/kith" label="Copy collection link" /></div>
+        <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-surface p-2"><code className="min-w-0 flex-1 break-words text-xs leading-relaxed">https://example.com/<wbr />collections/<wbr />kith</code><CopyButton value="https://example.com/collections/kith" label="Copy collection link" /></div>
         <div className="mt-5 flex justify-end"><MorphPopover.MorphingPopoverClose>Done</MorphPopover.MorphingPopoverClose></div>
       </MorphPopover.MorphingPopoverContent></MorphPopover.MorphingPopover>
     </div><div className="mt-6 border-t border-border pt-4 text-xs text-muted-foreground">{access} <span aria-hidden>·</span> Example permissions</div>

@@ -4,7 +4,7 @@ import * as React from "react";
 import { ArrowUpRightIcon, XIcon } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Button } from "../components/button";
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from "../components/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "../components/sheet";
 
 /** Matches a media query; false during server render and first paint. */
 export function useMediaQuery(query: string) {
@@ -172,6 +172,8 @@ export function RecordDetail({
   children,
   actions,
   desktopQuery = "(min-width: 1024px)",
+  focusHeading = true,
+  presentation = "auto",
   className,
 }: {
   open: boolean;
@@ -181,25 +183,35 @@ export function RecordDetail({
   children: React.ReactNode;
   actions?: React.ReactNode;
   desktopQuery?: string;
+  /** Focus the desktop heading after selection. Disable for an initially visible summary; modal sheet focus is always managed. */
+  focusHeading?: boolean;
+  /** Let a responsive parent own presentation and open state together. */
+  presentation?: "auto" | "panel" | "sheet";
   className?: string;
 }) {
-  const desktop = useMediaQuery(desktopQuery);
+  const matchesDesktop = useMediaQuery(desktopQuery);
+  const desktop = presentation === "auto" ? matchesDesktop : presentation === "panel";
   const headingRef = React.useRef<HTMLHeadingElement>(null);
   // Where focus was before the panel took it (usually the row that opened it).
   const returnTo = React.useRef<HTMLElement | null>(null);
+  React.useLayoutEffect(() => {
+    if (!open) return;
+    const from = document.activeElement;
+    if (from instanceof HTMLElement && from !== document.body && !from.closest("[data-record-detail]")) returnTo.current = from;
+  }, [open]);
   React.useEffect(() => {
     if (!desktop) return;
     if (open) {
       const from = document.activeElement;
       if (from instanceof HTMLElement && from !== document.body && !from.closest("[data-record-detail]")) returnTo.current = from;
-      headingRef.current?.focus({ preventScroll: true });
+      if (focusHeading) headingRef.current?.focus({ preventScroll: true });
     } else if (returnTo.current) {
       // The panel unmounted with focus inside it, so focus fell to <body>: put it back.
       const target = returnTo.current;
       returnTo.current = null;
       if (target.isConnected && (document.activeElement === document.body || !document.activeElement)) target.focus({ preventScroll: true });
     }
-  }, [open, desktop, title]);
+  }, [open, desktop, title, focusHeading]);
 
   const body = (
     <div className="flex flex-col gap-6 px-5 pb-8">
@@ -235,10 +247,22 @@ export function RecordDetail({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className={cn("max-h-[88dvh] gap-0 overflow-y-auto rounded-t-2xl", className)}>
-        <div className="sticky top-0 z-10 bg-background px-5 pb-4 pt-6 pr-12">
-          <SheetTitle className="font-display text-2xl normal-case">{title}</SheetTitle>
-          {subtitle ? <SheetDescription className="mt-1">{subtitle}</SheetDescription> : <SheetDescription className="sr-only">Record detail</SheetDescription>}
+      <SheetContent side="bottom" showCloseButton={false} onCloseAutoFocus={event => {
+        const target = returnTo.current;
+        returnTo.current = null;
+        if (target?.isConnected) {
+          event.preventDefault();
+          target.focus({ preventScroll: true });
+        }
+      }} className={cn("max-h-[88dvh] gap-0 overflow-y-auto rounded-t-2xl", className)}>
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-3 bg-background px-5 pb-4 pt-6">
+          <div className="min-w-0 flex-1">
+            <SheetTitle className="font-display text-2xl normal-case">{title}</SheetTitle>
+            {subtitle ? <SheetDescription className="mt-1">{subtitle}</SheetDescription> : <SheetDescription className="sr-only">Record detail</SheetDescription>}
+          </div>
+          <SheetClose asChild>
+            <Button variant="ghost" size="icon" className="-mr-2 -mt-3 size-11 shrink-0 text-muted-foreground" aria-label="Close"><XIcon /></Button>
+          </SheetClose>
         </div>
         {body}
       </SheetContent>

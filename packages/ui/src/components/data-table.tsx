@@ -55,6 +55,10 @@ export type DataColumn<T> = {
   value: (row: T) => DataValue
   /** Custom cell; defaults to the formatted value. */
   cell?: (row: T) => React.ReactNode
+  /** A stacked identifying cell when an ungrouped table is narrower than 40rem. */
+  compactCell?: (row: T) => React.ReactNode
+  /** Hide in the compact layout. Columns can restore the full table. */
+  collapseInCompact?: boolean
   align?: "left" | "right"
   /** Default true. */
   sortable?: boolean
@@ -351,9 +355,15 @@ function DataTable<T extends RowData>({
   }
 
   const hideable = table.getAllLeafColumns().filter((c) => c.getCanHide())
-  const headerGroups = table.getHeaderGroups()
   const grouped = columns.some((column) => !!column.group)
-  const colCount = Math.max(1, visibleColumns.length) + (selection ? 1 : 0)
+  const hasCompactCells = !grouped && columns.some(column => !!column.compactCell)
+  const [expandedColumns, setExpandedColumns] = React.useState(false)
+  const [narrow, setNarrow] = React.useState(false)
+  const compact = hasCompactCells && narrow && !expandedColumns
+  const canChooseColumns = hideable.length > 0 || hasCompactCells && narrow
+  const scrollHintId = React.useId()
+  const headerGroups = table.getHeaderGroups()
+  const colCount = Math.max(1, visibleColumns.filter(column => !compact || !column.collapseInCompact).length) + (selection ? 1 : 0)
   const scrollRef = React.useRef<HTMLDivElement>(null)
   const [headerHeight, setHeaderHeight] = React.useState(40)
   const [edges, setEdges] = React.useState({ left: false, right: false })
@@ -366,6 +376,8 @@ function DataTable<T extends RowData>({
       const table = content.getBoundingClientRect()
       const visibleLeft = frame.left + viewport.clientLeft
       const visibleRight = visibleLeft + viewport.clientWidth
+      const compactWidth = viewport.clientWidth > 0 && viewport.clientWidth < 640
+      setNarrow(previous => previous === compactWidth ? previous : compactWidth)
       const left = table.left < visibleLeft - 1
       const right = table.right > visibleRight + 1
       const header = content.querySelector("thead tr")?.getBoundingClientRect().height
@@ -384,11 +396,11 @@ function DataTable<T extends RowData>({
   }, [pageIndex, sorting])
 
   return (
-    <div ref={rootRef} data-slot="data-table" className={cn("flex min-w-0 flex-col gap-3 [--data-table-header-height:40px] [@media(pointer:coarse)]:[--data-table-header-height:48px]", className)}>
+    <div ref={rootRef} data-slot="data-table" data-compact={compact || undefined} className={cn("group/data-table flex min-w-0 flex-col gap-3 [--data-table-header-height:40px] [@media(pointer:coarse)]:[--data-table-header-height:48px]", className)}>
       {status === "loading" && <span role="status" className="sr-only">Loading</span>}
-      <div className={cn("grid min-h-8 items-start gap-2", hideable.length ? "grid-cols-[minmax(0,1fr)_auto]" : "grid-cols-1")}>
+      <div className={cn("grid min-h-8 items-start gap-2 sm:items-center", canChooseColumns ? "grid-cols-[minmax(0,1fr)_auto]" : "grid-cols-1")}>
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">{toolbar?.({ rows: sortedRows, columns: visibleColumns })}</div>
-        {hideable.length > 0 && (
+        {canChooseColumns && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="text-muted-foreground">
@@ -399,9 +411,11 @@ function DataTable<T extends RowData>({
             <DropdownMenuContent align="end" className="max-h-80 w-52">
               <DropdownMenuLabel className="ui-case text-xs font-medium text-muted-foreground">Show columns</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              {hasCompactCells && narrow && <DropdownMenuCheckboxItem checked={expandedColumns} onCheckedChange={value => setExpandedColumns(!!value)} onSelect={event => event.preventDefault()}>Show all columns</DropdownMenuCheckboxItem>}
               {hideable.map((col) => (
                 <DropdownMenuCheckboxItem
                   key={col.id}
+                  className={compact ? "hidden" : undefined}
                   checked={col.getIsVisible()}
                   onCheckedChange={(v) => col.toggleVisibility(!!v)}
                   onSelect={(e) => e.preventDefault()}
@@ -414,6 +428,7 @@ function DataTable<T extends RowData>({
         )}
       </div>
 
+      {(edges.left || edges.right) && <p id={scrollHintId} data-slot="data-table-scroll-hint" className="flex items-center gap-2 text-xs text-muted-foreground"><ArrowLeftRightIcon aria-hidden className="size-3.5" />Scroll horizontally for more columns.</p>}
       <div className="relative min-w-0">
       <div
         ref={scrollRef}
@@ -423,6 +438,7 @@ function DataTable<T extends RowData>({
         tabIndex={pageRows.length && onRowClick ? -1 : 0}
         role="region"
         aria-label={label}
+        aria-describedby={edges.left || edges.right ? scrollHintId : undefined}
         data-scroll-left={edges.left || undefined}
         data-scroll-right={edges.right || undefined}
       >
@@ -473,7 +489,8 @@ function DataTable<T extends RowData>({
                       aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : undefined}
                       className={cn(
                         "sticky top-0 z-10 h-(--data-table-header-height) border-b border-border bg-card px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4",
-                        right && "text-right"
+                        right && "text-right",
+                        col?.collapseInCompact && "group-data-[compact=true]/data-table:hidden"
                       )}
                       style={{ top: grouped && rowIndex > 0 ? rowIndex * headerHeight : undefined, minWidth: col?.minWidth }}
                     >
@@ -581,11 +598,12 @@ function DataTable<T extends RowData>({
                         className={cn(
                           "border-b border-hairline px-3 py-2.5 align-middle whitespace-nowrap first:pl-4 last:pr-4",
                           col.align === "right" && "text-right tabular-nums",
-                          col.className
+                          col.className,
+                          col.collapseInCompact && "group-data-[compact=true]/data-table:hidden"
                         )}
                         style={{ minWidth: col.minWidth }}
                       >
-                        {col.cell ? col.cell(row.original) : display(col.value(row.original))}
+                        {col.compactCell ? <><div className="hidden whitespace-normal group-data-[compact=true]/data-table:block">{col.compactCell(row.original)}</div><div className="group-data-[compact=true]/data-table:hidden">{col.cell ? col.cell(row.original) : display(col.value(row.original))}</div></> : col.cell ? col.cell(row.original) : display(col.value(row.original))}
                       </td>
                     ))}
                   </tr>
@@ -594,10 +612,9 @@ function DataTable<T extends RowData>({
           </tbody>
         </table>
       </div>
-      {edges.left && <span aria-hidden className="pointer-events-none absolute inset-y-px left-px z-20 w-6 rounded-l-lg bg-linear-to-r from-card to-transparent" />}
-      {edges.right && <span aria-hidden className="pointer-events-none absolute inset-y-px right-px z-20 w-6 rounded-r-lg bg-linear-to-l from-card to-transparent" />}
+      {edges.left && <span aria-hidden className="pointer-events-none absolute inset-y-px left-px z-20 w-12 rounded-l-lg bg-linear-to-r from-card from-25% to-transparent" />}
+      {edges.right && <span aria-hidden className="pointer-events-none absolute inset-y-px right-px z-20 w-12 rounded-r-lg bg-linear-to-l from-card from-25% to-transparent" />}
       </div>
-      {(edges.left || edges.right) && <p className="flex items-center gap-2 text-xs text-muted-foreground"><ArrowLeftRightIcon aria-hidden className="size-3.5" />Scroll horizontally for more columns.</p>}
 
       {status === "ready" && rowCount > pageSize && (
         <Pagination
@@ -612,14 +629,15 @@ function DataTable<T extends RowData>({
   )
 }
 
-type SkeletonColumn = Pick<DataColumn<unknown>, "id" | "header" | "align" | "minWidth" | "className">
+type SkeletonColumn = Pick<DataColumn<unknown>, "id" | "header" | "align" | "minWidth" | "className" | "collapseInCompact"> & { compactCell?: unknown }
 
 /** Shared with DataTable's loading branch so row geometry cannot drift. */
 function DataTableSkeletonRows({ columns, rows, selection }: { columns: SkeletonColumn[]; rows: number; selection: boolean }) {
   return <>{Array.from({ length: Math.max(0, rows) }, (_, i) => <tr key={i}>
     {selection && <td className="w-10 border-b border-hairline py-2.5 pl-4 pr-1"><div className="flex h-5 items-center [@media(pointer:coarse)]:h-11"><Skeleton className="size-4" /></div></td>}
-    {columns.map((col, j) => <td key={col.id} className={cn("border-b border-hairline px-3 py-2.5 align-middle whitespace-nowrap first:pl-4 last:pr-4", col.className)} style={{ minWidth: col.minWidth }}>
-      <div className={cn("flex h-5 items-center", col.align === "right" && "justify-end")}><Skeleton className={cn("h-3.5 max-w-full", j === 0 ? "w-32" : "w-14")} /></div>
+    {columns.map((col, j) => <td key={col.id} className={cn("border-b border-hairline px-3 py-2.5 align-middle whitespace-nowrap first:pl-4 last:pr-4", col.className, col.collapseInCompact && "group-data-[compact=true]/data-table:hidden")} style={{ minWidth: col.minWidth }}>
+      {!!col.compactCell && <div className="hidden gap-3 py-2 group-data-[compact=true]/data-table:grid"><Skeleton className="h-3.5 w-32 max-w-full" /><Skeleton className="h-3.5 w-52 max-w-full" /><Skeleton className="h-3.5 w-24 max-w-full" /></div>}
+      <div className={cn("flex h-5 items-center", !!col.compactCell && "group-data-[compact=true]/data-table:hidden", col.align === "right" && "justify-end")}><Skeleton className={cn("h-3.5 max-w-full", j === 0 ? "w-32" : "w-14")} /></div>
     </td>)}
   </tr>)}</>
 }

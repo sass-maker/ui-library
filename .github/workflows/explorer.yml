@@ -18,7 +18,7 @@ jobs:
   build:
     # Retained visual baselines were reviewed on Ubuntu 24.04.
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -39,7 +39,8 @@ jobs:
         run: pnpm test:browser
       - name: Generate candidate baselines for review
         if: ${{ inputs.updateVisuals }}
-        run: pnpm test:visual --update-snapshots
+        # Review actual renders, including changes within the comparison tolerance.
+        run: pnpm test:visual --update-snapshots=all
       - uses: actions/upload-artifact@v4
         if: always()
         with:

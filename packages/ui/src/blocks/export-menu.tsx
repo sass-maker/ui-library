@@ -16,7 +16,7 @@ export function ExportMenu<T>({
   columns,
   filename,
   meta,
-  label = "export",
+  label = "Export",
 }: {
   rows: T[];
   columns: ExportColumn<T>[];

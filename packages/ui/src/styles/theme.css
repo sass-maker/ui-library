@@ -16,7 +16,9 @@
  * product changes identity through tokens and imagery, never by forking a
  * component.
  */
-:root {
+/* A scoped preset starts from the same complete defaults as a document.
+   Aliases must resolve here, not to the enclosing product's computed values. */
+:root, [data-theme] {
   --surface-backdrop-gradient: linear-gradient(135deg, color-mix(in oklch, var(--brand-soft) 65%, transparent), transparent 65%);
   --surface-backdrop-glow: radial-gradient(ellipse at 75% 12%, color-mix(in oklch, var(--brand) 12%, transparent), transparent 65%);
   --surface-backdrop-grid: linear-gradient(color-mix(in oklch, var(--border) 45%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklch, var(--border) 45%, transparent) 1px, transparent 1px);
@@ -45,6 +47,7 @@
   --brand-soft: oklch(0.95 0.03 264);
   /* Brand as text on the page background; light brands set a deeper ink. */
   --brand-ink: var(--brand);
+  --accent-ink: var(--brand);
 
   --background: oklch(0.993 0 0);
   --foreground: oklch(0.17 0.005 270);
@@ -69,6 +72,8 @@
   --input: oklch(0.89 0.004 270);
   --ring: var(--brand);
   --shadow-color: 240 10% 10%;
+  /* Web overlays: separate the active surface without muddying the page. */
+  --scrim: rgb(24 20 17 / 0.42);
 
   --chart-1: var(--brand);
   --chart-2: oklch(0.7 0.13 190);
@@ -127,6 +132,7 @@
 
 /* Ink: precise dark technical. Developer tools, AI infra, Mac utilities. */
 [data-theme="ink"] {
+  --scrim: rgb(0 0 0 / 0.76);
   --font-accent: "Instrument Serif", Georgia, serif;
   --display-weight: 750;
   --display-tracking: -0.04em;
@@ -266,6 +272,7 @@
 /* Dark surfaces follow every preset, so mode always wins the cascade.
    Typography and product hue stay with the preset; surfaces are neutral. */
 [data-mode="dark"] {
+  --scrim: rgb(0 0 0 / 0.76);
   --background: #111111;
   --foreground: #f5f5f5;
   --surface: #202020;
@@ -321,6 +328,7 @@
   --font-text: var(--font-text);
 
   --color-background: var(--background);
+  --color-scrim: var(--scrim);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-card: var(--card);
@@ -498,6 +506,10 @@
 .hero-in {
   animation: hero-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: var(--d, 0ms);
+}
+[data-motion="reduced"] .hero-in { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-in { animation: none; }
 }
 
 /* ── Motion ─────────────────────────────────────────────────────────────

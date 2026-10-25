@@ -223,7 +223,9 @@ if (explorer) {
 
     await open("/iframe.html?id=effects-code-comparison--playground&viewMode=story", 820);
     check("code: scroll region renders", await waitFor("!!document.querySelector('[aria-label^=\"before code:\"]')"));
-    await js("document.querySelector('[aria-label^=\"before code:\"]').focus()");
+    // Keep a genuinely long line in this keyboard-scroll fixture, even when the demo fits.
+    await js("(() => { const region = document.querySelector('[aria-label^=\"before code:\"]'); region.querySelector('code').textContent = 'const description = \"' + 'readable code '.repeat(40) + '\";'; region.focus(); })()");
+    check("code: long-line fixture overflows", await js("document.activeElement.scrollWidth > document.activeElement.clientWidth"));
     await press("ArrowRight");
     check("code: keyboard scrolls long lines", await waitFor("document.activeElement?.getAttribute('aria-label')?.startsWith('before code:') && document.activeElement.scrollLeft > 0"));
     await press("Tab");

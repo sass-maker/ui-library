@@ -67,12 +67,12 @@ describe("resource states", () => {
     const retry = vi.fn();
     const { container } = mount(<ErrorState offline onRetry={retry} detail={'<script>unsafe</script>'} />);
     expect(container.querySelector('[role="alert"]')).not.toBeNull();
-    expect(container.textContent).toContain("you're offline");
+    expect(container.textContent).toContain("You’re offline");
     expect(container.querySelector("script")).toBeNull();
     expect(container.querySelector("details").textContent).toContain("<script>unsafe</script>");
     act(() => container.querySelector("button").click());
     expect(retry).toHaveBeenCalledOnce();
-    expect(container.querySelector("button").textContent).toBe("try again");
+    expect(container.querySelector("button").textContent).toBe("Try again");
   });
   it("delays loading, then renders empty, failure, and ready content", () => {
     vi.useFakeTimers();

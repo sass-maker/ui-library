@@ -19,10 +19,25 @@ function ContextMenu({
 }
 
 function ContextMenuTrigger({
+  className,
+  tabIndex = 0,
+  onKeyDown,
   ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Trigger>) {
   return (
-    <ContextMenuPrimitive.Trigger data-slot="context-menu-trigger" {...props} />
+    <ContextMenuPrimitive.Trigger
+      data-slot="context-menu-trigger"
+      tabIndex={tabIndex}
+      className={cn("outline-none focus-visible:ring-2 focus-visible:ring-ring", className)}
+      {...props}
+      onKeyDown={event => {
+        onKeyDown?.(event)
+        if (event.defaultPrevented || props.disabled || !(event.key === "ContextMenu" || event.key === "F10" && event.shiftKey)) return
+        event.preventDefault()
+        const bounds = event.currentTarget.getBoundingClientRect()
+        event.currentTarget.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: bounds.left + 8, clientY: bounds.bottom - 8 }))
+      }}
+    />
   )
 }
 

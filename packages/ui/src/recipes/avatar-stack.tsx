@@ -22,8 +22,8 @@ export type Person = {
 
 const SIZE = 44;
 
-// Stacked, each avatar hides a third of the one before it.
-const CLOSED_STEP = 30;
+// Keep a shallow overlap: the next circle and ring must not cover two-letter initials.
+const CLOSED_STEP = 38;
 
 // Fanned, a 6px gap: close enough to still read as one group.
 const OPEN_STEP = 50;

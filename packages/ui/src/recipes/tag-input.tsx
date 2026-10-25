@@ -24,12 +24,14 @@ const SLIDE = { type: "spring", visualDuration: 0.25, bounce: 0 } as const;
 
 const key = (tag: string) => tag.toLowerCase();
 
-export function TagInput({ label, tags, onTagsChange, placeholder = "Add a tag", className, }: {
+export function TagInput({ label, tags, onTagsChange, placeholder = "Add a tag", className, fieldClassName, }: {
     label: string;
     tags: string[];
     onTagsChange: (tags: string[]) => void;
     placeholder?: string;
     className?: string;
+    /** Style the editable field independently from its label and supporting text. */
+    fieldClassName?: string;
 }) {
     const reduceMotion = useReducedMotion();
     const id = useId();
@@ -99,7 +101,7 @@ export function TagInput({ label, tags, onTagsChange, placeholder = "Add a tag",
       </label>
       {/* Clicking the field's empty space types into it, like a real input.
             The field grows downward as chips wrap. */}
-      <div className="rounded-[14px] bg-surface p-1.5 shadow-md outline-offset-2 outline-foreground has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-solid" onPointerDown={(e) => {
+      <div className={cn("rounded-[14px] bg-surface p-1.5 shadow-md outline-offset-2 outline-foreground has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-solid", fieldClassName)} onPointerDown={(e) => {
             const target = e.target as HTMLElement;
             if (target !== e.currentTarget && !target.dataset.fill)
                 return;

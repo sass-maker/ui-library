@@ -15,8 +15,9 @@ export default function ToolbarDynamic({onSearch,label="Search components",class
   useClickOutside(root,()=>setOpen(false));
   useEffect(()=>{if(open)input.current?.focus();},[open]);
   const close=()=>{setOpen(false);trigger.current?.focus();};
-  return <motion.div ref={root} layout transition={reduced?{duration:0}:{type:"spring",duration:.25,bounce:0}} className={cn("inline-flex max-w-full items-center gap-2 rounded-xl border border-border bg-card p-2 shadow-sm",className)} onKeyDown={event=>{if(event.key==="Escape"&&open){event.preventDefault();close();}}}>
-    <Button ref={trigger} size="icon" variant="ghost" aria-label={open?"Close search":label} aria-expanded={open} onClick={()=>open?close():setOpen(true)}>{open?<ArrowLeft/>:<Search/>}</Button>
-    {open&&<form className="flex min-w-0 flex-1 gap-2" onSubmit={event=>{event.preventDefault();if(query.trim())onSearch(query.trim());}}><input ref={input} value={query} onChange={event=>setQuery(event.currentTarget.value)} type="search" aria-label={label} placeholder={label} className="h-9 min-w-0 w-[min(15rem,45vw)] rounded-md bg-transparent px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"/><Button type="submit" size="sm" disabled={!query.trim()}>Search</Button></form>}
+  return <motion.div ref={root} data-slot="dynamic-toolbar" layout transition={reduced?{duration:0}:{type:"spring",duration:.25,bounce:0}} className={cn("inline-flex w-fit max-w-full items-center gap-2 overflow-hidden rounded-xl border border-border bg-card p-2 shadow-sm",className)} onKeyDown={event=>{if(event.key==="Escape"&&open){event.preventDefault();close();}}}>
+    {/* Counter the surface's layout projection so icons and text never stretch. */}
+    <motion.div layout="position" className="inline-flex shrink-0"><Button ref={trigger} size="icon" variant="ghost" aria-label={open?"Close search":label} aria-expanded={open} onClick={()=>open?close():setOpen(true)}>{open?<ArrowLeft/>:<Search/>}</Button></motion.div>
+    {open&&<motion.form layout="position" className="flex min-w-0 flex-1 gap-2" onSubmit={event=>{event.preventDefault();if(query.trim())onSearch(query.trim());}}><input ref={input} value={query} onChange={event=>setQuery(event.currentTarget.value)} type="search" aria-label={label} placeholder={label} className="h-9 min-w-0 w-[min(15rem,45vw)] rounded-md bg-transparent px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"/><Button type="submit" size="sm" disabled={!query.trim()}>Search</Button></motion.form>}
   </motion.div>;
 }

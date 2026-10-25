@@ -83,8 +83,8 @@ export function PricingCalculator({ plans, maxSeats = 50, defaultSeats = 6, year
     const total = monthly - yearlyCut;
     const hasVolume = plan !== list;
     const yearly = billing === "yearly";
-    return (<div className={cn("flex w-[min(440px,100%)] flex-col gap-5 rounded-[22px] bg-background p-5 shadow-md", className)}>
-      <div className="flex items-start justify-between gap-3">
+    return (<div data-slot="pricing-calculator" className={cn("flex w-[min(440px,100%)] flex-col gap-5 rounded-[22px] bg-background p-5 shadow-md", className)}>
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <p className="text-[13px] font-medium text-muted-foreground">Your team</p>
           {/* The wheels are boxes, so there is no shared baseline: the
@@ -104,11 +104,12 @@ export function PricingCalculator({ plans, maxSeats = 50, defaultSeats = 6, year
 
       <div className="flex flex-col gap-2">
         <SeatSlider value={seats} max={maxSeats} thresholds={plans.slice(1)} onChange={setSeats} reduceMotion={reduceMotion}/>
-        {/* A fixed slot, so the invoice below never shifts: one line where
-            the notes fit on one, two on a phone. */}
-        <div className="relative h-10 sm:h-5" aria-live="polite">
+        {/* Measure all possible notes in the same grid cell. The slot follows
+            the component width, including narrow desktop columns, without jumps. */}
+        <div className="grid text-[13px] leading-5 text-pretty text-muted-foreground" aria-live="polite">
+          {[initialNote(plans, plan), ...plans.map(item => initialNote(plans, item)), ...plans.map(item => `${item.name} from ${item.minSeats} seats: every seat is now ${money(item.seatPrice)}.`), ...plans.flatMap((from, index) => plans.slice(0, index).map(to => `Under ${from.minSeats} seats, back to ${to.name} at ${money(to.seatPrice)}.`))].map((text, index) => <span key={index} aria-hidden className="invisible col-start-1 row-start-1">{text}</span>)}
           <AnimatePresence initial={false} mode="popLayout">
-            <motion.p key={note} {...BLUR_IN} transition={{ duration: reduceMotion ? 0 : 0.25, ease: EASE_OUT }} className="absolute inset-x-0 top-0 text-[13px] leading-5 text-pretty text-muted-foreground">
+            <motion.p key={note} {...BLUR_IN} transition={{ duration: reduceMotion ? 0 : 0.25, ease: EASE_OUT }} className="col-start-1 row-start-1">
               {note}
             </motion.p>
           </AnimatePresence>
@@ -122,18 +123,16 @@ export function PricingCalculator({ plans, maxSeats = 50, defaultSeats = 6, year
         <Row label={hasVolume
             ? `${plan.name} rate, ${money(list.seatPrice - plan.seatPrice)} off a seat`
             : `Volume rate from ${plans[1]?.minSeats ?? "more"} seats`} value={-volume} dim={!hasVolume} reduceMotion={reduceMotion}/>
-        <Row label={yearly
-            ? `Yearly billing, ${Math.round(yearlyDiscount * 100)}% off`
-            : `Pay yearly to save ${Math.round(yearlyDiscount * 100)}%`} value={-yearlyCut} dim={!yearly} reduceMotion={reduceMotion}/>
-        <div className="mt-2 flex items-end justify-between gap-3 border-t border-dashed border-border pt-4">
+        {yearly && <Row label={`Yearly billing, ${Math.round(yearlyDiscount * 100)}% off`} value={-yearlyCut} reduceMotion={reduceMotion}/>}
+        <div className="mt-2 flex flex-wrap items-end justify-between gap-3 border-t border-dashed border-border pt-4">
           <dt className="flex flex-col gap-1">
             <span className="text-[14px] font-medium">Total</span>
-            <div className="relative h-5 text-[13px] text-muted-foreground">
+            <div className="grid min-h-5 text-[13px] text-muted-foreground">
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.p key={billing} {...BLUR_IN} transition={{
             duration: reduceMotion ? 0 : 0.25,
             ease: EASE_OUT,
-        }} className="absolute top-0 left-0 whitespace-nowrap tabular-nums">
+        }} className="col-start-1 row-start-1 whitespace-nowrap tabular-nums">
                   {yearly
             ? `Billed ${money(total * 12, false)} a year`
             : "Billed monthly"}
@@ -141,7 +140,7 @@ export function PricingCalculator({ plans, maxSeats = 50, defaultSeats = 6, year
               </AnimatePresence>
             </div>
           </dt>
-          <dd className="flex items-baseline gap-2">
+          <dd className="ml-auto flex items-baseline gap-2">
             <Struck show={yearly} reduceMotion={reduceMotion}>
               {money(monthly)}
             </Struck>
@@ -168,10 +167,10 @@ function Row({ label, value, dim, reduceMotion, }: {
     dim?: boolean;
     reduceMotion: boolean;
 }) {
-    return (<div className={cn("flex h-9 items-center justify-between gap-3 transition-colors duration-200 ease-out", dim ? "text-muted-foreground" : "text-foreground")}>
-      <dt className="relative min-w-0 flex-1 truncate">
+    return (<div className={cn("flex min-h-9 items-baseline justify-between gap-3 py-2 transition-colors duration-200 ease-out", dim ? "text-muted-foreground" : "text-foreground")}>
+      <dt className="relative min-w-0 flex-1">
         <AnimatePresence initial={false} mode="popLayout">
-          <motion.span key={label} {...BLUR_IN} transition={{ duration: reduceMotion ? 0 : 0.22, ease: EASE_OUT }} className="block truncate">
+          <motion.span key={label} {...BLUR_IN} transition={{ duration: reduceMotion ? 0 : 0.22, ease: EASE_OUT }} className="block whitespace-normal [overflow-wrap:anywhere]">
             {label}
           </motion.span>
         </AnimatePresence>
@@ -331,25 +330,20 @@ function SeatSlider({ value, max, thresholds, onChange, reduceMotion, }: {
         Seats
       </label>
       <div className="relative h-10">
-        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-surface shadow-wheel">
-          <motion.div className="h-full origin-left bg-foreground" style={{ scaleX }}/>
+        <div data-slot="pricing-slider-track" className="absolute inset-x-2.5 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-surface shadow-wheel">
+          <motion.div data-slot="pricing-slider-fill" className="h-full origin-left bg-foreground" style={{ scaleX }}/>
         </div>
         {thresholds.map((plan) => (<span key={plan.name} aria-hidden className={cn("absolute top-1/2 h-3.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors duration-200 ease-out", value >= plan.minSeats ? "bg-background" : "bg-muted/60")} style={{
                 left: `calc(${at(plan.minSeats) * 100}% + ${10 - at(plan.minSeats) * 20}px)`,
             }}/>))}
-        <motion.span aria-hidden className="pointer-events-none absolute top-1/2 size-5 -translate-y-1/2 rounded-full bg-background shadow-md" style={{ left }}/>
-        <input id={id} type="range" min={1} max={max} step={1} value={value} onChange={(e) => onChange(Number(e.target.value))} aria-valuetext={`${value} ${value === 1 ? "seat" : "seats"}`} className="peer absolute inset-0 h-full w-full cursor-pointer touch-pan-y appearance-none rounded-full opacity-0"/>
+        <motion.span aria-hidden data-slot="pricing-slider-thumb" className="pointer-events-none absolute top-1/2 size-5 -translate-y-1/2 rounded-full border-2 border-foreground bg-background shadow-md" style={{ left }}/>
+        <input id={id} type="range" min={1} max={max} step={1} value={value} onChange={(e) => onChange(Number(e.target.value))} aria-valuetext={`${value} ${value === 1 ? "seat" : "seats"}`} aria-describedby={`${id}-thresholds`} className="peer absolute inset-0 h-full w-full cursor-pointer touch-pan-y appearance-none rounded-full opacity-0"/>
         <span aria-hidden className="pointer-events-none absolute -inset-1 rounded-full outline-hidden peer-focus-visible:outline-2 peer-focus-visible:outline-solid focus-visible:outline-solid peer-focus-visible:outline-foreground"/>
       </div>
-      <div aria-hidden className="relative h-4 text-[12px] text-muted-foreground tabular-nums">
-        <span className="absolute left-0">1</span>
-        {thresholds.map((plan) => (<span key={plan.name} className={cn("absolute -translate-x-1/2 whitespace-nowrap transition-colors duration-200 ease-out", value >= plan.minSeats && "text-foreground")} style={{
-                left: `calc(${at(plan.minSeats) * 100}% + ${10 - at(plan.minSeats) * 20}px)`,
-            }}>
-            {plan.minSeats} · {plan.name}
-          </span>))}
-        <span className="absolute right-0">{max}</span>
-      </div>
+      <div aria-hidden className="flex justify-between text-[12px] text-muted-foreground tabular-nums"><span>1 seat</span><span>{max} seats</span></div>
+      <ul id={`${id}-thresholds`} aria-label="Plan thresholds" className="flex flex-wrap gap-x-4 gap-y-2 text-xs leading-relaxed text-muted-foreground">
+        {thresholds.map(plan => <li key={plan.name} className={cn("min-w-0 [overflow-wrap:anywhere] transition-colors duration-200 ease-out", value >= plan.minSeats && "text-foreground")}><span className="font-medium">{plan.name}</span><span> · from {plan.minSeats} seats</span></li>)}
+      </ul>
     </div>);
 }
 

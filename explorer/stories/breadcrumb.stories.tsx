@@ -4,7 +4,7 @@ import { Button } from "@saas-maker/ui/components/button";
 import { Check, Search, Plus, Settings, Bold, Italic, ArrowRight, FolderOpen, Mail, Upload, Sparkles } from "lucide-react";
 import * as C from "@saas-maker/ui/components/breadcrumb";
 
-const meta = { id: "navigation-breadcrumb", title: "Molecules/Navigation/Breadcrumb", component: C.Breadcrumb, parameters: {"docs": {"description": {"component": "\n\nImport from `@saas-maker/ui/components/breadcrumb`. Preview theme, color mode, motion preference, and device width from the toolbar. Example data stays in this explorer."}}} } satisfies Meta;
+const meta = { id: "navigation-breadcrumb", title: "Molecules/Navigation/Breadcrumb", component: C.Breadcrumb, parameters: {"docs": {"description": {"component": "Show the current page in its hierarchy, with links back to parent sections.\n\nImport from `@saas-maker/ui/components/breadcrumb`. Compare presets, color modes, motion preferences and viewport widths using the toolbar. Upstream attribution is retained in THIRD_PARTY_NOTICES.md."}}} } satisfies Meta;
 export default meta;
 type Story = StoryObj;
 

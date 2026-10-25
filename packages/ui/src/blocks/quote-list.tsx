@@ -160,7 +160,7 @@ export function QuoteRow({
           type="button"
           data-quote-row
           aria-current={selected || undefined}
-          onClick={onOpen}
+          onClick={event => { event.currentTarget.focus({ preventScroll: true }); onOpen(); }}
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") onArrow?.(1);
             else if (e.key === "ArrowUp") onArrow?.(-1);

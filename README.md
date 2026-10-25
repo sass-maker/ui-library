@@ -18,7 +18,7 @@ The explorer follows the same dependency direction as the source:
 
 - **Atoms** — 21 primitives: inputs, actions, type-level labels, feedback and media.
   Import from `@saas-maker/ui/atoms/button` (and the other named atom exports).
-- **Molecules** — 77 focused compositions and effects, including labeled fields,
+- **Molecules** — 78 focused compositions and effects, including labeled fields,
   search, file cards, settings rows and existing interaction recipes.
   New compositions live under `@saas-maker/ui/molecules/*`; existing
   `components/*` and `recipes/*` imports keep working.
@@ -46,6 +46,36 @@ Overlays constrain long content to the available viewport; menus and form
 controls have roomier targets on coarse pointers. Dropdown and context menus
 default to non-modal interaction; pass `modal={true}` when outside interaction
 must be blocked. Dialogs retain modal focus containment.
+
+`ContextMenuTrigger` is focusable by default: Shift+F10 or the Context Menu key
+opens it from the keyboard. Pass `tabIndex={-1}` when an enclosing interface
+manages its focus order. `SearchTrigger` shows its label by default; use
+`mobileCompact` for a compact phone header and `compact` for an icon at every width.
+
+`MorphingPopover` keeps its measured anchor and content stationary while the
+decorative surface moves. Use `className` for layout and foreground text, and
+`surfaceClassName` for background, border and shadow styling. When upgrading a
+previously styled morph, move those paint utilities to `surfaceClassName`.
+
+`ShimmerButton` uses the theme’s primary surface and foreground by default.
+An explicit `background` retains the original white-text convention;
+`className` and `shimmerColor` can customize that pairing.
+
+`TagInput` uses `className` for the outer label/field group and
+`fieldClassName` for the editable field surface. Use `className="w-full"`
+to align it with other form fields while retaining the standalone default.
+
+`KanbanBoard` fills its container, retaining 260px minimum lanes by default in a local
+horizontal scroll area. `className` styles the grid, including custom columns,
+height and gaps; custom column templates supply their own track minimums.
+`--kanban-lane-min` can tune responsive density without replacing the template.
+`wrapperClassName` styles the outer container. Touch users can
+pan from card bodies and drag from the visible handle.
+
+`RecordDetail` chooses a desktop panel or phone sheet from `desktopQuery`. A parent
+that coordinates responsive selection can set `presentation="panel"` or `"sheet"`
+explicitly. Use `focusHeading={false}` for an initially visible desktop summary;
+a selection can enable heading focus, while sheets always manage modal focus.
 
 `pnpm registry:sync` builds registry items and the explorer catalog from actual source imports;
 `pnpm registry:check` catches stale copied dependencies before publication.
@@ -116,11 +146,14 @@ interaction recording.
 - `@saas-maker/ui/organisms/media-sequence`: keyboard-accessible product chapters.
 
 Molecules → Motion → Carousel includes a copyable Kith artwork gallery,
-a responsive collection with live removal/restoration, and an RTL example.
+a responsive collection with live removal/restoration, an RTL example, and a
+controlled-selection example that can freeze the parent’s selected artwork.
 Navigation and slide selectors have 44px targets. Focus the frame for arrow,
 Home and End navigation; controls keep focus as slides change. Offscreen
 slides are inert, geometry follows actual widths and gaps on resize, and
 reduced motion follows the live preference. The gallery never auto-advances.
+Swipe release settles from the actual pointer position; an ignored selection
+request returns to the parent’s current frame.
 `Carousel` accepts a descriptive `label`, controlled `index`/`onIndexChange`,
 or `initialIndex`; `CarouselItem` accepts an optional slide `label`.
 
@@ -163,7 +196,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.30"
+G="github:sass-maker/ui-library#v0.1.31"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -173,9 +206,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.30&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.30&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.30&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.31&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.31&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.31&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -198,6 +231,27 @@ export default defineConfig({ integrations: [react()] });
 ```
 
 Fonts: the theme ships Latin-only, weight-clamped woff2 subsets (about 50 KB on a Gallery page, about 105 KB on a Workbench paper page; `@font-face` is lazy and `Base.astro` preloads only the display font). Characters outside Latin fall back to the system font; add your own `@font-face` for other scripts. Regenerate with `pnpm --filter @saas-maker/ui fonts:build`.
+
+Products can keep their own personality. The explorer’s **Foundations → Tokens →
+Product personality** example changes presets and density on the same working
+form, with copyable setup and a product action wrapper.
+
+- Set `data-theme` and `data-mode` on `<html>` so the landing, application and
+  portalled dialogs/menus inherit one identity. Product CSS loaded after the
+  theme can override semantic color roles, font roles and `--radius`. Keep
+  foreground/background token pairs together and verify their contrast.
+  Embedded previews can set both attributes on their boundary; each preset
+  resets its default roles so a parent product's fonts and accents cannot leak.
+- Use existing `variant`, `size`, `className` and `data-slot` hooks for repeatable
+  visual choices. `Button` exports `buttonVariants`; `asChild` preserves native
+  links when an action navigates. A product wrapper should forward the shared
+  component’s props and merge the caller’s className last with `cn`.
+- Compose children, named template slots, organism callbacks and supplied media
+  rather than copying a component. Keep product content and one-off wrappers in
+  the product; add a shared variant when several products need the same pattern.
+- Retain shared keyboard, focus, touch-target and reduced-motion behavior while
+  changing appearance. The font-pairing bench applies one pairing to both the
+  landing and a working asset library.
 
 The image spread is reusable as `GalleryEditorial` from
 `@saas-maker/ui/blocks/gallery`. It accepts title, lede, actions, primary image,
@@ -603,6 +657,13 @@ High Signal Podcasts claims from its public API, read 9 Oct 2026).
 shared header. Sorting, visibility and row data continue to use each leaf
 column's `id`.
 
+For narrow containers, an ungrouped `DataTable` can give its identifying
+column a `compactCell(row)` renderer and mark supporting columns
+`collapseInCompact: true`. Below 40rem of available table width, the
+identifying cell stacks the important details. **Columns → Show all columns**
+restores the full table; horizontal overflow then has a cue above the header.
+Selection, sorting, export and row details keep the same data and handlers.
+
 ## Loading states
 
 Show a same-shape placeholder within 300 ms; delay it about 150 ms to avoid
@@ -748,7 +809,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.30&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.31&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

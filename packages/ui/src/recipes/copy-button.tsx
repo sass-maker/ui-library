@@ -17,12 +17,14 @@ type Status = "idle" | "copying" | "copied" | "failed";
 
 const ICON_SWAP = { type: "spring", duration: 0.3, bounce: 0 } as const;
 
-export function CopyButton({ value, label = "Copy to clipboard", 
+export function CopyButton({ value, label, text,
 // Long enough to read the tooltip, short enough that a second copy
 // rarely lands while the first is still confirming.
 resetAfter = 1600, onCopy, className, }: {
     value: string;
     label?: string;
+    /** Optional visible label; preserves the icon-only control when omitted. */
+    text?: string;
     resetAfter?: number;
     onCopy?: (value: string) => void;
     className?: string;
@@ -64,14 +66,15 @@ resetAfter = 1600, onCopy, className, }: {
     };
     const visible = status !== "idle";
     return (<span className={cn("relative inline-flex", className)}>
-      <button type="button" aria-label={label} onClick={copy} className={cn("relative flex size-8 touch-manipulation items-center justify-center rounded-full text-muted-foreground outline-hidden transition-[scale,color,background-color] duration-150 ease-out select-none hover:bg-background hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground active:scale-[0.96] motion-reduce:transition-[color,background-color]", 
+      <button type="button" aria-label={label ?? text ?? "Copy to clipboard"} onClick={copy} className={cn("relative flex size-8 touch-manipulation items-center justify-center rounded-full text-muted-foreground outline-hidden transition-[scale,color,background-color] duration-150 ease-out select-none hover:bg-background hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground active:scale-[0.96] motion-reduce:transition-[color,background-color]",
         // Grows the hit area to 40px without growing the visible circle.
-        "after:absolute after:-inset-1 after:rounded-full", visible && "text-foreground")}>
+        "after:absolute after:-inset-1 after:rounded-full", text && "min-h-11 w-auto gap-2 rounded-md border border-border bg-card px-3 text-sm font-medium hover:bg-accent", visible && "text-foreground")}>
         {/* Both icons share one grid cell so the swap never shifts layout. */}
         <span className="grid" aria-hidden>
           <CopyGlyph copied={status === "copied"} reduceMotion={reduceMotion}/>
           <CheckGlyph copied={status === "copied"} reduceMotion={reduceMotion}/>
         </span>
+        {text && <span>{text}</span>}
       </button>
 
       {/* Out of flow, so appearing never nudges the row. Enters in 150ms,

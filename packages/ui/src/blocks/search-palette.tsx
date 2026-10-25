@@ -60,7 +60,7 @@ export function openSearchPalette() {
  * Header button that opens the palette. Works without hydration: the
  * palette listens for clicks on `[data-search-trigger]`.
  */
-export function SearchTrigger({ label = "Search", className }: { label?: string; className?: string }) {
+export function SearchTrigger({ label = "Search", compact = false, mobileCompact = false, className }: { label?: string; compact?: boolean; mobileCompact?: boolean; className?: string }) {
   return (
     <button
       type="button"
@@ -68,13 +68,13 @@ export function SearchTrigger({ label = "Search", className }: { label?: string;
       aria-label={`${label} ⌘K`}
       aria-keyshortcuts="Meta+K Control+K"
       className={cn(
-        "inline-flex touch-manipulation select-none min-h-11 min-w-11 items-center justify-center gap-2 rounded-md border border-input bg-background px-2.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent active:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:w-64",
+        "inline-flex w-fit max-w-full touch-manipulation select-none min-h-11 min-w-11 items-center justify-center gap-2 rounded-md border border-input bg-background px-2.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent active:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring",
+        !compact && "sm:w-64",
         className,
       )}
     >
       <SearchIcon className="size-4 shrink-0" aria-hidden />
-      <span className="hidden flex-1 truncate text-left sm:inline">{label}</span>{" "}
-      <Kbd className="hidden sm:inline-flex">⌘K</Kbd>
+      {!compact && <><span className={cn("flex-1 truncate text-left", mobileCompact && "hidden sm:inline")}>{label}</span><Kbd className="hidden sm:inline-flex">⌘K</Kbd></>}
     </button>
   );
 }

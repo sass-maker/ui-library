@@ -2836,6 +2836,7 @@
       "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/image-comparison.",
       "dependencies": [
         "clsx@2.1.1",
+        "lucide-react@1.48.0",
         "motion@13.4.3",
         "tailwind-merge@3.7.0"
       ],
@@ -2913,6 +2914,7 @@
       "description": "Recipes module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/recipes/kanban-board.",
       "dependencies": [
         "clsx@2.1.1",
+        "lucide-react@1.48.0",
         "motion@13.4.3",
         "tailwind-merge@3.7.0"
       ],
@@ -4468,6 +4470,52 @@
           "path": "packages/ui/src/molecules/input-field.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/molecules/input-field.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.fleet-ui.md"
+        },
+        {
+          "path": "LICENSE",
+          "type": "registry:file",
+          "target": "LICENSE.fleet-ui"
+        }
+      ]
+    },
+    {
+      "name": "media-backdrop",
+      "type": "registry:ui",
+      "title": "Media Backdrop",
+      "description": "Fleet UI molecule: media backdrop. Uses semantic tokens and shared atomic components.",
+      "dependencies": [
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/video.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/video.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/use-reduced-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/utils.ts"
+        },
+        {
+          "path": "packages/ui/src/molecules/media-backdrop.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/molecules/media-backdrop.tsx"
         },
         {
           "path": "THIRD_PARTY_NOTICES.md",

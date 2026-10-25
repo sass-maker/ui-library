@@ -3,6 +3,75 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { noOverflow, openStory } from './helpers.mjs';
 
+test('shimmer actions retain readable text and distinct boundaries in both themes', async ({ page }, testInfo) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'effects-shimmer-button--playground', `theme:${theme};mode:${mode}`);
+    const button = page.getByRole('button', { name: 'Explore components', exact: true });
+    const contrast = await button.evaluate(node => {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      const rgb = color => { context.clearRect(0, 0, 1, 1); context.fillStyle = color; context.fillRect(0, 0, 1, 1); return [...context.getImageData(0, 0, 1, 1).data]; };
+      const luminance = color => color.slice(0, 3).map(v => { const c = v / 255; return c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; }).reduce((sum, c, i) => sum + c * [.2126, .7152, .0722][i], 0);
+      const ratio = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+      const painted = element => {
+        const layers = [];
+        for (let current = element; current; current = current.parentElement) layers.unshift(rgb(getComputedStyle(current).backgroundColor));
+        return layers.reduce((under, over) => over.slice(0, 3).map((value, i) => value * over[3] / 255 + under[i] * (1 - over[3] / 255)), [255, 255, 255]);
+      };
+      const background = painted(node);
+      return { text: ratio(rgb(getComputedStyle(node).color), background), boundary: ratio(background, painted(node.closest('.example-stage'))) };
+    });
+    await testInfo.attach(`shimmer-contrast-${theme}`, { body: JSON.stringify(contrast), contentType: 'application/json' });
+    expect(contrast.text).toBeGreaterThanOrEqual(4.5);
+    expect(contrast.boundary).toBeGreaterThanOrEqual(3);
+    await button.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByText('Example action selected', { exact: true })).toBeVisible();
+    await expect(button).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
+test('reorder priorities keep complete titles and descriptions readable through keyboard and pointer moves', async ({ page }) => {
+  await openStory(page, 'interactions-reorder-list--in-context');
+  const list = page.getByRole('list', { name: 'Release priorities', exact: true });
+  const labels = ['Set the foundation', 'Care for every state', 'Connect the moments', 'Look at the real thing'];
+  const descriptions = ['Tokens, type, and shared geometry', 'Loading, empty, error, success', 'Smooth, interruptible motion', 'Phone, tablet, and desktop'];
+  for (const text of [...labels, ...descriptions]) {
+    const content = list.getByText(text, { exact: true });
+    await expect(content).toBeVisible();
+    const overflow = await content.evaluate(node => ({ horizontal: node.scrollWidth - node.clientWidth, vertical: node.scrollHeight - node.clientHeight }));
+    expect(overflow.horizontal).toBeLessThanOrEqual(1);
+    expect(overflow.vertical).toBeLessThanOrEqual(1);
+  }
+  const handle = list.getByRole('button', { name: 'Reorder Set the foundation', exact: true });
+  const target = await handle.boundingBox();
+  expect(target.width).toBeGreaterThanOrEqual(44);
+  expect(target.height).toBeGreaterThanOrEqual(44);
+  await handle.focus();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('End');
+  await expect(list.getByRole('listitem').last()).toContainText(labels[0]);
+  await expect(handle).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(list.getByRole('listitem').first()).toContainText(labels[0]);
+  await expect(handle).toBeFocused();
+  await expect(page.getByText('Cancelled. Set the foundation returned to position 1 of 4.', { exact: true })).toHaveAttribute('aria-live', 'assertive');
+  await expect.poll(async () => (await handle.boundingBox()).y).toBeCloseTo(target.y, 0);
+  const destination = await list.getByRole('listitem').nth(1).boundingBox();
+  const start = await handle.boundingBox();
+  await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2 + 8, { steps: 4 });
+  await expect.poll(() => handle.locator('..').evaluate(row => row.style.zIndex)).toBe('1');
+  await page.mouse.move(start.x + start.width / 2, destination.y + destination.height - 5, { steps: 20 });
+  await page.mouse.up();
+  await expect(list.getByRole('listitem').nth(1)).toContainText(labels[0]);
+  await expect(list.getByRole('listitem').first()).toContainText(labels[1]);
+  await noOverflow(page);
+});
+
 test('the expressive button has one accessible name and supports keyboard activation', async ({ page }) => {
   await openStory(page, 'effects-interactive-hover-button--playground');
   const button = page.getByRole('button', { name: 'Explore components', exact: true });
@@ -47,6 +116,22 @@ test('the sheet inspector applies real properties and contains a nested select',
   const target = await close.boundingBox();
   expect(target.width).toBeGreaterThanOrEqual(44);
   expect(target.height).toBeGreaterThanOrEqual(44);
+  const originalViewport = page.viewportSize();
+  const pagePreview = page.locator('#storybook-root').getByRole('button', { name: 'Continue', exact: true, includeHidden: true });
+  const pageTrigger = page.locator('#storybook-root').getByRole('button', { name: 'Open inspector', exact: true, includeHidden: true });
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect.poll(async () => {
+      const panel = await sheet.boundingBox();
+      const controls = await Promise.all([pagePreview, pageTrigger].map(control => control.boundingBox()));
+      return controls.every(control => {
+        const clear = control.x + control.width <= panel.x + 1;
+        const covered = control.x >= panel.x - 1 && control.x + control.width <= panel.x + panel.width + 1;
+        return width < 640 ? clear || covered : clear;
+      });
+    }, { message: `the page controls are whole or fully covered at${width}px` }).toBe(true);
+  }
+  await page.setViewportSize(originalViewport);
   await sheet.getByRole('combobox', { name: 'Variant', exact: true }).click();
   await page.getByRole('option', { name: 'Outline', exact: true }).click();
   await sheet.getByRole('switch', { name: 'Disabled', exact: true }).click();
@@ -106,14 +191,43 @@ test('the paged catalog shows a complete page and makes horizontal overflow expl
   const geometry = await region.evaluate(element => ({ scroll: element.scrollHeight, height: element.clientHeight }));
   expect(geometry.scroll - geometry.height).toBeLessThanOrEqual(1);
   await page.setViewportSize({ width: 390, height: 900 });
+  await expect(region).not.toHaveAttribute('data-scroll-right');
+  const first = page.locator('tr[data-row]').first();
+  await expect(first.locator('code:visible')).toHaveText('@saas-maker/ui/molecules/accordion');
+  const rowSize = await first.boundingBox();
+  expect(rowSize.x + rowSize.width).toBeLessThanOrEqual(390);
+  await page.getByRole('button', { name: 'Columns', exact: true }).click();
+  await page.getByRole('menuitemcheckbox', { name: 'Show all columns', exact: true }).click();
+  await page.keyboard.press('Escape');
   await expect(region).toHaveAttribute('data-scroll-right', 'true');
-  await expect(page.getByText('Scroll horizontally for more columns.', { exact: true })).toBeVisible();
+  const cue = page.getByText('Scroll horizontally for more columns.', { exact: true });
+  await expect(cue).toBeVisible();
+  const cuePosition = await cue.boundingBox();
+  const tablePosition = await region.boundingBox();
+  expect(cuePosition.y + cuePosition.height).toBeLessThanOrEqual(tablePosition.y);
   await page.getByRole('checkbox', { name: 'Select Accordion', exact: true }).check();
   const actions = await Promise.all(['Download view', 'Columns'].map(name => page.getByRole('button', { name, exact: true }).boundingBox()));
   expect(Math.abs(actions[0].y - actions[1].y), 'selection keeps primary table actions on one line').toBeLessThan(1);
   await region.evaluate(element => { element.scrollLeft = element.scrollWidth; });
   await expect(region).toHaveAttribute('data-scroll-left', 'true');
   await expect(region).not.toHaveAttribute('data-scroll-right');
+  await noOverflow(page);
+});
+
+test('the visible catalog source action confirms clipboard success and failure without shifting', async ({ page }) => {
+  await openStory(page, 'start-here-catalog--all-modules');
+  const copy = page.getByRole('button', { name: 'Copy source', exact: true });
+  const initial = await copy.boundingBox();
+  expect(initial.height).toBeGreaterThanOrEqual(44);
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async value => { window.__sourceClipboard = value; } } }));
+  await copy.click();
+  await expect.poll(() => page.evaluate(() => window.__sourceClipboard)).toContain('ModuleCatalogExample');
+  await expect(page.locator('[aria-live="polite"]').filter({ hasText: /^Copied$/ })).toHaveCount(1);
+  expect((await copy.boundingBox()).width).toBe(initial.width);
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async () => { throw new Error('Clipboard denied'); } } }));
+  await copy.click();
+  await expect(page.locator('[aria-live="polite"]').filter({ hasText: /^Couldn't copy$/ })).toHaveCount(1);
+  expect((await copy.boundingBox()).width).toBe(initial.width);
   await noOverflow(page);
 });
 
@@ -218,6 +332,85 @@ test('the media gallery supports keyboard browsing and isolates offscreen links'
   await noOverflow(page);
 });
 
+for (const mode of ['light', 'dark']) {
+  test(`product personalities change identity while retaining shared component behavior in ${mode} mode`, async ({ page }, testInfo) => {
+    test.setTimeout(45_000);
+    await openStory(page, 'foundations-tokens--product-personality', `theme:paper;mode:${mode};motion:reduced`);
+    const preview = page.getByTestId('product-personality-preview');
+    const name = preview.getByRole('textbox', { name: 'Workspace name', exact: true });
+    await name.fill('Kith · the next chapter');
+    const identities = [];
+    for (const personality of ['Editorial', 'Technical', 'Warm']) {
+      await page.getByRole('group', { name: 'Product personality', exact: true }).getByRole('button', { name: new RegExp(`^${personality}`) }).click();
+      await page.evaluate(() => document.fonts.ready);
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await expect.poll(() => preview.evaluate(element => {
+        const color = getComputedStyle(element).color;
+        return [...element.querySelectorAll('h3, label, input, a, a svg')].every(child => getComputedStyle(child).color === color);
+      }), { message: 'all inherited text settles with the selected product surface' }).toBe(true);
+      await expect(name).toHaveValue('Kith · the next chapter');
+      identities.push(await preview.evaluate(element => ({ theme: element.dataset.theme, font: getComputedStyle(element.querySelector('h2')).fontFamily, radius: getComputedStyle(element.querySelector('button')).borderRadius, brand: getComputedStyle(element.querySelector('button')).backgroundColor })));
+      if (personality === 'Technical') expect(identities.at(-1).font).toContain('Figtree');
+      await accessibleStory(page, testInfo, `personality-${personality}-${mode}`);
+    }
+    expect(new Set(identities.map(item => item.font)).size).toBeGreaterThan(1);
+    expect(new Set(identities.map(item => item.radius)).size).toBeGreaterThan(1);
+    expect(new Set(identities.map(item => item.brand)).size).toBeGreaterThan(1);
+    await name.focus();
+    await page.keyboard.press('Enter');
+    await expect(preview.getByRole('status')).toHaveText('Saved “Kith · the next chapter” in this example.');
+    await page.getByRole('button', { name: /^compact$/i }).click();
+    await expect(preview.getByRole('button', { name: 'Reset example', exact: true })).toHaveAttribute('data-variant', 'outline');
+    await preview.getByRole('button', { name: 'Reset example', exact: true }).click();
+    await expect(name).toHaveValue('Kith · October release');
+    await noOverflow(page);
+  });
+}
+
+for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+test(`the media gallery keeps its caption action level across all slides and breakpoints in ${mode} mode`, async ({ page }) => {
+  await openStory(page, 'motion-carousel--in-context', `theme:${theme};mode:${mode};motion:reduced`);
+  const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    // Browser resize completion can precede responsive style recalculation.
+    // Qualify the committed breakpoint before comparing slide positions.
+    await expect(gallery.locator('h3').first()).toHaveCSS('font-size', width < 640 ? '24px' : '30px');
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await frame.focus();
+    await page.keyboard.press('Home');
+    const positions = [];
+    for (let slide = 0; slide < 4; slide++) {
+      await expect(gallery.getByRole('status')).toHaveText(`Slide ${slide + 1} of 4`);
+      const link = gallery.getByRole('link', { name: 'Explore Kith', exact: true });
+      positions.push(await link.evaluate(element => element.getBoundingClientRect().top - element.closest('[data-slot="carousel-viewport"]').getBoundingClientRect().top));
+      if (slide < 3) await page.keyboard.press('ArrowRight');
+    }
+    expect(Math.max(...positions) - Math.min(...positions), `CTA stays level at${width}px`).toBeLessThanOrEqual(1);
+    await noOverflow(page);
+  }
+});
+}
+
+test('the narrow review strip peeks imagery while keeping inactive copy and actions out of view', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'start-here-overview--explore', 'theme:paper;mode:light;motion:reduced');
+  const gallery = page.getByRole('group', { name: 'Artwork waiting for review', exact: true });
+  const slides = gallery.locator('[data-slot="carousel-slide"]');
+  await expect(slides.first()).not.toHaveAttribute('aria-hidden');
+  await expect(slides.first().locator('[data-review-details]')).toHaveCSS('opacity', '1');
+  await expect(slides.nth(1)).toHaveAttribute('inert');
+  await expect(slides.nth(1).locator('[data-review-details]')).toHaveCSS('opacity', '0');
+  await expect(gallery.getByText('01 / 03', { exact: true })).toBeVisible();
+  await gallery.getByRole('button', { name: 'Next slide', exact: true }).click();
+  await expect(gallery.getByRole('status').filter({ hasText: 'Slide 2 of 3' })).toBeVisible();
+  await expect(slides.nth(1).locator('[data-review-details]')).toHaveCSS('opacity', '1');
+  await expect(slides.first().locator('[data-review-details]')).toHaveCSS('opacity', '0');
+  await expect(gallery.getByText('02 / 03', { exact: true })).toBeVisible();
+  await noOverflow(page);
+});
+
 test('a carousel measures gaps, stays aligned on resize and recovers an empty collection', async ({ page }) => {
   await openStory(page, 'motion-carousel--responsive-collection', 'theme:paper;mode:light;motion:reduced');
   const gallery = page.getByRole('group', { name: 'Responsive artwork', exact: true });
@@ -240,15 +433,33 @@ test('a carousel measures gaps, stays aligned on resize and recovers an empty co
   await expect(gallery.getByRole('button', { name: 'Next slide', exact: true })).toBeDisabled();
   await page.getByRole('button', { name: 'Restore artwork', exact: true }).click();
   await expect(gallery.getByRole('status')).toHaveText('Slide 1 of 5');
-  await expect(gallery.getByRole('link', { name: 'Inspect Coastal walk', exact: true })).toBeVisible();
+  const media = gallery.locator('[data-media-state]');
+  await expect.poll(() => media.evaluateAll(frames => frames.every(frame => { const r = frame.getBoundingClientRect(); return Math.abs(r.width / r.height - 4 / 3) < .01; }))).toBe(true);
+  const spacing = await gallery.evaluate(node => { const first = node.querySelector('figure').getBoundingClientRect(); const footer = node.querySelector('footer').getBoundingClientRect(); return footer.top - first.bottom; });
+  expect(spacing).toBeLessThan(32);
+  const inspect = gallery.getByRole('button', { name: 'Inspect artwork: Coastal walk', exact: true });
+  await expect(inspect).toBeVisible();
+  await inspect.click();
+  const preview = page.getByRole('dialog', { name: 'Coastal walk', exact: true });
+  await expect(preview).toContainText('760 × 507 px');
+  await expect.poll(() => preview.getByRole('img').evaluate(image => image.complete && image.naturalWidth === 760 && image.naturalHeight === 507)).toBe(true);
+  await expect(preview.getByRole('link', { name: 'View the media source', exact: true })).toHaveAttribute('href', /site\/public\/demo\/kith/);
+  await page.keyboard.press('Escape');
+  await expect(preview).toHaveCount(0);
+  await expect(inspect).toBeFocused();
   await noOverflow(page);
 });
 
 test('a carousel follows right to left direction without changing button meaning', async ({ page }) => {
-  await openStory(page, 'motion-carousel--right-to-left', 'theme:paper;mode:light;motion:reduced');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'motion-carousel--right-to-left');
   const gallery = page.getByRole('group', { name: 'Right to left gallery', exact: true });
   const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  const release = await sampleCarouselRelease(page, frame, 1, .2, .7);
+  expectSettledRelease(release);
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
   await frame.focus();
+  await page.keyboard.press('Home');
   await page.keyboard.press('ArrowLeft');
   await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
   const second = gallery.getByRole('group', { name: '2 of 3', exact: true });
@@ -258,22 +469,79 @@ test('a carousel follows right to left direction without changing button meaning
   await noOverflow(page);
 });
 
-test('swipe navigation and live reduced motion keep the selected frame aligned', async ({ page }) => {
+async function sampleCarouselRelease(page, frame, targetIndex, from, to, hold = 0) {
+  await frame.scrollIntoViewIfNeeded();
+  const box = await frame.boundingBox();
+  await page.mouse.move(box.x + box.width * from, box.y + 80);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * to, box.y + 80, { steps: 8 });
+  if (hold) await page.waitForTimeout(hold); // A deliberate hold removes fling velocity.
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await frame.evaluate((element, index) => {
+    window.__carouselRelease = null;
+    document.addEventListener('pointerup', () => {
+      const target = element.querySelectorAll('[data-slot="carousel-slide"]')[index];
+      const start = performance.now(), samples = [];
+      function sample() {
+        samples.push({ ms: performance.now() - start, remaining: target.getBoundingClientRect().left - element.getBoundingClientRect().left });
+        if (performance.now() - start < 450) requestAnimationFrame(sample);
+        else window.__carouselRelease = samples;
+      }
+      sample();
+    }, { once: true, capture: true });
+  }, targetIndex);
+  await page.mouse.up();
+  await expect.poll(() => page.evaluate(() => !!window.__carouselRelease)).toBe(true);
+  return page.evaluate(() => window.__carouselRelease);
+}
+
+function expectSettledRelease(samples) {
+  const direction = samples[0].remaining < 0 ? -1 : 1;
+  const remaining = samples.map(sample => sample.remaining * direction);
+  expect(Math.min(...remaining), 'release never overshoots the selected frame').toBeGreaterThanOrEqual(-1);
+  expect(Math.max(...remaining), 'release never rebounds away from the target').toBeLessThanOrEqual(Math.abs(samples[0].remaining) + 1);
+  expect(Math.max(...samples.filter(sample => sample.ms >= 300).map(sample => Math.abs(sample.remaining))), 'release settles within300ms').toBeLessThanOrEqual(1);
+}
+
+test('swipe release stays continuous, settles without rebound and follows live reduced motion', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await openStory(page, 'motion-carousel--in-context');
   const gallery = page.getByRole('group', { name: 'Kith moments', exact: true });
   const frame = gallery.locator('[data-slot="carousel-viewport"]');
-  await frame.scrollIntoViewIfNeeded();
-  const box = await frame.boundingBox();
-  await page.mouse.move(box.x + box.width * 0.75, box.y + 80);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.2, box.y + 80, { steps: 8 });
-  await page.mouse.up();
+  const advance = await sampleCarouselRelease(page, frame, 1, .8, .3);
+  expectSettledRelease(advance);
   await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
+  const width = (await frame.boundingBox()).width;
+  const snapBack = await sampleCarouselRelease(page, frame, 1, .6, .6 - Math.min(30, width * .08) / width, 140);
+  expectSettledRelease(snapBack);
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 4');
+  await expect(frame).toBeFocused();
+  await testInfo.attach('carousel-release-trajectories', { body: JSON.stringify({ advance, snapBack }), contentType: 'application/json' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await gallery.getByRole('button', { name: 'Next slide', exact: true }).click();
   await expect(gallery.getByRole('status')).toHaveText('Slide 3 of 4');
   const current = gallery.getByRole('group', { name: 'Stories worth keeping.', exact: true });
   await expect.poll(async () => Math.abs((await current.boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThan(2);
+  await noOverflow(page);
+});
+
+test('a controlled carousel preserves a frozen owner and retargets interrupted navigation', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'motion-carousel--controlled-selection');
+  const gallery = page.getByRole('group', { name: 'Controlled release artwork', exact: true });
+  const frame = gallery.locator('[data-slot="carousel-viewport"]');
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
+  await expect.poll(async () => Math.abs((await gallery.locator('[data-slot="carousel-slide"]').nth(1).boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThanOrEqual(1);
+  await page.getByRole('button', { name: 'Freeze selection', exact: true }).click();
+  const rejected = await sampleCarouselRelease(page, frame, 1, .8, .3);
+  expectSettledRelease(rejected);
+  await expect(gallery.getByRole('status')).toHaveText('Slide 2 of 3');
+  await page.getByRole('button', { name: 'Unlock selection', exact: true }).click();
+  await gallery.getByRole('button', { name: 'Go to slide 1', exact: true }).click();
+  await gallery.getByRole('button', { name: 'Go to slide 3', exact: true }).click();
+  await expect(gallery.getByRole('status')).toHaveText('Slide 3 of 3');
+  await page.setViewportSize({ width: page.viewportSize().width === 390 ? 1440 : 390, height: 1000 });
+  await expect.poll(async () => Math.abs((await gallery.locator('[data-slot="carousel-slide"]').last().boundingBox()).x - (await frame.boundingBox()).x)).toBeLessThanOrEqual(1);
   await noOverflow(page);
 });
 
@@ -868,4 +1136,966 @@ test('the complete media page connects real screens, playback and truthful beta 
   await expect(page.locator('#kith-status')).toContainText('There is no public invite or App Store listing yet.');
   await noOverflow(page);
   expect(external).toEqual([]);
+});
+
+
+test('readable kanban lanes preserve keyboard movement, cancellation and focus on narrow screens', async ({ page }) => {
+  await openStory(page, 'interactions-kanban-board--playground', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Example component workflow', exact: true });
+  const viewport = page.getByRole('region', { name: 'Example component workflow lanes', exact: true });
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await expect.poll(() => board.getByRole('button').evaluateAll(buttons => buttons.every(button => {
+      const title = button.querySelector('span:last-child');
+      return title.scrollWidth <= title.clientWidth + 1 && title.scrollHeight <= title.clientHeight + 1;
+    }))).toBe(true);
+    await noOverflow(page);
+  }
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await expect(page.getByText('Scroll horizontally to explore all lanes. Arrow keys move between tasks.', { exact: true })).toBeVisible();
+  const task = board.getByRole('button', { name: 'Review upstream API', exact: true });
+  await task.focus();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('ArrowRight');
+  await expect(board.getByRole('list', { name: 'Adapt', exact: true }).getByRole('button', { name: 'Review upstream API', exact: true })).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(board.getByRole('list', { name: 'Verify', exact: true }).getByRole('button', { name: 'Review upstream API', exact: true })).toBeFocused();
+  await expect.poll(async () => {
+    const view = await viewport.boundingBox();
+    const card = await task.boundingBox();
+    return card.x >= view.x && card.x + card.width <= view.x + view.width;
+  }).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(board.getByRole('list', { name: 'Research', exact: true }).getByRole('button', { name: 'Review upstream API', exact: true })).toBeFocused();
+  await expect(task).not.toHaveAttribute('aria-pressed', 'true');
+  await noOverflow(page);
+});
+
+test('an opened navigation menu stays inside the viewport as its anchor resizes', async ({ page }) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'navigation-navigation-menu--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const trigger = page.getByRole('button', { name: 'Explore', exact: true });
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('ArrowDown');
+    const panel = page.locator('[data-slot="navigation-menu-viewport"]');
+    await expect(panel).toBeVisible();
+    const initialWidth = page.viewportSize().width;
+    await expect.poll(async () => {
+      const box = await panel.boundingBox();
+      return box && box.x >= 15 && box.x + box.width <= initialWidth - 15;
+    }).toBe(true);
+    await expect.poll(() => page.evaluate(() => window.innerWidth)).toBe(initialWidth);
+    for (const width of [390, 820, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      await expect.poll(async () => {
+        const box = await panel.boundingBox();
+        return box && box.x >= 15 && box.x + box.width <= width - 15;
+      }).toBe(true);
+      await expect(page.getByRole('link', { name: 'Source and installation', exact: true })).toBeVisible();
+      await noOverflow(page);
+    }
+    await page.keyboard.press('Escape');
+    await expect(trigger).toBeFocused();
+  }
+});
+
+test('context actions open from the keyboard and return focus after dismissal', async ({ page }) => {
+  await openStory(page, 'overlays-context-menu--playground');
+  const trigger = page.locator('[data-slot="context-menu-trigger"]');
+  await trigger.focus();
+  await expect(trigger).toBeFocused();
+  await page.keyboard.press('Shift+F10');
+  await expect(page.getByRole('menu')).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Unavailable action', exact: true })).toHaveAttribute('data-disabled', '');
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+});
+
+test('reduced motion retains orbit positions and removes delayed hero entrances', async ({ page }) => {
+  for (const [preference, motion] of [['reduce', 'user'], ['no-preference', 'reduced']]) {
+    await page.emulateMedia({ reducedMotion: preference });
+    await openStory(page, 'effects-orbiting-circles--playground', `theme:paper;mode:light;motion:${motion}`);
+    const positions = await page.locator('.animate-orbit').evaluateAll(elements => elements.map(element => {
+      const box = element.getBoundingClientRect();
+      return { x: Math.round(box.x), y: Math.round(box.y), animation: getComputedStyle(element).animationName };
+    }));
+    expect(positions).toHaveLength(5);
+    expect(new Set(positions.map(point => `${point.x},${point.y}`)).size).toBe(5);
+    expect(positions.every(point => point.animation === 'none')).toBe(true);
+    await openStory(page, 'blocks-hero--playground', `theme:paper;mode:light;motion:${motion}`);
+    expect(await page.locator('.hero-in').evaluateAll(elements => elements.every(element => getComputedStyle(element).animationName === 'none' && ['none', 'blur(0px)'].includes(getComputedStyle(element).filter)))).toBe(true);
+    await noOverflow(page);
+  }
+});
+
+test('morphing popover settles around a stable positioner in normal and reduced motion', async ({ page }) => {
+  for (const reduced of [false, true]) {
+    await page.emulateMedia({ reducedMotion: reduced ? 'reduce' : 'no-preference' });
+    await openStory(page, 'motion-morphing-popover--in-context', `theme:paper;mode:light;motion:${reduced ? 'reduced' : 'user'}`);
+    await page.getByRole('button', { name: 'Share collection', exact: true }).click();
+    const panel = page.getByRole('dialog');
+    const surface = page.locator('[data-slot="morphing-popover-surface"]');
+    await expect(panel).toBeVisible();
+    await expect.poll(async () => {
+      const outer = await panel.boundingBox();
+      const inner = await surface.boundingBox();
+      // Radix measures offscreen before placement; two matching unplaced boxes
+      // are not a settled popover, particularly with reduced motion.
+      const viewport = page.viewportSize();
+      if (outer.x < 0 || outer.y < 0 || outer.x + outer.width > viewport.width || outer.y + outer.height > viewport.height) return Infinity;
+      return Math.max(Math.abs(outer.x - inner.x), Math.abs(outer.y - inner.y), Math.abs(outer.width - inner.width), Math.abs(outer.height - inner.height));
+    }).toBeLessThan(1);
+    const bounds = await panel.boundingBox();
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.y).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(page.viewportSize().width);
+    expect(bounds.y + bounds.height).toBeLessThanOrEqual(page.viewportSize().height);
+    const samples = await surface.evaluate(element => new Promise(resolve => {
+      const start = performance.now(), samples = [];
+      function sample() {
+        const box = element.getBoundingClientRect();
+        samples.push({ x: box.x, y: box.y, width: box.width, height: box.height });
+        if (performance.now() - start < 350) requestAnimationFrame(sample); else resolve(samples);
+      }
+      sample();
+    }));
+    for (const key of ['x', 'y', 'width', 'height']) expect(Math.max(...samples.map(sample => sample[key])) - Math.min(...samples.map(sample => sample[key]))).toBeLessThan(1);
+    await expect(page.getByRole('heading', { name: 'Share collection', exact: true })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: 'Share collection', exact: true })).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
+test('a decorative video backdrop loads deliberately, pauses offscreen and follows live motion preferences', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const requests = [];
+  page.on('request', request => { if (request.url().includes('hobby-horizon.mp4')) requests.push(request.url()); });
+  await openStory(page, 'molecules-media-media-backdrop--video-cover', 'theme:paper;mode:light;motion:user');
+  const backdrop = page.getByRole('region', { name: 'Live adventure preview', exact: true });
+  const video = backdrop.locator('video');
+  await expect.poll(() => backdrop.locator('img').evaluate(image => image.complete && image.naturalWidth === 1280)).toBe(true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  expect(requests).toHaveLength(0);
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
+  await expect(video).toHaveJSProperty('muted', true);
+  await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', true);
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
+  await page.evaluate(() => { document.body.style.paddingBottom = '120vh'; window.scrollTo(0, document.body.scrollHeight); });
+  await expect(video).toHaveJSProperty('paused', true);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await backdrop.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(video).toHaveJSProperty('paused', false);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(video).toHaveJSProperty('paused', true);
+  await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+  await noOverflow(page);
+});
+
+test('background autoplay respects reduced motion and data saving before fetching video', async ({ page }) => {
+  const requests = [];
+  page.on('request', request => { if (request.url().includes('hobby-horizon.mp4')) requests.push(request.url()); });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openStory(page, 'molecules-media-media-backdrop--automatic-video', 'theme:ink;mode:dark;motion:user');
+  await expect(page.getByRole('button', { name: 'Play background video', exact: true })).toBeVisible();
+  await expect(page.locator('video source')).toHaveCount(0);
+  expect(requests).toHaveLength(0);
+  await page.addInitScript(() => {
+    const connection = new EventTarget();
+    connection.saveData = true;
+    Object.defineProperty(navigator, 'connection', { value: connection });
+  });
+  await page.goto('about:blank');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'molecules-media-media-backdrop--automatic-video', 'theme:ink;mode:dark;motion:user');
+  await expect(page.getByRole('button', { name: 'Play background video', exact: true })).toBeVisible();
+  await expect(page.locator('video source')).toHaveCount(0);
+  expect(requests).toHaveLength(0);
+  await noOverflow(page);
+});
+
+test('background video failure preserves the artwork and content and can recover', async ({ page }) => {
+  await page.route(/hobby-horizon\.mp4/, route => route.abort());
+  await openStory(page, 'molecules-media-media-backdrop--video-cover');
+  await page.getByRole('button', { name: 'Play background video', exact: true }).click();
+  await expect(page.getByRole('status')).toHaveText('Video unavailable. The artwork stays visible.');
+  await expect(page.getByRole('region', { name: 'Live adventure preview', exact: true }).getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('[data-media-backdrop] img')).toBeVisible();
+  await page.unroute(/hobby-horizon\.mp4/);
+  await page.getByRole('button', { name: 'Retry background video', exact: true }).click();
+  await expect.poll(() => page.locator('video').evaluate(element => element.currentTime)).toBeGreaterThan(0.15);
+  await expect(page.getByRole('button', { name: 'Pause background video', exact: true })).toBeVisible();
+  await noOverflow(page);
+});
+
+test('backdrop foreground tokens keep ordinary shared controls readable across product themes', async ({ page }) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark'], ['hearth', 'light']]) {
+    await openStory(page, 'molecules-media-media-backdrop--image-cover', `theme:${theme};mode:${mode};motion:reduced`);
+    const backdrop = page.getByRole('region', { name: 'Kith coastal artwork', exact: true });
+    const colors = await backdrop.locator('[data-slot="button"]').evaluateAll(buttons => buttons.map(button => {
+      const style = getComputedStyle(button);
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d');
+      const luminance = color => {
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        const values = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3).map(value => {
+          const channel = value / 255;
+          return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+        });
+        return values[0] * .2126 + values[1] * .7152 + values[2] * .0722;
+      };
+      const text = luminance(style.color), background = luminance(style.getPropertyValue('--background'));
+      return { variant: button.dataset.variant, contrast: (Math.max(text, background) + .05) / (Math.min(text, background) + .05) };
+    }));
+    expect(colors.map(color => color.variant)).toEqual(['outline', 'ghost']);
+    expect(colors.every(color => color.contrast >= 7)).toBe(true);
+    await backdrop.locator('[data-variant="outline"]').focus();
+    await expect(backdrop.locator('[data-variant="outline"]')).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
+test('tab labels fit inside their indicators with touch-sized controls', async ({ page }) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'navigation-tabs--playground', `theme:${theme};mode:${mode};motion:reduced`);
+    const tabs = page.getByRole('tablist');
+    for (const width of [390, 820, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      const geometry = await tabs.getByRole('tab').evaluateAll(elements => elements.map(element => {
+        const box = element.getBoundingClientRect(), range = document.createRange();
+        range.selectNodeContents(element);
+        const text = range.getBoundingClientRect();
+        return { left: text.left - box.left, right: box.right - text.right };
+      }));
+      expect(geometry.every(box => box.left >= 7 && box.right >= 7)).toBe(true);
+      await noOverflow(page);
+    }
+    await page.getByRole('tab', { name: 'Components', exact: true }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page.getByRole('tab', { name: 'Tokens', exact: true })).toBeFocused();
+    await expect(page.getByRole('tabpanel')).toContainText('Shared color');
+  }
+});
+
+test('closed avatar stacks leave every fallback initial unobscured', async ({ page }) => {
+  for (const motion of ['user', 'reduced']) {
+    await openStory(page, 'motion-morphing-popover--in-context', `theme:paper;mode:light;motion:${motion}`);
+    const stack = page.getByRole('toolbar', { name: 'Collection collaborators', exact: true });
+    const labels = await stack.getByRole('button').evaluateAll(buttons => buttons.map(button => {
+      const label = button.querySelector('span[aria-hidden]'), range = document.createRange();
+      range.selectNodeContents(label);
+      const box = range.getBoundingClientRect();
+      return { text: label.textContent, visible: [box.left + .5, box.right - .5].every(x => document.elementFromPoint(x, box.top + box.height / 2)?.closest('button') === button) };
+    }));
+    expect(labels.map(label => label.text)).toEqual(['MC', 'AP', 'LM']);
+    expect(labels.every(label => label.visible)).toBe(true);
+    await stack.getByRole('button').first().focus();
+    await page.keyboard.press('End');
+    await expect(stack.getByRole('button', { name: /Leah Martin/ })).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
+test('collapsed search controls have a visible label or a compact footprint', async ({ page }) => {
+  await openStory(page, 'blocks-search-palette--playground');
+  const trigger = page.getByRole('button', { name: 'Search components ⌘K', exact: true });
+  await expect(trigger.getByText('Search components', { exact: true })).toBeVisible();
+  await trigger.focus();
+  await page.keyboard.press('Control+k');
+  await expect(page.getByRole('dialog', { name: 'Search', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await openStory(page, 'motion-dynamic-toolbar--playground');
+  const search = page.getByRole('button', { name: 'Search components', exact: true });
+  const wrapperWidth = await search.evaluate(element => element.closest('[data-slot="dynamic-toolbar"]').getBoundingClientRect().width);
+  expect(wrapperWidth).toBeLessThanOrEqual((await search.boundingBox()).width + 32);
+  await search.click();
+  await expect(page.getByRole('searchbox', { name: 'Search components', exact: true })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(search).toBeFocused();
+  await noOverflow(page);
+});
+
+test('expanding search preserves foreground proportions through interruption', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'motion-dynamic-toolbar--playground', 'theme:paper;mode:light;motion:user');
+  const toolbar = page.locator('[data-slot="dynamic-toolbar"]');
+  await toolbar.evaluate(element => {
+    window.toolbarMotion = { done: false, samples: [] };
+    element.addEventListener('click', () => {
+      const start = performance.now();
+      const frame = () => {
+        const svg = element.querySelector('button svg'), input = element.querySelector('input');
+        window.toolbarMotion.samples.push({
+          icon: svg.getBoundingClientRect().width,
+          width: element.getBoundingClientRect().width,
+          inputScale: input ? input.getBoundingClientRect().width / parseFloat(getComputedStyle(input).width) : 1,
+        });
+        if (performance.now() - start < 650) requestAnimationFrame(frame);
+        else window.toolbarMotion.done = true;
+      };
+      requestAnimationFrame(frame);
+    }, { once: true });
+  });
+  await page.getByRole('button', { name: 'Search components', exact: true }).click();
+  // Reverse the live surface projection, then reopen before it settles.
+  await page.waitForTimeout(90);
+  await page.getByRole('searchbox', { name: 'Search components', exact: true }).press('Escape');
+  await page.waitForTimeout(50);
+  await page.getByRole('button', { name: 'Search components', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.toolbarMotion.done)).toBe(true);
+  const samples = await page.evaluate(() => window.toolbarMotion.samples);
+  expect(samples.length).toBeGreaterThan(5);
+  expect(samples.every(sample => sample.icon >= 15.5 && sample.icon <= 16.5)).toBe(true);
+  expect(samples.every(sample => sample.inputScale >= .98 && sample.inputScale <= 1.02)).toBe(true);
+  expect(Math.max(...samples.map(sample => sample.width)) - Math.min(...samples.map(sample => sample.width))).toBeGreaterThan(50);
+  await expect(page.getByRole('searchbox', { name: 'Search components', exact: true })).toBeFocused();
+  await noOverflow(page);
+});
+
+test('ruled feature grids retain the section surface in incomplete rows', async ({ page }) => {
+  test.setTimeout(45000);
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1200 });
+    for (const columns of [2, 3, 4]) {
+      await page.goto(`/iframe.html?id=blocks-features--playground&args=columns:${columns};count:5&globals=theme:paper;mode:light;motion:reduced`);
+      const grid = page.getByRole('list');
+      await expect(grid.getByRole('listitem')).toHaveCount(5);
+      const cells = await grid.getByRole('listitem').evaluateAll(elements => elements.map(element => ({
+        top: parseFloat(getComputedStyle(element).borderTopWidth),
+        left: parseFloat(getComputedStyle(element).borderLeftWidth),
+      })));
+      const actualColumns = width < 640 ? 1 : width < 1024 ? 2 : columns;
+      expect(cells).toEqual(cells.map((_, index) => ({ top: index >= actualColumns ? 1 : 0, left: index % actualColumns ? 1 : 0 })));
+      // An absent cell must show the surrounding section, not a border-colored block.
+      await expect(grid).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      await noOverflow(page);
+    }
+  }
+});
+
+test('image comparison exposes a visible handle that follows native input', async ({ page }) => {
+  await openStory(page, 'motion-image-comparison--in-context');
+  const slider = page.getByRole('slider', { name: 'Compare images', exact: true });
+  const handle = page.locator('[data-slot="comparison-handle"]');
+  await expect(handle).toBeVisible();
+  const handleBox = await handle.boundingBox();
+  expect(handleBox.width).toBeGreaterThanOrEqual(36);
+  expect(handleBox.height).toBeGreaterThanOrEqual(36);
+  for (const [key, value] of [['Home', 0], ['ArrowRight', 1], ['End', 100], ['ArrowLeft', 99]]) {
+    await slider.press(key);
+    await expect(slider).toHaveValue(String(value));
+    await expect.poll(async () => {
+      const track = await slider.boundingBox(), grip = await handle.boundingBox();
+      return Math.abs(grip.x + grip.width / 2 - track.x - track.width * value / 100);
+    }).toBeLessThan(1.5);
+  }
+  const track = await slider.boundingBox();
+  await page.mouse.move(track.x + track.width / 2, track.y + track.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(track.x + track.width * .75, track.y + track.height / 2, { steps: 4 });
+  await page.mouse.up();
+  const value = Number(await slider.inputValue());
+  expect(value).toBeGreaterThan(70);
+  expect(value).toBeLessThan(80);
+  await noOverflow(page);
+});
+
+test('kanban pointer overlays cross lane clips and follow unequal scroll offsets', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const queue = board.getByRole('list', { name: 'Queue', exact: true });
+  const active = board.getByRole('list', { name: 'Active', exact: true });
+  const card = board.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  const overlay = board.locator('[data-kanban-overlay="moving"]');
+  await expect.poll(() => board.evaluate(node => ({ height: node.clientHeight, gap: getComputedStyle(node).gap }))).toEqual({ height: 520, gap: '24px' });
+  const initialOrder = await board.getByRole('list').evaluateAll(lists => lists.map(list => [...list.querySelectorAll('button')].map(button => button.textContent.trim())));
+  await queue.evaluate(list => { list.scrollTop = 72; });
+  await expect.poll(() => queue.evaluate(list => list.scrollTop)).toBe(72);
+  const source = await card.boundingBox();
+  await page.mouse.move(source.x + source.width / 2, source.y + source.height / 2);
+  await page.mouse.down();
+  // Before the lane threshold, the moving body's left edge crosses its lane.
+  await page.mouse.move(source.x + source.width / 2 - 40, source.y + source.height / 2);
+  await expect(overlay).toBeVisible();
+  expect(await overlay.evaluate(node => {
+    const bounds = node.getBoundingClientRect();
+    return !node.closest('ul') && node.contains(document.elementFromPoint(bounds.left + 2, bounds.top + bounds.height / 2));
+  })).toBe(true);
+  await expect(card).toHaveCount(1);
+  const target = await queue.boundingBox();
+  const x = target.x + target.width / 2;
+  const y = target.y + 32;
+  await page.mouse.move(x, y, { steps: 6 });
+  await expect.poll(() => queue.getByRole('button').allTextContents()).toEqual([
+    'Queued task 1', 'Move between scrolled lanes', 'Queued task 2', 'Queued task 3',
+    'Queued task 4', 'Queued task 5', 'Queued task 6', 'Queued task 7', 'Queued task 8',
+  ]);
+  await expect.poll(() => overlay.evaluate((node, point) => {
+    const box = node.getBoundingClientRect();
+    return Math.max(Math.abs(box.top + box.height / 2 - point.y), Math.abs(box.left + box.width / 2 - point.x));
+  }, { x, y })).toBeLessThan(1);
+  const beforeScroll = await overlay.boundingBox();
+  await queue.evaluate(list => { list.scrollTop = 0; });
+  await expect.poll(async () => {
+    const box = await overlay.boundingBox();
+    return Math.abs(box.x - beforeScroll.x) <= 2 && Math.abs(box.y - beforeScroll.y) <= 2;
+  }).toBe(true);
+  await expect(queue.getByRole('button').first()).toHaveText('Move between scrolled lanes');
+  await page.keyboard.press('Escape');
+  await page.mouse.up();
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await expect.poll(() => board.getByRole('list').evaluateAll(lists => lists.map(list => [...list.querySelectorAll('button')].map(button => button.textContent.trim())))).toEqual(initialOrder);
+  // A committed drop uses the same scrolled insertion position.
+  await queue.evaluate(list => { list.scrollTop = 72; });
+  const again = await card.boundingBox();
+  await page.mouse.move(again.x + again.width / 2, again.y + again.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(x, y, { steps: 6 });
+  await page.mouse.up();
+  await expect(queue.getByRole('button').nth(1)).toHaveText('Move between scrolled lanes');
+  await expect(active.getByRole('button')).toHaveCount(0);
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await noOverflow(page);
+});
+
+test('kanban keyboard moves reveal below-fold cards and preserve grid overrides on narrow screens', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const queue = board.getByRole('list', { name: 'Queue', exact: true });
+  const card = queue.getByRole('button', { name: 'Queued task 1', exact: true });
+  await card.focus();
+  await page.keyboard.press('Space');
+  for (let i = 0; i < 7; i++) await page.keyboard.press('ArrowDown');
+  await expect(queue.getByRole('button').last()).toHaveText('Queued task 1');
+  await expect(card).toBeFocused();
+  await expect.poll(() => card.evaluate(button => {
+    const card = button.closest('li').getBoundingClientRect();
+    const lane = button.closest('ul').getBoundingClientRect();
+    return card.top >= lane.top - 1 && card.bottom <= lane.bottom + 1;
+  })).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(queue.getByRole('button').first()).toHaveText('Queued task 1');
+  await expect(card).toBeFocused();
+  await expect.poll(() => queue.evaluate(list => list.scrollTop)).toBe(0);
+  await noOverflow(page);
+});
+
+test('kanban ignores another pointer and cancels the active pointer without losing cards', async ({ page }) => {
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const card = board.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  const original = await board.getByRole('list').evaluateAll(lists => lists.map(list => list.textContent));
+  const bounds = await card.boundingBox();
+  const point = { clientX: bounds.x + bounds.width / 2, clientY: bounds.y + bounds.height / 2, pointerType: 'touch', bubbles: true };
+  await card.locator('[data-kanban-drag-handle]').dispatchEvent('pointerdown', { ...point, pointerId: 41, button: 0 });
+  const send = (type, fields) => page.evaluate(({ type, fields }) => window.dispatchEvent(new PointerEvent(type, fields)), { type, fields });
+  await send('pointermove', { ...point, pointerId: 41, clientX: point.clientX - 35 });
+  const overlay = board.locator('[data-kanban-overlay="moving"]');
+  await expect(overlay).toBeVisible();
+  const heldBox = await overlay.boundingBox();
+  await send('pointermove', { ...point, pointerId: 42, clientX: point.clientX + 200 });
+  await send('pointerup', { ...point, pointerId: 42 });
+  await expect(overlay).toBeVisible();
+  const afterOtherPointer = await overlay.boundingBox();
+  expect(Math.abs(afterOtherPointer.x - heldBox.x)).toBeLessThanOrEqual(1);
+  await send('pointercancel', { ...point, pointerId: 41 });
+  await expect(overlay).toHaveCount(0);
+  await expect.poll(() => board.getByRole('list').evaluateAll(lists => lists.map(list => list.textContent))).toEqual(original);
+  await expect(card).toBeFocused();
+  await expect(board.getByRole('button')).toHaveCount(10);
+});
+
+test('kanban keeps a held card under a stationary pointer when its horizontal viewport scrolls', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const board = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  const viewport = page.getByRole('region', { name: 'Scrollable workflow lanes', exact: true });
+  const card = board.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  await card.focus();
+  const box = await card.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 - 20, box.y + box.height / 2);
+  const overlay = board.locator('[data-kanban-overlay="moving"]');
+  await expect(overlay).toBeVisible();
+  const before = await overlay.boundingBox();
+  const scrollBefore = await viewport.evaluate(node => node.scrollLeft);
+  await viewport.evaluate(node => { node.scrollLeft += 30; });
+  await expect.poll(() => viewport.evaluate(node => node.scrollLeft)).toBeGreaterThan(scrollBefore + 20);
+  await expect.poll(async () => {
+    const after = await overlay.boundingBox();
+    return Math.abs(after.x - before.x) <= 2 && Math.abs(after.y - before.y) <= 2;
+  }).toBe(true);
+  await page.keyboard.press('Escape');
+  await page.mouse.up();
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await noOverflow(page);
+});
+
+test('kanban returning overlay can be picked up before it settles', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'interactions-kanban-board--playground', 'theme:paper;mode:light;motion:user');
+  const board = page.getByRole('group', { name: 'Example component workflow', exact: true });
+  const card = board.getByRole('button', { name: 'Review upstream API', exact: true });
+  await board.evaluate(node => node.addEventListener('pointerdown', event => { window.kanbanTestPointerId = event.pointerId; }, { once: true }));
+  const box = await card.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 55, box.y + box.height / 2 + 100, { steps: 6 });
+  await page.mouse.up();
+  const overlay = board.locator('[data-kanban-overlay="a"]');
+  await expect(overlay).toBeVisible();
+  // Hit and press in the same browser task: a spring can move between protocol calls.
+  const returning = await overlay.evaluate(node => {
+    const bounds = node.getBoundingClientRect();
+    const x = bounds.left + bounds.width / 2, y = bounds.top + bounds.height / 2;
+    const target = document.elementFromPoint(x, y);
+    if (!node.contains(target)) throw new Error('Returning card is clipped at its center');
+    target.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId: window.kanbanTestPointerId, pointerType: 'mouse', button: 0, buttons: 1, clientX: x, clientY: y }));
+    return { x, y };
+  });
+  const pressed = await overlay.boundingBox();
+  await page.mouse.move(returning.x + 8, returning.y);
+  await expect(card).toHaveAttribute('aria-pressed', 'true');
+  const lifted = await overlay.boundingBox();
+  expect(Math.abs(lifted.x - pressed.x - 8)).toBeLessThan(8);
+  expect(Math.abs(lifted.y - pressed.y)).toBeLessThan(8);
+  await page.keyboard.press('Escape');
+  await page.mouse.up();
+  await expect(overlay).toHaveCount(0);
+  await expect(card).toBeFocused();
+  await expect(board.getByRole('button')).toHaveCount(4);
+  await expect(card).toHaveCount(1);
+});
+
+test('product artwork examples keep selection, source metadata and recovery usable', async ({ page }) => {
+  await openStory(page, 'blocks-record-detail--in-context');
+  const row = page.getByRole('button', { name: 'Inspect Keep the small things', exact: true });
+  await row.click();
+  const detail = page.viewportSize().width >= 1024
+    ? page.getByRole('complementary', { name: 'Record detail', exact: true })
+    : page.getByRole('dialog');
+  await expect(detail.getByRole('heading', { name: 'Keep the small things', exact: true })).toBeVisible();
+  await expect(detail).toContainText('1536 × 1024 px');
+  const art = detail.getByRole('img', { name: 'Kith memory book with a photograph and coffee', exact: true });
+  await expect.poll(() => art.evaluate(image => image.complete && image.naturalWidth === 1536 && image.naturalHeight === 1024)).toBe(true);
+  await expect(detail.getByRole('link', { name: 'github.com', exact: true })).toHaveAttribute('href', /site\/public\/demo\/kith/);
+  await page.keyboard.press('Escape');
+  await expect(detail).toHaveCount(0);
+  await expect(row).toBeFocused();
+  const boundary = page.locator('[data-slot="resource-boundary"]');
+  const readyHeight = (await boundary.boundingBox()).height;
+  const keepsGeometry = async () => expect.poll(async () => Math.abs((await boundary.boundingBox()).height - readyHeight)).toBeLessThanOrEqual(1);
+  await page.getByRole('button', { name: 'Error', exact: true }).click();
+  await expect(page.getByText('Artwork could not load', { exact: true })).toBeVisible();
+  await keepsGeometry();
+  await page.getByRole('button', { name: 'Try again', exact: true }).click();
+  await expect(row).toBeVisible();
+  await page.getByRole('button', { name: 'Empty', exact: true }).click();
+  await expect(row).toHaveCount(0);
+  await keepsGeometry();
+  await page.getByRole('button', { name: 'Restore example artwork', exact: true }).click();
+  await expect(row).toBeVisible();
+  await page.getByRole('button', { name: 'Loading', exact: true }).click();
+  await expect(page.getByLabel('Loading release artwork', { exact: true })).toBeVisible();
+  await keepsGeometry();
+  await page.getByRole('button', { name: 'Ready', exact: true }).click();
+  await expect(row).toBeVisible();
+  await keepsGeometry();
+  await noOverflow(page);
+});
+
+test('selected product notes retain their exact source and custom popover paint is exposed', async ({ page }) => {
+  await openStory(page, 'blocks-quote-list--in-context');
+  const notes = page.getByRole('list', { name: 'CodeVetter product notes', exact: true });
+  await notes.getByRole('button').nth(1).click();
+  const selected = page.viewportSize().width >= 1024
+    ? page.getByRole('complementary', { name: 'Record detail', exact: true })
+    : page.getByRole('dialog');
+  await expect(selected).toContainText('The product should prefer narrow, evidence-backed loops over broad "code intelligence" surfaces.');
+  await expect(selected.getByRole('link', { name: 'Read the original text', exact: true })).toHaveAttribute('href', /efb6744aaf0a229f6e0d24aac61bffaad636477e\/README.md#product-direction$/);
+  await page.keyboard.press('Escape');
+  await expect(notes.getByRole('button').nth(1)).toBeFocused();
+  await noOverflow(page);
+  await openStory(page, 'motion-morphing-popover--playground');
+  const trigger = page.getByRole('button', { name: 'Library details', exact: true });
+  const paint = page.locator('[data-slot="morphing-popover-trigger-surface"]');
+  await expect(paint).toHaveClass(/bg-primary/);
+  expect(await paint.evaluate(node => getComputedStyle(node).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
+  await trigger.click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.locator('[data-slot="morphing-popover-surface"]')).toHaveClass(/shadow-sm/);
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+});
+
+test('kanban touch pans the lane from card bodies and drags only from its handle', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'Trusted touch dispatch uses the Chromium DevTools protocol.');
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes', 'theme:paper;mode:light;motion:reduced');
+  const queue = page.getByRole('list', { name: 'Queue', exact: true });
+  const active = page.getByRole('list', { name: 'Active', exact: true });
+  const original = await queue.getByRole('button').allTextContents();
+  const box = await queue.boundingBox();
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: true });
+  const gesture = async (from, to) => {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...from, id: 1 }] });
+    for (let i = 1; i <= 8; i++) {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: from.x + (to.x - from.x) * i / 8, y: from.y + (to.y - from.y) * i / 8, id: 1 }] });
+      await page.waitForTimeout(20);
+    }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  };
+  const start = { x: box.x + box.width / 4, y: box.y + 180 };
+  await gesture(start, { x: start.x, y: start.y - 120 });
+  await expect.poll(() => queue.evaluate(list => list.scrollTop)).toBeGreaterThan(40);
+  await expect(queue.getByRole('button')).toHaveText(original);
+  await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
+  const viewport = page.getByRole('region', { name: 'Scrollable workflow lanes', exact: true });
+  const scrollBefore = await viewport.evaluate(node => node.scrollLeft);
+  const sideways = { x: box.x + box.width / 4, y: box.y + 180 };
+  await gesture(sideways, { x: sideways.x - 80, y: sideways.y });
+  await expect.poll(() => viewport.evaluate(node => node.scrollLeft)).toBeGreaterThan(scrollBefore + 20);
+  await expect(queue.getByRole('button')).toHaveText(original);
+  const visible = await queue.getByRole('button').evaluateAll(buttons => {
+    const lane = buttons[0].closest('ul').getBoundingClientRect();
+    return buttons.find(button => { const r = button.getBoundingClientRect(); return r.top >= lane.top + 2 && r.bottom <= lane.bottom - 2; }).textContent.trim();
+  });
+  const handle = queue.getByRole('button', { name: visible, exact: true }).locator('[data-kanban-drag-handle]');
+  const grip = await handle.boundingBox(), destination = await active.boundingBox();
+  await gesture({ x: grip.x + grip.width / 2, y: grip.y + grip.height / 2 }, { x: destination.x + destination.width / 2, y: destination.y + 32 });
+  await expect(active.getByRole('button', { name: visible, exact: true })).toHaveCount(1);
+  await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
+  await expect(page.getByRole('group', { name: 'Scrollable workflow', exact: true }).getByRole('button')).toHaveCount(10);
+  await cdp.detach();
+});
+
+test('kanban responsive geometry gives ordinary titles room and honors consumer column templates', async ({ page }) => {
+  await openStory(page, 'interactions-kanban-board--in-context');
+  const board = page.getByRole('group', { name: 'Kith release board', exact: true });
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1100 });
+    const titles = await board.getByRole('button').evaluateAll(buttons => buttons.map(button => {
+      const text = button.querySelector('span.line-clamp-2');
+      return { label: text.textContent, fullHeight: text.scrollHeight, visibleHeight: text.clientHeight };
+    }));
+    expect(titles).toHaveLength(7);
+    expect(titles.every(title => title.fullHeight <= title.visibleHeight + 1)).toBe(true);
+    if (width === 820) {
+      await expect.poll(() => board.evaluate(node => node.parentElement.scrollWidth - node.parentElement.clientWidth)).toBeLessThanOrEqual(1);
+    }
+    if (width === 1440) {
+      const widths = await board.evaluate(node => ({ board: node.clientWidth, container: node.parentElement.clientWidth }));
+      expect(widths.board).toBeGreaterThan(widths.container - 12);
+    }
+    await noOverflow(page);
+  }
+  await page.goto('/iframe.html?id=interactions-kanban-board--scrollable-lanes&args=wideFirst:true&globals=theme:paper;mode:light;motion:reduced');
+  const custom = page.getByRole('group', { name: 'Scrollable workflow', exact: true });
+  await expect.poll(() => custom.evaluate(node => {
+    const tracks = getComputedStyle(node).gridTemplateColumns.split(' ').map(parseFloat);
+    return tracks.length === 3 && Math.abs(tracks[0] / tracks[1] - 2) < .02 && Math.abs(tracks[1] - tracks[2]) < 1;
+  })).toBe(true);
+});
+
+test('kanban cleans up a card removed by its controlled parent during a drag', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--scrollable-lanes');
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const card = page.getByRole('button', { name: 'Move between scrolled lanes', exact: true });
+  const box = await card.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 - 25, box.y + box.height / 2);
+  await expect(page.locator('[data-kanban-overlay="moving"]')).toBeVisible();
+  // A controlled parent update can arrive independently of the held pointer.
+  await page.getByRole('button', { name: 'Remove active task', exact: true }).dispatchEvent('click');
+  await expect(card).toHaveCount(0);
+  await expect(page.locator('[data-kanban-overlay]')).toHaveCount(0);
+  await page.mouse.up();
+  await page.getByRole('button', { name: 'Restore example', exact: true }).click();
+  await expect(card).toBeVisible();
+  await expect(card).toHaveCSS('opacity', '1');
+  await card.focus();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Space');
+  await expect(card).toBeFocused();
+  await expect(page.getByRole('list', { name: 'Done', exact: true }).getByRole('button')).toHaveCount(2);
+  await page.keyboard.press('Space');
+  await page.getByRole('button', { name: 'Remove active task', exact: true }).dispatchEvent('click');
+  await expect(card).toHaveCount(0);
+  await page.getByRole('button', { name: 'Restore example', exact: true }).click();
+  await expect(card).toBeVisible();
+  await expect.poll(() => card.evaluate(button => {
+    const body = button.getBoundingClientRect(), slot = button.closest('li').getBoundingClientRect();
+    return Math.abs(body.width - slot.width) + Math.abs(body.height - slot.height);
+  })).toBeLessThan(.5);
+  expect(errors).toEqual([]);
+  await noOverflow(page);
+});
+
+test('artwork detail keeps its title and image throughout the phone exit animation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'blocks-record-detail--in-context', 'theme:paper;mode:light;motion:user');
+  await page.getByRole('button', { name: 'Inspect Keep the small things', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Keep the small things', exact: true });
+  await expect(dialog).toBeVisible();
+  await dialog.evaluate(node => {
+    window.artworkExit = { done: false, samples: [] };
+    const frame = () => {
+      if (!node.isConnected) { window.artworkExit.done = true; return; }
+      if (node.dataset.state === 'closed') window.artworkExit.samples.push({ title: node.querySelector('h2')?.textContent, image: !!node.querySelector('img') });
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  });
+  await page.keyboard.press('Escape');
+  await expect.poll(() => page.evaluate(() => window.artworkExit.done)).toBe(true);
+  const samples = await page.evaluate(() => window.artworkExit.samples);
+  expect(samples.length).toBeGreaterThan(0);
+  expect(samples.every(sample => sample.title === 'Keep the small things' && sample.image)).toBe(true);
+  await expect(page.getByRole('button', { name: 'Inspect Keep the small things', exact: true })).toBeFocused();
+});
+
+test('detail examples keep initial focus and do not open a phone modal on breakpoint changes', async ({ page }) => {
+  for (const [story, rowName, listName] of [
+    ['blocks-record-detail--in-context', 'Inspect Keep the small things', null],
+    ['blocks-quote-list--in-context', null, 'CodeVetter product notes'],
+  ]) {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await openStory(page, story);
+    await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toBeVisible();
+    expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true);
+    await page.evaluate(() => {
+      window.unrequestedSheets = [];
+      window.resizeSheetObserver = new MutationObserver(() => {
+        if (document.querySelector('[data-slot="sheet-content"][data-state="open"]')) window.unrequestedSheets.push(performance.now());
+      });
+      window.resizeSheetObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-state'] });
+    });
+    await page.setViewportSize({ width: 390, height: 1000 });
+    await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toHaveCount(0);
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    const unrequested = await page.evaluate(() => { window.resizeSheetObserver.disconnect(); return window.unrequestedSheets; });
+    expect(unrequested).toEqual([]);
+    const row = rowName ? page.getByRole('button', { name: rowName, exact: true }) : page.getByRole('list', { name: listName, exact: true }).getByRole('button').nth(1);
+    await row.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toBeVisible();
+    await page.setViewportSize({ width: 390, height: 1000 });
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  }
+});
+
+test('phone detail close controls stay visible and hit-test above sticky headers', async ({ page }) => {
+  for (const [width, height] of [[390, 1000], [820, 1000], [844, 390]]) {
+    await page.setViewportSize({ width, height });
+    await openStory(page, 'blocks-record-detail--in-context');
+    const row = page.getByRole('button', { name: 'Inspect Keep the small things', exact: true });
+    await row.click();
+    const dialog = page.getByRole('dialog', { name: 'Keep the small things', exact: true });
+    const close = dialog.getByRole('button', { name: 'Close', exact: true });
+    await expect(close).toBeVisible();
+    const closeIsTopmost = () => close.evaluate(button => { const r = button.getBoundingClientRect(); return button.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)); });
+    await expect.poll(closeIsTopmost).toBe(true);
+    await dialog.evaluate(node => { node.scrollTop = node.scrollHeight; });
+    await expect.poll(closeIsTopmost).toBe(true);
+    if (height < 500) {
+      expect(await dialog.evaluate(node => node.scrollTop)).toBeGreaterThan(0);
+      await close.focus();
+      await page.keyboard.press('Enter');
+    } else await close.click();
+    await expect(page.locator('[data-slot="sheet-content"]')).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await noOverflow(page);
+  }
+});
+
+
+test('overflowing kanban retains a visible unmasked keyboard focus ring', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await openStory(page, 'interactions-kanban-board--in-context');
+  const lanes = page.getByRole('region', { name: 'Kith release board lanes', exact: true });
+  await expect(lanes).toHaveAttribute('tabindex', '0');
+  await page.keyboard.press('Tab');
+  await lanes.focus();
+  await expect(lanes).toBeFocused();
+  expect(await lanes.evaluate(node => node.matches(':focus-visible'))).toBe(true);
+  await expect(lanes).toHaveCSS('mask-image', 'none');
+  expect(await lanes.evaluate(node => getComputedStyle(node).boxShadow)).not.toBe('none');
+});
+
+test('artwork state recovery keeps focus on the deliberate state action', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await openStory(page, 'blocks-record-detail--in-context');
+  await page.getByRole('button', { name: 'Inspect Keep the small things', exact: true }).click();
+  await expect(page.getByRole('complementary', { name: 'Record detail', exact: true }).getByRole('heading', { name: 'Keep the small things', exact: true })).toBeFocused();
+  await page.getByRole('button', { name: 'Error', exact: true }).click();
+  const ready = page.getByRole('button', { name: 'Ready', exact: true });
+  await ready.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('complementary', { name: 'Record detail', exact: true })).toBeVisible();
+  await expect(ready).toBeFocused();
+});
+
+
+test('pricing thresholds and discount explanations stay readable in narrow components', async ({ page }) => {
+  for (const width of [390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 1100 });
+    await openStory(page, 'data-pricing-calculator--in-context');
+    const thresholds = page.getByRole('list', { name: 'Plan thresholds', exact: true });
+    await expect(thresholds.getByRole('listitem')).toHaveText(['Growing studio · from 5 seats', 'Together at scale · from 12 seats']);
+    const boxes = await thresholds.getByRole('listitem').evaluateAll(items => items.map(item => { const r = item.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: item.scrollWidth, client: item.clientWidth }; }));
+    expect(boxes.every(box => box.width <= box.client + 1)).toBe(true);
+    expect(boxes[0].right <= boxes[1].left + 1 || boxes[0].bottom <= boxes[1].top + 1).toBe(true);
+    const slider = page.getByRole('slider', { name: 'Seats', exact: true });
+    await slider.focus();
+    await page.keyboard.press('Home');
+    for (let seat = 1; seat < 12; seat++) await page.keyboard.press('ArrowRight');
+    await expect(slider).toHaveAttribute('aria-valuetext', '12 seats');
+    const invoice = page.locator('dl');
+    await expect(invoice.getByText(/Yearly billing/)).toHaveCount(0);
+    await expect(invoice.getByText('Together at scale rate, $4.00 off a seat', { exact: true })).toBeVisible();
+    await expect.poll(() => invoice.locator('dt').evaluateAll(labels => labels.every(label => label.scrollWidth <= label.clientWidth + 1 && label.scrollHeight <= label.clientHeight + 1))).toBe(true);
+    await expect(invoice).toContainText('$96.00');
+    await page.getByRole('radio', { name: /Yearly/ }).click();
+    await expect(invoice.getByText('Yearly billing, 20% off', { exact: true })).toBeVisible();
+    await expect(invoice).toContainText('$76.80');
+    await expect(invoice).toContainText('Billed $922 a year');
+    await noOverflow(page);
+  }
+});
+
+
+test('a contextual shimmer action opens its artwork and preserves an intrinsic button width', async ({ page }) => {
+  await openStory(page, 'effects-shimmer-button--in-context');
+  const trigger = page.getByRole('button', { name: 'Explore this artwork', exact: true });
+  expect((await trigger.boundingBox()).width).toBeLessThan(300);
+  await trigger.click();
+  const detail = page.getByRole('dialog', { name: 'Keep the small things', exact: true });
+  await expect(detail).toBeVisible();
+  await expect.poll(() => detail.getByRole('img').evaluate(image => image.complete && image.naturalWidth === 1536)).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(detail).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
+  await openStory(page, 'effects-shimmer-button--playground');
+  expect((await page.getByRole('button', { name: 'Explore components', exact: true }).boundingBox()).width).toBeLessThan(300);
+});
+
+
+test('decorative effect motion keeps text stationary and stops for reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'effects-shimmer-button--in-context', 'theme:paper;mode:light;motion:user');
+  const trigger = page.getByRole('button', { name: 'Explore this artwork', exact: true });
+  const spark = trigger.locator('.animate-spin-around');
+  const before = await spark.evaluate(node => getComputedStyle(node).transform);
+  const textBefore = await trigger.boundingBox();
+  await expect.poll(() => spark.evaluate(node => getComputedStyle(node).transform)).not.toBe(before);
+  const textAfter = await trigger.boundingBox();
+  expect(Math.abs(textAfter.x - textBefore.x) + Math.abs(textAfter.y - textBefore.y) + Math.abs(textAfter.width - textBefore.width)).toBeLessThan(.5);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => spark.evaluate(node => parseFloat(getComputedStyle(node).animationDuration))).toBeLessThan(.001);
+  await page.waitForTimeout(100);
+  const reducedSpark = await spark.evaluate(node => getComputedStyle(node).transform);
+  await page.waitForTimeout(100);
+  expect(await spark.evaluate(node => getComputedStyle(node).transform)).toBe(reducedSpark);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openStory(page, 'effects-border-beam--in-context', 'theme:paper;mode:light;motion:user');
+  const beam = page.locator('[style*="offset-path"]');
+  const heading = page.getByRole('heading', { name: 'Guard the invalid state', exact: true });
+  const headingBefore = await heading.boundingBox();
+  const offset = await beam.evaluate(node => getComputedStyle(node).offsetDistance);
+  await expect.poll(() => beam.evaluate(node => getComputedStyle(node).offsetDistance)).not.toBe(offset);
+  const headingAfter = await heading.boundingBox();
+  expect(Math.abs(headingAfter.x - headingBefore.x) + Math.abs(headingAfter.y - headingBefore.y)).toBeLessThan(.5);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(beam).toHaveCSS('offset-distance', '0%');
+  await page.waitForTimeout(150);
+  await expect(beam).toHaveCSS('offset-distance', '0%');
+  await noOverflow(page);
+});
+
+
+test('pricing slider has a contrasting thumb, aligned fill and stable notes across full-range jumps', async ({ page }, testInfo) => {
+  const evidence = [];
+  await page.setViewportSize({ width: 390, height: 1100 });
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openStory(page, 'data-pricing-calculator--in-context', `theme:${theme};mode:${mode};motion:reduced`);
+    const thumb = page.locator('[data-slot="pricing-slider-thumb"]');
+    const contrast = await thumb.evaluate(node => {
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d');
+      const luminance = color => { context.clearRect(0, 0, 1, 1); context.fillStyle = color; context.fillRect(0, 0, 1, 1); const rgb = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3).map(channel => { const s = channel / 255; return s <= .04045 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4; }); return .2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2]; };
+      const ratio = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+      const style = getComputedStyle(node), card = getComputedStyle(node.closest('[data-slot="pricing-calculator"]')), track = getComputedStyle(node.parentElement.querySelector('[data-slot="pricing-slider-track"]'));
+      return { borderWidth: parseFloat(style.borderTopWidth), againstCard: ratio(style.borderTopColor, card.backgroundColor), againstTrack: ratio(style.borderTopColor, track.backgroundColor) };
+    });
+    expect(contrast.borderWidth).toBeGreaterThanOrEqual(2);
+    expect(contrast.againstCard).toBeGreaterThanOrEqual(3);
+    expect(contrast.againstTrack).toBeGreaterThanOrEqual(3);
+    const slider = page.getByRole('slider', { name: 'Seats', exact: true });
+    const invoice = page.locator('dl');
+    let baseline;
+    for (const [key, seats] of [['Home', '1 seat'], ['End', '20 seats'], ['Home', '1 seat']]) {
+      await slider.focus(); await page.keyboard.press(key);
+      await expect(slider).toHaveAttribute('aria-valuetext', seats);
+      await expect.poll(() => thumb.evaluate(node => { const knob = node.getBoundingClientRect(), fill = node.parentElement.querySelector('[data-slot="pricing-slider-fill"]').getBoundingClientRect(); return Math.abs(fill.right - (knob.left + knob.width / 2)); })).toBeLessThan(1);
+      const top = (await invoice.boundingBox()).y;
+      if (baseline === undefined) baseline = top;
+      else expect(Math.abs(top - baseline)).toBeLessThan(1);
+    }
+    evidence.push({ theme, ...contrast });
+    await noOverflow(page);
+  }
+  await testInfo.attach('pricing-thumb-contrast', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' });
+});
+
+
+test('collection sharing keeps its full link readable and retains the selected example permission', async ({ page }) => {
+  await openStory(page, 'motion-morphing-popover--in-context');
+  const trigger = page.getByRole('button', { name: 'Share collection', exact: true });
+  await trigger.click();
+  const dialog = page.getByRole('dialog');
+  const link = dialog.getByText('https://example.com/collections/kith', { exact: true });
+  await expect(link).toBeVisible();
+  expect(await link.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+  await dialog.getByLabel('Who can open this?', { exact: true }).selectOption('Anyone with the link');
+  await dialog.getByRole('button', { name: 'Done', exact: true }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await expect(page.getByText('Anyone with the link · Example permissions', { exact: true })).toBeVisible();
+  await trigger.click();
+  await expect(page.getByLabel('Who can open this?', { exact: true })).toHaveValue('Anyone with the link');
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
+  await noOverflow(page);
 });

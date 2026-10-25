@@ -56,7 +56,7 @@ function color(value, vars, depth = 0) {
   return null; // other mixes are web-only refinements
 }
 
-const base = block(":root");
+const base = block(":root, [data-theme]");
 const baseThemes = {
   base,
   paper: { ...base, ...block('[data-theme="paper"]') },
