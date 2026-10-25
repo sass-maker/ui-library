@@ -2498,3 +2498,94 @@ test('collection sharing keeps its full link readable and retains the selected e
   await expect(trigger).toBeFocused();
   await noOverflow(page);
 });
+
+
+test('reduced marquee keeps every item reachable and retains first-copy DOM identity', async ({ page }, testInfo) => {
+  const measurements = [];
+  for (const width of [...new Set([page.viewportSize().width, 820])]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const vertical of [false, true]) {
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.goto(`/iframe.html?id=effects-marquee--playground&args=vertical:${vertical};reverse:true&globals=theme:paper;mode:light;motion:user`);
+      const track = page.locator(vertical ? '.animate-marquee-vertical' : '.animate-marquee').first();
+      await track.waitFor();
+      await page.evaluate(() => document.fonts.ready);
+      const root = track.locator('..');
+      const input = await track.evaluateHandle(element => {
+        const input = document.createElement('input');
+        input.setAttribute('aria-label', 'Marquee DOM identity probe');
+        input.style.cssText = 'width:100%;min-width:0;display:block';
+        element.firstElementChild.append(input);
+        return input;
+      });
+      const field = page.getByRole('textbox', { name: 'Marquee DOM identity probe' });
+      await field.fill('Keep this value');
+      await field.focus();
+      const assertReachable = async preference => {
+        await expect(field).toBeFocused();
+        await expect(field).toHaveValue('Keep this value');
+        expect(await input.evaluate(element => element === document.querySelector('input[aria-label="Marquee DOM identity probe"]'))).toBe(true);
+        const overflow = await root.evaluate(element => ({ x: getComputedStyle(element).overflowX, y: getComputedStyle(element).overflowY }));
+        const initialBounds = await track.locator(':scope > div').evaluateAll(elements => elements.map(element => { const b = element.getBoundingClientRect(); return { label: element.firstChild.textContent, left: b.left, right: b.right, top: b.top, bottom: b.bottom }; }));
+        await testInfo.attach(`marquee-${width}-${vertical ? 'vertical' : 'horizontal'}-${preference}-initial-bounds`, { body: JSON.stringify({ overflow, initialBounds, root: await root.boundingBox() }), contentType: 'application/json' });
+        const bounds = [];
+        for (const tile of await track.locator(':scope > div').all()) {
+          if (['auto', 'scroll'].includes(vertical ? overflow.y : overflow.x)) await tile.scrollIntoViewIfNeeded();
+          const result = await tile.evaluate(element => {
+            const tile = element.getBoundingClientRect(), root = element.parentElement.parentElement.getBoundingClientRect();
+            return { label: element.firstChild.textContent, tile: { left: tile.left, right: tile.right, top: tile.top, bottom: tile.bottom }, root: { left: root.left, right: root.right, top: root.top, bottom: root.bottom }, viewport: { width: innerWidth, height: innerHeight } };
+          });
+          expect(result.tile.left).toBeGreaterThanOrEqual(Math.max(0, result.root.left) - 1);
+          expect(result.tile.right).toBeLessThanOrEqual(Math.min(result.viewport.width, result.root.right) + 1);
+          expect(result.tile.top).toBeGreaterThanOrEqual(Math.max(0, result.root.top) - 1);
+          expect(result.tile.bottom).toBeLessThanOrEqual(Math.min(result.viewport.height, result.root.bottom) + 1);
+          bounds.push(result);
+        }
+        expect(bounds.map(item => item.label)).toEqual(['Components', 'Tokens', 'Motion', 'Blocks', 'Templates']);
+        await expect.poll(() => track.evaluate(element => getComputedStyle(element).animationName)).toBe('none');
+        await expect.poll(() => track.evaluate(element => getComputedStyle(element).transform)).toBe('none');
+        const visibleCopies = await root.locator(':scope > div').evaluateAll(elements => elements.filter(element => getComputedStyle(element).display !== 'none').length);
+        expect(visibleCopies).toBe(1);
+        measurements.push({ width, vertical, preference, bounds });
+        await noOverflow(page);
+      };
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await assertReachable('os');
+      await field.focus();
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await expect.poll(() => track.evaluate(element => getComputedStyle(element).animationName)).toBe(vertical ? 'sm-marquee-vertical' : 'sm-marquee');
+      await page.evaluate(() => document.documentElement.dataset.motion = 'reduced');
+      await assertReachable('explorer');
+      await field.focus();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.evaluate(() => document.documentElement.dataset.motion = 'user');
+      await assertReachable('os-with-explorer-user');
+      await input.dispose();
+    }
+  }
+  await testInfo.attach('marquee-reduced-reachability-and-dom-identity', { body: JSON.stringify(measurements), contentType: 'application/json' });
+});
+
+test('normal marquee translates with inert copies and preserves reverse and hover pause', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  for (const vertical of [false, true]) {
+    await page.goto(`/iframe.html?id=effects-marquee--playground&args=vertical:${vertical};reverse:true&globals=theme:paper;mode:light;motion:user`);
+    const track = page.locator(vertical ? '.animate-marquee-vertical' : '.animate-marquee').first();
+    await track.waitFor();
+    const root = track.locator('..');
+    await page.mouse.move(0, 0);
+    expect(await root.locator(':scope > div').count()).toBe(4);
+    for (const copy of (await root.locator(':scope > div').all()).slice(1)) {
+      await expect(copy).toHaveAttribute('aria-hidden', 'true');
+      await expect(copy).toHaveJSProperty('inert', true);
+      await expect(copy).toBeVisible();
+    }
+    expect(await track.evaluate(element => getComputedStyle(element).animationDirection)).toBe('reverse');
+    const first = await track.evaluate(element => getComputedStyle(element).transform);
+    await expect.poll(() => track.evaluate(element => getComputedStyle(element).transform)).not.toBe(first);
+    if (await page.evaluate(() => matchMedia('(hover:hover)').matches)) await root.hover();
+    else await track.evaluate(element => { const button = document.createElement('button'); button.textContent = 'Marquee focus pause probe'; element.firstElementChild.append(button); button.focus(); });
+    await expect.poll(() => track.evaluate(element => getComputedStyle(element).animationPlayState)).toBe('paused');
+    await noOverflow(page);
+  }
+});
