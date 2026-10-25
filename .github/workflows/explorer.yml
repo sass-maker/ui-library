@@ -39,7 +39,8 @@ jobs:
         run: pnpm test:browser
       - name: Generate candidate baselines for review
         if: ${{ inputs.updateVisuals }}
-        run: pnpm test:visual --update-snapshots
+        # Review actual renders, including changes within the comparison tolerance.
+        run: pnpm test:visual --update-snapshots=all
       - uses: actions/upload-artifact@v4
         if: always()
         with:
