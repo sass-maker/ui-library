@@ -203,21 +203,20 @@ function Row({ item, lifted, reduceMotion, constraints, describedBy, handleRef, 
         lifted: { opacity: 1, transition: LIFT },
     };
     return (<Reorder.Item value={item} 
-    // Rows never change size, so only position is projected and the text
-    // inside can't stretch mid-slide.
+    // Project only position so wrapped text can't stretch mid-slide.
     layout="position" dragListener={false} dragControls={controls} dragConstraints={constraints} dragElastic={EDGE_GIVE} dragTransition={reduceMotion ? SNAP : HOME} transition={{ layout: reduceMotion ? { duration: 0 } : SLIDE }} initial={false} animate={lifted ? "lifted" : "rest"} whileDrag="lifted" variants={row} onDragStart={onDragStart} onDragEnd={onDragEnd} className={cn("relative flex items-center gap-3 rounded-[16px] bg-surface p-1.5 pr-4", 
         // Reorder only raises a row while it's pointer-dragged, so a row
         // moved from the keyboard needs this to slide over its neighbours.
         lifted && "z-10!")}>
       <motion.span aria-hidden variants={shadow} style={{ boxShadow: LIFTED_SHADOW }} className="pointer-events-none absolute inset-0 rounded-[inherit]"/>
       {/* 6px row padding around 10px corners keeps the radii concentric: 16 = 10 + 6,
-            and the 40px handle plus that padding makes a 52px row.
+            and the 44px handle plus that padding makes a 56px minimum row.
             No press scale: pressing lifts the whole row, which is the feedback. */}
       <button ref={handleRef} type="button" aria-label={`Reorder ${item.label}`} aria-describedby={describedBy} onPointerDown={(e) => {
             // Stops the press from starting a text selection or moving focus.
             e.preventDefault();
             controls.start(e);
-        }} onKeyDown={onKeyDown} onBlur={onBlur} className={cn("relative flex size-10 shrink-0 cursor-grab touch-none items-center justify-center rounded-[10px] text-muted-foreground outline-hidden transition-[color,background-color] duration-150 ease-out select-none hover:bg-foreground/5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground active:cursor-grabbing", lifted && "bg-foreground/5 text-foreground")}>
+        }} onKeyDown={onKeyDown} onBlur={onBlur} className={cn("relative flex size-11 shrink-0 cursor-grab touch-none items-center justify-center rounded-[10px] text-muted-foreground outline-hidden transition-[color,background-color] duration-150 ease-out select-none hover:bg-foreground/5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground active:cursor-grabbing", lifted && "bg-foreground/5 text-foreground")}>
         <svg viewBox="0 0 16 16" className="size-5" fill="currentColor" aria-hidden>
           <circle cx="6" cy="4" r="1.25"/>
           <circle cx="10" cy="4" r="1.25"/>
@@ -227,11 +226,13 @@ function Row({ item, lifted, reduceMotion, constraints, describedBy, handleRef, 
           <circle cx="10" cy="12" r="1.25"/>
         </svg>
       </button>
-      <span className="relative min-w-0 flex-1 truncate text-[15px] font-medium text-foreground">
-        {item.label}
-      </span>
-      {item.meta && (<span className="relative shrink-0 text-[13px] text-muted-foreground tabular-nums">
-          {item.meta}
-        </span>)}
+      <div className="relative min-w-0 flex-1 py-1.5 [overflow-wrap:anywhere]">
+        <span className="block text-[15px] leading-5 font-medium text-foreground">
+          {item.label}
+        </span>
+        {item.meta && (<span className="mt-1 block text-[13px] leading-5 text-muted-foreground tabular-nums">
+            {item.meta}
+          </span>)}
+      </div>
     </Reorder.Item>);
 }

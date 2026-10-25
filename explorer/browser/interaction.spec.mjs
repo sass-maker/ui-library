@@ -3,6 +3,45 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { noOverflow, openStory } from './helpers.mjs';
 
+test('reorder priorities keep complete titles and descriptions readable through keyboard and pointer moves', async ({ page }) => {
+  await openStory(page, 'interactions-reorder-list--in-context');
+  const list = page.getByRole('list', { name: 'Release priorities', exact: true });
+  const labels = ['Set the foundation', 'Care for every state', 'Connect the moments', 'Look at the real thing'];
+  const descriptions = ['Tokens, type, and shared geometry', 'Loading, empty, error, success', 'Smooth, interruptible motion', 'Phone, tablet, and desktop'];
+  for (const text of [...labels, ...descriptions]) {
+    const content = list.getByText(text, { exact: true });
+    await expect(content).toBeVisible();
+    const overflow = await content.evaluate(node => ({ horizontal: node.scrollWidth - node.clientWidth, vertical: node.scrollHeight - node.clientHeight }));
+    expect(overflow.horizontal).toBeLessThanOrEqual(1);
+    expect(overflow.vertical).toBeLessThanOrEqual(1);
+  }
+  const handle = list.getByRole('button', { name: 'Reorder Set the foundation', exact: true });
+  const target = await handle.boundingBox();
+  expect(target.width).toBeGreaterThanOrEqual(44);
+  expect(target.height).toBeGreaterThanOrEqual(44);
+  await handle.focus();
+  await page.keyboard.press('Space');
+  await page.keyboard.press('End');
+  await expect(list.getByRole('listitem').last()).toContainText(labels[0]);
+  await expect(handle).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(list.getByRole('listitem').first()).toContainText(labels[0]);
+  await expect(handle).toBeFocused();
+  await expect(page.getByText('Cancelled. Set the foundation returned to position 1 of 4.', { exact: true })).toHaveAttribute('aria-live', 'assertive');
+  await expect.poll(async () => (await handle.boundingBox()).y).toBeCloseTo(target.y, 0);
+  const destination = await list.getByRole('listitem').nth(1).boundingBox();
+  const start = await handle.boundingBox();
+  await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2 + 8, { steps: 4 });
+  await expect.poll(() => handle.locator('..').evaluate(row => row.style.zIndex)).toBe('1');
+  await page.mouse.move(start.x + start.width / 2, destination.y + destination.height - 5, { steps: 20 });
+  await page.mouse.up();
+  await expect(list.getByRole('listitem').nth(1)).toContainText(labels[0]);
+  await expect(list.getByRole('listitem').first()).toContainText(labels[1]);
+  await noOverflow(page);
+});
+
 test('the expressive button has one accessible name and supports keyboard activation', async ({ page }) => {
   await openStory(page, 'effects-interactive-hover-button--playground');
   const button = page.getByRole('button', { name: 'Explore components', exact: true });
@@ -1173,6 +1212,10 @@ test('morphing popover settles around a stable positioner in normal and reduced 
     await expect.poll(async () => {
       const outer = await panel.boundingBox();
       const inner = await surface.boundingBox();
+      // Radix measures offscreen before placement; two matching unplaced boxes
+      // are not a settled popover, particularly with reduced motion.
+      const viewport = page.viewportSize();
+      if (outer.x < 0 || outer.y < 0 || outer.x + outer.width > viewport.width || outer.y + outer.height > viewport.height) return Infinity;
       return Math.max(Math.abs(outer.x - inner.x), Math.abs(outer.y - inner.y), Math.abs(outer.width - inner.width), Math.abs(outer.height - inner.height));
     }).toBeLessThan(1);
     const bounds = await panel.boundingBox();
