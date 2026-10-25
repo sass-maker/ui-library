@@ -49,3 +49,8 @@ export const sampleArtwork = [
   { id: "sky", title: "Your constellation", file: "constellation.webp", alt: "Actual Kith screen showing a constellation of people", width: 603, height: 1311, kind: "Actual app screen", fit: "contain" as const },
   { id: "begin", title: "A quiet beginning", file: "onboarding.webp", alt: "Actual Kith first-run screen for adding a person", width: 603, height: 1311, kind: "Actual app screen", fit: "contain" as const },
 ];
+
+/** Keep the dimensions together when the surrounding metadata wraps. */
+export function formatMediaDimensions(width: number, height: number) {
+  return `${width}\u00a0×\u00a0${height}\u00a0px`;
+}

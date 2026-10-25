@@ -368,11 +368,11 @@ test('a carousel measures gaps, stays aligned on resize and recovers an empty co
   await expect.poll(() => media.evaluateAll(frames => frames.every(frame => { const r = frame.getBoundingClientRect(); return Math.abs(r.width / r.height - 4 / 3) < .01; }))).toBe(true);
   const spacing = await gallery.evaluate(node => { const first = node.querySelector('figure').getBoundingClientRect(); const footer = node.querySelector('footer').getBoundingClientRect(); return footer.top - first.bottom; });
   expect(spacing).toBeLessThan(32);
-  const inspect = gallery.getByRole('button', { name: 'Inspect Coastal walk', exact: true });
+  const inspect = gallery.getByRole('button', { name: 'Inspect artwork: Coastal walk', exact: true });
   await expect(inspect).toBeVisible();
   await inspect.click();
   const preview = page.getByRole('dialog', { name: 'Coastal walk', exact: true });
-  await expect(preview).toContainText('760 × 507px');
+  await expect(preview).toContainText('760 × 507 px');
   await expect.poll(() => preview.getByRole('img').evaluate(image => image.complete && image.naturalWidth === 760 && image.naturalHeight === 507)).toBe(true);
   await expect(preview.getByRole('link', { name: 'View the media source', exact: true })).toHaveAttribute('href', /site\/public\/demo\/kith/);
   await page.keyboard.press('Escape');
@@ -1619,7 +1619,7 @@ test('product artwork examples keep selection, source metadata and recovery usab
     ? page.getByRole('complementary', { name: 'Record detail', exact: true })
     : page.getByRole('dialog');
   await expect(detail.getByRole('heading', { name: 'Keep the small things', exact: true })).toBeVisible();
-  await expect(detail).toContainText('1536 × 1024px');
+  await expect(detail).toContainText('1536 × 1024 px');
   const art = detail.getByRole('img', { name: 'Kith memory book with a photograph and coffee', exact: true });
   await expect.poll(() => art.evaluate(image => image.complete && image.naturalWidth === 1536 && image.naturalHeight === 1024)).toBe(true);
   await expect(detail.getByRole('link', { name: 'github.com', exact: true })).toHaveAttribute('href', /site\/public\/demo\/kith/);
@@ -1908,10 +1908,12 @@ test('pricing thresholds and discount explanations stay readable in narrow compo
     for (let seat = 1; seat < 12; seat++) await page.keyboard.press('ArrowRight');
     await expect(slider).toHaveAttribute('aria-valuetext', '12 seats');
     const invoice = page.locator('dl');
+    await expect(invoice.getByText(/Yearly billing/)).toHaveCount(0);
     await expect(invoice.getByText('Together at scale rate, $4.00 off a seat', { exact: true })).toBeVisible();
     await expect.poll(() => invoice.locator('dt').evaluateAll(labels => labels.every(label => label.scrollWidth <= label.clientWidth + 1 && label.scrollHeight <= label.clientHeight + 1))).toBe(true);
     await expect(invoice).toContainText('$96.00');
     await page.getByRole('radio', { name: /Yearly/ }).click();
+    await expect(invoice.getByText('Yearly billing, 20% off', { exact: true })).toBeVisible();
     await expect(invoice).toContainText('$76.80');
     await expect(invoice).toContainText('Billed $922 a year');
     await noOverflow(page);
@@ -1965,5 +1967,62 @@ test('decorative effect motion keeps text stationary and stops for reduced motio
   await expect(beam).toHaveCSS('offset-distance', '0%');
   await page.waitForTimeout(150);
   await expect(beam).toHaveCSS('offset-distance', '0%');
+  await noOverflow(page);
+});
+
+
+test('pricing slider has a contrasting thumb, aligned fill and stable notes across full-range jumps', async ({ page }, testInfo) => {
+  const evidence = [];
+  await page.setViewportSize({ width: 390, height: 1100 });
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openStory(page, 'data-pricing-calculator--in-context', `theme:${theme};mode:${mode};motion:reduced`);
+    const thumb = page.locator('[data-slot="pricing-slider-thumb"]');
+    const contrast = await thumb.evaluate(node => {
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d');
+      const luminance = color => { context.clearRect(0, 0, 1, 1); context.fillStyle = color; context.fillRect(0, 0, 1, 1); const rgb = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3).map(channel => { const s = channel / 255; return s <= .04045 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4; }); return .2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2]; };
+      const ratio = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+      const style = getComputedStyle(node), card = getComputedStyle(node.closest('[data-slot="pricing-calculator"]')), track = getComputedStyle(node.parentElement.querySelector('[data-slot="pricing-slider-track"]'));
+      return { borderWidth: parseFloat(style.borderTopWidth), againstCard: ratio(style.borderTopColor, card.backgroundColor), againstTrack: ratio(style.borderTopColor, track.backgroundColor) };
+    });
+    expect(contrast.borderWidth).toBeGreaterThanOrEqual(2);
+    expect(contrast.againstCard).toBeGreaterThanOrEqual(3);
+    expect(contrast.againstTrack).toBeGreaterThanOrEqual(3);
+    const slider = page.getByRole('slider', { name: 'Seats', exact: true });
+    const invoice = page.locator('dl');
+    let baseline;
+    for (const [key, seats] of [['Home', '1 seat'], ['End', '20 seats'], ['Home', '1 seat']]) {
+      await slider.focus(); await page.keyboard.press(key);
+      await expect(slider).toHaveAttribute('aria-valuetext', seats);
+      await expect.poll(() => thumb.evaluate(node => { const knob = node.getBoundingClientRect(), fill = node.parentElement.querySelector('[data-slot="pricing-slider-fill"]').getBoundingClientRect(); return Math.abs(fill.right - (knob.left + knob.width / 2)); })).toBeLessThan(1);
+      const top = (await invoice.boundingBox()).y;
+      if (baseline === undefined) baseline = top;
+      else expect(Math.abs(top - baseline)).toBeLessThan(1);
+    }
+    evidence.push({ theme, ...contrast });
+    await noOverflow(page);
+  }
+  await testInfo.attach('pricing-thumb-contrast', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' });
+});
+
+
+test('collection sharing keeps its full link readable and retains the selected example permission', async ({ page }) => {
+  await openStory(page, 'motion-morphing-popover--in-context');
+  const trigger = page.getByRole('button', { name: 'Share collection', exact: true });
+  await trigger.click();
+  const dialog = page.getByRole('dialog');
+  const link = dialog.getByText('https://example.com/collections/kith', { exact: true });
+  await expect(link).toBeVisible();
+  expect(await link.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+  await dialog.getByLabel('Who can open this?', { exact: true }).selectOption('Anyone with the link');
+  await dialog.getByRole('button', { name: 'Done', exact: true }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await expect(page.getByText('Anyone with the link · Example permissions', { exact: true })).toBeVisible();
+  await trigger.click();
+  await expect(page.getByLabel('Who can open this?', { exact: true })).toHaveValue('Anyone with the link');
+  await page.keyboard.press('Escape');
+  await expect(trigger).toBeFocused();
   await noOverflow(page);
 });

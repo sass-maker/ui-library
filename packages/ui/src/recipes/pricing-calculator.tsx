@@ -83,7 +83,7 @@ export function PricingCalculator({ plans, maxSeats = 50, defaultSeats = 6, year
     const total = monthly - yearlyCut;
     const hasVolume = plan !== list;
     const yearly = billing === "yearly";
-    return (<div className={cn("flex w-[min(440px,100%)] flex-col gap-5 rounded-[22px] bg-background p-5 shadow-md", className)}>
+    return (<div data-slot="pricing-calculator" className={cn("flex w-[min(440px,100%)] flex-col gap-5 rounded-[22px] bg-background p-5 shadow-md", className)}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <p className="text-[13px] font-medium text-muted-foreground">Your team</p>
@@ -107,7 +107,7 @@ export function PricingCalculator({ plans, maxSeats = 50, defaultSeats = 6, year
         {/* Measure all possible notes in the same grid cell. The slot follows
             the component width, including narrow desktop columns, without jumps. */}
         <div className="grid text-[13px] leading-5 text-pretty text-muted-foreground" aria-live="polite">
-          {[initialNote(plans, plan), ...plans.map(item => `${item.name} from ${item.minSeats} seats: every seat is now ${money(item.seatPrice)}.`), ...plans.slice(1).map((item, index) => `Under ${item.minSeats} seats, back to ${plans[index].name} at ${money(plans[index].seatPrice)}.`)].map((text, index) => <span key={index} aria-hidden className="invisible col-start-1 row-start-1">{text}</span>)}
+          {[initialNote(plans, plan), ...plans.map(item => initialNote(plans, item)), ...plans.map(item => `${item.name} from ${item.minSeats} seats: every seat is now ${money(item.seatPrice)}.`), ...plans.flatMap((from, index) => plans.slice(0, index).map(to => `Under ${from.minSeats} seats, back to ${to.name} at ${money(to.seatPrice)}.`))].map((text, index) => <span key={index} aria-hidden className="invisible col-start-1 row-start-1">{text}</span>)}
           <AnimatePresence initial={false} mode="popLayout">
             <motion.p key={note} {...BLUR_IN} transition={{ duration: reduceMotion ? 0 : 0.25, ease: EASE_OUT }} className="col-start-1 row-start-1">
               {note}
@@ -123,9 +123,7 @@ export function PricingCalculator({ plans, maxSeats = 50, defaultSeats = 6, year
         <Row label={hasVolume
             ? `${plan.name} rate, ${money(list.seatPrice - plan.seatPrice)} off a seat`
             : `Volume rate from ${plans[1]?.minSeats ?? "more"} seats`} value={-volume} dim={!hasVolume} reduceMotion={reduceMotion}/>
-        <Row label={yearly
-            ? `Yearly billing, ${Math.round(yearlyDiscount * 100)}% off`
-            : `Pay yearly to save ${Math.round(yearlyDiscount * 100)}%`} value={-yearlyCut} dim={!yearly} reduceMotion={reduceMotion}/>
+        {yearly && <Row label={`Yearly billing, ${Math.round(yearlyDiscount * 100)}% off`} value={-yearlyCut} reduceMotion={reduceMotion}/>}
         <div className="mt-2 flex flex-wrap items-end justify-between gap-3 border-t border-dashed border-border pt-4">
           <dt className="flex flex-col gap-1">
             <span className="text-[14px] font-medium">Total</span>
@@ -332,13 +330,13 @@ function SeatSlider({ value, max, thresholds, onChange, reduceMotion, }: {
         Seats
       </label>
       <div className="relative h-10">
-        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-surface shadow-wheel">
-          <motion.div className="h-full origin-left bg-foreground" style={{ scaleX }}/>
+        <div data-slot="pricing-slider-track" className="absolute inset-x-2.5 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-surface shadow-wheel">
+          <motion.div data-slot="pricing-slider-fill" className="h-full origin-left bg-foreground" style={{ scaleX }}/>
         </div>
         {thresholds.map((plan) => (<span key={plan.name} aria-hidden className={cn("absolute top-1/2 h-3.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors duration-200 ease-out", value >= plan.minSeats ? "bg-background" : "bg-muted/60")} style={{
                 left: `calc(${at(plan.minSeats) * 100}% + ${10 - at(plan.minSeats) * 20}px)`,
             }}/>))}
-        <motion.span aria-hidden className="pointer-events-none absolute top-1/2 size-5 -translate-y-1/2 rounded-full bg-background shadow-md" style={{ left }}/>
+        <motion.span aria-hidden data-slot="pricing-slider-thumb" className="pointer-events-none absolute top-1/2 size-5 -translate-y-1/2 rounded-full border-2 border-foreground bg-background shadow-md" style={{ left }}/>
         <input id={id} type="range" min={1} max={max} step={1} value={value} onChange={(e) => onChange(Number(e.target.value))} aria-valuetext={`${value} ${value === 1 ? "seat" : "seats"}`} aria-describedby={`${id}-thresholds`} className="peer absolute inset-0 h-full w-full cursor-pointer touch-pan-y appearance-none rounded-full opacity-0"/>
         <span aria-hidden className="pointer-events-none absolute -inset-1 rounded-full outline-hidden peer-focus-visible:outline-2 peer-focus-visible:outline-solid focus-visible:outline-solid peer-focus-visible:outline-foreground"/>
       </div>
