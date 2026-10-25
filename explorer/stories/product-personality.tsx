@@ -1,4 +1,4 @@
-import { useId, useState, type ComponentProps, type CSSProperties } from "react";
+import { useId, useLayoutEffect, useRef, useState, type ComponentProps, type CSSProperties } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
 import { Button } from "@saas-maker/ui/atoms/button";
 import { Input } from "@saas-maker/ui/atoms/input";
@@ -24,7 +24,17 @@ export function ProductPersonalityBench({ mode = "light" }: { mode?: "light" | "
   const [name, setName] = useState("Kith · October release");
   const [saved, setSaved] = useState("");
   const id = useId();
+  const preview = useRef<HTMLElement>(null);
   const profile = personalities[selected];
+  useLayoutEffect(() => {
+    const boundary = preview.current;
+    if (!boundary) return;
+    // Settle semantic colors together, avoiding white text over a light surface.
+    boundary.dataset.themeChanging = "true";
+    void boundary.offsetHeight;
+    const frame = requestAnimationFrame(() => { delete boundary.dataset.themeChanging; });
+    return () => cancelAnimationFrame(frame);
+  }, [selected, mode]);
   const themeCode = `<html data-theme="${profile.id}" data-mode="${mode}">\n  <!-- One identity for the landing, app, and portalled overlays. -->\n</html>\n\n/* Optional product overrides, loaded after the shared theme. */\n[data-theme="${profile.id}"] {\n  /* --brand, --brand-foreground, --brand-soft, --brand-ink */\n  /* --font-display, --font-sans, --radius */\n  --display-case: none;\n  --ui-case: none;\n}`;
   const componentCode = `import { Button } from "@saas-maker/ui/atoms/button";\nimport { cn } from "@saas-maker/ui/lib/utils";\n\nfunction ProductAction({ className, ...props }) {\n  return <Button\n    variant="brand"\n    {...props}\n    className={cn("${density === "comfortable" ? "min-h-11 px-5" : "h-9 px-3"}", className)}\n  />;\n}\n\n<ProductAction onClick={save}>Save workspace</ProductAction>\n<ProductAction asChild variant="outline">\n  <a href="/workspace">Open workspace</a>\n</ProductAction>`;
 
@@ -32,7 +42,7 @@ export function ProductPersonalityBench({ mode = "light" }: { mode?: "light" | "
     <header className="max-w-2xl"><p className="eyebrow mb-4">One system. Your product’s voice.</p><h1 className="font-display text-3xl leading-tight sm:text-5xl">Shared foundations.<br /><em>Room for personality.</em></h1><p className="mt-5 text-sm leading-relaxed text-muted-foreground">Change the identity and density of the same working form. The draft, save behavior, keyboard access, and focus treatment stay with the shared components.</p></header>
     <div role="group" aria-label="Product personality" className="mt-8 grid gap-3 sm:grid-cols-3">{personalities.map((item, index) => <button key={item.id} type="button" aria-pressed={selected === index} aria-controls={id} onClick={() => setSelected(index)} className={cn("min-h-11 rounded-xl border p-4 text-left outline-none transition-colors duration-150 hover:bg-surface focus-visible:ring-2 focus-visible:ring-ring", selected === index ? "border-foreground/40 bg-card" : "border-border")}><span className="flex items-center justify-between gap-3 text-sm font-semibold">{item.name}{selected === index && <Check aria-hidden className="size-4" />}</span><span className="mt-2 block text-xs leading-relaxed text-muted-foreground">{item.description}</span></button>)}</div>
     <div className="my-5 flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-muted-foreground">Same components, state, and content in every preset.</p><div role="group" aria-label="Component density" className="flex gap-1">{(["comfortable", "compact"] as const).map(value => <Button key={value} variant={density === value ? "secondary" : "ghost"} size="sm" aria-pressed={density === value} onClick={() => setDensity(value)} className="min-h-11 capitalize">{value}</Button>)}</div></div>
-    <section id={id} data-testid="product-personality-preview" data-theme={profile.id} data-mode={mode} aria-label="Product workspace preview" className="overflow-hidden rounded-xl border border-border bg-background text-foreground" style={{ fontFamily: "var(--font-sans)", "--display-case": "none", "--ui-case": "none" } as CSSProperties}>
+    <section ref={preview} id={id} data-testid="product-personality-preview" data-theme={profile.id} data-mode={mode} aria-label="Product workspace preview" className="overflow-hidden rounded-xl border border-border bg-background text-foreground" style={{ fontFamily: "var(--font-sans)", "--display-case": "none", "--ui-case": "none" } as CSSProperties}>
       <div className="grid sm:grid-cols-[.8fr_1.2fr]"><header className="border-b border-border bg-surface p-6 sm:border-b-0 sm:border-r sm:p-8"><p className="text-xs font-medium text-brand-ink">Kith / Release workspace</p><h2 className="mt-5 font-display text-3xl leading-tight">Make room for<br /><em>the next chapter.</em></h2><p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">A shared place for the artwork, notes, and small decisions behind the release.</p><a href="./?path=/story/start-here-workspace--complete-workflow" target="_top" className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-sm text-sm underline underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-ring">Explore the complete workflow<ArrowUpRight aria-hidden className="size-4" /></a></header>
         <form className={cn("grid content-start p-6 sm:p-8", density === "comfortable" ? "gap-6" : "gap-4")} onSubmit={event => { event.preventDefault(); if (name.trim()) setSaved(name.trim()); }}>
           <div><h3 className="text-base font-semibold">Workspace details</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Give this release a name you can find again.</p></div>

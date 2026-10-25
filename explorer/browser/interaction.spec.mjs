@@ -275,6 +275,10 @@ for (const mode of ['light', 'dark']) {
       await page.getByRole('group', { name: 'Product personality', exact: true }).getByRole('button', { name: new RegExp(`^${personality}`) }).click();
       await page.evaluate(() => document.fonts.ready);
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await expect.poll(() => preview.evaluate(element => {
+        const color = getComputedStyle(element).color;
+        return [...element.querySelectorAll('h3, label, input')].every(child => getComputedStyle(child).color === color);
+      }), { message: 'all inherited text settles with the selected product surface' }).toBe(true);
       await expect(name).toHaveValue('Kith · the next chapter');
       identities.push(await preview.evaluate(element => ({ theme: element.dataset.theme, font: getComputedStyle(element.querySelector('h2')).fontFamily, radius: getComputedStyle(element.querySelector('button')).borderRadius, brand: getComputedStyle(element.querySelector('button')).backgroundColor })));
       if (personality === 'Technical') expect(identities.at(-1).font).toContain('Figtree');
