@@ -16,7 +16,7 @@ const catalogLayers = ["All modules", "Atoms", "Molecules", "Organisms"] as cons
 function CompactModule({ item }: { item: CatalogModule }) {
   return <div className="grid min-w-0 gap-2 py-1">
     <span className="font-medium">{item.name}</span>
-    <code className="break-words font-mono text-xs leading-relaxed text-muted-foreground">{item.importPath.split("/").map((part, index, parts) => <Fragment key={index}>{part}{index < parts.length - 1 && <>/<wbr /></>}</Fragment>)}</code>
+    <code className="font-mono text-xs leading-relaxed text-muted-foreground">{item.importPath.split("/").map((part, index, parts) => <Fragment key={index}><span className="whitespace-nowrap">{part}{index < parts.length - 1 && "/"}</span>{index < parts.length - 1 && <wbr />}</Fragment>)}</code>
     <span className="text-xs leading-relaxed text-muted-foreground">{item.layer.replace(/s$/, "")} · {item.section.split(" / ").slice(1).join(" / ")}</span>
   </div>;
 }

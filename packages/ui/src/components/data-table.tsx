@@ -398,7 +398,7 @@ function DataTable<T extends RowData>({
   return (
     <div ref={rootRef} data-slot="data-table" data-compact={compact || undefined} className={cn("group/data-table flex min-w-0 flex-col gap-3 [--data-table-header-height:40px] [@media(pointer:coarse)]:[--data-table-header-height:48px]", className)}>
       {status === "loading" && <span role="status" className="sr-only">Loading</span>}
-      <div className={cn("grid min-h-8 items-start gap-2", canChooseColumns ? "grid-cols-[minmax(0,1fr)_auto]" : "grid-cols-1")}>
+      <div className={cn("grid min-h-8 items-start gap-2 sm:items-center", canChooseColumns ? "grid-cols-[minmax(0,1fr)_auto]" : "grid-cols-1")}>
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">{toolbar?.({ rows: sortedRows, columns: visibleColumns })}</div>
         {canChooseColumns && (
           <DropdownMenu>
@@ -612,8 +612,8 @@ function DataTable<T extends RowData>({
           </tbody>
         </table>
       </div>
-      {edges.left && <span aria-hidden className="pointer-events-none absolute inset-y-px left-px z-20 w-10 rounded-l-lg bg-linear-to-r from-card to-transparent" />}
-      {edges.right && <span aria-hidden className="pointer-events-none absolute inset-y-px right-px z-20 w-10 rounded-r-lg bg-linear-to-l from-card to-transparent" />}
+      {edges.left && <span aria-hidden className="pointer-events-none absolute inset-y-px left-px z-20 w-12 rounded-l-lg bg-linear-to-r from-card from-25% to-transparent" />}
+      {edges.right && <span aria-hidden className="pointer-events-none absolute inset-y-px right-px z-20 w-12 rounded-r-lg bg-linear-to-l from-card from-25% to-transparent" />}
       </div>
 
       {status === "ready" && rowCount > pageSize && (
