@@ -233,6 +233,8 @@ for (const width of [390, 820, 1440]) {
           const transform = getComputedStyle(node).transform;
           return transform === 'none' || new DOMMatrixReadOnly(transform).isIdentity;
         }))).toBe(true);
+        await expect(viewport).toHaveCSS('opacity', '1');
+        await expect(viewport.locator('[data-slot="navigation-menu-content"]')).toHaveCSS('opacity', '1');
         await noOverflow(page);
         // Canonicalize the resting endpoint without a retained animation/compositor layer.
         await expect(page).toHaveScreenshot(`finish-navigation-${suffix}.png`, {
