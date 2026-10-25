@@ -1270,6 +1270,101 @@ test('morphing popover settles around a stable positioner in normal and reduced 
   }
 });
 
+test('stacked backdrop artwork stays complete and separate from foreground copy', async ({ page }) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'molecules-media-media-backdrop--image-cover', `theme:${theme};mode:${mode};motion:reduced`);
+    const backdrop = page.getByRole('region', { name: 'Kith coastal artwork', exact: true });
+    const image = backdrop.locator('img');
+    await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth === 760)).toBe(true);
+    const geometry = await image.evaluate(element => {
+      const image = element.getBoundingClientRect(), foreground = element.parentElement.querySelector('h1').parentElement.getBoundingClientRect();
+      return { width: image.width, height: image.height, gap: foreground.top - image.bottom, fit: getComputedStyle(element).objectFit };
+    });
+    expect(geometry.gap).toBeGreaterThanOrEqual(-1);
+    expect(geometry.height).toBeCloseTo(geometry.width * 507 / 760, 0);
+    expect(geometry.fit).toBe('contain');
+    await noOverflow(page);
+  }
+});
+
+test('stacked backdrop intrinsic poster size prevents a jump during a real delayed image request', async ({ page }, testInfo) => {
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    let release;
+    const gate = new Promise(resolve => { release = resolve; });
+    await page.route(/coastal-walk-v2\.webp/, async route => { await gate; await route.continue(); });
+    await page.goto(`/iframe.html?id=molecules-media-media-backdrop--image-cover&viewMode=story&globals=theme:${theme};mode:${mode};motion:reduced`, { waitUntil: 'domcontentloaded' });
+    const backdrop = page.getByRole('region', { name: 'Kith coastal artwork', exact: true });
+    const image = backdrop.locator('img');
+    try {
+      await expect(backdrop.getByRole('heading', { level: 1 })).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
+      expect(await image.evaluate(element => element.complete)).toBe(false);
+      // Measure the component's own boundary; font settling in the explorer shell
+      // can move the entire section without a poster-induced layout shift.
+      const geometry = () => image.evaluate(element => {
+        const artwork = element.getBoundingClientRect(), foreground = element.parentElement.querySelector('h1').parentElement.getBoundingClientRect();
+        return { image: artwork.height, foreground: foreground.top - artwork.top, artworkTop: artwork.top, scrollY: window.scrollY };
+      });
+      const before = await geometry();
+      expect(before.image).toBeCloseTo((await image.boundingBox()).width * 507 / 760, 0);
+      release();
+      await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth === 760)).toBe(true);
+      const after = await geometry();
+      await testInfo.attach(`delayed-poster-${theme}`, { body: JSON.stringify({ before, after }), contentType: 'application/json' });
+      expect(Math.abs(after.image - before.image)).toBeLessThan(1);
+      expect(Math.abs(after.foreground - before.foreground)).toBeLessThan(1);
+    } finally {
+      release();
+      await page.unroute(/coastal-walk-v2\.webp/);
+    }
+  }
+});
+
+test('stacked background video and controls occupy only artwork and pause when only copy remains', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  for (const [theme, mode] of [['paper', 'light'], ['ink', 'dark']]) {
+    await openStory(page, 'molecules-media-media-backdrop--stacked-video', `theme:${theme};mode:${mode};motion:user`);
+    const backdrop = page.getByRole('region', { name: 'Live adventure preview', exact: true });
+    const image = backdrop.locator('img'), video = backdrop.locator('video');
+    await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth === 1280)).toBe(true);
+    const artwork = await image.boundingBox(), movie = await video.boundingBox();
+    expect(artwork.height).toBeCloseTo(artwork.width * 720 / 1280, 0);
+    for (const key of ['x', 'y', 'width', 'height']) expect(Math.abs(movie[key] - artwork[key])).toBeLessThan(1);
+    const play = backdrop.getByRole('button', { name: 'Play background video', exact: true });
+    const control = await play.boundingBox();
+    expect(control.y).toBeGreaterThanOrEqual(artwork.y);
+    expect(control.y + control.height).toBeLessThanOrEqual(artwork.y + artwork.height);
+    expect((await backdrop.getByRole('heading', { level: 1 }).boundingBox()).y).toBeGreaterThanOrEqual(artwork.y + artwork.height);
+    await play.click();
+    await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(.15);
+    await expect(backdrop).toHaveAttribute('data-media-backdrop', 'playing');
+    await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).focus();
+    await page.evaluate(() => { document.body.style.paddingBottom = '120vh'; });
+    await image.evaluate(element => window.scrollTo(0, window.scrollY + element.getBoundingClientRect().bottom + 1));
+    await expect(backdrop.getByRole('heading', { level: 1 })).toBeInViewport();
+    await expect.poll(() => image.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThanOrEqual(0);
+    await expect(video).toHaveJSProperty('paused', true);
+    await expect(backdrop).toHaveAttribute('data-media-backdrop', 'still');
+    // A keyboard activation while the copy remains visible must not restart hidden artwork.
+    await video.evaluate(element => { element.dataset.playEvents = '0'; element.addEventListener('play', () => { element.dataset.playEvents = String(Number(element.dataset.playEvents) + 1); }); });
+    await page.keyboard.press('Enter');
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await expect(video).toHaveJSProperty('paused', true);
+    await expect(video).toHaveAttribute('data-play-events', '0');
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(image).toBeInViewport();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await expect(video).toHaveJSProperty('paused', true);
+    const pausedTime = await video.evaluate(element => element.currentTime);
+    await play.click();
+    await expect(video).toHaveJSProperty('paused', false);
+    await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(pausedTime + .1);
+    await backdrop.getByRole('button', { name: 'Pause background video', exact: true }).click();
+    await expect(video).toHaveJSProperty('paused', true);
+    await noOverflow(page);
+  }
+});
+
 test('a decorative video backdrop loads deliberately, pauses offscreen and follows live motion preferences', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const requests = [];

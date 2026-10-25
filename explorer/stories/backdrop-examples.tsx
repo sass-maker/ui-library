@@ -1,12 +1,12 @@
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@saas-maker/ui/atoms/button";
-import { MediaBackdrop } from "@saas-maker/ui/molecules/media-backdrop";
+import { MediaBackdrop, type MediaBackdropProps } from "@saas-maker/ui/molecules/media-backdrop";
 
 const liveSources = [{ src: "./visual/hobby-horizon.mp4", type: "video/mp4" }];
 
-export function LiveBackdropExample({ autoPlay = false }: { autoPlay?: boolean }) {
+export function LiveBackdropExample({ autoPlay = false, layout = "cover" }: { autoPlay?: boolean; layout?: MediaBackdropProps["layout"] }) {
   return <div className="w-full p-3 sm:p-6">
-    <MediaBackdrop label="Live adventure preview" poster="./visual/hobby-horizon-poster.webp" sources={liveSources} autoPlay={autoPlay} focalPoint="55% 50%" className="min-h-[40rem] sm:min-h-[44rem]" contentClassName="pb-6 sm:pb-8">
+    <MediaBackdrop label="Live adventure preview" poster="./visual/hobby-horizon-poster.webp" posterSize={{ width: 1280, height: 720 }} layout={layout} sources={liveSources} autoPlay={autoPlay} focalPoint="55% 50%" className={layout === "cover" ? "min-h-[40rem] sm:min-h-[44rem]" : undefined} contentClassName="pb-6 sm:pb-8">
       <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-white/85">Live · A little more life</p>
       <h1 className="max-w-[12ch] font-display text-[clamp(2.75rem,1.6rem+4vw,5.5rem)] leading-[1.02] tracking-tight">Make room for <em className="font-accent font-normal">a little wonder.</em></h1>
       <p className="mt-6 max-w-[36ch] text-base leading-relaxed text-white/90 sm:text-lg">Bucket-list ideas and side quests, with a place to keep your own plans.</p>
@@ -19,7 +19,7 @@ export function LiveBackdropExample({ autoPlay = false }: { autoPlay?: boolean }
 
 export function KithBackdropExample() {
   return <div className="w-full p-3 sm:p-6">
-  <MediaBackdrop label="Kith coastal artwork" poster="./demo/kith/coastal-walk-v2.webp" className="min-h-0 [&>img]:static [&>img]:h-auto [&>img]:w-full [&>img]:object-contain [&>div[aria-hidden]]:hidden" contentClassName="max-w-3xl">
+  <MediaBackdrop label="Kith coastal artwork" poster="./demo/kith/coastal-walk-v2.webp" layout="stacked" posterSize={{ width: 760, height: 507 }} contentClassName="max-w-3xl">
     <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-white/85">Kith · Keep close</p>
     <h1 className="max-w-[12ch] font-display text-[clamp(2.75rem,1.6rem+4vw,5.5rem)] leading-[1.02] tracking-tight">A little space <em className="font-accent font-normal">for your people.</em></h1>
     <p className="mt-6 max-w-[34ch] text-base leading-relaxed text-white/90 sm:text-lg">Remember the details. Make time for the people who matter.</p>
