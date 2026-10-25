@@ -280,7 +280,7 @@ for (const mode of ['light', 'dark']) {
     await name.focus();
     await page.keyboard.press('Enter');
     await expect(preview.getByRole('status')).toHaveText('Saved “Kith · the next chapter” in this example.');
-    await page.getByRole('button', { name: 'Compact', exact: true }).click();
+    await page.getByRole('button', { name: /^compact$/i }).click();
     await expect(preview.getByRole('button', { name: 'Reset example', exact: true })).toHaveAttribute('data-variant', 'outline');
     await preview.getByRole('button', { name: 'Reset example', exact: true }).click();
     await expect(name).toHaveValue('Kith · October release');
