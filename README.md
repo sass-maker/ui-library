@@ -142,6 +142,14 @@ interaction recording.
 - `@saas-maker/ui/atoms/video`: no movie fetch until play; native controls,
   captions, error/retry, and pause offscreen, on hidden tabs or on a live
   reduced-motion change. Deliberate playback remains available.
+- `@saas-maker/ui/molecules/media-backdrop`: decorative artwork with optional silent
+  video. `layout="cover"` (default) crops artwork behind the foreground and a
+  readability gradient. `layout="stacked"` shows the complete picture above
+  separate copy; video and transport controls overlay only the artwork. Pass
+  `posterSize={{ width, height }}` with the actual image dimensions to reserve
+  its space before loading. Playback pauses when the artwork leaves view and
+  stays paused on re-entry until deliberate play. `poster`, `sources`,
+  `focalPoint`, `className` and `contentClassName` remain supported.
 - `@saas-maker/ui/molecules/media-frame`: consistent caption and credit.
 - `@saas-maker/ui/organisms/media-sequence`: keyboard-accessible product chapters.
 
