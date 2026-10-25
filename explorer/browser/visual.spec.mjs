@@ -215,11 +215,35 @@ for (const width of [390, 820, 1440]) {
           await expect(page).toHaveScreenshot(`media-status-${suffix}.png`);
         }
       });
+      test(`navigation menu settles ${suffix}`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 1000 });
+        await openStory(page, 'navigation-navigation-menu--playground', globals);
+        await page.getByRole('button', { name: 'Explore', exact: true }).focus();
+        await page.keyboard.press('Enter');
+        await page.keyboard.press('ArrowDown');
+        const viewport = page.locator('[data-slot="navigation-menu-viewport"]');
+        await expect(viewport).toHaveAttribute('data-state', 'open');
+        await expect(page.getByRole('link', { name: 'Source and installation', exact: true })).toBeFocused();
+        await viewport.evaluate(async element => {
+          await Promise.all(element.getAnimations({ subtree: true })
+            .filter(animation => animation.effect?.getTiming().iterations !== Infinity)
+            .map(animation => animation.finished.catch(() => {})));
+        });
+        await expect.poll(() => viewport.evaluate(element => [element, ...element.querySelectorAll('[data-slot="navigation-menu-content"]')].every(node => {
+          const transform = getComputedStyle(node).transform;
+          return transform === 'none' || new DOMMatrixReadOnly(transform).isIdentity;
+        }))).toBe(true);
+        await noOverflow(page);
+        // Canonicalize the resting endpoint without a retained animation/compositor layer.
+        await expect(page).toHaveScreenshot(`finish-navigation-${suffix}.png`, {
+          fullPage: width > 820, animations: 'disabled',
+          style: '[data-slot="navigation-menu-viewport"], [data-slot="navigation-menu-content"] { animation: none !important; transition: none !important; transform: none !important; opacity: 1 !important; }',
+        });
+      });
       test(`catalog state finishes ${suffix}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 1000 });
         for (const [name, id] of [
           ['kanban', 'interactions-kanban-board--playground'],
-          ['navigation', 'navigation-navigation-menu--playground'],
           ['orbit', 'effects-orbiting-circles--playground'],
           ['context', 'overlays-context-menu--playground'],
           ['morphing-popover', 'motion-morphing-popover--in-context'],
@@ -230,17 +254,6 @@ for (const width of [390, 820, 1440]) {
           ['features', 'blocks-features--playground'],
         ]) {
           await openStory(page, id, globals);
-          if (name === 'navigation') {
-            await page.getByRole('button', { name: 'Explore', exact: true }).focus();
-            await page.keyboard.press('Enter');
-            await page.keyboard.press('ArrowDown');
-            await expect(page.locator('[data-slot="navigation-menu-viewport"]')).toBeVisible();
-            await page.locator('[data-slot="navigation-menu-viewport"]').evaluate(async element => {
-              await Promise.all(element.getAnimations({ subtree: true })
-                .filter(animation => animation.effect?.getTiming().iterations !== Infinity)
-                .map(animation => animation.finished.catch(() => {})));
-            });
-          }
           if (name === 'context') {
             await page.locator('[data-slot="context-menu-trigger"]').focus();
             await page.keyboard.press('Shift+F10');
