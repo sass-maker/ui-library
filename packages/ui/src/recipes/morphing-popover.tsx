@@ -77,7 +77,7 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
     return () => { entrance.cancelled = true; entrance.complete = undefined; cancelFrame(observe); };
   }, [open, ready, reduced, entrance]);
   const reveal = ready && (reduced || settled);
-  // Preserve focused text entry; guard activation until the foreground is revealed.
+  // Preserve native text entry; suppress hidden keydown handlers and click/submit actions.
   const guardHidden = (event: SyntheticEvent) => {
     if (!reveal) { event.preventDefault(); event.stopPropagation(); }
   };
@@ -102,6 +102,7 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
       onLayoutAnimationComplete={() => entrance.complete?.()}
       className={cn("pointer-events-none absolute inset-0 rounded-[inherit] border border-border bg-popover shadow-lg", surfaceClassName)} />}
     <motion.div className={cn("relative", !reveal && "pointer-events-none")} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: reveal ? 1 : 0 }} transition={{ duration: reduced ? 0 : .16 }}
+      onKeyDownCapture={event => { if (!reveal && event.key !== "Tab" && event.key !== "Escape") event.stopPropagation(); }}
       onClickCapture={guardHidden} onSubmitCapture={guardHidden}>{children}</motion.div>
   </Primitive.Content></Primitive.Portal>;
 }
