@@ -1706,6 +1706,34 @@ test('popover finishes pointer entrance before native interaction and preserves 
   await testInfo.attach('independent-hidden-document-shortcut', { body: JSON.stringify({ beforeShortcut, shortcut }), contentType: 'application/json' });
   expect(shortcut).toHaveLength(1); expect(shortcut[0].trusted).toBe(true); expectFinal(shortcut[0].state); await dismiss();
 
+  // Content itself and its padding sit outside the foreground subtree; hover
+  // must also finish entrance before a child consumer observes the original event.
+  for (const boundary of ['content-keyboard', 'padding-pointerdown', 'child-pointerover']) {
+    await load('surfaceDuration:2;surfaceDelay:1'); await pointer();
+    const content = page.locator('[data-slot="morphing-popover-content"]');
+    await content.evaluate((node, boundary) => {
+      window.popoverBoundaryEvents = [];
+      const record = event => window.popoverBoundaryEvents.push({ trusted: event.isTrusted, type: event.type, target: event.target === node ? 'content' : event.target.tagName, state: window.popoverInteractionState() });
+      if (boundary === 'content-keyboard') {
+        node.focus();
+        document.addEventListener('keydown', event => { if (event.ctrlKey && event.altKey && event.key.toLowerCase() === 'k') { record(event); event.preventDefault(); } });
+      } else if (boundary === 'padding-pointerdown') node.addEventListener('pointerdown', record);
+      else node.querySelector('button').addEventListener('pointerover', record);
+    }, boundary);
+    const before = await page.evaluate(() => window.popoverInteractionState()); expect(before.opacity).toBe('0');
+    if (boundary === 'content-keyboard') { await expect(content).toBeFocused(); await page.keyboard.press('Control+Alt+k'); }
+    else {
+      const box = await (boundary === 'padding-pointerdown' ? content : close).boundingBox();
+      if (boundary === 'padding-pointerdown') await page.mouse.click(box.x + 5, box.y + 5);
+      else await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    }
+    const result = await page.evaluate(() => ({ events: window.popoverBoundaryEvents, after: window.popoverInteractionState() }));
+    await testInfo.attach(boundary, { body: JSON.stringify({ before, ...result }), contentType: 'application/json' });
+    expect(result.events).toHaveLength(1); expect(result.events[0].trusted).toBe(true); expectFinal(result.events[0].state); expectFinal(result.after);
+    if (boundary !== 'child-pointerover') expect(result.events[0].target).toBe('content');
+    await dismiss();
+  }
+
   // Keyless native insertText exercises the portal-bound beforeinput listener.
   await load('surfaceDuration:2;surfaceDelay:1'); await pointer();
   await input.evaluate(node => { window.popoverBeforeInput = []; node.addEventListener('beforeinput', event => window.popoverBeforeInput.push({ trusted: event.isTrusted, state: window.popoverInteractionState() })); });

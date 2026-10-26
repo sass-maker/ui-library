@@ -1,6 +1,8 @@
 "use client";
 /** Morphing surface adapted from ibelick/motion-primitives, MIT.
  * See THIRD_PARTY_NOTICES.md. Fleet retains Radix popover keyboard/focus behavior.
+ * Interaction finishes an active pointer entrance and forwards the original event.
+ * Keyboard, programmatic and externally controlled opens render immediately.
  */
 import { createContext, useCallback, useContext, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
@@ -122,14 +124,14 @@ export function MorphingPopoverContent({ children, className, surfaceClassName, 
     return () => { cancelled = true; cancelAnimationFrame(frame); };
   }, [open, setReady]);
   return <Primitive.Portal><Primitive.Content ref={content} data-slot="morphing-popover-content" side={side} align={align} sideOffset={8} collisionPadding={16}
+    onKeyDownCapture={engage} onPointerDownCapture={engage} onPointerOverCapture={engage} onClickCapture={engage} onPasteCapture={engage} onCompositionStartCapture={engage} onSubmitCapture={engage}
     className={cn("relative z-50 w-80 max-w-[calc(100vw-2rem)] rounded-xl p-5 text-popover-foreground outline-none", className)}>
     <div data-slot="morphing-popover-shared-paint" aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit]" style={{ opacity: engaged ? 0 : 1 }}>
       {ready && <motion.div ref={surface} data-slot={engaged ? "morphing-popover-shared-surface" : "morphing-popover-surface"} initial={false} layoutId={instant ? undefined : `${id}-surface`} transition={instant ? { duration: 0 } : transition ?? settle}
         onLayoutAnimationComplete={() => entrance.complete?.()} className={paintClass} />}
     </div>
     {ready && engaged && <div data-slot="morphing-popover-surface" aria-hidden className={paintClass} />}
-    <div ref={foreground} className="relative" style={{ opacity: reveal ? 1 : 0, transition: instant || engaged ? "none" : "opacity .16s cubic-bezier(0.2,0,0,1)" }}
-      onKeyDownCapture={engage} onPointerDownCapture={engage} onClickCapture={engage} onPasteCapture={engage} onCompositionStartCapture={engage} onSubmitCapture={engage}>{children}</div>
+    <div ref={foreground} className="relative" style={{ opacity: reveal ? 1 : 0, transition: instant || engaged ? "none" : "opacity .16s cubic-bezier(0.2,0,0,1)" }}>{children}</div>
   </Primitive.Content></Primitive.Portal>;
 }
 
