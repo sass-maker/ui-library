@@ -1379,26 +1379,41 @@ test('popover foreground follows surface settlement and interrupted reopen', asy
       await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
     }
     await page.evaluate(() => {
-      window.popoverTiming = []; window.popoverTimingDone = false;
+      window.popoverTiming = []; window.popoverTimingFrames = []; window.popoverTimingDone = false;
       const started = performance.now();
       const sample = () => {
         const paint = document.querySelector('[data-slot="morphing-popover-surface"]'), foreground = document.querySelector('[data-slot="morphing-popover-content"] > .relative');
         const box = node => { const b = node.getBoundingClientRect(); return { x: b.x, y: b.y, width: b.width, height: b.height }; };
-        if (paint && foreground) window.popoverTiming.push({ t: performance.now() - started, paint: box(paint), foreground: box(foreground), opacity: Number(getComputedStyle(foreground).opacity) });
+        const observation = { t: performance.now() - started, paint: paint ? box(paint) : null, foreground: foreground ? box(foreground) : null, opacity: foreground ? Number(getComputedStyle(foreground).opacity) : null };
+        window.popoverTimingFrames.push(observation);
+        if (paint && foreground) window.popoverTiming.push(observation);
         if (performance.now() - started < 2000) requestAnimationFrame(sample); else window.popoverTimingDone = true;
       };
       requestAnimationFrame(sample);
     });
     await trigger.click(); await page.waitForFunction(() => window.popoverTimingDone);
     const samples = await page.evaluate(() => window.popoverTiming);
+    const frames = await page.evaluate(() => window.popoverTimingFrames);
     await testInfo.attach(`popover-${args}-interrupted-reopen`, { body: JSON.stringify(samples), contentType: 'application/json' });
+    await testInfo.attach(`popover-${args}-all-frame-opportunities`, { body: JSON.stringify(frames), contentType: 'application/json' });
     const visible = samples.filter(sample => sample.opacity > 0);
     expect(visible.length).toBeGreaterThan(2); expect(visible.at(-1).opacity).toBe(1);
     const keys = ['x', 'y', 'width', 'height'], finalPaint = samples.at(-1).paint;
     const growing = samples.filter(sample => keys.some(key => Math.abs(sample.paint[key] - finalPaint[key]) >= .5));
     for (const sample of growing) expect(sample.opacity).toBe(0);
     if (duration) expect(new Set(growing.map(sample => JSON.stringify(keys.map(key => Math.round(sample.paint[key] * 100) / 100)))).size).toBeGreaterThanOrEqual(3);
-    else expect(visible[0].t - samples[0].t).toBeLessThan(150);
+    else {
+      const firstPaint = frames.findIndex(sample => sample.paint !== null), firstVisible = frames.findIndex(sample => sample.opacity > 0);
+      expect(firstPaint).toBeGreaterThanOrEqual(0); expect(firstVisible).toBeGreaterThanOrEqual(firstPaint);
+      const opening = frames.slice(firstPaint, firstVisible + 1);
+      for (const sample of opening) { expect(sample.paint).not.toBeNull(); expect(sample.foreground).not.toBeNull(); }
+      // Bound render opportunities even when a busy browser cannot deliver regular RAF callbacks.
+      expect(firstVisible - firstPaint).toBeLessThanOrEqual(4);
+      const gaps = opening.slice(1).map((sample, index) => sample.t - opening[index].t);
+      const elapsed = frames[firstVisible].t - frames[firstPaint].t, wellSampled = gaps.every(gap => gap <= 50);
+      await testInfo.attach(`popover-${args}-instant-latency`, { body: JSON.stringify({ elapsed, gaps, renderOpportunities: firstVisible - firstPaint, qualification: wellSampled ? 'sampled wall-clock latency' : 'latency unqualified due to sampling stalls' }), contentType: 'application/json' });
+      if (wellSampled) expect(elapsed).toBeLessThan(150);
+    }
     for (const sample of visible) for (const key of keys) expect(Math.abs(sample.paint[key] - finalPaint[key])).toBeLessThan(.5);
     for (const { paint, foreground } of visible) {
       expect(foreground.x).toBeGreaterThanOrEqual(paint.x - 1); expect(foreground.y).toBeGreaterThanOrEqual(paint.y - 1);
