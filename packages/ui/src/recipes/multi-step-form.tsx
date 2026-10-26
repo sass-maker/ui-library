@@ -243,7 +243,7 @@ function Footer({ canGoBack, valid, primary, completeLabel, onBack, }: {
     completeLabel: string;
     onBack: () => void;
 }) {
-    return (<div className="flex items-center justify-between border-t border-border p-4">
+    return (<div className="flex items-center justify-between border-t border-border px-6 py-4">
       {/* Always rendered, so Continue keeps its place when Back is hidden. */}
       <button type="button" onClick={onBack} disabled={!canGoBack} className={cn("h-11 touch-manipulation rounded-full px-4 text-[15px] font-medium text-muted-foreground outline-hidden transition-[scale,opacity,color,background-color] duration-150 ease-out select-none hover:bg-background hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-foreground motion-safe:active:scale-[0.96]", !canGoBack && "pointer-events-none opacity-0")}>
         Back
