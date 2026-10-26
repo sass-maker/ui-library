@@ -1476,12 +1476,16 @@ for (const timing of ['nested', 'physical']) test(`popover completion contains $
     await captureOpening('initial'); await page.keyboard.press('Escape'); await expect(trigger).toBeFocused();
     if (preference === 'normal') {
       await trigger.click(); await expect(page.locator('[data-slot="morphing-popover-surface"]')).toHaveCount(1);
-      await expect(foreground).toHaveCSS('opacity', '0'); await expect(foreground).toHaveCSS('pointer-events', 'none');
+      await expect(foreground).toHaveCSS('opacity', '0');
       const close = page.getByRole('button', { name: 'Close', exact: true }), box = await close.boundingBox();
       await expect(close).toBeFocused();
+      await close.evaluate(node => node.addEventListener('pointerdown', event => {
+        window.popoverFirstTap = { trusted: event.isTrusted, opacity: getComputedStyle(node.closest('[data-slot="morphing-popover-content"]').querySelector(':scope > .relative')).opacity };
+      }));
+      // The first tap finishes entrance before the original consumer action runs.
       await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
-      await expect(panel).toHaveCount(1); // Invisible controls must not receive pointer activation.
-      await page.keyboard.press('Escape'); await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+      await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+      expect(await page.evaluate(() => window.popoverFirstTap)).toEqual({ trusted: true, opacity: '1' });
       await captureOpening('interrupted-reopen');
       await expect(foreground).toHaveCSS('pointer-events', 'auto');
       await page.getByRole('button', { name: 'Close', exact: true }).click(); await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
@@ -1579,7 +1583,7 @@ test('popover styling survives snapped openings without revealing during delayed
     if (timing === 'delayed') {
       // A stationary delayed projection is not settled: its projection transform is still active.
       await page.waitForFunction(() => window.popoverStyling.filter(sample => sample.paint?.transform !== 'none' && sample.paint).length >= 5);
-      await expect(foreground).toHaveCSS('opacity', '0'); await expect(foreground).toHaveCSS('pointer-events', 'none');
+      await expect(foreground).toHaveCSS('opacity', '0');
     }
     await page.setViewportSize({ ...viewport, width: viewport.width === 1440 ? 1400 : viewport.width - 10 });
     await page.waitForFunction(() => window.popoverStylingDone);
@@ -1633,83 +1637,104 @@ test('popover styling survives snapped openings without revealing during delayed
   }
 });
 
-test('popover preserves early text while guarding hidden activation', async ({ page }, testInfo) => {
-  test.setTimeout(60_000);
+test('popover finishes pointer entrance before native interaction and preserves instant opens', async ({ page }, testInfo) => {
+  test.setTimeout(90_000);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.addInitScript(() => {
     const request = window.requestAnimationFrame.bind(window), cancel = window.cancelAnimationFrame.bind(window), pending = new Set();
     window.requestAnimationFrame = callback => { const handle = request(time => { pending.delete(handle); callback(time); }); pending.add(handle); return handle; };
     window.cancelAnimationFrame = handle => { pending.delete(handle); cancel(handle); };
     window.popoverPendingFrames = () => pending.size;
+    window.popoverInteractionState = () => {
+      const content = document.querySelector('[data-slot="morphing-popover-content"]'), foreground = content?.querySelector(':scope > .relative');
+      const paint = document.querySelector('[data-slot="morphing-popover-surface"]'), shared = document.querySelector('[data-slot="morphing-popover-shared-surface"]');
+      const rect = node => { if (!node) return null; const box = node.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width, height: box.height }; };
+      return { opacity: foreground && getComputedStyle(foreground).opacity, paint: rect(paint), content: rect(content), transform: paint && getComputedStyle(paint).transform, count: document.querySelectorAll('[data-slot="morphing-popover-surface"]').length, shared: !!shared, wrapperOpacity: document.querySelector('[data-slot="morphing-popover-shared-paint"]')?.style.opacity };
+    };
   });
-  for (const timing of ['default', 'long']) {
-    const args = `interactive:true${timing === 'long' ? ';surfaceDuration:2;surfaceDelay:1' : ''}`;
-    await page.goto(`/iframe.html?id=motion-morphing-popover--playground&args=${args}&globals=theme:paper;mode:light;motion:user`);
-    const fixture = page.locator('[data-popover-ownership]');
-    if (timing === 'long') {
-      await expect(fixture).toHaveAttribute('data-surface-duration', '2');
-      await expect(fixture).toHaveAttribute('data-surface-delay', '1');
-    }
-    const trigger = page.getByRole('button', { name: 'Library details', exact: true }), panel = page.getByRole('dialog');
-    const surface = page.locator('[data-slot="morphing-popover-surface"]'), foreground = page.locator('[data-slot="morphing-popover-content"] > .relative');
-    const input = page.getByRole('textbox', { name: 'Collection note', exact: true }), close = page.getByRole('button', { name: 'Close', exact: true });
-    const tab = testInfo.project.name.startsWith('webkit') ? 'Alt+Tab' : 'Tab';
-    const back = testInfo.project.name.startsWith('webkit') ? 'Alt+Shift+Tab' : 'Shift+Tab';
-    const snapshot = label => page.evaluate(label => {
-      const node = document.querySelector('[data-slot="morphing-popover-content"] > .relative');
-      return { label, opacity: node && getComputedStyle(node).opacity, activeTag: document.activeElement?.tagName, activeText: document.activeElement?.textContent, input: document.querySelector('input')?.value, requests: document.querySelector('[data-popover-ownership]')?.getAttribute('data-open-requests'), consumerCount: Number(document.querySelector('#popover-consumer-action-count')?.textContent ?? 0), consumerEvents: window.popoverConsumerEvents ?? [] };
-    }, label);
-    await trigger.focus(); await page.keyboard.press('Enter'); await expect(input).toBeFocused();
-    if (timing === 'long') {
-      // A real target listener models a consumer keydown action; all keys below are native.
-      await close.evaluate(node => {
-        const output = document.createElement('output'); output.id = 'popover-consumer-action-count'; output.textContent = '0';
-        Object.assign(output.style, { position: 'fixed', bottom: '0', left: '0' }); document.body.append(output);
-        window.popoverConsumerEvents = [];
-        node.addEventListener('keydown', event => {
-          window.popoverConsumerEvents.push({ key: event.key, trusted: event.isTrusted });
-          if (event.key === 'Enter' || event.key === ' ') output.textContent = String(Number(output.textContent) + 1);
-        });
-      });
-      await page.keyboard.press(tab); await expect(close).toBeFocused();
-      const beforeActions = await snapshot('before-hidden-Enter-Space');
-      await page.keyboard.press('Enter'); await page.keyboard.press('Space');
-      const afterActions = await snapshot('after-hidden-Enter-Space');
-      // Standard cancelable DOM submit coverage; this fixture has no consumer form/backend.
-      const hiddenSubmitAllowed = await foreground.evaluate(node => node.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
-      await testInfo.attach(`${timing}-hidden-activation`, { body: JSON.stringify({ beforeActions, afterActions, hiddenSubmitAllowed }), contentType: 'application/json' });
-      expect(beforeActions.opacity).toBe('0'); expect(afterActions.opacity).toBe('0'); expect(hiddenSubmitAllowed).toBe(false);
-      expect(afterActions.consumerCount).toBe(0);
-      expect(afterActions.consumerEvents.filter(event => event.key === 'Enter' || event.key === ' ')).toEqual([]);
-      await expect(panel).toHaveCount(1); await expect(close).toBeFocused();
-      await page.keyboard.press(back); await expect(input).toBeFocused();
-    }
-    // Default entrance tests immediate text retention, not automation beating a .25s morph.
-    const beforeText = await snapshot('before-early-text');
-    await page.keyboard.type('Keep'); await page.keyboard.insertText(' text');
-    const afterText = await snapshot('after-native-type-and-insertText');
-    await testInfo.attach(`${timing}-early-text`, { body: JSON.stringify({ beforeText, afterText }), contentType: 'application/json' });
-    if (timing === 'long') expect(beforeText.opacity).toBe('0');
-    await expect(input).toHaveValue('Keep text'); await expect(fixture).toHaveAttribute('data-note', 'Keep text');
-    await expect(foreground).toHaveCSS('opacity', '1');
-    expect(await foreground.evaluate(node => node.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })))).toBe(true);
-    await testInfo.attach(`${timing}-visible-editor`, { body: await page.screenshot({ animations: 'allow' }), contentType: 'image/png' });
-    await page.keyboard.press(tab); await expect(close).toBeFocused(); await page.keyboard.press('Space');
-    await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
-    if (timing === 'long') {
-      const afterVisible = await snapshot('after-visible-consumer-Space');
-      await testInfo.attach('visible-consumer-keydown', { body: JSON.stringify(afterVisible), contentType: 'application/json' });
-      expect(afterVisible.consumerCount).toBe(1);
-      expect(afterVisible.consumerEvents.filter(event => event.key === 'Enter' || event.key === ' ')).toEqual([{ key: ' ', trusted: true }]);
-    }
-    await page.keyboard.press('Enter'); await expect(input).toBeFocused(); await expect(foreground).toHaveCSS('opacity', '1');
-    await expect(input).toHaveValue('Keep text'); await page.keyboard.press(tab); await expect(close).toBeFocused(); await page.keyboard.press('Enter');
-    await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
-    await page.keyboard.press('Enter'); await surface.waitFor(); await page.keyboard.press('Escape');
-    await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
-    await expect(fixture).toHaveAttribute('data-open-requests', 'true,false,true,false,true,false');
+  const trigger = page.getByRole('button', { name: 'Library details', exact: true }), panel = page.getByRole('dialog');
+  const input = page.getByRole('textbox', { name: 'Collection note', exact: true }), close = page.getByRole('button', { name: 'Close', exact: true });
+  const foreground = page.locator('[data-slot="morphing-popover-content"] > .relative');
+  const load = args => page.goto(`/iframe.html?id=motion-morphing-popover--playground&args=interactive:true${args ? `;${args}` : ''}&globals=theme:paper;mode:light;motion:user`);
+  const pointer = async () => { await trigger.click(); await page.locator('[data-slot="morphing-popover-surface"]').waitFor(); };
+  const dismiss = async () => {
+    await page.keyboard.press('Escape'); await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
     await expect.poll(() => page.evaluate(() => window.popoverPendingFrames())).toBe(0);
-    await noOverflow(page);
+  };
+  const expectFinal = state => {
+    expect(state.opacity).toBe('1'); expect(state.count).toBe(1); expect(state.transform).toBe('none');
+    for (const key of ['x', 'y', 'width', 'height']) expect(Math.abs(state.paint[key] - state.content[key])).toBeLessThan(1);
+  };
+  // Default timing exercises immediate editing without requiring automation to beat .25s.
+  await load(''); await pointer(); await expect(input).toBeFocused();
+  const defaultBefore = await page.evaluate(() => window.popoverInteractionState());
+  await page.keyboard.type('Keep'); await page.keyboard.insertText(' text');
+  await expect(input).toHaveValue('Keep text'); await expect(foreground).toHaveCSS('opacity', '1');
+  await testInfo.attach('default-native-editing', { body: JSON.stringify({ before: defaultBefore, after: await page.evaluate(() => window.popoverInteractionState()) }), contentType: 'application/json' });
+  await testInfo.attach('default-visible-editor', { body: await page.screenshot({ animations: 'allow' }), contentType: 'image/png' });
+  await dismiss();
+
+  // A real consumer mask must still prevent native defaults, and a document shortcut
+  // must receive the original trusted event. Both observe final paint before acting.
+  await load('surfaceDuration:2;surfaceDelay:1'); await pointer(); await expect(input).toBeFocused();
+  await input.evaluate(node => {
+    window.popoverInput = node; window.popoverForeground = node.closest('[data-slot="morphing-popover-content"]').querySelector(':scope > .relative'); window.popoverLead = document.querySelector('[data-slot="morphing-popover-surface"]');
+    window.popoverMask = [];
+    node.addEventListener('keydown', event => { if (event.key === 'x') { window.popoverMask.push({ trusted: event.isTrusted, state: window.popoverInteractionState() }); event.preventDefault(); } });
+  });
+  const beforeMask = await page.evaluate(() => window.popoverInteractionState()); expect(beforeMask.opacity).toBe('0');
+  await page.keyboard.type('x12'); await page.keyboard.press('ArrowLeft'); await page.keyboard.insertText('9');
+  await expect(input).toHaveValue('192');
+  const editing = await page.evaluate(() => ({ mask: window.popoverMask, state: window.popoverInteractionState(), sameInput: window.popoverInput === document.querySelector('input'), sameForeground: window.popoverForeground === document.querySelector('[data-slot="morphing-popover-content"] > .relative'), sameLead: window.popoverLead === document.querySelector('[data-slot="morphing-popover-shared-surface"]'), caret: [document.querySelector('input').selectionStart, document.querySelector('input').selectionEnd] }));
+  await testInfo.attach('native-mask-and-identity', { body: JSON.stringify({ beforeMask, editing }), contentType: 'application/json' });
+  expect(editing.mask).toHaveLength(1);
+  for (const event of editing.mask) { expect(event.trusted).toBe(true); expectFinal(event.state); }
+  expect(editing.sameInput && editing.sameForeground && editing.sameLead).toBe(true); expect(editing.caret).toEqual([2, 2]);
+  expect(editing.state.wrapperOpacity).toBe('0');
+  await testInfo.attach('long-engaged-editor', { body: await page.screenshot({ animations: 'allow' }), contentType: 'image/png' });
+  await dismiss();
+
+  // A fresh hidden entrance independently exercises document bubble semantics.
+  await load('surfaceDuration:2;surfaceDelay:1'); await pointer();
+  await page.evaluate(() => {
+    window.popoverShortcut = [];
+    document.addEventListener('keydown', event => { if (event.ctrlKey && event.altKey && event.key.toLowerCase() === 'k') { window.popoverShortcut.push({ trusted: event.isTrusted, state: window.popoverInteractionState() }); event.preventDefault(); } });
+  });
+  const beforeShortcut = await page.evaluate(() => window.popoverInteractionState()); expect(beforeShortcut.opacity).toBe('0');
+  await page.keyboard.press('Control+Alt+k');
+  const shortcut = await page.evaluate(() => window.popoverShortcut);
+  await testInfo.attach('independent-hidden-document-shortcut', { body: JSON.stringify({ beforeShortcut, shortcut }), contentType: 'application/json' });
+  expect(shortcut).toHaveLength(1); expect(shortcut[0].trusted).toBe(true); expectFinal(shortcut[0].state); await dismiss();
+
+  // Keyless native insertText exercises the portal-bound beforeinput listener.
+  await load('surfaceDuration:2;surfaceDelay:1'); await pointer();
+  await input.evaluate(node => { window.popoverBeforeInput = []; node.addEventListener('beforeinput', event => window.popoverBeforeInput.push({ trusted: event.isTrusted, state: window.popoverInteractionState() })); });
+  await expect(foreground).toHaveCSS('opacity', '0'); await page.keyboard.insertText('Keep'); await expect(input).toHaveValue('Keep');
+  const keyless = await page.evaluate(() => window.popoverBeforeInput);
+  await testInfo.attach('native-keyless-beforeinput', { body: JSON.stringify(keyless), contentType: 'application/json' });
+  expect(keyless).toHaveLength(1); expect(keyless[0].trusted).toBe(true); expectFinal(keyless[0].state);
+  const tab = testInfo.project.name.startsWith('webkit') ? 'Alt+Tab' : 'Tab';
+  await page.keyboard.press(tab); await expect(close).toBeFocused(); await page.keyboard.press('Space');
+  await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+  await page.keyboard.press('Enter'); await expect(input).toBeFocused(); await expect(input).toHaveValue('Keep'); await expect(foreground).toHaveCSS('opacity', '1'); await dismiss();
+  await expect(page.locator('[data-popover-ownership]')).toHaveAttribute('data-open-requests', 'true,false,true,false');
+
+  for (const mode of ['keyboard', 'detail0', 'external']) {
+    await load(mode === 'external' ? 'ownership:controlled;externalControls:true' : '');
+    if (mode === 'external') { await pointer(); await dismiss(); }
+    const requests = await page.locator('[data-popover-ownership]').getAttribute('data-open-requests');
+    await samplePopoverUntilSettled(page, 'popoverInstant');
+    if (mode === 'keyboard') { await trigger.focus(); await page.keyboard.press('Enter'); }
+    else if (mode === 'detail0') await trigger.evaluate(node => node.click());
+    else await page.getByRole('button', { name: 'Open externally', exact: true }).click();
+    await page.waitForFunction(() => window.popoverInstantDone);
+    const samples = await page.evaluate(() => window.popoverInstant);
+    await testInfo.attach(`${mode}-instant-opening`, { body: JSON.stringify(samples), contentType: 'application/json' });
+    const visible = samples.filter(sample => sample.paint?.visibility === 'visible' && sample.paint.opacity > 0);
+    expect(visible.length).toBeGreaterThan(0);
+    for (const sample of visible) { expect(sample.paint.transform).toBe('none'); expect(sample.foreground.opacity).toBe(1); }
+    if (mode === 'external') await expect(page.locator('[data-popover-ownership]')).toHaveAttribute('data-open-requests', requests);
+    await dismiss(); await noOverflow(page);
   }
 });
 
