@@ -1657,29 +1657,51 @@ test('popover preserves early text while guarding hidden activation', async ({ p
     const back = testInfo.project.name.startsWith('webkit') ? 'Alt+Shift+Tab' : 'Shift+Tab';
     const snapshot = label => page.evaluate(label => {
       const node = document.querySelector('[data-slot="morphing-popover-content"] > .relative');
-      return { label, opacity: node && getComputedStyle(node).opacity, activeTag: document.activeElement?.tagName, activeText: document.activeElement?.textContent, input: document.querySelector('input')?.value, requests: document.querySelector('[data-popover-ownership]')?.getAttribute('data-open-requests') };
+      return { label, opacity: node && getComputedStyle(node).opacity, activeTag: document.activeElement?.tagName, activeText: document.activeElement?.textContent, input: document.querySelector('input')?.value, requests: document.querySelector('[data-popover-ownership]')?.getAttribute('data-open-requests'), consumerCount: Number(document.querySelector('#popover-consumer-action-count')?.textContent ?? 0), consumerEvents: window.popoverConsumerEvents ?? [] };
     }, label);
     await trigger.focus(); await page.keyboard.press('Enter'); await expect(input).toBeFocused();
-    await page.keyboard.press(tab); await expect(close).toBeFocused();
-    const beforeActions = await snapshot('before-hidden-Enter-Space');
-    await page.keyboard.press('Enter'); await page.keyboard.press('Space');
-    const afterActions = await snapshot('after-hidden-Enter-Space');
-    // Standard cancelable DOM submit coverage; this fixture has no consumer form/backend.
-    const hiddenSubmitAllowed = await foreground.evaluate(node => node.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
-    await testInfo.attach(`${timing}-hidden-activation`, { body: JSON.stringify({ beforeActions, afterActions, hiddenSubmitAllowed }), contentType: 'application/json' });
-    expect(beforeActions.opacity).toBe('0'); expect(hiddenSubmitAllowed).toBe(false);
-    await expect(panel).toHaveCount(1); await expect(close).toBeFocused();
-    await page.keyboard.press(back); await expect(input).toBeFocused();
+    if (timing === 'long') {
+      // A real target listener models a consumer keydown action; all keys below are native.
+      await close.evaluate(node => {
+        const output = document.createElement('output'); output.id = 'popover-consumer-action-count'; output.textContent = '0';
+        Object.assign(output.style, { position: 'fixed', bottom: '0', left: '0' }); document.body.append(output);
+        window.popoverConsumerEvents = [];
+        node.addEventListener('keydown', event => {
+          window.popoverConsumerEvents.push({ key: event.key, trusted: event.isTrusted });
+          if (event.key === 'Enter' || event.key === ' ') output.textContent = String(Number(output.textContent) + 1);
+        });
+      });
+      await page.keyboard.press(tab); await expect(close).toBeFocused();
+      const beforeActions = await snapshot('before-hidden-Enter-Space');
+      await page.keyboard.press('Enter'); await page.keyboard.press('Space');
+      const afterActions = await snapshot('after-hidden-Enter-Space');
+      // Standard cancelable DOM submit coverage; this fixture has no consumer form/backend.
+      const hiddenSubmitAllowed = await foreground.evaluate(node => node.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+      await testInfo.attach(`${timing}-hidden-activation`, { body: JSON.stringify({ beforeActions, afterActions, hiddenSubmitAllowed }), contentType: 'application/json' });
+      expect(beforeActions.opacity).toBe('0'); expect(afterActions.opacity).toBe('0'); expect(hiddenSubmitAllowed).toBe(false);
+      expect(afterActions.consumerCount).toBe(0);
+      expect(afterActions.consumerEvents.filter(event => event.key === 'Enter' || event.key === ' ')).toEqual([]);
+      await expect(panel).toHaveCount(1); await expect(close).toBeFocused();
+      await page.keyboard.press(back); await expect(input).toBeFocused();
+    }
+    // Default entrance tests immediate text retention, not automation beating a .25s morph.
     const beforeText = await snapshot('before-early-text');
     await page.keyboard.type('Keep'); await page.keyboard.insertText(' text');
     const afterText = await snapshot('after-native-type-and-insertText');
     await testInfo.attach(`${timing}-early-text`, { body: JSON.stringify({ beforeText, afterText }), contentType: 'application/json' });
-    expect(beforeText.opacity).toBe('0'); await expect(input).toHaveValue('Keep text'); await expect(fixture).toHaveAttribute('data-note', 'Keep text');
+    if (timing === 'long') expect(beforeText.opacity).toBe('0');
+    await expect(input).toHaveValue('Keep text'); await expect(fixture).toHaveAttribute('data-note', 'Keep text');
     await expect(foreground).toHaveCSS('opacity', '1');
     expect(await foreground.evaluate(node => node.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })))).toBe(true);
     await testInfo.attach(`${timing}-visible-editor`, { body: await page.screenshot({ animations: 'allow' }), contentType: 'image/png' });
     await page.keyboard.press(tab); await expect(close).toBeFocused(); await page.keyboard.press('Space');
     await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
+    if (timing === 'long') {
+      const afterVisible = await snapshot('after-visible-consumer-Space');
+      await testInfo.attach('visible-consumer-keydown', { body: JSON.stringify(afterVisible), contentType: 'application/json' });
+      expect(afterVisible.consumerCount).toBe(1);
+      expect(afterVisible.consumerEvents.filter(event => event.key === 'Enter' || event.key === ' ')).toEqual([{ key: ' ', trusted: true }]);
+    }
     await page.keyboard.press('Enter'); await expect(input).toBeFocused(); await expect(foreground).toHaveCSS('opacity', '1');
     await expect(input).toHaveValue('Keep text'); await page.keyboard.press(tab); await expect(close).toBeFocused(); await page.keyboard.press('Enter');
     await expect(panel).toHaveCount(0); await expect(trigger).toBeFocused();
