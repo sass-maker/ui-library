@@ -55,7 +55,10 @@ manages its focus order. `SearchTrigger` shows its label by default; use
 `MorphingPopover` keeps its measured anchor and content stationary while the
 decorative surface moves. Use `className` for layout and foreground text, and
 `surfaceClassName` for background, border and shadow styling. When upgrading a
-previously styled morph, move those paint utilities to `surfaceClassName`.
+previously styled morph, move those paint utilities to `surfaceClassName`. Pointer
+opens animate; interaction during entrance finishes the surface and forwards the
+original event, including the first press. Keyboard, programmatic and externally
+controlled opens render immediately.
 
 `ShimmerButton` uses the theme’s primary surface and foreground by default.
 An explicit `background` retains the original white-text convention;
