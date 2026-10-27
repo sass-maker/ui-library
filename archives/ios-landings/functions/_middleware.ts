@@ -193,5 +193,7 @@ const resolveRequest: PagesFunction = async (context) => {
 
 export const onRequest: PagesFunction = async (context) => {
   const response = await resolveRequest(context);
-  return advertiseMarkdown(response, new URL(context.request.url).origin);
+  return response.headers.get("content-type")?.includes("text/html")
+    ? advertiseMarkdown(response, new URL(context.request.url).origin)
+    : response;
 };

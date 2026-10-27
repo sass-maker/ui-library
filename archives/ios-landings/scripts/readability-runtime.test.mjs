@@ -31,7 +31,7 @@ for (const product of ['kith', 'browserdaddy', 'motion']) {
       const catalogResponse = await fetch(`${origin}/api/md/_catalog`);
       assert.equal(catalogResponse.status, 200);
       const catalog = await catalogResponse.json();
-      const samples = [catalog.find((route) => route.path === '/'), catalog.find((route) => route.path === '/privacy/'), catalog.find((route) => route.path.startsWith('/blog/') && route.path !== '/blog/'), catalog.find((route) => route.path === '/changelog')].filter(Boolean);
+      const samples = [catalog.find((route) => route.path === '/'), catalog.find((route) => route.path === '/privacy/'), catalog.find((route) => route.path === '/release/'), catalog.find((route) => route.path.startsWith('/blog/') && route.path !== '/blog/'), catalog.find((route) => route.path === '/changelog')].filter(Boolean);
       for (const route of samples) {
         const mdPath = new URL(route.md).pathname;
         const directPath = `/api/md${route.path}`;
@@ -47,6 +47,8 @@ for (const product of ['kith', 'browserdaddy', 'motion']) {
         assert.equal(suffix.headers.get('access-control-allow-origin'), '*');
         assert.ok(Number(suffix.headers.get('x-markdown-tokens')) > 0);
         assert.ok(text.startsWith('# '));
+        if (route.path === '/release/') assert.match(text, /^# .+: Release status$/m);
+        assert.equal(suffix.headers.get('link').split(',').filter((link) => link.includes('/llms.txt>')).length, 1);
         for (const [path, accept] of [[directPath, undefined], [route.path, 'text/markdown']]) {
           const response = await fetch(origin + path, { headers: accept ? { accept } : {} });
           assert.equal(response.status, 200);

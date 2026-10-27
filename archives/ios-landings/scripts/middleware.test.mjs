@@ -108,3 +108,14 @@ test("flat public HTML assets are not mistaken for directory-route soft 404s", a
   assert.equal(response.status, 200);
   assert.equal(await response.text(), '<main>Changelog</main>');
 });
+
+test("agent responses own exactly one discovery Link set", async () => {
+  const assets = async () => new Response("# page", { headers: { "content-type": "text/markdown" } });
+  for (const path of ["/privacy.md", "/llms.txt", "/ai.txt", "/api/md/_catalog"]) {
+    const response = await onRequest(contextFor(request(path), new Response("unused"), assets));
+    assert.equal(response.status, 200);
+    const links = response.headers.get("link");
+    assert.equal(links.match(/<https:\/\/browserdaddy\.example\/llms\.txt>/g)?.length, 1, path);
+    assert.equal(response.headers.get("access-control-allow-origin"), "*");
+  }
+});

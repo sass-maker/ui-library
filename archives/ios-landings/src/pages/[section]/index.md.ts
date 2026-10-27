@@ -1,3 +1,4 @@
+import { primaryCta, verifiedMacDownloadUrl } from "../../lib/distribution";
 import { clarityProjectIdFor } from "../../lib/clarity";
 import { productId, site } from "../../site.config";
 
@@ -18,16 +19,24 @@ export function GET({ params }: { params: { section: string } }) {
   const section = params.section as Section;
   const page = site.legal[section === "release" ? "testflight" : section];
   const lines = [
-    `# ${site.name}: ${page.title}`,
+    `# ${site.name}: ${section === "release" ? "Release status" : page.title}`,
     "",
-    `> ${page.lede}`,
+    `> ${section === "release" ? site.status : page.lede}`,
     "",
     `Canonical: ${site.url}/${section}/`,
     `Last updated: ${site.lastUpdated}`,
     ""
   ];
 
-  if (section === "testflight" || section === "release") {
+  if (section === "release") {
+    const download = verifiedMacDownloadUrl();
+    const cta = download ? { href: download, label: site.macDownloadLabel ?? "Download for Mac" } : site.device !== "desktop" ? primaryCta() : undefined;
+    lines.push(`## ${download ? "Available for Mac" : "Availability"}`, "", site.betaNote, "");
+    if (cta) lines.push(`[${cta.label}](${new URL(cta.href, site.url).href})`, "");
+    lines.push("## What is included", "", site.legal.testflight.testing, "", "## What is not included", "", site.legal.testflight.notIncluded, "");
+  }
+
+  if (section === "testflight") {
     const testflight = site.legal.testflight;
     lines.push(
       "## Current access",
@@ -54,7 +63,7 @@ export function GET({ params }: { params: { section: string } }) {
     );
   }
 
-  for (const entry of page.sections) {
+  for (const entry of section === "release" ? [] : page.sections) {
     lines.push(`## ${entry.title}`, "", entry.body, "");
     for (const paragraph of entry.paragraphs ?? []) lines.push(paragraph, "");
     for (const link of entry.links ?? []) lines.push(`- [${link.label}](${new URL(link.href, site.url).href})`);

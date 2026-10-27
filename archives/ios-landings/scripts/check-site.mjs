@@ -537,3 +537,11 @@ const sitemapUrls = [...(await readFile(`${dist}/sitemap.xml`, 'utf8')).matchAll
 if (sitemapUrls.length !== registeredUrls.size || sitemapUrls.some((url) => !registeredUrls.has(url) || url.endsWith('.md'))) {
   throw new Error(`${product}: sitemap and public Markdown registry differ`);
 }
+
+// Release mirrors use the release page's status and availability, not TestFlight metadata.
+const releaseMarkdown = await readFile(`${dist}/release/index.md`, "utf8");
+if (!/^# .+: Release status$/m.test(releaseMarkdown) || !releaseMarkdown.includes("## What is included") || !releaseMarkdown.includes("## What is not included")) throw new Error(`${product}: release Markdown lost its authored release sections.`);
+const discovery = await readFile(`${dist}/llms.txt`, "utf8");
+if (!discovery.includes("## Product boundaries")) throw new Error(`${product}: discovery lost product boundaries.`);
+if (["calorie", "habits", "journal", "kith", "motion", "setline"].includes(product) && !discovery.includes("## When to use this")) throw new Error(`${product}: discovery lost curated agent fit.`);
+if (product === "motion" && !discovery.includes("## CLI")) throw new Error("Motion discovery lost its authored CLI guidance.");
