@@ -70,9 +70,10 @@ const hasBlog = (await getPublishedPosts()).length > 0;
 ---
 <meta name="generator" content={Astro.generator} />
 <meta name="description" content={description} />
+{!robots.includes("noindex") && <meta name="ai-summary" content={description} />}
 <meta name="theme-color" content={site.themeColor} />
 <link rel="canonical" href={canonical} />
-<link rel="alternate" type="text/markdown" href={markdownAlternate} />
+{!robots.includes("noindex") && <link rel="alternate" type="text/markdown" href={markdownAlternate} />}
 {hasBlog && <link rel="alternate" type="application/rss+xml" title={`${site.name} journal`} href="/blog/rss.xml" />}
 {site.device === "desktop" ? <link rel="icon" type="image/png" href={site.mark} /> : <>
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />

@@ -1,3 +1,7 @@
+import { wantsMarkdown } from '../src/lib/agent-surfaces/http.mjs';
+import { createStaticAssetHandler, advertiseMarkdown } from '../src/lib/agent-surfaces/adapters/static-assets.mjs';
+const handleMarkdown = createStaticAssetHandler({});
+
 // CF Pages Functions middleware for ios-landings multi-product deployments.
 // Each product (kith, setline, anchor, motion, journal, habits) deploys
 // to its own Pages project with its own domain. This middleware is generic —
@@ -8,12 +12,6 @@
 // - Adds Vary: Accept to HTML responses with markdown alternates.
 // - Returns JSON errors for unknown /api/* paths.
 
-function wantsMarkdown(request: Request): boolean {
-  const accept = (request.headers.get("accept") || "").toLowerCase();
-  if (!accept.includes("text/markdown")) return false;
-  if (!accept.includes("text/html")) return true;
-  return accept.indexOf("text/markdown") < accept.indexOf("text/html");
-}
 
 function normalizePath(pathname: string): string {
   if (!pathname || pathname === "/") return "/";
@@ -80,10 +78,10 @@ function withoutBody(request: Request, response: Response): Response {
   });
 }
 
-export const onRequest: PagesFunction = async (context) => {
+const resolveRequest: PagesFunction = async (context) => {
   const { request } = context;
 
-  if (request.method !== "GET" && request.method !== "HEAD") {
+  if (!["GET", "HEAD", "OPTIONS"].includes(request.method)) {
     return context.next();
   }
 
@@ -102,6 +100,8 @@ export const onRequest: PagesFunction = async (context) => {
     return Response.redirect(url.toString(), 301);
   }
   const pathname = url.pathname;
+  const agent = await handleMarkdown(request, context.env.ASSETS);
+  if (agent) return agent;
 
   // JSON errors for unknown /api/* paths.
   if (pathname.startsWith("/api/") && pathname !== "/api/ai") {
@@ -115,26 +115,6 @@ export const onRequest: PagesFunction = async (context) => {
     (pathname.includes(".") && !pathname.endsWith(".md"))
   ) {
     return withoutBody(request, await context.next());
-  }
-
-  // Accept: text/markdown negotiation for HTML pages that have a .md alternate.
-  if (wantsMarkdown(request) && !pathname.endsWith(".md") && !pathname.startsWith("/api/")) {
-    const mdPath = pathname === "/" ? "/index.md" : `${pathname.replace(/\/+$/, "")}/index.md`;
-    if (context.env.ASSETS) {
-      const mdUrl = new URL(url);
-      mdUrl.pathname = mdPath;
-      const mdResponse = await context.env.ASSETS.fetch(new Request(mdUrl.toString(), request));
-      if (mdResponse.status === 200) {
-        const headers = new Headers(mdResponse.headers);
-        headers.set("content-type", "text/markdown; charset=utf-8");
-        headers.set("vary", "Accept, Accept-Encoding");
-        headers.set("x-content-type-options", "nosniff");
-        return new Response(request.method === "HEAD" ? null : mdResponse.body, {
-          status: 200,
-          headers,
-        });
-      }
-    }
   }
 
   const response = await context.next();
@@ -179,6 +159,15 @@ export const onRequest: PagesFunction = async (context) => {
         checkResponse = await context.env.ASSETS.fetch(new Request(new URL(location, checkUrl).toString()));
       }
     }
+    // Retained product pages can be flat .html assets, such as Motion's changelog.
+    if (checkResponse.status !== 200 && pathname !== "/") {
+      checkUrl.pathname = `${pathname.replace(/\/$/, "")}.html`;
+      checkResponse = await context.env.ASSETS.fetch(new Request(checkUrl.toString()));
+      const location = checkResponse.headers.get("location");
+      if (checkResponse.status >= 300 && checkResponse.status < 400 && location) {
+        checkResponse = await context.env.ASSETS.fetch(new Request(new URL(location, checkUrl).toString()));
+      }
+    }
     if (checkResponse.status !== 200) {
       if (wantsMarkdown(request)) {
         return markdown404(pathname, request.method, url.origin);
@@ -200,4 +189,9 @@ export const onRequest: PagesFunction = async (context) => {
     statusText: response.statusText,
     headers,
   });
+};
+
+export const onRequest: PagesFunction = async (context) => {
+  const response = await resolveRequest(context);
+  return advertiseMarkdown(response, new URL(context.request.url).origin);
 };

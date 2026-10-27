@@ -18,18 +18,12 @@ export function GET({ params }: { params: { section: string } }) {
   const section = params.section as Section;
   const page = site.legal[section === "release" ? "testflight" : section];
   const lines = [
-    "---",
-    `title: ${JSON.stringify(`${page.title} — ${site.name}`)}`,
-    `description: ${JSON.stringify(page.lede)}`,
-    `canonical: ${site.url}/${section}/`,
-    `product: ${JSON.stringify(site.name)}`,
-    `status: ${JSON.stringify(site.status)}`,
-    `last_updated: ${site.lastUpdated}`,
-    "---",
+    `# ${site.name}: ${page.title}`,
     "",
-    `# ${page.title}`,
+    `> ${page.lede}`,
     "",
-    page.lede,
+    `Canonical: ${site.url}/${section}/`,
+    `Last updated: ${site.lastUpdated}`,
     ""
   ];
 
@@ -63,7 +57,7 @@ export function GET({ params }: { params: { section: string } }) {
   for (const entry of page.sections) {
     lines.push(`## ${entry.title}`, "", entry.body, "");
     for (const paragraph of entry.paragraphs ?? []) lines.push(paragraph, "");
-    for (const link of entry.links ?? []) lines.push(`- [${link.label}](${link.href})`);
+    for (const link of entry.links ?? []) lines.push(`- [${link.label}](${new URL(link.href, site.url).href})`);
     if (entry.links?.length) lines.push("");
   }
 

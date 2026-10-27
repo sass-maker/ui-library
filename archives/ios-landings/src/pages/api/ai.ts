@@ -10,9 +10,9 @@ export async function GET() {
     version: "1",
     url: site.url,
     llms: `${site.url}/llms.txt`,
-    llmsFull: null,
+    llmsFull: `${site.url}/llms-full.txt`,
     sitemap: `${site.url}/sitemap.xml`,
-    markdown: { suffix: ".md", negotiation: false },
+    markdown: { suffix: ".md", negotiation: true },
     openapi: `${site.url}/openapi.json`,
     surfaces: [
       { id: "home", url: "/", md: "/index.md", kind: "static" },

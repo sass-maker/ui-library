@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import { imageMetadata } from "astro/assets/utils";
 import { appHealthConfigFor } from "../src/lib/app-health.mjs";
 
@@ -503,3 +503,37 @@ if (!feed.includes("<item>") && !blog.includes('content="noindex,follow"')) {
   throw new Error(`${product}: empty journal should not be indexed`);
 }
 console.log(`Checked ${product}: ${requiredFiles.length} public surfaces and ${localHrefs.length} internal links.`);
+
+// Coverage follows built public HTML, including routes outside the sitemap.
+const markdownCatalog = JSON.parse(await readFile(`${dist}/api/md/_catalog`, "utf8"));
+const registered = new Map(markdownCatalog.map((route) => [route.path, route]));
+async function checkPublicMarkdown(directory) {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const file = `${directory}/${entry.name}`;
+    if (entry.isDirectory()) { await checkPublicMarkdown(file); continue; }
+    if (!entry.name.endsWith('.html')) continue;
+    const html = await readFile(file, 'utf8');
+    if (/<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/i.test(html)) continue;
+    const canonical = html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i)?.[1];
+    if (!canonical) throw new Error(`${product}: HTML lacks canonical: ${file}`);
+    const route = registered.get(new URL(canonical).pathname);
+    if (!route) throw new Error(`${product}: unregistered public HTML: ${canonical}`);
+    if (!/<meta\b[^>]*name="ai-summary"/i.test(html) || !/<link\b[^>]*rel="alternate"[^>]*type="text\/markdown"/i.test(html)) {
+      throw new Error(`${product}: missing AI head signals: ${canonical}`);
+    }
+    const markdown = await readFile(`${dist}${route.assetPath}`, 'utf8');
+    if (!markdown.startsWith('# ') || !markdown.includes(`Canonical: ${canonical}`)) {
+      throw new Error(`${product}: Markdown lacks title or canonical: ${canonical}`);
+    }
+  }
+}
+await checkPublicMarkdown(dist);
+const fullExport = await readFile(`${dist}/llms-full.txt`, 'utf8');
+if (fullExport.length >= 500000) throw new Error(`${product}: full Markdown exceeds its budget`);
+console.log(`${product}: all public HTML covered by ${registered.size} registered Markdown routes`);
+
+const registeredUrls = new Set(markdownCatalog.map((route) => route.url));
+const sitemapUrls = [...(await readFile(`${dist}/sitemap.xml`, 'utf8')).matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+if (sitemapUrls.length !== registeredUrls.size || sitemapUrls.some((url) => !registeredUrls.has(url) || url.endsWith('.md'))) {
+  throw new Error(`${product}: sitemap and public Markdown registry differ`);
+}

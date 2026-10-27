@@ -15,8 +15,8 @@
     "dev:habits": "PRODUCT=habits astro dev",
     "build": "node scripts/build-all.mjs",
     "build:one": "astro build",
-    "check": "node --test scripts/image-delivery.test.mjs scripts/screenshots.test.mjs scripts/blog.test.mjs scripts/contrast.test.mjs scripts/middleware.test.mjs scripts/deploy.test.mjs scripts/app-health.test.mjs scripts/worker-sites.test.mjs && astro check && node scripts/build-all.mjs && node scripts/check-all.mjs && node scripts/check-worker-sites.mjs",
-    "check:one": "node --test scripts/image-delivery.test.mjs scripts/screenshots.test.mjs scripts/blog.test.mjs scripts/contrast.test.mjs scripts/middleware.test.mjs scripts/deploy.test.mjs scripts/app-health.test.mjs scripts/worker-sites.test.mjs && astro check && astro build && node scripts/check-site.mjs",
+    "check": "node --test scripts/image-delivery.test.mjs scripts/markdown-format.test.mjs scripts/screenshots.test.mjs scripts/blog.test.mjs scripts/contrast.test.mjs scripts/middleware.test.mjs scripts/deploy.test.mjs scripts/app-health.test.mjs scripts/worker-sites.test.mjs && astro check && node scripts/build-all.mjs && node scripts/check-all.mjs && node scripts/check-worker-sites.mjs",
+    "check:one": "node --test scripts/image-delivery.test.mjs scripts/markdown-format.test.mjs scripts/screenshots.test.mjs scripts/blog.test.mjs scripts/contrast.test.mjs scripts/middleware.test.mjs scripts/deploy.test.mjs scripts/app-health.test.mjs scripts/worker-sites.test.mjs && astro check && astro build && node scripts/check-site.mjs",
     "preview": "astro preview",
     "deploy": "node scripts/deploy.mjs",
     "deploy:kith": "node scripts/deploy.mjs kith",
@@ -26,7 +26,8 @@
     "deploy:journal": "node scripts/deploy.mjs journal",
     "deploy:habits": "node scripts/deploy.mjs habits",
     "check:worker-sites": "node scripts/check-worker-sites.mjs",
-    "deploy:daddyrad": "node scripts/deploy-worker-site.mjs daddyrad"
+    "deploy:daddyrad": "node scripts/deploy-worker-site.mjs daddyrad",
+    "check:readability-runtime": "node --test scripts/readability-runtime.test.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
