@@ -69,7 +69,7 @@ async function studioStrip(current: string) {
  * public TestFlight link when one is configured, the footer's legal and status
  * routes, and the studio strip from the SaaS Maker catalog feed.
  */
-export async function loadTemplateContent(): Promise<ProductContent> {
+export async function loadTemplateContent({ includeFooter = true } = {}): Promise<ProductContent> {
   const raw = contentFiles[`../../products/${productId}/content.json`];
   if (!raw) throw new Error(`${productId}: products/${productId}/content.json is missing.`);
   const content = productContent.parse(raw);
@@ -80,7 +80,7 @@ export async function loadTemplateContent(): Promise<ProductContent> {
     if (content.template === "gallery") content.closing.primary = swap(content.closing.primary);
   }
   includeSiteFaqs(content);
-  if (content.footer) {
+  if (content.footer && includeFooter) {
     content.footer.privacyUrl = "/privacy/";
     const required = await requiredFooterLinks();
     if (content.template === "gallery") {

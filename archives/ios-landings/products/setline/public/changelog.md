@@ -1,5 +1,9 @@
 # Setline changelog
 
+> What actually shipped in Setline, newest first, including the parts that were removed.
+
+Canonical: https://setline.significanthobbies.com/changelog
+
 What shipped, newest first — including what was taken back out. Setline is
 pre-release, so there are no version numbers yet.
 

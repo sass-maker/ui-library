@@ -6,7 +6,7 @@ import ts from "typescript";
 const source = await readFile(new URL("../functions/_middleware.ts", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 },
-}).outputText;
+}).outputText.replace(/from (["'])(\.\.?\/[^"']+)\1/g, (_match, _quote, path) => `from ${JSON.stringify(new URL(path, new URL("../functions/_middleware.ts", import.meta.url)).href)}`);
 const { onRequest } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
 
 function request(path, options = {}) {
@@ -14,7 +14,13 @@ function request(path, options = {}) {
 }
 
 function contextFor(req, next, assets) {
-  return { request: req, next: async () => next, env: assets ? { ASSETS: { fetch: assets } } : {} };
+  const fetch = async (request) => {
+    const path = new URL(request.url).pathname;
+    if (path === '/api/md/_identity') return Response.json({ name: 'BrowserDaddy', url: 'https://browserdaddy.example', summary: 'Public description.' });
+    if (path === '/api/md/_catalog') return Response.json(['/', '/privacy/', '/blog/'].map((path) => ({ path, title: path, description: 'Public page', assetPath: path === '/' ? '/index.md' : `${path}index.md`, aliases: [path === '/' ? '/index.md' : `${path}index.md`] })));
+    return assets(request);
+  };
+  return { request: req, next: async () => next, env: assets ? { ASSETS: { fetch } } : {} };
 }
 
 test("the production Daddy aliases redirect, preserving path and query", async () => {
@@ -62,7 +68,7 @@ test("Markdown negotiation maps root, trailing-slash pages, and articles to inde
 });
 
 test("HEAD responses have no body, including negotiated Markdown and 404s", async () => {
-  const assets = async () => new Response("# page", { status: 200 });
+  const assets = async () => new Response("# page", { status: 200, headers: { "content-type": "text/markdown" } });
   const markdown = await onRequest(contextFor(request("/privacy/", { method: "HEAD", headers: { accept: "text/markdown" } }), new Response("html"), assets));
   assert.equal(markdown.status, 200);
   assert.equal(await markdown.text(), "");
@@ -90,4 +96,49 @@ test("a canonical asset redirect does not turn a valid HTML route into a 404", a
   assert.equal(response.status, 200);
   assert.equal(await response.text(), "html");
   assert.equal(checks, 2);
+});
+
+
+test("flat public HTML assets are not mistaken for directory-route soft 404s", async () => {
+  const response = await onRequest(contextFor(request('/changelog'), new Response('<main>Changelog</main>', { headers: { 'content-type': 'text/html' } }), async (req) => {
+    return new URL(req.url).pathname === '/changelog.html'
+      ? new Response('<main>Changelog</main>', { headers: { 'content-type': 'text/html' } })
+      : new Response('Not found', { status: 404 });
+  }));
+  assert.equal(response.status, 200);
+  assert.equal(await response.text(), '<main>Changelog</main>');
+});
+
+test("agent responses own exactly one discovery Link set", async () => {
+  const assets = async () => new Response("# page", { headers: { "content-type": "text/markdown" } });
+  for (const path of ["/privacy.md", "/llms.txt", "/ai.txt", "/api/md/_catalog"]) {
+    const response = await onRequest(contextFor(request(path), new Response("unused"), assets));
+    assert.equal(response.status, 200);
+    const links = response.headers.get("link");
+    assert.equal(links.match(/<https:\/\/browserdaddy\.example\/llms\.txt>/g)?.length, 1, path);
+    assert.equal(response.headers.get("access-control-allow-origin"), "*");
+  }
+});
+
+test("proxied Daddy HTML advertises its canonical discovery host", async () => {
+  const response = await onRequest(contextFor(new Request("https://browserdaddy-landing.pages.dev/", { headers: { "x-daddy-proxy": "1" } }), new Response("<main>Public</main>", { headers: { "content-type": "text/html" } })));
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("link"), /https:\/\/browser\.daddyrad\.com\/llms\.txt/);
+  assert.doesNotMatch(response.headers.get("link"), /pages\.dev/);
+});
+
+test('unknown Markdown paths cannot advertise off-origin canonicals', async () => {
+  const { createAgentSurfaceManifest } = await import('../src/lib/agent-surfaces/manifest.mjs');
+  const { createAgentSurfaceHandler } = await import('../src/lib/agent-surfaces/handler.mjs');
+  const fixtureOrigin = 'https://public.example';
+  const manifest = createAgentSurfaceManifest({ name: 'Public fixture', url: fixtureOrigin, summary: 'Public fixture', pages: { '/': '# Public' } });
+  const handler = createAgentSurfaceHandler({ manifest });
+  for (const path of ['/api/md//evil.example/x', '//evil.example/x.md']) {
+    const response = await handler(new Request(fixtureOrigin + path));
+    assert.equal(response.status, 404);
+    assert.equal(response.headers.get('content-location'), fixtureOrigin + '//evil.example/x');
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, follow');
+    assert.ok(response.headers.get('link').includes(fixtureOrigin + '/llms.txt'));
+  }
 });
