@@ -16,12 +16,11 @@ on:
 permissions:
   contents: read
 
-defaults:
-  run:
-    working-directory: archives/ios-landings
-
 jobs:
   check:
+    defaults:
+      run:
+        working-directory: archives/ios-landings
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
