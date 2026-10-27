@@ -78,6 +78,12 @@ function withoutBody(request: Request, response: Response): Response {
   });
 }
 
+const daddyCanonical: Record<string, string> = {
+    "browserdaddy-landing.pages.dev": "browser.daddyrad.com",
+    "performancedaddy-landing.pages.dev": "performance.daddyrad.com",
+    "contextdaddy-landing.pages.dev": "context.daddyrad.com",
+  };
+
 const resolveRequest: PagesFunction = async (context) => {
   const { request } = context;
 
@@ -88,11 +94,6 @@ const resolveRequest: PagesFunction = async (context) => {
   const url = new URL(request.url);
   // Pages Functions do not apply static _redirects rules to handled routes.
   // Keep hash previews available; redirect only these production aliases.
-  const daddyCanonical: Record<string, string> = {
-    "browserdaddy-landing.pages.dev": "browser.daddyrad.com",
-    "performancedaddy-landing.pages.dev": "performance.daddyrad.com",
-    "contextdaddy-landing.pages.dev": "context.daddyrad.com",
-  };
   const canonicalHost = daddyCanonical[url.hostname] ?? null;
   if (canonicalHost && !request.headers.has("x-daddy-proxy")) {
     url.protocol = "https:";
@@ -193,7 +194,9 @@ const resolveRequest: PagesFunction = async (context) => {
 
 export const onRequest: PagesFunction = async (context) => {
   const response = await resolveRequest(context);
+  const url = new URL(context.request.url);
+  const origin = daddyCanonical[url.hostname] ? `https://${daddyCanonical[url.hostname]}` : url.origin;
   return response.headers.get("content-type")?.includes("text/html")
-    ? advertiseMarkdown(response, new URL(context.request.url).origin)
+    ? advertiseMarkdown(response, origin)
     : response;
 };

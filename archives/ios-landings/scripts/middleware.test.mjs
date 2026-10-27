@@ -119,3 +119,10 @@ test("agent responses own exactly one discovery Link set", async () => {
     assert.equal(response.headers.get("access-control-allow-origin"), "*");
   }
 });
+
+test("proxied Daddy HTML advertises its canonical discovery host", async () => {
+  const response = await onRequest(contextFor(new Request("https://browserdaddy-landing.pages.dev/", { headers: { "x-daddy-proxy": "1" } }), new Response("<main>Public</main>", { headers: { "content-type": "text/html" } })));
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("link"), /https:\/\/browser\.daddyrad\.com\/llms\.txt/);
+  assert.doesNotMatch(response.headers.get("link"), /pages\.dev/);
+});

@@ -9,10 +9,16 @@ import { createAgentSurfaceHandler } from './agent-surfaces/handler.mjs';
 
 export const markdownIdentity = {
   name: site.name, url: site.url, summary: site.summary,
-  contact: links.support, updatedAt: site.lastUpdated, trainingAllowed: true,
+  openapi: `${site.url}/openapi.json`, contact: links.support, updatedAt: site.lastUpdated, trainingAllowed: true,
   excludedPaths: ['/admin', '/auth', '/dashboard', '/api'],
   notes: [
-    ...(site.agentFit ? ['## When to use this', '', ...site.agentFit.bestFit.map((entry) => `- Best fit: ${entry}`), ...site.agentFit.notAFit.map((entry) => `- Not a fit: ${entry}`), ''] : []),
+    '## When to use this', '',
+    ...(site.agentFit ? [...site.agentFit.bestFit.map((entry) => `- Best fit: ${entry}`), ...site.agentFit.notAFit.map((entry) => `- Not a fit: ${entry}`)] : [
+      `- Best fit: learning about ${site.name} — ${site.tagline}`,
+      `- Best fit: checking ${site.name} availability, privacy, and support on the public landing`,
+      '- Not a fit: accessing product functionality or user data through these public read-only pages',
+      '- Not a fit: API integrations beyond the read-only agent surfaces listed here',
+    ]), '',
     ...(site.agentCli?.length ? ['## CLI', '', ...site.agentCli.map((entry) => `- ${entry}`), ''] : []),
     '## Product boundaries', '', ...site.boundaries.map((entry) => `- ${entry}`),
     ...(productId === 'setline' ? ['', 'Agent email for directory verification: sarthakagrawal@agentmail.to'] : []),
