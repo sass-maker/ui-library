@@ -66,10 +66,11 @@ for (const product of ['kith', 'browserdaddy', 'motion']) {
         assert.match(html.headers.get('content-type'), /text\/html/);
         assert.match(html.headers.get('link'), /llms-full.txt/);
       }
-      for (const path of ['/missing.md', '/api/md/admin', '/api/md/dashboard', '/api/md/missing']) {
+      for (const path of ['/missing.md', '/api/md/admin', '/api/md/dashboard', '/api/md/missing', '/api/md//evil.example/x', '//evil.example/x.md']) {
         const missing = await fetch(origin + path);
         assert.equal(missing.status, 404);
         assert.match(missing.headers.get('content-type'), /text\/markdown/);
+        if (path.includes('evil.example')) assert.equal(new URL(missing.headers.get('content-location')).origin, new URL(catalog[0].url).origin);
       }
       const full = await (await fetch(origin + '/llms-full.txt')).text();
       assert.ok(full.length < 500000);

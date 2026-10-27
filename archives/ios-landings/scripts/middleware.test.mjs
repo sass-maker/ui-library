@@ -126,3 +126,19 @@ test("proxied Daddy HTML advertises its canonical discovery host", async () => {
   assert.match(response.headers.get("link"), /https:\/\/browser\.daddyrad\.com\/llms\.txt/);
   assert.doesNotMatch(response.headers.get("link"), /pages\.dev/);
 });
+
+test('unknown Markdown paths cannot advertise off-origin canonicals', async () => {
+  const { createAgentSurfaceManifest } = await import('../src/lib/agent-surfaces/manifest.mjs');
+  const { createAgentSurfaceHandler } = await import('../src/lib/agent-surfaces/handler.mjs');
+  const fixtureOrigin = 'https://public.example';
+  const manifest = createAgentSurfaceManifest({ name: 'Public fixture', url: fixtureOrigin, summary: 'Public fixture', pages: { '/': '# Public' } });
+  const handler = createAgentSurfaceHandler({ manifest });
+  for (const path of ['/api/md//evil.example/x', '//evil.example/x.md']) {
+    const response = await handler(new Request(fixtureOrigin + path));
+    assert.equal(response.status, 404);
+    assert.equal(response.headers.get('content-location'), fixtureOrigin + '//evil.example/x');
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, follow');
+    assert.ok(response.headers.get('link').includes(fixtureOrigin + '/llms.txt'));
+  }
+});
