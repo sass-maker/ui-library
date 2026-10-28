@@ -94,6 +94,8 @@ describe("imperative native constructors", () => {
     expect(button.textContent).toBe("Save0");
     expect(button.className).toContain("custom");
     expect(button.getAttribute("aria-expanded")).toBe("false");
+    expect(createUiControl("input", { value: false }).value).toBe("false");
+    expect(createUiControl("input", { "data-active": false }).dataset.active).toBe("false");
     const clicked = vi.fn();
     button.addEventListener("click", clicked);
     button.click();

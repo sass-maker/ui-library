@@ -45,6 +45,10 @@ export function AppShell({
               href={it.href}
               aria-current={it.active ? "page" : undefined}
               title={compact ? it.label : undefined}
+              onClickCapture={modal ? event => {
+                // Stop the composed Close handler while leaving native new-tab navigation intact.
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) event.stopPropagation();
+              } : undefined}
               onClick={modal ? undefined : event => {
                 if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                 if (onNavigate) { event.preventDefault(); onNavigate(it.href); }

@@ -2,7 +2,8 @@ import { expect, test } from '@playwright/test';
 import { noOverflow, openStory } from './helpers.mjs';
 
 test('native controls retain browser interfaces and intrinsic input geometry', async ({ page }, testInfo) => {
-  await openStory(page, 'inputs-native-controls--playground');
+  const globals = testInfo.project.name.includes('dark') ? 'theme:ink;mode:dark' : 'theme:paper;mode:light';
+  await openStory(page, 'inputs-native-controls--playground', globals);
   const select = page.getByLabel('Project status');
   await select.selectOption('parked');
   await expect(select).toHaveValue('parked');
@@ -29,7 +30,8 @@ test('native controls retain browser interfaces and intrinsic input geometry', a
 });
 
 test('optional shell rail and mobile modal navigation retain focus and routing', async ({ page }, testInfo) => {
-  await openStory(page, 'blocks-app--navigation');
+  const globals = testInfo.project.name.includes('dark') ? 'theme:ink;mode:dark' : 'theme:paper;mode:light';
+  await openStory(page, 'blocks-app--navigation', globals);
   if (page.viewportSize().width >= 1024) {
     const sidebar = page.locator('[data-slot="app-sidebar"]');
     await page.getByRole('button', { name: 'Collapse sidebar' }).click();

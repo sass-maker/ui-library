@@ -13,6 +13,8 @@ for (const [specifier, target] of Object.entries(manifest.exports)) {
 }
 function levelOf(file) {
   if (layers.has(file)) return layers.get(file);
+  // Native adapters consume the same exported atom style APIs as React controls.
+  if (["lib/native-control-styles.ts", "lib/dom-controls.ts"].includes(path.relative(sourceRoot, file).split(path.sep).join("/"))) return 1;
   const directory = path.relative(sourceRoot, file).split(path.sep)[0];
   if (directory === "components") throw new Error(`Classify component in package exports: ${file}`);
   return { recipes: 2, effects: 2, molecules: 2, organisms: 3, blocks: 3 }[directory] ?? 0;
@@ -29,7 +31,7 @@ for (const category of ["components", "recipes", "effects", "molecules", "organi
     if (!(/\.tsx?$/.test(filename)) || filename === "upload-types.tsx") continue;
     const file = path.join(sourceRoot, category, filename);
     const level = levelOf(file);
-    if (level > 0) counts[["", "atoms", "molecules", "organisms"][level]]++;
+    if (level > 0 && category !== "lib") counts[["", "atoms", "molecules", "organisms"][level]]++;
     const source = await readFile(file, "utf8");
     for (const node of ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true).statements) {
       if ((!ts.isImportDeclaration(node) && !ts.isExportDeclaration(node)) || !node.moduleSpecifier || !ts.isStringLiteral(node.moduleSpecifier)) continue;

@@ -58,6 +58,11 @@ describe("AppShell optional navigation", () => {
     expect(dialog.getAttribute("aria-modal")).toBe("true");
     expect(dialog.contains(document.activeElement)).toBe(true);
     expect(container.closest('[aria-hidden="true"]')).not.toBeNull();
+    const modified = new MouseEvent("click", { ctrlKey: true, bubbles: true, cancelable: true });
+    await act(async () => dialog.querySelector("a").dispatchEvent(modified));
+    expect(modified.defaultPrevented).toBe(false);
+    expect(document.querySelector('[role="dialog"]')).toBe(dialog);
+    expect(navigate).not.toHaveBeenCalled();
     await act(async () => dialog.querySelector("a").click());
     expect(navigate).toHaveBeenCalledWith("#projects");
     expect(document.querySelector('[role="dialog"]')).toBeNull();

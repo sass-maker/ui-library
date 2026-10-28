@@ -45,6 +45,10 @@ describe("Console isolated-install CSS sources", () => {
     expect(css).toContain("focus-visible");
     expect(candidates).toContain("motion-safe:enabled:active:scale-[0.97]");
     expect(candidates).toContain("[&::-webkit-progress-value]:bg-primary");
+    const legacy = new Scanner({ sources: [{ base: installedUi, pattern: "components/{button,input,textarea,table}.tsx", negated: false }] }).scan();
+    for (const candidate of ["motion-safe:enabled:active:scale-[0.97]", "selection:bg-primary", "field-sizing-content", "caption-bottom"]) {
+      expect(legacy).toContain(candidate);
+    }
     expect(css).toContain('data-mode="dark"');
   });
 });

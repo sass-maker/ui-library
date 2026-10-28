@@ -8,6 +8,7 @@ const supportedTags = new Set<NativeControlTag>([
   "button", "a", "input", "textarea", "select", "details", "summary", "dialog", "progress",
   "table", "thead", "tbody", "tfoot", "tr", "th", "td", "caption",
 ])
+const booleanAttributes = new Set(["autofocus", "checked", "disabled", "formnovalidate", "hidden", "inert", "multiple", "open", "readonly", "required", "selected"])
 
 /** Creates the actual native control. No DOM or browser state is read at import time. */
 export function createUiControl<Tag extends NativeControlTag>(
@@ -24,9 +25,9 @@ export function createUiControl<Tag extends NativeControlTag>(
   for (const [key, value] of Object.entries(attributes)) {
     if (value == null) continue
     // ARIA/data false are meaningful strings; HTML boolean false is absence.
-    const labelled = key.startsWith("aria-") || key.startsWith("data-")
-    if (value === false && !labelled) continue
-    element.setAttribute(key, value === true && !labelled ? "" : String(value))
+    const boolean = booleanAttributes.has(key.toLowerCase())
+    if (value === false && boolean) continue
+    element.setAttribute(key, value === true && boolean ? "" : String(value))
   }
   element.className = nativeControlStyles(tag, {
     ...options,

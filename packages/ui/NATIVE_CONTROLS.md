@@ -60,3 +60,8 @@ Load the normal shared theme/utilities and include the installed UI sources in
 Tailwind scanning, as with the React components. No additional CSS/runtime or
 global mutation is installed by this adapter. `data-slot` attributes identify
 library markup; the library-owned construction and shared styles are the API.
+
+Established Button/Input/Textarea/Table style literals remain in their original
+component modules for consumers with existing narrow Tailwind sources. New native
+controls additionally need `src/lib/native-control-styles.ts`; the shared Console
+and Workbench CSS source entrypoints already include it.
