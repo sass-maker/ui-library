@@ -1119,7 +1119,6 @@ export const moduleCatalog = [
     "storyId": "inputs-input--playground",
     "registryName": "input",
     "dependencies": [
-      "class-variance-authority@0.7.1",
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
     ]
@@ -1139,7 +1138,6 @@ export const moduleCatalog = [
     "storyId": "molecules-compositions-input-field--fields",
     "registryName": "input-field",
     "dependencies": [
-      "class-variance-authority@0.7.1",
       "clsx@2.1.1",
       "lucide-react@1.48.0",
       "motion@13.4.3",
@@ -1528,6 +1526,7 @@ export const moduleCatalog = [
     "dependencies": [
       "class-variance-authority@0.7.1",
       "clsx@2.1.1",
+      "radix-ui@1.6.7",
       "tailwind-merge@3.7.0"
     ]
   },
@@ -1951,7 +1950,6 @@ export const moduleCatalog = [
     "storyId": "molecules-compositions-search-field--search",
     "registryName": "search-field",
     "dependencies": [
-      "class-variance-authority@0.7.1",
       "clsx@2.1.1",
       "lucide-react@1.48.0",
       "tailwind-merge@3.7.0"
@@ -2285,7 +2283,6 @@ export const moduleCatalog = [
     "storyId": "data-table--playground",
     "registryName": "table",
     "dependencies": [
-      "class-variance-authority@0.7.1",
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
     ]
@@ -2406,7 +2403,6 @@ export const moduleCatalog = [
     "storyId": "inputs-textarea--playground",
     "registryName": "textarea",
     "dependencies": [
-      "class-variance-authority@0.7.1",
       "clsx@2.1.1",
       "tailwind-merge@3.7.0"
     ]
