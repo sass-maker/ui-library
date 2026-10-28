@@ -1,116 +1,128 @@
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { Button } from "../components/button";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../components/sheet";
 
 export type NavItem = { label: string; href: string; icon?: React.ReactNode; active?: boolean; count?: number };
 
-/**
- * Internal-tool shell: sidebar on desktop, top bar with a native-popover
- * drawer on phones. Native navigation needs no client JavaScript; client
- * routers can opt into callbacks and mobile header actions.
- */
+/** Internal-tool shell. Native popover navigation remains the default. */
 export function AppShell({
-  brand,
-  nav,
-  secondary,
-  user,
-  onNavigate,
-  mobileActions,
-  children,
+  brand, nav, secondary, user, onNavigate, mobileActions,
+  collapsible = false, collapsed = false, onCollapsedChange, modalNavigation = false, children,
 }: {
   brand: { name: string; mark?: React.ReactNode };
   nav: { title?: string; items: NavItem[] }[];
+  /** Expanded desktop and mobile content; expand the rail to reach these controls. */
   secondary?: React.ReactNode;
   user?: { name: string; detail?: string };
   /** Client routers can handle ordinary clicks while preserving native modified clicks. */
   onNavigate?: (href: string) => void;
   mobileActions?: React.ReactNode;
+  /** Controlled desktop rail. The consumer owns state and optional persistence. */
+  collapsible?: boolean;
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
+  /** Opt into the shared modal Sheet's focus trap, dismissal and focus restoration. */
+  modalNavigation?: boolean;
   children: React.ReactNode;
 }) {
   const drawerId = React.useId();
-  const navList = (
-    <nav aria-label="App" className="flex flex-1 flex-col gap-6 overflow-y-auto overscroll-contain px-3 py-4">
+  const rail = collapsible && collapsed;
+  const navList = (compact = false, modal = false) => (
+    <nav aria-label="App" className={cn("flex flex-1 flex-col gap-6 overflow-y-auto overscroll-contain px-3 py-4", compact && "px-2")}
+      onClick={modal && onNavigate ? event => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const link = (event.target as Element).closest<HTMLAnchorElement>("a[href]");
+        if (!link) return;
+        // Let SheetClose handle the link first, then prevent native navigation.
+        event.preventDefault(); onNavigate(link.getAttribute("href")!);
+      } : undefined}
+    >
       {nav.map((group, gi) => (
         <div key={gi} className="flex flex-col gap-0.5">
-          {group.title && <p className="px-2.5 pb-1.5 text-xs font-medium text-muted-foreground">{group.title}</p>}
-          {group.items.map((it) => (
-            <a
-              key={it.href + it.label}
+          {group.title && <p className={cn("px-2.5 pb-1.5 text-xs font-medium text-muted-foreground", compact && "sr-only")}>{group.title}</p>}
+          {group.items.map((it) => {
+            const link = <a
               href={it.href}
               aria-current={it.active ? "page" : undefined}
-              onClick={onNavigate ? event => {
-                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                event.preventDefault(); onNavigate(it.href);
-                event.currentTarget.closest<HTMLElement>("[popover]")?.hidePopover();
+              title={compact ? it.label : undefined}
+              onClickCapture={modal ? event => {
+                // Stop the composed Close handler while leaving native new-tab navigation intact.
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) event.stopPropagation();
               } : undefined}
+              onClick={modal ? undefined : event => {
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                if (onNavigate) { event.preventDefault(); onNavigate(it.href); }
+                if (!modal) event.currentTarget.closest<HTMLElement>("[popover]")?.hidePopover();
+              }}
               className={cn(
                 "flex min-h-11 items-center gap-2.5 rounded-md px-2.5 text-[0.8125rem] text-sidebar-foreground/75 outline-none transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-ring md:min-h-9 [@media(pointer:coarse)]:min-h-11 [&_svg]:size-4 [&_svg]:text-muted-foreground",
                 it.active && "bg-sidebar-accent font-medium text-sidebar-foreground [&_svg]:text-brand",
+                compact && "justify-center px-2",
               )}
             >
-              {it.icon}
-              <span className="truncate">{it.label}</span>
-              {it.count !== undefined && <span className="ml-auto font-mono text-[0.6875rem] tabular-nums text-muted-foreground">{it.count}</span>}
-            </a>
-          ))}
+              {it.icon ?? (compact && <span aria-hidden="true">{it.label.slice(0, 1)}</span>)}
+              <span className={compact ? "sr-only" : "truncate"}>{it.label}</span>
+              {it.count !== undefined && <span className={compact ? "sr-only" : "ml-auto font-mono text-[0.6875rem] tabular-nums text-muted-foreground"}>{it.count}</span>}
+            </a>;
+            return modal ? <SheetClose key={it.href + it.label} asChild>{link}</SheetClose> : React.cloneElement(link, { key: it.href + it.label });
+          })}
         </div>
       ))}
     </nav>
   );
-  const brandRow = (
-    <div className="flex h-14 min-w-0 items-center gap-2.5 px-5 [&>svg]:shrink-0">
-      {brand.mark}
-      <span className="truncate text-sm font-semibold tracking-[-0.01em]">{brand.name}</span>
+  const brandRow = (compact = false) => (
+    <div className={cn("flex h-14 min-w-0 items-center gap-2.5 px-5 [&>svg]:shrink-0", compact && "justify-center px-2")}>
+      {brand.mark ?? (compact && <span aria-hidden="true">{brand.name.slice(0, 1)}</span>)}
+      <span className={compact ? "sr-only" : "truncate text-sm font-semibold tracking-[-0.01em]"}>{brand.name}</span>
     </div>
   );
-  const userRow = user && (
-    <div className="flex items-center gap-2.5 border-t border-sidebar-border px-5 py-3.5">
-      <span className="inline-flex size-7 items-center justify-center rounded-full bg-brand-soft text-[0.6875rem] font-semibold uppercase text-brand">
-        {user.name
-          .split(" ")
-          .map((w) => w[0])
-          .join("")
-          .slice(0, 2)}
+  const userRow = (compact = false) => user && (
+    <div className={cn("flex items-center gap-2.5 border-t border-sidebar-border px-5 py-3.5", compact && "justify-center px-2")} title={compact ? user.name : undefined}>
+      <span aria-hidden="true" className="inline-flex size-7 items-center justify-center rounded-full bg-brand-soft text-[0.6875rem] font-semibold uppercase text-brand">
+        {user.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
       </span>
-      <span className="min-w-0 text-xs">
+      <span className={compact ? "sr-only" : "min-w-0 text-xs"}>
         <span className="block truncate font-medium text-foreground">{user.name}</span>
         {user.detail && <span className="block truncate text-muted-foreground">{user.detail}</span>}
       </span>
     </div>
   );
+  const menuIcon = <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-5" aria-hidden><path d="M4 7h16M4 12h16M4 17h16" /></svg>;
 
   return (
-    <div className="flex min-h-dvh bg-background">
-      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
-        {brandRow}
-        {navList}
-        {secondary && <div className="px-3 pb-3">{secondary}</div>}
-        {userRow}
+    <div data-slot="app-shell" className="flex min-h-dvh bg-background">
+      <aside id={`${drawerId}-sidebar`} data-slot="app-sidebar" data-collapsed={rail} className={cn("sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex", rail ? "w-16" : "w-60")}>
+        {brandRow(rail)}
+        {collapsible && <Button type="button" variant="ghost" size="icon-sm" className="mx-auto" aria-controls={`${drawerId}-sidebar`} aria-expanded={!rail} aria-label={rail ? "Expand sidebar" : "Collapse sidebar"} onClick={() => onCollapsedChange?.(!rail)}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-4" aria-hidden><path d={rail ? "m9 6 6 6-6 6" : "m15 6-6 6 6 6"} /></svg>
+        </Button>}
+        {navList(rail)}
+        {secondary && !rail && <div className="px-3 pb-3">{secondary}</div>}
+        {userRow(rail)}
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-md lg:hidden">
-          <div className="flex min-w-0 items-center gap-2.5">
-            {brand.mark}
-            <span className="truncate text-sm font-semibold">{brand.name}</span>
-          </div>
+          <div className="flex min-w-0 items-center gap-2.5">{brand.mark}<span className="truncate text-sm font-semibold">{brand.name}</span></div>
           <div className="flex shrink-0 items-center gap-1">
-          {mobileActions}
-          <button type="button" popoverTarget={drawerId} aria-label="Open navigation" className="inline-flex size-11 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-accent active:bg-accent focus-visible:ring-2 focus-visible:ring-ring">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-5" aria-hidden>
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-          </button>
+            {mobileActions}
+            {modalNavigation ? <Sheet>
+              <SheetTrigger asChild><Button type="button" variant="ghost" size="icon" aria-label="Open navigation">{menuIcon}</Button></SheetTrigger>
+              <SheetContent side="left" aria-modal="true" aria-describedby={undefined} className="w-72 max-w-[85vw] gap-0 border-sidebar-border bg-sidebar p-0 pb-[env(safe-area-inset-bottom)]">
+                <SheetTitle className="sr-only">{brand.name} navigation</SheetTitle>
+                <div className="border-b border-sidebar-border pr-12">{brandRow()}</div>
+                {navList(false, true)}
+                {secondary && <div className="px-3 pb-3">{secondary}</div>}
+                {userRow()}
+              </SheetContent>
+            </Sheet> : <button type="button" popoverTarget={drawerId} aria-label="Open navigation" className="inline-flex size-11 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-accent active:bg-accent focus-visible:ring-2 focus-visible:ring-ring">{menuIcon}</button>}
           </div>
-          <div
-            id={drawerId}
-            data-slot="app-drawer"
-            popover="auto"
-            className="fixed inset-y-0 left-0 m-0 h-dvh w-72 max-w-[85vw] flex-col border-r border-sidebar-border bg-sidebar p-0 pb-[env(safe-area-inset-bottom)] text-foreground shadow-xl backdrop:bg-black/30 [&:popover-open]:flex"
-          >
-            <div className="flex items-center justify-between border-b border-sidebar-border pr-2">{brandRow}<button type="button" popoverTarget={drawerId} popoverTargetAction="hide" aria-label="Close navigation" className="inline-flex size-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-sidebar-accent active:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-5" aria-hidden><path d="m6 6 12 12M18 6 6 18" /></svg></button></div>
-            {navList}
+          {!modalNavigation && <div id={drawerId} data-slot="app-drawer" popover="auto" className="fixed inset-y-0 left-0 m-0 h-dvh w-72 max-w-[85vw] flex-col border-r border-sidebar-border bg-sidebar p-0 pb-[env(safe-area-inset-bottom)] text-foreground shadow-xl backdrop:bg-black/30 [&:popover-open]:flex">
+            <div className="flex items-center justify-between border-b border-sidebar-border pr-2">{brandRow()}<button type="button" popoverTarget={drawerId} popoverTargetAction="hide" aria-label="Close navigation" className="inline-flex size-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-md outline-none hover:bg-sidebar-accent active:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-5" aria-hidden><path d="m6 6 12 12M18 6 6 18" /></svg></button></div>
+            {navList()}
             {secondary && <div className="px-3 pb-3">{secondary}</div>}
-            {userRow}
-          </div>
+            {userRow()}
+          </div>}
         </div>
         <main className="flex-1">{children}</main>
       </div>

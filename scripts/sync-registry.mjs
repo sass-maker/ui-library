@@ -10,7 +10,7 @@ const manifest = JSON.parse(await readFile(path.join(root, "packages/ui/package.
 const registryPath = path.join(root, "registry.json");
 const registry = JSON.parse(await readFile(registryPath, "utf8"));
 const existing = new Map(registry.items.map(item => [item.name, item]));
-const categories = ["components", "recipes", "effects", "molecules", "organisms"];
+const categories = ["components", "recipes", "effects", "molecules", "organisms", "blocks"];
 const generated = new Map();
 
 async function resolveImport(from, specifier) {
@@ -24,6 +24,7 @@ async function resolveImport(from, specifier) {
 for (const category of categories) {
   for (const filename of (await readdir(path.join(sourceRoot, category))).sort()) {
     if (!filename.endsWith(".tsx") || filename === "upload-types.tsx") continue;
+    if (category === "blocks" && filename !== "app.tsx") continue;
     const name = filename.slice(0, -4);
     const visited = new Set();
     const dependencies = new Set();
@@ -49,7 +50,7 @@ for (const category of categories) {
     const old = existing.get(name);
     generated.set(name, {
       name,
-      type: category === "organisms" ? "registry:block" : "registry:ui",
+      type: ["organisms", "blocks"].includes(category) ? "registry:block" : "registry:ui",
       title: old?.title ?? name.replace(/(^|-)([a-z])/g, (_, separator, letter) => (separator ? " " : "") + letter.toUpperCase()),
       description: old?.description ?? `Fleet UI ${category === "organisms" ? "organism" : "molecule"}: ${name.replaceAll("-", " ")}. Uses semantic tokens and shared atomic components.`,
       dependencies: [...dependencies].sort(),
