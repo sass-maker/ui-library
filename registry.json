@@ -539,6 +539,11 @@
           "target": "src/components/fleet/components/button.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/surface-motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/surface-motion.ts"
@@ -727,6 +732,11 @@
           "target": "src/components/fleet/components/button.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -769,6 +779,11 @@
           "path": "packages/ui/src/components/calendar.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/calendar.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -931,6 +946,16 @@
           "target": "src/components/fleet/components/textarea.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -978,6 +1003,11 @@
           "path": "packages/ui/src/components/dialog.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/dialog.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/surface-motion.ts",
@@ -1096,6 +1126,11 @@
           "target": "src/components/fleet/components/skeleton.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/surface-motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/surface-motion.ts"
@@ -1142,6 +1177,11 @@
           "path": "packages/ui/src/components/dialog.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/dialog.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/surface-motion.ts",
@@ -1269,6 +1309,11 @@
           "target": "src/components/fleet/components/empty-state.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -1314,6 +1359,11 @@
           "path": "packages/ui/src/components/error-state.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/error-state.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1409,6 +1459,16 @@
           "target": "src/components/fleet/components/textarea.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -1468,6 +1528,7 @@
       "title": "Input",
       "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/input.",
       "dependencies": [
+        "class-variance-authority@0.7.1",
         "clsx@2.1.1",
         "tailwind-merge@3.7.0"
       ],
@@ -1479,6 +1540,16 @@
           "path": "packages/ui/src/components/input.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/input.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -1611,6 +1682,57 @@
       ]
     },
     {
+      "name": "native-controls",
+      "type": "registry:ui",
+      "title": "Native Controls",
+      "description": "Fleet UI molecule: native controls. Uses semantic tokens and shared atomic components.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/input.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/input.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/native-controls.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/native-controls.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/utils.ts"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.fleet-ui.md"
+        },
+        {
+          "path": "LICENSE",
+          "type": "registry:file",
+          "target": "LICENSE.fleet-ui"
+        }
+      ]
+    },
+    {
       "name": "navigation-menu",
       "type": "registry:ui",
       "title": "Navigation Menu",
@@ -1673,6 +1795,11 @@
           "path": "packages/ui/src/components/pagination.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/pagination.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -2176,6 +2303,7 @@
       "title": "Table",
       "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/table.",
       "dependencies": [
+        "class-variance-authority@0.7.1",
         "clsx@2.1.1",
         "tailwind-merge@3.7.0"
       ],
@@ -2187,6 +2315,16 @@
           "path": "packages/ui/src/components/table.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/table.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -2248,6 +2386,7 @@
       "title": "Textarea",
       "description": "Components module. MIT upstream attribution in THIRD_PARTY_NOTICES.md. Import from @saas-maker/ui/components/textarea.",
       "dependencies": [
+        "class-variance-authority@0.7.1",
         "clsx@2.1.1",
         "tailwind-merge@3.7.0"
       ],
@@ -2259,6 +2398,16 @@
           "path": "packages/ui/src/components/textarea.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/textarea.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -2756,6 +2905,11 @@
           "path": "packages/ui/src/components/button.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/use-reduced-motion.ts",
@@ -3595,6 +3749,11 @@
           "target": "src/components/fleet/components/button.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/use-click-outside.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/use-click-outside.ts"
@@ -3780,6 +3939,11 @@
           "path": "packages/ui/src/effects/bento-grid.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/effects/bento-grid.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -3982,6 +4146,11 @@
           "target": "src/components/fleet/effects/file-tree.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/utils.ts"
@@ -4069,6 +4238,11 @@
           "path": "packages/ui/src/effects/hero-video-dialog.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/effects/hero-video-dialog.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/surface-motion.ts",
@@ -4399,6 +4573,11 @@
           "target": "src/components/fleet/components/responsive-image.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/surface-motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/surface-motion.ts"
@@ -4431,6 +4610,7 @@
       "title": "Input Field",
       "description": "Fleet UI molecule: input field. Uses semantic tokens and shared atomic components.",
       "dependencies": [
+        "class-variance-authority@0.7.1",
         "clsx@2.1.1",
         "lucide-react@1.48.0",
         "motion@13.4.3",
@@ -4452,9 +4632,19 @@
           "target": "src/components/fleet/components/label.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/use-reduced-motion.ts",
@@ -4617,6 +4807,7 @@
       "title": "Search Field",
       "description": "Fleet UI molecule: search field. Uses semantic tokens and shared atomic components.",
       "dependencies": [
+        "class-variance-authority@0.7.1",
         "clsx@2.1.1",
         "lucide-react@1.48.0",
         "tailwind-merge@3.7.0"
@@ -4629,6 +4820,16 @@
           "path": "packages/ui/src/components/input.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/input.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/utils.ts",
@@ -4752,9 +4953,19 @@
           "target": "src/components/fleet/components/skeleton.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/surface-motion.ts",
@@ -4883,9 +5094,19 @@
           "target": "src/components/fleet/components/input.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/use-reduced-motion.ts",
@@ -4960,6 +5181,11 @@
           "path": "packages/ui/src/components/progress.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/components/progress.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/motion.ts",
@@ -5047,9 +5273,19 @@
           "target": "src/components/fleet/components/switch.tsx"
         },
         {
+          "path": "packages/ui/src/lib/button-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/button-styles.ts"
+        },
+        {
           "path": "packages/ui/src/lib/motion.ts",
           "type": "registry:ui",
           "target": "src/components/fleet/lib/motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/native-control-styles.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/native-control-styles.ts"
         },
         {
           "path": "packages/ui/src/lib/use-reduced-motion.ts",

@@ -29,7 +29,7 @@ describe("Console isolated-install CSS sources", () => {
     const candidates = after.scan();
     const declared = new Scanner({ sources: sources.filter(source => !source.negated) });
     declared.scan();
-    expect(declared.files).toHaveLength(33);
+    expect(declared.files).toHaveLength(37);
     expect(after.files.filter(file => file.startsWith(installedUi) || file.startsWith(installedTemplates)).sort()).toEqual(declared.files.sort());
     expect(candidates).not.toContain("blur-[90px]");
     expect(after.files.some(file => file.endsWith("/frames.tsx"))).toBe(false);
@@ -43,6 +43,8 @@ describe("Console isolated-install CSS sources", () => {
     expect(candidates).toContain("data-[state=checked]:border-primary");
     expect(css.includes('data-state="checked"')).toBe(true);
     expect(css).toContain("focus-visible");
+    expect(candidates).toContain("motion-safe:enabled:active:scale-[0.97]");
+    expect(candidates).toContain("[&::-webkit-progress-value]:bg-primary");
     expect(css).toContain('data-mode="dark"');
   });
 });

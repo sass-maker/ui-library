@@ -81,7 +81,8 @@
     "./atoms/skeleton": "./src/components/skeleton.tsx",
     "./visual-sources.json": "./visual-sources.json",
     "./atoms/responsive-image": "./src/components/responsive-image.tsx",
-    "./atoms/video": "./src/components/video.tsx"
+    "./atoms/video": "./src/components/video.tsx",
+    "./atoms/native-controls": "./src/components/native-controls.tsx"
   },
   "dependencies": {
     "@tanstack/react-table": "9.2.4",
