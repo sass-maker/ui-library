@@ -209,6 +209,11 @@ a controlled desktop rail and modal mobile navigation. See the
 [native control contract](packages/ui/NATIVE_CONTROLS.md) for supported tags,
 native refs and CSS source requirements.
 
+Registry upgrades of the `app` block now install at
+`src/components/fleet/blocks/app.tsx`. Earlier copies may remain at
+`components/app.tsx`; update imports and reconcile local customizations before
+replacing the earlier copy.
+
 Install from the GitHub repo (public), not npm. Write the specs into `package.json`
 and run `pnpm install`; templates needs ui and motion beside it.
 

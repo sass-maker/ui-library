@@ -1,10 +1,11 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 import { build } from "esbuild"
 import { expect, it } from "vitest"
 
 it("bundles the app block using only its declared installed registry files", async () => {
-  const root = path.resolve("../..")
+  const root = fileURLToPath(new URL("../../../", import.meta.url))
   const registry = JSON.parse(await readFile(path.join(root, "registry.json"), "utf8"))
   const app = registry.items.find((item: { name: string }) => item.name === "app")
   const files = new Map<string, string>(app.files.filter((file: { target?: string }) => file.target?.endsWith(".ts") || file.target?.endsWith(".tsx"))
