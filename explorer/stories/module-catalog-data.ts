@@ -11,7 +11,7 @@ export const moduleCatalog = [
     "importName": "Accordion",
     "importStatement": "import { Accordion } from \"@saas-maker/ui/molecules/accordion\";",
     "sourcePath": "packages/ui/src/components/accordion.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-accordion--playground",
     "registryName": "accordion",
     "dependencies": [
@@ -32,7 +32,7 @@ export const moduleCatalog = [
     "importName": "ActivityItem",
     "importStatement": "import { ActivityItem } from \"@saas-maker/ui/molecules/activity-item\";",
     "sourcePath": "packages/ui/src/molecules/activity-item.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-compositions-activity-item--activity",
     "registryName": "activity-item",
     "dependencies": [
@@ -53,7 +53,7 @@ export const moduleCatalog = [
     "importName": "Alert",
     "importStatement": "import { Alert } from \"@saas-maker/ui/molecules/alert\";",
     "sourcePath": "packages/ui/src/components/alert.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-alert--playground",
     "registryName": "alert",
     "dependencies": [
@@ -73,7 +73,7 @@ export const moduleCatalog = [
     "importName": "AlertDialog",
     "importStatement": "import { AlertDialog } from \"@saas-maker/ui/molecules/alert-dialog\";",
     "sourcePath": "packages/ui/src/components/alert-dialog.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-alert-dialog--playground",
     "registryName": "alert-dialog",
     "dependencies": [
@@ -94,7 +94,7 @@ export const moduleCatalog = [
     "importName": "AnimatedBackground",
     "importStatement": "import { AnimatedBackground } from \"@saas-maker/ui/recipes/animated-background\";",
     "sourcePath": "packages/ui/src/recipes/animated-background.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-animated-background--playground",
     "registryName": "animated-background",
     "dependencies": [
@@ -114,7 +114,7 @@ export const moduleCatalog = [
     "importName": "AnimatedBeam",
     "importStatement": "import { AnimatedBeam } from \"@saas-maker/ui/effects/animated-beam\";",
     "sourcePath": "packages/ui/src/effects/animated-beam.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-animated-beam--playground",
     "registryName": "animated-beam",
     "dependencies": [
@@ -134,7 +134,7 @@ export const moduleCatalog = [
     "importName": "AnimatedNumber",
     "importStatement": "import { AnimatedNumber } from \"@saas-maker/ui/recipes/animated-number\";",
     "sourcePath": "packages/ui/src/recipes/animated-number.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-animated-number--playground",
     "registryName": "animated-number",
     "dependencies": [
@@ -154,11 +154,14 @@ export const moduleCatalog = [
     "importName": "AppShell",
     "importStatement": "import { AppShell } from \"@saas-maker/ui/blocks/app\";",
     "sourcePath": "packages/ui/src/blocks/app.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-app--playground",
     "registryName": "app",
     "dependencies": [
+      "class-variance-authority@0.7.1",
       "clsx@2.1.1",
+      "lucide-react@1.48.0",
+      "radix-ui@1.6.7",
       "tailwind-merge@3.7.0"
     ]
   },
@@ -173,7 +176,7 @@ export const moduleCatalog = [
     "importName": "AssetLibrary",
     "importStatement": "import { AssetLibrary } from \"@saas-maker/ui/organisms/asset-library\";",
     "sourcePath": "packages/ui/src/organisms/asset-library.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "organisms-workspaces-asset-library--files",
     "registryName": "asset-library",
     "dependencies": [
@@ -197,7 +200,7 @@ export const moduleCatalog = [
     "importName": "AssistantLogo",
     "importStatement": "import { AssistantLogo } from \"@saas-maker/ui/blocks/assistant-logos\";",
     "sourcePath": "packages/ui/src/blocks/assistant-logos.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-assistant-logos--playground",
     "registryName": "assistant-logos",
     "dependencies": []
@@ -213,7 +216,7 @@ export const moduleCatalog = [
     "importName": "AutosaveStatus",
     "importStatement": "import { AutosaveStatus } from \"@saas-maker/ui/recipes/autosave-status\";",
     "sourcePath": "packages/ui/src/recipes/autosave-status.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-autosave-status--playground",
     "registryName": "autosave-status",
     "dependencies": [
@@ -233,7 +236,7 @@ export const moduleCatalog = [
     "importName": "Avatar",
     "importStatement": "import { Avatar } from \"@saas-maker/ui/atoms/avatar\";",
     "sourcePath": "packages/ui/src/components/avatar.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "foundations-avatar--playground",
     "registryName": "avatar",
     "dependencies": [
@@ -253,7 +256,7 @@ export const moduleCatalog = [
     "importName": "AvatarStack",
     "importStatement": "import { AvatarStack } from \"@saas-maker/ui/recipes/avatar-stack\";",
     "sourcePath": "packages/ui/src/recipes/avatar-stack.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "data-avatar-stack--playground",
     "registryName": "avatar-stack",
     "dependencies": [
@@ -273,7 +276,7 @@ export const moduleCatalog = [
     "importName": "Badge",
     "importStatement": "import { Badge } from \"@saas-maker/ui/atoms/badge\";",
     "sourcePath": "packages/ui/src/components/badge.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "foundations-badge--playground",
     "registryName": "badge",
     "dependencies": [
@@ -294,7 +297,7 @@ export const moduleCatalog = [
     "importName": "BentoCard",
     "importStatement": "import { BentoCard } from \"@saas-maker/ui/effects/bento-grid\";",
     "sourcePath": "packages/ui/src/effects/bento-grid.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-bento-grid--playground",
     "registryName": "bento-grid",
     "dependencies": [
@@ -316,7 +319,7 @@ export const moduleCatalog = [
     "importName": "BlurFade",
     "importStatement": "import { BlurFade } from \"@saas-maker/ui/effects/blur-fade\";",
     "sourcePath": "packages/ui/src/effects/blur-fade.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-blur-fade--playground",
     "registryName": "blur-fade",
     "dependencies": [
@@ -334,7 +337,7 @@ export const moduleCatalog = [
     "importName": "BorderBeam",
     "importStatement": "import { BorderBeam } from \"@saas-maker/ui/effects/border-beam\";",
     "sourcePath": "packages/ui/src/effects/border-beam.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-border-beam--playground",
     "registryName": "border-beam",
     "dependencies": [
@@ -354,7 +357,7 @@ export const moduleCatalog = [
     "importName": "Breadcrumb",
     "importStatement": "import { Breadcrumb } from \"@saas-maker/ui/molecules/breadcrumb\";",
     "sourcePath": "packages/ui/src/components/breadcrumb.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-breadcrumb--playground",
     "registryName": "breadcrumb",
     "dependencies": [
@@ -375,7 +378,7 @@ export const moduleCatalog = [
     "importName": "Button",
     "importStatement": "import { Button } from \"@saas-maker/ui/atoms/button\";",
     "sourcePath": "packages/ui/src/components/button.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "foundations-button--playground",
     "registryName": "button",
     "dependencies": [
@@ -396,7 +399,7 @@ export const moduleCatalog = [
     "importName": "Calendar",
     "importStatement": "import { Calendar } from \"@saas-maker/ui/molecules/calendar\";",
     "sourcePath": "packages/ui/src/components/calendar.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-calendar--playground",
     "registryName": "calendar",
     "dependencies": [
@@ -419,7 +422,7 @@ export const moduleCatalog = [
     "importName": "Card",
     "importStatement": "import { Card } from \"@saas-maker/ui/atoms/card\";",
     "sourcePath": "packages/ui/src/components/card.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "foundations-card--playground",
     "registryName": "card",
     "dependencies": [
@@ -438,7 +441,7 @@ export const moduleCatalog = [
     "importName": "Carousel",
     "importStatement": "import { Carousel } from \"@saas-maker/ui/recipes/carousel\";",
     "sourcePath": "packages/ui/src/recipes/carousel.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-carousel--playground",
     "registryName": "carousel",
     "dependencies": [
@@ -459,7 +462,7 @@ export const moduleCatalog = [
     "importName": "Checkbox",
     "importStatement": "import { Checkbox } from \"@saas-maker/ui/atoms/checkbox\";",
     "sourcePath": "packages/ui/src/components/checkbox.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-checkbox--playground",
     "registryName": "checkbox",
     "dependencies": [
@@ -480,7 +483,7 @@ export const moduleCatalog = [
     "importName": "Faq",
     "importStatement": "import { Faq } from \"@saas-maker/ui/blocks/closing\";",
     "sourcePath": "packages/ui/src/blocks/closing.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-closing--playground",
     "registryName": "closing",
     "dependencies": [
@@ -500,7 +503,7 @@ export const moduleCatalog = [
     "importName": "CodeComparison",
     "importStatement": "import { CodeComparison } from \"@saas-maker/ui/effects/code-comparison\";",
     "sourcePath": "packages/ui/src/effects/code-comparison.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-code-comparison--playground",
     "registryName": "code-comparison",
     "dependencies": [
@@ -520,7 +523,7 @@ export const moduleCatalog = [
     "importName": "Collapsible",
     "importStatement": "import { Collapsible } from \"@saas-maker/ui/molecules/collapsible\";",
     "sourcePath": "packages/ui/src/components/collapsible.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-collapsible--playground",
     "registryName": "collapsible",
     "dependencies": [
@@ -538,7 +541,7 @@ export const moduleCatalog = [
     "importName": "Combobox",
     "importStatement": "import { Combobox } from \"@saas-maker/ui/molecules/combobox\";",
     "sourcePath": "packages/ui/src/components/combobox.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-combobox--playground",
     "registryName": "combobox",
     "dependencies": [
@@ -561,7 +564,7 @@ export const moduleCatalog = [
     "importName": "Command",
     "importStatement": "import { Command } from \"@saas-maker/ui/molecules/command\";",
     "sourcePath": "packages/ui/src/components/command.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-command--playground",
     "registryName": "command",
     "dependencies": [
@@ -584,7 +587,7 @@ export const moduleCatalog = [
     "importName": "ContextMenu",
     "importStatement": "import { ContextMenu } from \"@saas-maker/ui/molecules/context-menu\";",
     "sourcePath": "packages/ui/src/components/context-menu.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-context-menu--playground",
     "registryName": "context-menu",
     "dependencies": [
@@ -605,7 +608,7 @@ export const moduleCatalog = [
     "importName": "CopyButton",
     "importStatement": "import { CopyButton } from \"@saas-maker/ui/recipes/copy-button\";",
     "sourcePath": "packages/ui/src/recipes/copy-button.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-copy-button--playground",
     "registryName": "copy-button",
     "dependencies": [
@@ -625,7 +628,7 @@ export const moduleCatalog = [
     "importName": "DataTable",
     "importStatement": "import { DataTable } from \"@saas-maker/ui/organisms/data-table\";",
     "sourcePath": "packages/ui/src/components/data-table.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "data-data-table--in-context",
     "registryName": "data-table",
     "dependencies": [
@@ -648,7 +651,7 @@ export const moduleCatalog = [
     "importName": "Dialog",
     "importStatement": "import { Dialog } from \"@saas-maker/ui/molecules/dialog\";",
     "sourcePath": "packages/ui/src/components/dialog.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-dialog--playground",
     "registryName": "dialog",
     "dependencies": [
@@ -670,7 +673,7 @@ export const moduleCatalog = [
     "importName": "Disclosure",
     "importStatement": "import { Disclosure } from \"@saas-maker/ui/recipes/disclosure\";",
     "sourcePath": "packages/ui/src/recipes/disclosure.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-disclosure--playground",
     "registryName": "disclosure",
     "dependencies": [
@@ -689,7 +692,7 @@ export const moduleCatalog = [
     "importName": "DotPattern",
     "importStatement": "import { DotPattern } from \"@saas-maker/ui/effects/dot-pattern\";",
     "sourcePath": "packages/ui/src/effects/dot-pattern.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-dot-pattern--playground",
     "registryName": "dot-pattern",
     "dependencies": [
@@ -709,7 +712,7 @@ export const moduleCatalog = [
     "importName": "Drawer",
     "importStatement": "import { Drawer } from \"@saas-maker/ui/molecules/drawer\";",
     "sourcePath": "packages/ui/src/components/drawer.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-drawer--playground",
     "registryName": "drawer",
     "dependencies": [
@@ -729,7 +732,7 @@ export const moduleCatalog = [
     "importName": "DropdownMenu",
     "importStatement": "import { DropdownMenu } from \"@saas-maker/ui/molecules/dropdown-menu\";",
     "sourcePath": "packages/ui/src/components/dropdown-menu.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-dropdown-menu--playground",
     "registryName": "dropdown-menu",
     "dependencies": [
@@ -750,7 +753,7 @@ export const moduleCatalog = [
     "importName": "EmptyState",
     "importStatement": "import { EmptyState } from \"@saas-maker/ui/molecules/empty-state\";",
     "sourcePath": "packages/ui/src/components/empty-state.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-empty-state--playground",
     "registryName": "empty-state",
     "dependencies": [
@@ -771,7 +774,7 @@ export const moduleCatalog = [
     "importName": "ErrorState",
     "importStatement": "import { ErrorState } from \"@saas-maker/ui/molecules/error-state\";",
     "sourcePath": "packages/ui/src/components/error-state.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-error-state--playground",
     "registryName": "error-state",
     "dependencies": [
@@ -792,7 +795,7 @@ export const moduleCatalog = [
     "importName": "ExportMenu",
     "importStatement": "import { ExportMenu } from \"@saas-maker/ui/blocks/export-menu\";",
     "sourcePath": "packages/ui/src/blocks/export-menu.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-export-menu--playground",
     "registryName": "export-menu",
     "dependencies": [
@@ -810,7 +813,7 @@ export const moduleCatalog = [
     "importName": "FeatureGrid",
     "importStatement": "import { FeatureGrid } from \"@saas-maker/ui/blocks/features\";",
     "sourcePath": "packages/ui/src/blocks/features.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-features--playground",
     "registryName": "features",
     "dependencies": [
@@ -829,7 +832,7 @@ export const moduleCatalog = [
     "importName": "FileCard",
     "importStatement": "import { FileCard } from \"@saas-maker/ui/molecules/file-card\";",
     "sourcePath": "packages/ui/src/molecules/file-card.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-compositions-file-card--files",
     "registryName": "file-card",
     "dependencies": [
@@ -851,7 +854,7 @@ export const moduleCatalog = [
     "importName": "FileDropzone",
     "importStatement": "import { FileDropzone } from \"@saas-maker/ui/recipes/file-dropzone\";",
     "sourcePath": "packages/ui/src/recipes/file-dropzone.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-file-dropzone--playground",
     "registryName": "file-dropzone",
     "dependencies": [
@@ -874,7 +877,7 @@ export const moduleCatalog = [
     "importName": "CollapseButton",
     "importStatement": "import { CollapseButton } from \"@saas-maker/ui/effects/file-tree\";",
     "sourcePath": "packages/ui/src/effects/file-tree.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-file-tree--playground",
     "registryName": "file-tree",
     "dependencies": [
@@ -896,7 +899,7 @@ export const moduleCatalog = [
     "importName": "FilterBar",
     "importStatement": "import { FilterBar } from \"@saas-maker/ui/blocks/filter-bar\";",
     "sourcePath": "packages/ui/src/blocks/filter-bar.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-filter-bar--playground",
     "registryName": "filter-bar",
     "dependencies": [
@@ -916,7 +919,7 @@ export const moduleCatalog = [
     "importName": "StudioFooter",
     "importStatement": "import { StudioFooter } from \"@saas-maker/ui/blocks/footer\";",
     "sourcePath": "packages/ui/src/blocks/footer.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-footer--playground",
     "registryName": "studio-footer",
     "dependencies": [
@@ -936,7 +939,7 @@ export const moduleCatalog = [
     "importName": "WindowFrame",
     "importStatement": "import { WindowFrame } from \"@saas-maker/ui/blocks/frames\";",
     "sourcePath": "packages/ui/src/blocks/frames.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-frames--playground",
     "registryName": "frames",
     "dependencies": [
@@ -955,7 +958,7 @@ export const moduleCatalog = [
     "importName": "Device",
     "importStatement": "import { Device } from \"@saas-maker/ui/blocks/gallery\";",
     "sourcePath": "packages/ui/src/blocks/gallery.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-gallery--playground",
     "registryName": "gallery",
     "dependencies": [
@@ -974,7 +977,7 @@ export const moduleCatalog = [
     "importName": "Globe",
     "importStatement": "import { Globe } from \"@saas-maker/ui/effects/globe\";",
     "sourcePath": "packages/ui/src/effects/globe.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-globe--playground",
     "registryName": "globe",
     "dependencies": [
@@ -994,7 +997,7 @@ export const moduleCatalog = [
     "importName": "Hero",
     "importStatement": "import { Hero } from \"@saas-maker/ui/blocks/hero\";",
     "sourcePath": "packages/ui/src/blocks/hero.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-hero--playground",
     "registryName": "hero",
     "dependencies": [
@@ -1013,7 +1016,7 @@ export const moduleCatalog = [
     "importName": "HeroVideoDialog",
     "importStatement": "import { HeroVideoDialog } from \"@saas-maker/ui/effects/hero-video-dialog\";",
     "sourcePath": "packages/ui/src/effects/hero-video-dialog.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-hero-video-dialog--playground",
     "registryName": "hero-video-dialog",
     "dependencies": [
@@ -1035,7 +1038,7 @@ export const moduleCatalog = [
     "importName": "HoldToDelete",
     "importStatement": "import { HoldToDelete } from \"@saas-maker/ui/recipes/hold-to-delete\";",
     "sourcePath": "packages/ui/src/recipes/hold-to-delete.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-hold-to-delete--playground",
     "registryName": "hold-to-delete",
     "dependencies": [
@@ -1054,7 +1057,7 @@ export const moduleCatalog = [
     "importName": "HoverCard",
     "importStatement": "import { HoverCard } from \"@saas-maker/ui/molecules/hover-card\";",
     "sourcePath": "packages/ui/src/components/hover-card.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-hover-card--playground",
     "registryName": "hover-card",
     "dependencies": [
@@ -1074,7 +1077,7 @@ export const moduleCatalog = [
     "importName": "ImageComparison",
     "importStatement": "import { ImageComparison } from \"@saas-maker/ui/recipes/image-comparison\";",
     "sourcePath": "packages/ui/src/recipes/image-comparison.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-image-comparison--playground",
     "registryName": "image-comparison",
     "dependencies": [
@@ -1095,7 +1098,7 @@ export const moduleCatalog = [
     "importName": "InlineEdit",
     "importStatement": "import { InlineEdit } from \"@saas-maker/ui/recipes/inline-edit\";",
     "sourcePath": "packages/ui/src/recipes/inline-edit.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-inline-edit--playground",
     "registryName": "inline-edit",
     "dependencies": [
@@ -1115,7 +1118,7 @@ export const moduleCatalog = [
     "importName": "Input",
     "importStatement": "import { Input } from \"@saas-maker/ui/atoms/input\";",
     "sourcePath": "packages/ui/src/components/input.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-input--playground",
     "registryName": "input",
     "dependencies": [
@@ -1134,7 +1137,7 @@ export const moduleCatalog = [
     "importName": "InputField",
     "importStatement": "import { InputField } from \"@saas-maker/ui/molecules/input-field\";",
     "sourcePath": "packages/ui/src/molecules/input-field.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-compositions-input-field--fields",
     "registryName": "input-field",
     "dependencies": [
@@ -1156,7 +1159,7 @@ export const moduleCatalog = [
     "importName": "InputGroup",
     "importStatement": "import { InputGroup } from \"@saas-maker/ui/molecules/input-group\";",
     "sourcePath": "packages/ui/src/components/input-group.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-input-group--playground",
     "registryName": "input-group",
     "dependencies": [
@@ -1177,7 +1180,7 @@ export const moduleCatalog = [
     "importName": "InputOTP",
     "importStatement": "import { InputOTP } from \"@saas-maker/ui/molecules/input-otp\";",
     "sourcePath": "packages/ui/src/components/input-otp.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-one-time-code--playground",
     "registryName": "input-otp",
     "dependencies": [
@@ -1198,7 +1201,7 @@ export const moduleCatalog = [
     "importName": "InteractiveHoverButton",
     "importStatement": "import { InteractiveHoverButton } from \"@saas-maker/ui/effects/interactive-hover-button\";",
     "sourcePath": "packages/ui/src/effects/interactive-hover-button.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-interactive-hover-button--playground",
     "registryName": "interactive-hover-button",
     "dependencies": [
@@ -1218,7 +1221,7 @@ export const moduleCatalog = [
     "importName": "KanbanBoard",
     "importStatement": "import { KanbanBoard } from \"@saas-maker/ui/organisms/kanban-board\";",
     "sourcePath": "packages/ui/src/recipes/kanban-board.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-kanban-board--playground",
     "registryName": "kanban-board",
     "dependencies": [
@@ -1239,7 +1242,7 @@ export const moduleCatalog = [
     "importName": "Kbd",
     "importStatement": "import { Kbd } from \"@saas-maker/ui/atoms/kbd\";",
     "sourcePath": "packages/ui/src/components/kbd.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "foundations-keyboard-hints--playground",
     "registryName": "kbd",
     "dependencies": [
@@ -1258,7 +1261,7 @@ export const moduleCatalog = [
     "importName": "Label",
     "importStatement": "import { Label } from \"@saas-maker/ui/atoms/label\";",
     "sourcePath": "packages/ui/src/components/label.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-label--playground",
     "registryName": "label",
     "dependencies": [
@@ -1278,7 +1281,7 @@ export const moduleCatalog = [
     "importName": "Container",
     "importStatement": "import { Container } from \"@saas-maker/ui/blocks/layout\";",
     "sourcePath": "packages/ui/src/blocks/layout.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-layout--playground",
     "registryName": "layout",
     "dependencies": [
@@ -1297,7 +1300,7 @@ export const moduleCatalog = [
     "importName": "Marquee",
     "importStatement": "import { Marquee } from \"@saas-maker/ui/effects/marquee\";",
     "sourcePath": "packages/ui/src/effects/marquee.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-marquee--playground",
     "registryName": "marquee",
     "dependencies": [
@@ -1316,7 +1319,7 @@ export const moduleCatalog = [
     "importName": "MediaBackdrop",
     "importStatement": "import { MediaBackdrop } from \"@saas-maker/ui/molecules/media-backdrop\";",
     "sourcePath": "packages/ui/src/molecules/media-backdrop.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-media-media-backdrop--video-cover",
     "registryName": "media-backdrop",
     "dependencies": [
@@ -1336,7 +1339,7 @@ export const moduleCatalog = [
     "importName": "MediaFrame",
     "importStatement": "import { MediaFrame } from \"@saas-maker/ui/molecules/media-frame\";",
     "sourcePath": "packages/ui/src/molecules/media-frame.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-media-media-frame--caption-and-credit",
     "registryName": "media-frame",
     "dependencies": [
@@ -1355,7 +1358,7 @@ export const moduleCatalog = [
     "importName": "MediaSequence",
     "importStatement": "import { MediaSequence } from \"@saas-maker/ui/organisms/media-sequence\";",
     "sourcePath": "packages/ui/src/organisms/media-sequence.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "organisms-media-media-sequence--chapters",
     "registryName": "media-sequence",
     "dependencies": [
@@ -1376,7 +1379,7 @@ export const moduleCatalog = [
     "importName": "Menubar",
     "importStatement": "import { Menubar } from \"@saas-maker/ui/molecules/menubar\";",
     "sourcePath": "packages/ui/src/components/menubar.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-menubar--playground",
     "registryName": "menubar",
     "dependencies": [
@@ -1397,7 +1400,7 @@ export const moduleCatalog = [
     "importName": "MetricCard",
     "importStatement": "import { MetricCard } from \"@saas-maker/ui/molecules/metric-card\";",
     "sourcePath": "packages/ui/src/molecules/metric-card.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-compositions-metric-card--metrics",
     "registryName": "metric-card",
     "dependencies": [
@@ -1418,7 +1421,7 @@ export const moduleCatalog = [
     "importName": "MobileNav",
     "importStatement": "import { MobileNav } from \"@saas-maker/ui/blocks/mobile-nav\";",
     "sourcePath": "packages/ui/src/blocks/mobile-nav.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-mobile-nav--playground",
     "registryName": "site-header",
     "dependencies": [
@@ -1437,7 +1440,7 @@ export const moduleCatalog = [
     "importName": "MorphingButton",
     "importStatement": "import { MorphingButton } from \"@saas-maker/ui/recipes/morphing-button\";",
     "sourcePath": "packages/ui/src/recipes/morphing-button.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-morphing-button--playground",
     "registryName": "morphing-button",
     "dependencies": [
@@ -1457,7 +1460,7 @@ export const moduleCatalog = [
     "importName": "MorphingDialog",
     "importStatement": "import { MorphingDialog } from \"@saas-maker/ui/recipes/morphing-dialog\";",
     "sourcePath": "packages/ui/src/recipes/morphing-dialog.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-morphing-dialog--playground",
     "registryName": "morphing-dialog",
     "dependencies": [
@@ -1479,7 +1482,7 @@ export const moduleCatalog = [
     "importName": "MorphingPopover",
     "importStatement": "import { MorphingPopover } from \"@saas-maker/ui/recipes/morphing-popover\";",
     "sourcePath": "packages/ui/src/recipes/morphing-popover.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-morphing-popover--playground",
     "registryName": "morphing-popover",
     "dependencies": [
@@ -1500,7 +1503,7 @@ export const moduleCatalog = [
     "importName": "MultiStepForm",
     "importStatement": "import { MultiStepForm } from \"@saas-maker/ui/organisms/multi-step-form\";",
     "sourcePath": "packages/ui/src/recipes/multi-step-form.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-multi-step-form--playground",
     "registryName": "multi-step-form",
     "dependencies": [
@@ -1520,7 +1523,7 @@ export const moduleCatalog = [
     "importName": "NativeInput",
     "importStatement": "import { NativeInput } from \"@saas-maker/ui/atoms/native-controls\";",
     "sourcePath": "packages/ui/src/components/native-controls.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-native-controls--playground",
     "registryName": "native-controls",
     "dependencies": [
@@ -1541,7 +1544,7 @@ export const moduleCatalog = [
     "importName": "NavigationMenu",
     "importStatement": "import { NavigationMenu } from \"@saas-maker/ui/molecules/navigation-menu\";",
     "sourcePath": "packages/ui/src/components/navigation-menu.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-navigation-menu--playground",
     "registryName": "navigation-menu",
     "dependencies": [
@@ -1563,7 +1566,7 @@ export const moduleCatalog = [
     "importName": "NotificationBell",
     "importStatement": "import { NotificationBell } from \"@saas-maker/ui/recipes/notification-bell\";",
     "sourcePath": "packages/ui/src/recipes/notification-bell.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-notification-bell--playground",
     "registryName": "notification-bell",
     "dependencies": [
@@ -1584,7 +1587,7 @@ export const moduleCatalog = [
     "importName": "NotificationInbox",
     "importStatement": "import { NotificationInbox } from \"@saas-maker/ui/organisms/notification-inbox\";",
     "sourcePath": "packages/ui/src/organisms/notification-inbox.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "organisms-workspaces-notification-inbox--inbox",
     "registryName": "notification-inbox",
     "dependencies": [
@@ -1607,7 +1610,7 @@ export const moduleCatalog = [
     "importName": "NumberTicker",
     "importStatement": "import { NumberTicker } from \"@saas-maker/ui/effects/number-ticker\";",
     "sourcePath": "packages/ui/src/effects/number-ticker.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-number-ticker--playground",
     "registryName": "number-ticker",
     "dependencies": [
@@ -1627,7 +1630,7 @@ export const moduleCatalog = [
     "importName": "OrbitingCircles",
     "importStatement": "import { OrbitingCircles } from \"@saas-maker/ui/effects/orbiting-circles\";",
     "sourcePath": "packages/ui/src/effects/orbiting-circles.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-orbiting-circles--playground",
     "registryName": "orbiting-circles",
     "dependencies": [
@@ -1646,7 +1649,7 @@ export const moduleCatalog = [
     "importName": "Pagination",
     "importStatement": "import { Pagination } from \"@saas-maker/ui/molecules/pagination\";",
     "sourcePath": "packages/ui/src/components/pagination.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-pagination--playground",
     "registryName": "pagination",
     "dependencies": [
@@ -1668,7 +1671,7 @@ export const moduleCatalog = [
     "importName": "Popover",
     "importStatement": "import { Popover } from \"@saas-maker/ui/molecules/popover\";",
     "sourcePath": "packages/ui/src/components/popover.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-popover--playground",
     "registryName": "popover",
     "dependencies": [
@@ -1688,7 +1691,7 @@ export const moduleCatalog = [
     "importName": "PricingCalculator",
     "importStatement": "import { PricingCalculator } from \"@saas-maker/ui/recipes/pricing-calculator\";",
     "sourcePath": "packages/ui/src/recipes/pricing-calculator.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "data-pricing-calculator--playground",
     "registryName": "pricing-calculator",
     "dependencies": [
@@ -1708,7 +1711,7 @@ export const moduleCatalog = [
     "importName": "Progress",
     "importStatement": "import { Progress } from \"@saas-maker/ui/atoms/progress\";",
     "sourcePath": "packages/ui/src/components/progress.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-progress--playground",
     "registryName": "progress",
     "dependencies": [
@@ -1728,7 +1731,7 @@ export const moduleCatalog = [
     "importName": "ProgressStepper",
     "importStatement": "import { ProgressStepper } from \"@saas-maker/ui/recipes/progress-stepper\";",
     "sourcePath": "packages/ui/src/recipes/progress-stepper.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-progress-stepper--playground",
     "registryName": "progress-stepper",
     "dependencies": [
@@ -1748,7 +1751,7 @@ export const moduleCatalog = [
     "importName": "ProjectOverview",
     "importStatement": "import { ProjectOverview } from \"@saas-maker/ui/organisms/project-overview\";",
     "sourcePath": "packages/ui/src/organisms/project-overview.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "organisms-workspaces-project-overview--overview",
     "registryName": "project-overview",
     "dependencies": [
@@ -1771,7 +1774,7 @@ export const moduleCatalog = [
     "importName": "StatusPill",
     "importStatement": "import { StatusPill } from \"@saas-maker/ui/blocks/proof\";",
     "sourcePath": "packages/ui/src/blocks/proof.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-proof--playground",
     "registryName": "proof",
     "dependencies": [
@@ -1790,7 +1793,7 @@ export const moduleCatalog = [
     "importName": "QuoteListSkeleton",
     "importStatement": "import { QuoteListSkeleton } from \"@saas-maker/ui/blocks/quote-list\";",
     "sourcePath": "packages/ui/src/blocks/quote-list.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-quote-list--playground",
     "registryName": "quote-list",
     "dependencies": [
@@ -1809,7 +1812,7 @@ export const moduleCatalog = [
     "importName": "RadioGroup",
     "importStatement": "import { RadioGroup } from \"@saas-maker/ui/atoms/radio-group\";",
     "sourcePath": "packages/ui/src/components/radio-group.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-radio-group--playground",
     "registryName": "radio-group",
     "dependencies": [
@@ -1830,7 +1833,7 @@ export const moduleCatalog = [
     "importName": "KeyValueList",
     "importStatement": "import { KeyValueList } from \"@saas-maker/ui/blocks/record-detail\";",
     "sourcePath": "packages/ui/src/blocks/record-detail.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-record-detail--playground",
     "registryName": "record-detail",
     "dependencies": [
@@ -1850,7 +1853,7 @@ export const moduleCatalog = [
     "importName": "ReorderList",
     "importStatement": "import { ReorderList } from \"@saas-maker/ui/recipes/reorder-list\";",
     "sourcePath": "packages/ui/src/recipes/reorder-list.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-reorder-list--playground",
     "registryName": "reorder-list",
     "dependencies": [
@@ -1870,7 +1873,7 @@ export const moduleCatalog = [
     "importName": "ResizableHandle",
     "importStatement": "import { ResizableHandle } from \"@saas-maker/ui/molecules/resizable\";",
     "sourcePath": "packages/ui/src/components/resizable.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-resizable-panels--playground",
     "registryName": "resizable",
     "dependencies": [
@@ -1891,7 +1894,7 @@ export const moduleCatalog = [
     "importName": "ResourceBoundary",
     "importStatement": "import { ResourceBoundary } from \"@saas-maker/ui/blocks/resource-boundary\";",
     "sourcePath": "packages/ui/src/blocks/resource-boundary.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-resource-boundary--playground",
     "registryName": "resource-boundary",
     "dependencies": []
@@ -1907,7 +1910,7 @@ export const moduleCatalog = [
     "importName": "ResponsiveImage",
     "importStatement": "import { ResponsiveImage } from \"@saas-maker/ui/atoms/responsive-image\";",
     "sourcePath": "packages/ui/src/components/responsive-image.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "atoms-media--image",
     "registryName": "responsive-image",
     "dependencies": [
@@ -1926,7 +1929,7 @@ export const moduleCatalog = [
     "importName": "ScrollArea",
     "importStatement": "import { ScrollArea } from \"@saas-maker/ui/molecules/scroll-area\";",
     "sourcePath": "packages/ui/src/components/scroll-area.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-scroll-area--playground",
     "registryName": "scroll-area",
     "dependencies": [
@@ -1946,7 +1949,7 @@ export const moduleCatalog = [
     "importName": "SearchField",
     "importStatement": "import { SearchField } from \"@saas-maker/ui/molecules/search-field\";",
     "sourcePath": "packages/ui/src/molecules/search-field.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-compositions-search-field--search",
     "registryName": "search-field",
     "dependencies": [
@@ -1966,7 +1969,7 @@ export const moduleCatalog = [
     "importName": "SearchTrigger",
     "importStatement": "import { SearchTrigger } from \"@saas-maker/ui/blocks/search-palette\";",
     "sourcePath": "packages/ui/src/blocks/search-palette.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-search-palette--playground",
     "registryName": "search-palette",
     "dependencies": [
@@ -1986,7 +1989,7 @@ export const moduleCatalog = [
     "importName": "SegmentedControl",
     "importStatement": "import { SegmentedControl } from \"@saas-maker/ui/recipes/segmented-control\";",
     "sourcePath": "packages/ui/src/recipes/segmented-control.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-segmented-control--playground",
     "registryName": "segmented-control",
     "dependencies": [
@@ -2006,7 +2009,7 @@ export const moduleCatalog = [
     "importName": "Select",
     "importStatement": "import { Select } from \"@saas-maker/ui/atoms/select\";",
     "sourcePath": "packages/ui/src/components/select.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-select--playground",
     "registryName": "select",
     "dependencies": [
@@ -2027,7 +2030,7 @@ export const moduleCatalog = [
     "importName": "Separator",
     "importStatement": "import { Separator } from \"@saas-maker/ui/atoms/separator\";",
     "sourcePath": "packages/ui/src/components/separator.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "foundations-separator--playground",
     "registryName": "separator",
     "dependencies": [
@@ -2047,7 +2050,7 @@ export const moduleCatalog = [
     "importName": "SettingRow",
     "importStatement": "import { SettingRow } from \"@saas-maker/ui/molecules/setting-row\";",
     "sourcePath": "packages/ui/src/molecules/setting-row.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "molecules-compositions-setting-row--preferences",
     "registryName": "setting-row",
     "dependencies": [
@@ -2067,7 +2070,7 @@ export const moduleCatalog = [
     "importName": "Sheet",
     "importStatement": "import { Sheet } from \"@saas-maker/ui/molecules/sheet\";",
     "sourcePath": "packages/ui/src/components/sheet.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-sheet--playground",
     "registryName": "sheet",
     "dependencies": [
@@ -2088,7 +2091,7 @@ export const moduleCatalog = [
     "importName": "ShimmerButton",
     "importStatement": "import { ShimmerButton } from \"@saas-maker/ui/effects/shimmer-button\";",
     "sourcePath": "packages/ui/src/effects/shimmer-button.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-shimmer-button--playground",
     "registryName": "shimmer-button",
     "dependencies": [
@@ -2107,7 +2110,7 @@ export const moduleCatalog = [
     "importName": "SiteHeader",
     "importStatement": "import { SiteHeader } from \"@saas-maker/ui/blocks/site-header\";",
     "sourcePath": "packages/ui/src/blocks/site-header.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-site-header--playground",
     "registryName": "site-header",
     "dependencies": [
@@ -2126,7 +2129,7 @@ export const moduleCatalog = [
     "importName": "Skeleton",
     "importStatement": "import { Skeleton } from \"@saas-maker/ui/atoms/skeleton\";",
     "sourcePath": "packages/ui/src/components/skeleton.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-skeleton--playground",
     "registryName": "skeleton",
     "dependencies": [
@@ -2145,7 +2148,7 @@ export const moduleCatalog = [
     "importName": "CardSkeleton",
     "importStatement": "import { CardSkeleton } from \"@saas-maker/ui/blocks/skeletons\";",
     "sourcePath": "packages/ui/src/blocks/skeletons.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "blocks-skeletons--playground",
     "registryName": "skeletons",
     "dependencies": []
@@ -2161,7 +2164,7 @@ export const moduleCatalog = [
     "importName": "Slider",
     "importStatement": "import { Slider } from \"@saas-maker/ui/atoms/slider\";",
     "sourcePath": "packages/ui/src/components/slider.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-slider--playground",
     "registryName": "slider",
     "dependencies": [
@@ -2181,7 +2184,7 @@ export const moduleCatalog = [
     "importName": "SlidingNumber",
     "importStatement": "import { SlidingNumber } from \"@saas-maker/ui/recipes/sliding-number\";",
     "sourcePath": "packages/ui/src/recipes/sliding-number.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-sliding-number--playground",
     "registryName": "sliding-number",
     "dependencies": [
@@ -2200,7 +2203,7 @@ export const moduleCatalog = [
     "importName": "Toaster",
     "importStatement": "import { Toaster } from \"@saas-maker/ui/molecules/sonner\";",
     "sourcePath": "packages/ui/src/components/sonner.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "feedback-toast--playground",
     "registryName": "sonner",
     "dependencies": [
@@ -2219,7 +2222,7 @@ export const moduleCatalog = [
     "importName": "SortableGrid",
     "importStatement": "import { SortableGrid } from \"@saas-maker/ui/recipes/sortable-grid\";",
     "sourcePath": "packages/ui/src/recipes/sortable-grid.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-sortable-grid--playground",
     "registryName": "sortable-grid",
     "dependencies": [
@@ -2239,7 +2242,7 @@ export const moduleCatalog = [
     "importName": "StorageMeter",
     "importStatement": "import { StorageMeter } from \"@saas-maker/ui/recipes/storage-meter\";",
     "sourcePath": "packages/ui/src/recipes/storage-meter.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "data-storage-meter--playground",
     "registryName": "storage-meter",
     "dependencies": [
@@ -2259,7 +2262,7 @@ export const moduleCatalog = [
     "importName": "Switch",
     "importStatement": "import { Switch } from \"@saas-maker/ui/atoms/switch\";",
     "sourcePath": "packages/ui/src/components/switch.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-switch--playground",
     "registryName": "switch",
     "dependencies": [
@@ -2279,7 +2282,7 @@ export const moduleCatalog = [
     "importName": "Table",
     "importStatement": "import { Table } from \"@saas-maker/ui/atoms/table\";",
     "sourcePath": "packages/ui/src/components/table.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "data-table--playground",
     "registryName": "table",
     "dependencies": [
@@ -2298,7 +2301,7 @@ export const moduleCatalog = [
     "importName": "Tabs",
     "importStatement": "import { Tabs } from \"@saas-maker/ui/molecules/tabs\";",
     "sourcePath": "packages/ui/src/components/tabs.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-tabs--playground",
     "registryName": "tabs",
     "dependencies": [
@@ -2319,7 +2322,7 @@ export const moduleCatalog = [
     "importName": "TagInput",
     "importStatement": "import { TagInput } from \"@saas-maker/ui/recipes/tag-input\";",
     "sourcePath": "packages/ui/src/recipes/tag-input.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "interactions-tag-input--playground",
     "registryName": "tag-input",
     "dependencies": [
@@ -2339,7 +2342,7 @@ export const moduleCatalog = [
     "importName": "TextAnimate",
     "importStatement": "import { TextAnimate } from \"@saas-maker/ui/effects/text-animate\";",
     "sourcePath": "packages/ui/src/effects/text-animate.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "effects-text-animate--playground",
     "registryName": "text-animate",
     "dependencies": [
@@ -2359,7 +2362,7 @@ export const moduleCatalog = [
     "importName": "TextEffect",
     "importStatement": "import { TextEffect } from \"@saas-maker/ui/recipes/text-effect\";",
     "sourcePath": "packages/ui/src/recipes/text-effect.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-text-effect--playground",
     "registryName": "text-effect",
     "dependencies": [
@@ -2379,7 +2382,7 @@ export const moduleCatalog = [
     "importName": "TextMorph",
     "importStatement": "import { TextMorph } from \"@saas-maker/ui/recipes/text-morph\";",
     "sourcePath": "packages/ui/src/recipes/text-morph.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-text-morph--playground",
     "registryName": "text-morph",
     "dependencies": [
@@ -2399,7 +2402,7 @@ export const moduleCatalog = [
     "importName": "Textarea",
     "importStatement": "import { Textarea } from \"@saas-maker/ui/atoms/textarea\";",
     "sourcePath": "packages/ui/src/components/textarea.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-textarea--playground",
     "registryName": "textarea",
     "dependencies": [
@@ -2418,7 +2421,7 @@ export const moduleCatalog = [
     "importName": "Toggle",
     "importStatement": "import { Toggle } from \"@saas-maker/ui/atoms/toggle\";",
     "sourcePath": "packages/ui/src/components/toggle.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-toggle--playground",
     "registryName": "toggle",
     "dependencies": [
@@ -2439,7 +2442,7 @@ export const moduleCatalog = [
     "importName": "ToggleGroup",
     "importStatement": "import { ToggleGroup } from \"@saas-maker/ui/molecules/toggle-group\";",
     "sourcePath": "packages/ui/src/components/toggle-group.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "inputs-toggle-group--playground",
     "registryName": "toggle-group",
     "dependencies": [
@@ -2460,7 +2463,7 @@ export const moduleCatalog = [
     "importName": "ToolbarDynamic",
     "importStatement": "import ToolbarDynamic from \"@saas-maker/ui/recipes/toolbar-dynamic\";",
     "sourcePath": "packages/ui/src/recipes/toolbar-dynamic.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-dynamic-toolbar--playground",
     "registryName": "toolbar-dynamic",
     "dependencies": [
@@ -2483,7 +2486,7 @@ export const moduleCatalog = [
     "importName": "Tooltip",
     "importStatement": "import { Tooltip } from \"@saas-maker/ui/atoms/tooltip\";",
     "sourcePath": "packages/ui/src/components/tooltip.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "overlays-tooltip--playground",
     "registryName": "tooltip",
     "dependencies": [
@@ -2503,7 +2506,7 @@ export const moduleCatalog = [
     "importName": "TransitionPanel",
     "importStatement": "import { TransitionPanel } from \"@saas-maker/ui/recipes/transition-panel\";",
     "sourcePath": "packages/ui/src/recipes/transition-panel.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "motion-transition-panel--playground",
     "registryName": "transition-panel",
     "dependencies": [
@@ -2524,7 +2527,7 @@ export const moduleCatalog = [
     "importName": "TreeView",
     "importStatement": "import { TreeView } from \"@saas-maker/ui/recipes/tree-view\";",
     "sourcePath": "packages/ui/src/recipes/tree-view.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "navigation-tree-view--playground",
     "registryName": "tree-view",
     "dependencies": [
@@ -2544,7 +2547,7 @@ export const moduleCatalog = [
     "importName": "Video",
     "importStatement": "import { Video } from \"@saas-maker/ui/atoms/video\";",
     "sourcePath": "packages/ui/src/components/video.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "atoms-media--playback",
     "registryName": "video",
     "dependencies": [
@@ -2564,7 +2567,7 @@ export const moduleCatalog = [
     "importName": "WorkspaceSettings",
     "importStatement": "import { WorkspaceSettings } from \"@saas-maker/ui/organisms/workspace-settings\";",
     "sourcePath": "packages/ui/src/organisms/workspace-settings.tsx",
-    "sourceRef": "v0.1.32",
+    "sourceRef": "v0.1.33",
     "storyId": "organisms-workspaces-workspace-settings--settings",
     "registryName": "workspace-settings",
     "dependencies": [

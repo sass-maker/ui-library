@@ -212,25 +212,6 @@
       ]
     },
     {
-      "name": "app",
-      "type": "registry:block",
-      "title": "app",
-      "description": "AppShell, PageHeader, StatCard, Sparkline, AreaChart and EmptyState.",
-      "dependencies": [
-        "clsx@2.1.1",
-        "tailwind-merge@3.7.0"
-      ],
-      "registryDependencies": [
-        "utils"
-      ],
-      "files": [
-        {
-          "path": "packages/ui/src/blocks/app.tsx",
-          "type": "registry:component"
-        }
-      ]
-    },
-    {
       "name": "filter-bar",
       "type": "registry:block",
       "title": "filter-bar",
@@ -5142,6 +5123,59 @@
           "path": "packages/ui/src/recipes/transition-panel.tsx",
           "type": "registry:ui",
           "target": "src/components/fleet/recipes/transition-panel.tsx"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "type": "registry:file",
+          "target": "THIRD_PARTY_NOTICES.fleet-ui.md"
+        },
+        {
+          "path": "LICENSE",
+          "type": "registry:file",
+          "target": "LICENSE.fleet-ui"
+        }
+      ]
+    },
+    {
+      "name": "app",
+      "type": "registry:block",
+      "title": "app",
+      "description": "AppShell, PageHeader, StatCard, Sparkline, AreaChart and EmptyState.",
+      "dependencies": [
+        "class-variance-authority@0.7.1",
+        "clsx@2.1.1",
+        "lucide-react@1.48.0",
+        "radix-ui@1.6.7",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/blocks/app.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/blocks/app.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/button.tsx"
+        },
+        {
+          "path": "packages/ui/src/components/sheet.tsx",
+          "type": "registry:ui",
+          "target": "src/components/fleet/components/sheet.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/surface-motion.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/surface-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:ui",
+          "target": "src/components/fleet/lib/utils.ts"
         },
         {
           "path": "THIRD_PARTY_NOTICES.md",

@@ -203,11 +203,17 @@ Imported from `Significant-Hobbies/ios-landings` at
 
 ## Web product (Astro)
 
+The v0.1.33 candidate adds native select, disclosure, dialog and progress controls,
+plus an imperative DOM adapter using the same shared styles. AppShell can opt into
+a controlled desktop rail and modal mobile navigation. See the
+[native control contract](packages/ui/NATIVE_CONTROLS.md) for supported tags,
+native refs and CSS source requirements.
+
 Install from the GitHub repo (public), not npm. Write the specs into `package.json`
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.32"
+G="github:sass-maker/ui-library#v0.1.33"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -217,9 +223,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.32&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.32&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.32&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.33&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.33&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.33&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -820,7 +826,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.32&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.33&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

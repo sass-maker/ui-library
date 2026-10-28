@@ -12,6 +12,7 @@ export function AppShell({
 }: {
   brand: { name: string; mark?: React.ReactNode };
   nav: { title?: string; items: NavItem[] }[];
+  /** Expanded desktop and mobile content; expand the rail to reach these controls. */
   secondary?: React.ReactNode;
   user?: { name: string; detail?: string };
   /** Client routers can handle ordinary clicks while preserving native modified clicks. */
