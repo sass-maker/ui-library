@@ -100,9 +100,12 @@ export function suiteNavigation(current) {
 }
 
 const navigationStyle = `.daddy-suite{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px max(20px,calc((100% - 1160px)/2));border-bottom:1px solid #263a2d;background:#07100a;color:#c4e6d2;font:500 13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.daddy-suite a{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;color:inherit;text-decoration:none;border-radius:5px}.daddy-suite-home{font-weight:750;letter-spacing:-.02em}.daddy-suite>div{display:flex;gap:4px;flex-wrap:wrap}.daddy-suite a:hover,.daddy-suite a[aria-current]{background:#14291c;color:#8ce0b8}.daddy-suite a:focus-visible{outline:2px solid #8ce0b8;outline-offset:2px}@media(max-width:480px){.daddy-suite{padding:8px 10px;gap:0}.daddy-suite>div{gap:0}.daddy-suite a{padding:0 8px;font-size:12px}}`;
+const productHeaderStyle = `@media(width<64rem){[data-daddy-product-header] .md\\:flex{display:none}[data-daddy-product-header] .md\\:hidden{display:block}[data-daddy-product-header] .md\\:ml-0{margin-left:auto}}`;
 
 function enhanceHtml(html, current) {
-  return html.replace(/<\/head>/i, `<style>${navigationStyle}</style></head>`).replace(/(<body\b[^>]*>)/i, `$1${suiteNavigation(current)}`);
+  return html.replace(/<\/head>/i, `<style>${navigationStyle}${productHeaderStyle}</style></head>`)
+    .replace(/<header\b/i, "<header data-daddy-product-header")
+    .replace(/(<body\b[^>]*>)/i, `$1${suiteNavigation(current)}`);
 }
 
 async function put(output, path, body) {
