@@ -43,22 +43,32 @@ Pages project. Calorie is not in this deploy because it remains on its Worker.
 
 ## Worker sites
 
-`scripts/worker-sites.mjs` registers static sites that keep their own Worker
-(routes, security headers, 404 and HEAD handling) instead of the Astro engine.
-DaddyRad's umbrella landing lives in `sites/daddyrad/`, moved unchanged from
-`Significant-Hobbies/daddyrad` at `bfdd8a8`. `pnpm check` runs its Worker
-tests and a Wrangler dry-run; `pnpm check:worker-sites` runs only those.
+`scripts/worker-sites.mjs` registers sites that keep their own Worker, routes,
+security headers and 404 handling. DaddyRad preserves its root landing and
+composes four dedicated factory product sections under `/storage/`,
+`/performance/`, `/browser/` and `/context/`. The mount registry separates
+canonical marketing URLs from native release origins. Downloads and update
+feeds remain on each app's own Worker.
 
 ```bash
-pnpm run deploy:daddyrad   # checks, then wrangler deploy of the existing daddyrad Worker
+pnpm run build:daddyrad    # four product builds, then compose dist/daddyrad
+pnpm run preview:daddyrad  # local Worker-module preview on 127.0.0.1:4322
+pnpm run check:daddyrad    # builds, public-route checks, Worker tests and Wrangler dry-run
+pnpm run deploy:daddyrad   # checks, then publish only the existing daddyrad Worker
 ```
 
-The registry's `renderer` field is the seam for producing a site's assets from
-a UI-library content file later; the Worker and its contracts stay the same.
+The output contains an aggregate sitemap and Markdown catalog. The Worker
+negotiates Markdown through that registry and permits each page's inline scripts
+through generated CSP hashes. The deploy command passes `dist/daddyrad` to
+Wrangler; the checked-in root and production Wrangler settings are unchanged.
+`pnpm check` reuses that run's product builds before checking the composed site.
+Local previews execute the Worker module with a filesystem ASSETS adapter;
+Wrangler's dry-run separately validates the production bundle.
 
 ## Rules
 
-- One page design, one product per domain. Not a combined storefront.
+- One focused product per page. DaddyRad has one root and four product sections;
+  other factory products retain their separate domains.
 - Privacy and support pages are first-class. App Store listings need both.
 - No invented App Store badge or Smart App Banner.
 - TestFlight links must be `https://testflight.apple.com/…`.

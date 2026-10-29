@@ -19,7 +19,11 @@
   prebuilt static sites that keep their own Worker, routes, headers and
   404/HEAD handling. `sites/daddyrad/` is the DaddyRad umbrella (`daddyrad.com`,
   `www` 301 to apex), moved verbatim from `Significant-Hobbies/daddyrad@bfdd8a8`.
-  Do not restyle it or port it to Astro as part of factory work. It owns no
+  The owner-approved 29 October 2026 consolidation preserves its root design
+  and composes the four Daddy product pages at `/storage/`, `/performance/`,
+  `/browser/` and `/context/`. `sites/daddyrad/products.mjs` owns the mount and
+  native-release origins; `scripts/build-daddyrad.mjs` assembles `dist/daddyrad`.
+  Other factory products keep their separate sites. DaddyRad owns no
   download or update feed; each Daddy app's own Worker keeps `/download`,
   `/updates/*` and the `significanthobbies.com` 308s.
   Deploy only with `pnpm run deploy:daddyrad`; it is never part of `pnpm run deploy`.
@@ -27,8 +31,9 @@
   `scripts/sync-calorie-marketing.sh` is retired and must not overwrite it.
 - Calorie is a native-app landing. Its internal TestFlight build has no public
   invitation URL, so its CTA stays on the honest beta-status page.
-- Build output is `dist/<id>`. Never merge the five sites into one
-  homepage.
+- Product build output is `dist/<id>`. DaddyRad composes its four dedicated
+  product sections into one Worker asset tree; it does not combine their
+  product content into a single homepage.
 - Do not invent App Store badges, Smart App Banners, or TestFlight URLs.
   Only a live `apps.apple.com` or `testflight.apple.com` link is allowed.
 - Product apps stay independently buildable in their own repos. Do not

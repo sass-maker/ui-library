@@ -1,6 +1,30 @@
 # iOS landings — PROJECT STATUS
 
-Last updated: 2026-10-09
+Last updated: 2026-10-29
+
+## DaddyRad website consolidation
+
+The owner approved one DaddyRad website with dedicated `/storage/`,
+`/performance/`, `/browser/` and `/context/` sections. The existing root design
+and each app's current shared-template direction are preserved. Product builds
+remain independent inputs to `dist/daddyrad`; the existing DaddyRad Worker owns
+the combined static site, aggregate sitemap and public Markdown registry.
+Native downloads, update feeds, app APIs and binaries remain on their own origins.
+
+StorageDaddy's current Workbench content, assets and public website measurement
+come from `storagedaddy@bb786caac109be8a4992c01be3af989570dce07f`, rather than the
+older retained Editorial preview. Its local-data and optional native-heartbeat
+disclosures follow that source. Product analytics and newsletter identities stay
+separate. Central-origin capture-config reads and subscription/feedback preflight
+checks passed without a submission or grant change; actual delivery is untested.
+
+Local `pnpm check` passes 52 source tests, 19 Worker/composition tests, Astro
+validation and all eleven product build/surface checks. The combined site passes
+32 HTML/Markdown page checks, 1,653 local references, all four native download
+links and a Wrangler dry-run. Fourteen Storage measurement checks also pass
+against the transformed output. This verifies the static site and Worker module;
+rendered review, independent review and production publication remain separate
+acceptance evidence. No native interface or binary was changed or newly qualified.
 
 ## Product-owned artwork across current landings
 
@@ -120,7 +144,7 @@ privacy URL, support URL, tokens, and screenshots.
 In scope: the shared page engine, twelve product configs (including two retired
 compatibility configs), artwork/screenshot trees, Apple-gated CTAs, and agent surfaces.
 
-Out of scope: a combined multi-app homepage, App Store badges without a
+Out of scope: combining product content into one homepage, App Store badges without a
 live listing, and Pace / Significant Hobbies marketing.
 
 ## Editorial factory and Daddy landing launch

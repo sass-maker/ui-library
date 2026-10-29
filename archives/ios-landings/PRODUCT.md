@@ -27,7 +27,9 @@ support, and the gated install path.
 
 ## Positioning
 
-One shared page engine, separate product sites. Domain, tokens, copy, and
+One shared page engine, separate product pages. DaddyRad groups its four Mac
+utilities under one website, with dedicated `/storage/`, `/performance/`,
+`/browser/` and `/context/` sections. Other products keep separate sites. Domain, tokens, copy, and
 screenshots come from `products/<id>/`. The Significant Hobbies Hub is a
 separate read-only application surface, not another copy of this landing.
 
@@ -64,7 +66,7 @@ availability.
 
 ## Product Principles
 
-- One product per domain
+- One focused product per page; DaddyRad provides shared suite navigation
 - Show the real phone before explaining it
 - Privacy and support are first-class, not footer afterthoughts
 - Product config, original screenshots and product-owned artwork are the inputs

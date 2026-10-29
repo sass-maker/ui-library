@@ -12,7 +12,7 @@ import { loadTemplateContent } from "../lib/template-content";
 const content = await loadTemplateContent();
 // Each page imports its own Tailwind entry; load only the selected family.
 // Vite must eliminate the unused import before collecting CSS for this build.
-const workbench = import.meta.env.PRODUCT === "browserdaddy" || import.meta.env.PRODUCT === "performancedaddy";
+const workbench = import.meta.env.PRODUCT === "storagedaddy" || import.meta.env.PRODUCT === "browserdaddy" || import.meta.env.PRODUCT === "performancedaddy";
 const GalleryPage = !workbench
   ? (await import("@saas-maker/templates/gallery-page")).GalleryPage : undefined;
 const WorkbenchPage = workbench

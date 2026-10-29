@@ -24,5 +24,5 @@ const sha = spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" });
 if (sha.status !== 0) process.exit(sha.status ?? 1);
 
 run("node", ["scripts/check-worker-sites.mjs", id]);
-run("pnpm", ["exec", "wrangler", "deploy", "--config", config, "--tag", sha.stdout.trim()]);
+run("pnpm", ["exec", "wrangler", "deploy", "--config", config, ...(site.assets ? ["--assets", site.assets] : []), "--tag", sha.stdout.trim()]);
 console.log(`\nDeployed ${id} → Worker ${site.worker}`);
