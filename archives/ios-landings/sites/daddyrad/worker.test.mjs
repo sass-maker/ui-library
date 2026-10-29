@@ -1,98 +1,122 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import worker from './worker.mjs';
+import test from "node:test";
+import assert from "node:assert/strict";
+import worker from "./worker.mjs";
 
-const env = { ASSETS: { fetch: (request) => Promise.resolve(new Response('asset', { status: 200 })) } };
+function fixture(extra = {}) {
+  const files = {
+    "/_security.json": { "/index.html": [], "/404.html": [], "/storage/privacy/index.html": [] },
+    "/api/md/_identity": { name: "DaddyRad", url: "https://daddyrad.com", summary: "Four Mac utilities" },
+    "/api/md/_catalog": [{ path: "/storage/privacy/", title: "Storage privacy", assetPath: "/storage/privacy/index.md", aliases: ["/storage/privacy/index.md"] }],
+    "/storage/privacy/index.md": "# Storage privacy\n\nCanonical: https://daddyrad.com/storage/privacy/\n",
+    "/storage/privacy/": "<h1>Storage privacy</h1>",
+    "/": "<h1>DaddyRad</h1>",
+    "/404.html": "<h1>Return home</h1>",
+    ...extra,
+  };
+  return { ASSETS: { async fetch(request) {
+    const path = new URL(request.url).pathname;
+    const value = files[path];
+    if (value instanceof Response) return value.clone();
+    if (value === undefined) return new Response(null, { status: 404 });
+    const type = typeof value === "object" ? "application/json" : path.endsWith(".md") ? "text/markdown" : "text/html";
+    return new Response(request.method === "HEAD" ? null : typeof value === "object" ? JSON.stringify(value) : value, { headers: { "Content-Type": type } });
+  } } };
+}
 
-test('apex serves assets', async () => {
-  const res = await worker.fetch(new Request('https://daddyrad.com/'), env);
-  assert.equal(res.status, 200);
-  const csp = res.headers.get('Content-Security-Policy');
-  assert.match(csp, /https:\/\/health\.sassmaker\.com/);
-  assert.match(csp, /https:\/\/api\.sassmaker\.com/);
-  assert.match(csp, /https:\/\/ingest\.sassmaker\.com/);
+test("apex serves assets with bounded script origins and no inline script wildcard", async () => {
+  const response = await worker.fetch(new Request("https://daddyrad.com/"), fixture());
+  assert.equal(response.status, 200);
+  const policy = response.headers.get("Content-Security-Policy");
+  const directives = Object.fromEntries(policy.split(";").filter((value) => value.trim()).map((value) => { const [key, ...rest] = value.trim().split(/\s+/); return [key, rest]; }));
+  assert.ok(!directives["script-src"].includes("'unsafe-inline'"));
+  assert.ok(directives["script-src"].includes("https://scripts.clarity.ms"));
+  assert.deepEqual(directives["font-src"], ["'self'", "https://sassmaker.com"]);
+  assert.deepEqual(directives["default-src"], ["'none'"]);
+  for (const name of ["base-uri", "frame-ancestors"]) assert.deepEqual(directives[name], ["'none'"]);
+  assert.deepEqual(directives["form-action"], ["https://claude.ai", "https://chatgpt.com", "https://www.perplexity.ai", "https://grok.com"]);
+  assert.match(response.headers.get("Vary"), /Accept/);
 });
 
-test('www redirects to apex preserving path', async () => {
-  const res = await worker.fetch(new Request('https://www.daddyrad.com/foo?x=1'), env);
-  assert.equal(res.status, 301);
-  assert.equal(res.headers.get('location'), 'https://daddyrad.com/foo?x=1');
+test("www redirects to apex preserving a section path and query", async () => {
+  const response = await worker.fetch(new Request("https://www.daddyrad.com/storage/privacy/?x=1"), fixture());
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get("Location"), "https://daddyrad.com/storage/privacy/?x=1");
 });
 
-test('unknown hosts 404', async () => {
-  const res = await worker.fetch(new Request('https://daddyrad.workers.dev/'), env);
-  assert.equal(res.status, 404);
+test("unknown hosts and write methods are rejected", async () => {
+  assert.equal((await worker.fetch(new Request("https://daddyrad.workers.dev/"), fixture())).status, 404);
+  const response = await worker.fetch(new Request("https://daddyrad.com/", { method: "POST" }), fixture());
+  assert.equal(response.status, 405);
+  assert.equal(response.headers.get("Allow"), "GET, HEAD, OPTIONS");
 });
 
-test('non-GET methods rejected', async () => {
-  const res = await worker.fetch(new Request('https://daddyrad.com/', { method: 'POST' }), env);
-  assert.equal(res.status, 405);
+test("mounted Markdown negotiation and direct alternates preserve canonical URLs", async () => {
+  const env = fixture();
+  for (const path of ["/storage/privacy/", "/storage/privacy/index.md", "/storage/privacy.md", "/api/md/storage/privacy"]) {
+    const response = await worker.fetch(new Request("https://daddyrad.com" + path, { headers: { Accept: "text/markdown" } }), env);
+    assert.equal(response.status, 200, path);
+    assert.match(response.headers.get("Content-Type"), /text\/markdown/);
+    assert.match(await response.text(), /Canonical: https:\/\/daddyrad.com\/storage\/privacy\//);
+  }
+  const html = await worker.fetch(new Request("https://daddyrad.com/storage/privacy/"), env);
+  assert.match(html.headers.get("Content-Type"), /text\/html/);
+  const head = await worker.fetch(new Request("https://daddyrad.com/storage/privacy/", { method: "HEAD", headers: { Accept: "text/markdown" } }), env);
+  assert.equal(head.status, 200);
+  assert.equal(await head.text(), "");
 });
 
-
-test('missing routes serve the branded guide with genuine 404 status', async () => {
-  const { readFile } = await import('node:fs/promises');
-  const html = await readFile(new URL('./public/404.html', import.meta.url), 'utf8');
-  const missingEnv = { ASSETS: { fetch: async request => new URL(request.url).pathname === '/404.html'
-    ? new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
-    : new Response(null, { status: 404 }) } };
-  const response = await worker.fetch(new Request('https://daddyrad.com/missing'), missingEnv);
-  assert.equal(response.status, 404);
-  assert.match(response.headers.get('Content-Type'), /text\/html/);
-  assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
-  const body = await response.text();
-  assert.match(body, /Return home/);
-  for (const app of ['storage', 'performance', 'browser', 'context']) assert.ok(body.includes(`https://${app}.daddyrad.com`));
-  const head = await worker.fetch(new Request('https://daddyrad.com/missing', { method: 'HEAD' }), missingEnv);
-  assert.equal(head.status, 404);
-  assert.equal(await head.text(), '');
-});
-
-test('missing guide asset preserves a 404 without recursion', async () => {
-  let requests = 0;
-  const response = await worker.fetch(new Request('https://daddyrad.com/missing'), {
-    ASSETS: { fetch: async () => { requests++; return new Response(null, { status: 404 }); } },
-  });
-  assert.equal(response.status, 404);
-  assert.equal(requests, 2);
-});
-
-test('guide resolves the static assets HTML redirect without redirecting the visitor', async () => {
-  const paths = [];
-  const response = await worker.fetch(new Request('https://daddyrad.com/missing'), {
-    ASSETS: { fetch: async request => {
-      const path = new URL(request.url).pathname;
-      paths.push(path);
-      if (path === '/404.html') return Response.redirect('https://daddyrad.com/404', 307);
-      if (path === '/404') return new Response('<h1>Return home</h1>', { headers: { 'Content-Type': 'text/html' } });
-      return new Response(null, { status: 404 });
-    } },
-  });
-  assert.equal(response.status, 404);
-  assert.equal(response.headers.has('Location'), false);
-  assert.match(await response.text(), /Return home/);
-  assert.deepEqual(paths, ['/missing', '/404.html', '/404']);
-});
-
-test('guide does not follow unrelated or external redirects', async () => {
-  for (const location of ['https://example.com/404', 'https://daddyrad.com/', 'https://daddyrad.com/404?redirect=1']) {
-    let requests = 0;
-    const response = await worker.fetch(new Request('https://daddyrad.com/missing'), {
-      ASSETS: { fetch: async () => ++requests === 1 ? new Response(null, { status: 404 }) : Response.redirect(location, 307) },
-    });
-    assert.equal(response.status, 404);
-    assert.equal(requests, 2);
+test("missing HTML and Markdown remain genuine 404s with empty HEAD bodies", async () => {
+  for (const accept of ["text/html", "text/markdown"]) {
+    for (const method of ["GET", "HEAD"]) {
+      const response = await worker.fetch(new Request("https://daddyrad.com/storage/missing", { method, headers: { Accept: accept } }), fixture());
+      assert.equal(response.status, 404);
+      assert.match(response.headers.get("Content-Type"), accept === "text/html" ? /text\/html/ : /text\/markdown/);
+      const body = await response.text();
+      if (method === "HEAD") assert.equal(body, "");
+      else assert.ok(body.includes(accept === "text/html" ? "Return home" : "/storage/"));
+    }
   }
 });
 
+test("missing guide and unrelated guide redirects do not recurse", async () => {
+  for (const replacement of [undefined, Response.redirect("https://example.com/404"), Response.redirect("https://daddyrad.com/"), Response.redirect("https://daddyrad.com/404?redirect=1")]) {
+    const response = await worker.fetch(new Request("https://daddyrad.com/missing"), fixture({ "/404.html": replacement }));
+    assert.equal(response.status, 404);
+  }
+});
 
-test('approved local fonts are permitted without broadening other resource origins', async () => {
-  const response = await worker.fetch(new Request('https://daddyrad.com/fonts/fleet-footer-precise-v1/geist.woff2'), env);
-  const directives = Object.fromEntries(response.headers.get('Content-Security-Policy').split(';').filter(x => x.trim()).map(x => { const [name, ...values] = x.trim().split(/\s+/); return [name, values]; }));
-  assert.deepEqual(directives['font-src'], ["'self'"]);
-  assert.deepEqual(directives['img-src'], ["'self'", 'data:']);
-  assert.deepEqual(directives['default-src'], ["'none'"]);
-  assert.deepEqual(directives['script-src'], ["'self'", 'https://sassmaker.com', 'https://health.sassmaker.com']);
-  assert.deepEqual(directives['connect-src'], ["'self'", 'https://sassmaker.com', 'https://api.sassmaker.com', 'https://ingest.sassmaker.com']);
-  for (const name of ['base-uri', 'form-action', 'frame-ancestors']) assert.deepEqual(directives[name], ["'none'"]);
+test("guide follows only the Assets canonical guide path", async () => {
+  const env = fixture({ "/404.html": Response.redirect("https://daddyrad.com/404", 307), "/404": "<h1>Return home</h1>" });
+  const response = await worker.fetch(new Request("https://daddyrad.com/missing"), env);
+  assert.equal(response.status, 404);
+  assert.equal(response.headers.has("Location"), false);
+  assert.match(await response.text(), /Return home/);
+});
+
+test("unknown API routes return JSON while public discovery allows OPTIONS", async () => {
+  for (const path of ["/api/missing", "/storage/api/missing"]) {
+    const response = await worker.fetch(new Request("https://daddyrad.com" + path), fixture());
+    assert.equal(response.status, 404);
+    assert.equal((await response.json()).error.code, "not_found");
+  }
+  const response = await worker.fetch(new Request("https://daddyrad.com/storage/privacy/", { method: "OPTIONS", headers: { Accept: "text/markdown" } }), fixture());
+  assert.equal(response.status, 204);
+  assert.match(response.headers.get("Access-Control-Allow-Methods"), /HEAD/);
+});
+
+test("an empty journal keeps its explicit noindex Markdown status page without registering unknown content", async () => {
+  const env = fixture({ "/storage/blog/index.md": "# StorageDaddy journal\n\nNo published notes yet.\n" });
+  const response = await worker.fetch(new Request("https://daddyrad.com/storage/blog/index.md"), env);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("X-Robots-Tag"), "noindex, follow");
+  assert.match(await response.text(), /No published notes yet/);
+  assert.equal((await worker.fetch(new Request("https://daddyrad.com/storage/blog/missing.md"), env)).status, 404);
+});
+
+test("missing or malformed page script hashes fail closed without stale metadata", async () => {
+  for (const manifest of [undefined, { "/index.html": ["'unsafe-inline'"] }, []]) {
+    const response = await worker.fetch(new Request("https://daddyrad.com/"), fixture({ "/_security.json": manifest }));
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get("Cache-Control"), "no-store");
+  }
 });

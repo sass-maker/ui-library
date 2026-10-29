@@ -69,6 +69,10 @@ const newsletterCapture = site.newsletterCapture === true;
 const hasBlog = (await getPublishedPosts()).length > 0;
 ---
 <meta name="generator" content={Astro.generator} />
+{productId === "storagedaddy" && <>
+  <script is:inline defer src="/storage-clarity.js"></script>
+  <script is:inline defer src="/storage-analytics.js" data-key="ahk_pub_ab3311cd5d9186c1910936f52a28e4c523575518aa3991a9ffded4952e55cb8f" data-project="app-3262e567-f7cc-48bc-a528-4e3845185b41"></script>
+</>}
 <meta name="description" content={description} />
 {!robots.includes("noindex") && <meta name="ai-summary" content={description} />}
 <meta name="theme-color" content={site.themeColor} />

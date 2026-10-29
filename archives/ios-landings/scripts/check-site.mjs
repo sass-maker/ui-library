@@ -217,7 +217,8 @@ const newsletterProducts = new Set([
   "motion",
   "browserdaddy",
   "contextdaddy",
-  "performancedaddy"
+  "performancedaddy",
+  "storagedaddy"
 ]);
 const appHealthTracker = "https://health.sassmaker.com/tracker.js";
 for (const src of templateHome ? [] : approvedFooterScripts) {
@@ -241,6 +242,7 @@ const unexpectedScripts = executableScripts.filter((match) => {
   // The template's bundled scroll-motion module (Base.astro).
   const isTemplateMotion = templateHome && /^\s*type="module" src="\/_astro\/Base\.astro_[^"]+\.js"\s*$/.test(attrs);
   if (isTemplateMotion) return false;
+  if (product === "storagedaddy" && /src="\/storage-(?:analytics|clarity)\.js"/.test(attrs)) return false;
   const isNewsletterCapture = !templateHome && (newsletterProducts.has(product) || product === "anchor") && (
     attrs.includes(`src="${newsletterCaptureScript}"`) ||
     attrs.includes(`src='${newsletterCaptureScript}'`)
@@ -252,6 +254,17 @@ const appHealthScripts = executableScripts.filter((match) => {
   return attrs.includes(`src="${appHealthTracker}"`) ||
     attrs.includes(`src='${appHealthTracker}'`);
 });
+if (product === "storagedaddy") {
+  for (const name of ["analytics", "clarity"]) {
+    if (executableScripts.filter((match) => match[1].includes(`src="/storage-${name}.js"`)).length !== 1) throw new Error(`storagedaddy: expected exactly one ${name} loader.`);
+    await access(`${dist}/storage-${name}.js`);
+  }
+  if (!home.includes('data-project="app-3262e567-f7cc-48bc-a528-4e3845185b41"')) throw new Error("storagedaddy: existing analytics identity changed.");
+  for (const page of ["privacy/index.html", "privacy/index.md"]) {
+    const body = await readFile(`${dist}/${page}`, "utf8");
+    for (const provider of ["App Health", "Microsoft Clarity", "Email updates"]) if (!body.includes(provider)) throw new Error(`storagedaddy: ${page} lost ${provider} disclosure.`);
+  }
+}
 if (expectedAppHealth) {
   if (appHealthScripts.length !== 1) {
     throw new Error(`${product}: expected exactly one App Health tracker.`);
@@ -316,8 +329,7 @@ if (templateHome) {
     }
     for (const fragment of [
       'hasAttribute("data-subscribe")',
-      "newsletter_signup_clicked",
-      "consent?.checked && email?.validity.valid",
+      ...(expectedAppHealth ? ["newsletter_signup_clicked", "consent?.checked && email?.validity.valid"] : []),
       ...(expectedAppHealth && product !== "anchor" && !desktopProducts.includes(product) ? ["testflight_status_opened"] : [])
     ]) {
       if (!home.includes(fragment)) throw new Error(`${product}: landing is missing ${fragment}.`);

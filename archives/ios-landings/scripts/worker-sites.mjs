@@ -5,17 +5,19 @@
  * `pnpm run deploy` (Pages only) and deploy one at a time through
  * scripts/deploy-worker-site.mjs.
  *
- * `renderer` names how the site's assets are produced. "static" serves the
- * checked-in `public/` directory unchanged. A future "ui-library" renderer can
- * write the same directory from a content file without changing the Worker.
+ * `renderer` names how the site's assets are produced. A composed factory
+ * site keeps its checked-in root and builds product sections into `assets`.
  */
 export const WORKER_SITES = {
   daddyrad: {
-    renderer: "static",
+    renderer: "factory-composition",
     dir: "sites/daddyrad",
+    assets: "dist/daddyrad",
+    build: "scripts/build-daddyrad.mjs",
+    check: "scripts/check-daddyrad.mjs",
     worker: "daddyrad",
     routes: ["daddyrad.com", "www.daddyrad.com"],
-    tests: ["worker.test.mjs", "app-health-events.test.mjs"],
+    tests: ["compose.test.mjs", "worker.test.mjs", "app-health-events.test.mjs"],
     source: {
       repository: "Significant-Hobbies/daddyrad",
       path: "site",
