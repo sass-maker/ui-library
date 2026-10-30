@@ -21,7 +21,7 @@ export async function kithImageVariant(options, getImage) {
 }
 
 export function finishKithImages(html) {
-  return html.replace(/<img\b[^>]*>/g, tag => {
+  const rendered = html.replace(/<img\b[^>]*>/g, tag => {
     if (!/\bdecoding=/.test(tag)) tag = tag.replace("<img", '<img decoding="async"');
     // These landscape images cover tall sections. Size for the covered image,
     // rather than the narrow viewport, to keep the existing mobile crop sharp.
@@ -29,4 +29,15 @@ export function finishKithImages(html) {
     if (tag.includes('/images/story/kith-closing-v3.webp')) tag = tag.replace(/sizes="[^"]*"/, 'sizes="(max-width: 767px) 930px, 100vw"');
     return tag;
   });
+  const phone = (rendered.match(/<img\b[^>]*>/g) ?? []).find(tag =>
+    tag.includes('src="/images/screens/constellation.webp"')
+      && /\bloading="eager"/i.test(tag) && /\bfetchpriority="high"/i.test(tag));
+  const sourceSet = phone?.match(/\bsrcset="([^"]+)"/i)?.[1];
+  const sizes = phone?.match(/\bsizes="([^"]+)"/i)?.[1];
+  if (!sourceSet || !sizes) return rendered;
+  // The phone is the mobile LCP. Let the preload scanner start its exact
+  // responsive resource before the large inline stylesheet and body arrive.
+  // The viewport must be known first, or mobile preloads the desktop variant.
+  const preload = `<link rel="preload" as="image" href="/images/screens/constellation.webp" imagesrcset="${sourceSet}" imagesizes="${sizes}" fetchpriority="high">`;
+  return rendered.replace(/<meta\b[^>]*\bname=["']viewport["'][^>]*>/i, tag => `${tag}${preload}`);
 }
