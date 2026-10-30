@@ -4,6 +4,7 @@ import type { ImageMetadata } from "astro";
 import { optimizeImageTags } from "./lib/image-delivery.mjs";
 import { productId } from "./site.config";
 import { prepareKithImages, kithImageVariant, finishKithImages } from "./lib/kith-image-delivery.mjs";
+import { deferSetlineClosingBackdrop } from "./lib/setline-backdrop-delivery.mjs";
 
 // Import local public assets through Astro so its existing image service owns
 // compression, caching and emitted variants, including UI-library home pages.
@@ -21,5 +22,7 @@ export const onRequest = defineMiddleware(async (_context, next) => {
   }, productId === "kith" ? (options: Parameters<typeof getImage>[0]) => kithImageVariant(options, getImage) : getImage);
   const headers = new Headers(response.headers);
   headers.delete("content-length");
-  return new Response(productId === "kith" ? finishKithImages(html) : html, { status: response.status, statusText: response.statusText, headers });
+  const completedHTML = productId === "kith" ? finishKithImages(html)
+    : productId === "setline" ? deferSetlineClosingBackdrop(html) : html;
+  return new Response(completedHTML, { status: response.status, statusText: response.statusText, headers });
 });
