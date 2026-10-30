@@ -3,7 +3,31 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { runInNewContext } from "node:vm";
 import { optimizeImageTags } from "../src/lib/image-delivery.mjs";
-import { prepareKithImages, kithImageVariant } from "../src/lib/kith-image-delivery.mjs";
+import { prepareKithImages, kithImageVariant, finishKithImages } from "../src/lib/kith-image-delivery.mjs";
+
+test("Kith preloads the primary phone's responsive resource before styles without changing its rendering", () => {
+  const candidates = "/_astro/phone-248.webp 248w, /_astro/phone-496.webp 496w, /_astro/phone-603.webp 603w";
+  const sizes = "(max-width: 767px) 248px, 360px";
+  const body = `<body><div class="glow" style="background-image:url(/images/screens/constellation.webp)"></div><img src="/images/screens/constellation.webp" srcset="${candidates}" sizes="${sizes}" loading="eager" fetchpriority="high" decoding="async" width="603" height="1311"><img src="/images/screens/constellation.webp" loading="lazy" decoding="async"></body>`;
+  const viewport = '<meta name="viewport" content="width=device-width, initial-scale=1">';
+  const output = finishKithImages(`<head><meta charset="utf-8">${viewport}<style>body{color:inherit}</style></head>${body}`);
+  const preload = output.match(/<link\b[^>]*rel="preload"[^>]*>/)?.[0];
+  assert.ok(preload, "the measured phone LCP should begin with the document");
+  assert.ok(preload.includes('as="image"'));
+  assert.ok(preload.includes(`imagesrcset="${candidates}"`));
+  assert.ok(preload.includes(`imagesizes="${sizes}"`));
+  assert.ok(preload.includes('fetchpriority="high"'));
+  assert.ok(output.indexOf(preload) < output.indexOf("<style>"));
+  assert.ok(output.indexOf('<meta charset="utf-8">') < output.indexOf(preload));
+  assert.ok(output.indexOf(viewport) < output.indexOf(preload), "responsive preload selection needs the mobile viewport first");
+  assert.equal(output.slice(output.indexOf("<body>")), body);
+  assert.equal((output.match(/rel="preload"/g) ?? []).length, 1);
+});
+
+test("Kith does not preload a below-fold screenshot or unrelated image", () => {
+  const html = '<head><meta charset="utf-8"></head><body><img src="/images/screens/constellation.webp" loading="lazy" decoding="async"><img src="/images/story/kith-hero-v3.webp" loading="eager" decoding="async"></body>';
+  assert.equal(finishKithImages(html), html);
+});
 
 test("Kith defers decorative backgrounds while preserving their crop and motion wrappers", async () => {
   const html = '<head></head><main><section><div class="motion-parallax size-full bg-cover bg-[center_30%]" style="background-image:url(/images/story/kith-hero-v3.webp)"></div></section><section><div aria-hidden="true" class="motion-drift absolute inset-0" style="background-image:url(/images/story/kith-closing-v3.webp)"></div></section></main>';
