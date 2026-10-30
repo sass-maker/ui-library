@@ -13,6 +13,7 @@ function parseSelector(selector) {
 const rootSelector = parseSelector(`:where(${root})`);
 const withinFooter = parseSelector(`:where(${root},${root} *)`)[0];
 const descendant = { type: "combinator", value: "descendant" };
+const isSemanticRole = (name) => /^--(?:font-(?:sans|display|text|mono|features)|display-[\w-]+|ui-case|eyebrow-[\w-]+|radius|brand(?:-[\w-]+)?|background|foreground|surface|card(?:-foreground)?|primary(?:-foreground)?|muted(?:-foreground)?|accent(?:-foreground)?|border|input|ring|shadow-color)$/.test(name);
 const isRoot = (selector) => selector.every(part => part.type === "pseudo-class" &&
   (["root", "host"].includes(part.kind) || part.kind === "where" && part.selectors.every(isRoot)));
 const isTheme = (selector) => selector.every(part =>
@@ -22,7 +23,7 @@ const isTheme = (selector) => selector.every(part =>
 /** Constrain each matched element, leaving its ancestor/theme conditions intact. */
 export function scopeFooterCss(css) {
   let styleDepth = 0;
-  const rootDefaults = [];
+  let declarationName;
   const output = transform({
     filename: "footer.css",
     code: Buffer.from(css),
@@ -31,7 +32,6 @@ export function scopeFooterCss(css) {
       Rule(rule) {
         if (rule.type !== "style") return;
         styleDepth++;
-        rootDefaults.push(rule.value.selectors.every(isRoot));
       },
       Selector(selector) {
         if (styleDepth > 1) return;
@@ -46,17 +46,28 @@ export function scopeFooterCss(css) {
         return isTheme(selector) ? [scoped, [...selector, descendant, ...rootSelector]] : scoped;
       },
       Declaration(declaration) {
-        // Local defaults must not mask font roles inherited from the page.
-        if (rootDefaults.at(-1) && declaration.property === "custom" &&
-          /^--font-(sans|display|text|mono)$/.test(declaration.value.name)) return [];
+        declarationName = undefined;
+        if (declaration.property !== "custom") return;
+        const name = declaration.value.name;
+        // Tailwind's imported font defaults must not mask inherited page fonts.
+        if (/^--font-(sans|display|text|mono)$/.test(name)) return [];
+        if (isSemanticRole(name)) declarationName = name;
+      },
+      DashedIdent(name) {
+        // The first identifier is the declaration name; references in its value
+        // must still resolve inherited page roles before our private defaults.
+        if (name !== declarationName) return;
+        declarationName = undefined;
+        return `--fleet-footer-default-${name.slice(2)}`;
+      },
+      DeclarationExit() {
+        declarationName = undefined;
       },
       RuleExit(rule) {
-        if (rule.type === "style") { styleDepth--; rootDefaults.pop(); }
+        if (rule.type === "style") styleDepth--;
       },
     },
   }).code.toString();
-  return output.replace(/var\(--font-(sans|display|text|mono)\)/g,
-    (_value, role) => `var(--font-${role},${role === "mono" ? "ui-monospace,monospace" : "ui-sans-serif,system-ui,sans-serif"})`)
-    .replace(/var\(--(background|foreground|surface|card(?:-foreground)?|primary(?:-foreground)?|muted(?:-foreground)?|accent(?:-foreground)?|border|input|ring|shadow-color|brand(?:-foreground|-soft|-ink)?)\)/g,
-      (_value, role) => `var(--${role},var(--fleet-footer-default-${role}))`);
+  return output.replace(/var\((--[\w-]+)\)/g, (value, name) =>
+    isSemanticRole(name) ? `var(${name},var(--fleet-footer-default-${name.slice(2)}))` : value);
 }

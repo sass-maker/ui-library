@@ -52,7 +52,7 @@ describe("standalone footer CSS isolation", () => {
     const css = scopeFooterCss(":root{--font-sans:serif;--font-display:serif;--spacing:.25rem}.font-display{font-family:var(--font-display)}");
     expect(css).not.toContain("--font-sans:serif");
     expect(css).not.toContain("--font-display:serif");
-    expect(css).toContain("font-family:var(--font-display,ui-sans-serif,system-ui,sans-serif)");
+    expect(css).toContain("font-family:var(--font-display,var(--fleet-footer-default-font-display))");
     expect(css).toContain("--spacing:.25rem");
   });
 });

@@ -76,11 +76,16 @@ export function bindFooter(root) {
   function pick() {
     const d = dialog();
     d.close();
+    const palette = getComputedStyle(d);
+    const brand = palette.getPropertyValue("--brand").trim() ||
+      palette.getPropertyValue("--fleet-footer-default-brand").trim() || palette.color;
     const box = Object.assign(document.createElement("div"), {
       ariaHidden: "true",
     });
     box.style.cssText =
-      "position:fixed;pointer-events:none;z-index:2147483647;border:2px solid var(--brand);border-radius:6px;background:color-mix(in oklch,var(--brand) 12%,transparent);transition:all .08s";
+      "position:fixed;pointer-events:none;z-index:2147483647;border:2px solid;border-radius:6px;transition:all .08s";
+    box.style.borderColor = brand;
+    box.style.background = `color-mix(in oklch,${brand} 12%,transparent)`;
     const tip = Object.assign(document.createElement("div"), {
       textContent: "Click the part you mean. Esc to cancel.",
     });
