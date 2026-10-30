@@ -29,6 +29,7 @@
     "registry:check": "node scripts/sync-registry.mjs --check",
     "check:architecture": "node scripts/check-architecture.mjs",
     "test:browser": "playwright test",
+    "test:footer-isolation": "node scripts/check-footer-isolation.mjs",
     "test:visual": "playwright test --project=visual"
   },
   "devDependencies": {

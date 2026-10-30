@@ -5,6 +5,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import * as icons from "lucide-react";
 import { compile } from "@tailwindcss/node";
+import { scopeFooterCss } from "./scope-footer-css.mjs";
 const ui = fileURLToPath(new URL("../", import.meta.url));
 process.chdir(ui);
 const runtime = fileURLToPath(
@@ -90,21 +91,20 @@ for (const [entry, outfile] of [
 const theme = await readFile("src/styles/theme.css", "utf8");
 const footerRoot = "footer[data-fleet-footer]";
 // Read surface roles from the canonical theme, rather than maintaining a palette here.
-const footerTokens = (selector) => theme
-  .match(new RegExp(selector + " \\{([^}]+)\\}"))[1]
+const footerTokens = (selector, includeBrand = false) => theme
+  .match(new RegExp(selector + "\\s*\\{([^}]+)\\}"))[1]
   .split("\n")
-  .filter((line) => /^\s*--(?:background|foreground|surface|card(?:-foreground)?|primary(?:-foreground)?|muted(?:-foreground)?|accent(?:-foreground)?|border|input|ring|shadow-color):/.test(line))
+  .filter((line) => /^\s*--(?:background|foreground|surface|card(?:-foreground)?|primary(?:-foreground)?|muted(?:-foreground)?|accent(?:-foreground)?|border|input|ring|shadow-color):/.test(line) || includeBrand && /^\s*--brand(?:-foreground|-soft|-ink)?:/.test(line))
   .join("\n");
-const lightTokens = footerTokens(":root");
-const darkTokens = footerTokens('\\[data-mode="dark"\\]') + "\n--brand-ink:var(--foreground);";
-const darkHost = ':is(.dark, [data-theme="dark"], [data-mode="dark"], [data-theme="ink"])';
+const darkTokens = footerTokens('\\[data-mode="dark"\\]', true) + "\n--brand-ink:var(--foreground);";
+const darkHost = ':where(.dark, [data-theme="dark"])';
 let tokens = theme.slice(
-  theme.indexOf(":root {"),
+  theme.search(/^:root[^{]*\{/m),
   theme.indexOf("@layer base"),
 );
 // Keep only semantic roles referenced by footer utilities and their dependencies.
 const rolesNeeded =
-  /^(font-|display-|ui-case|eyebrow-|radius|brand(?:-|:)|background|foreground|surface:|card:|primary(?:-|:)|muted-foreground|accent:|border:|input:|ring:|shadow-color|color-(?:background|foreground|surface|card|primary|muted-foreground|accent|border|input|ring|brand)|shadow-(?:xs|2xl))/;
+  /^(font-|display-|ui-case|eyebrow-|radius|brand(?:-|:)|background|foreground|surface:|card(?:-foreground)?:|primary(?:-|:)|muted(?:-foreground)?:|accent(?:-foreground)?:|border:|input:|ring:|shadow-color|color-(?:background|foreground|surface|card|primary|muted-foreground|accent|border|input|ring|brand)|shadow-(?:xs|2xl))/;
 tokens = tokens.replace(/^\s*--([^\n]+);/gm, (declaration, content) =>
   rolesNeeded.test(content) ? declaration : "",
 );
@@ -114,7 +114,7 @@ tokens =
     .slice(0, mappingStart)
     .replace(/--font-(sans|display|text|mono):[^;]+;/g, "") +
   tokens.slice(mappingStart);
-tokens = tokens.replace(":root {", ":where(:root) {");
+tokens = tokens.replace(/^:root[^\{]*\{/m, ":where(:root) {");
 const roles = ["font-display", "eyebrow", "container-page"]
   .map((name) => theme.match(new RegExp("  \\." + name + " \\{[^}]+\\}"))[0])
   .join("\n");
@@ -132,8 +132,9 @@ ${editorialDark}
 :where(h1,h2,h3,h4).font-display { text-transform:var(--display-case); }
 .ui-case { text-transform:var(--ui-case); }
 }
-/* Defaults have zero specificity, so a page's theme/font overrides win. */
-:where(:root) { --font-sans:ui-sans-serif,system-ui,sans-serif; --font-display:ui-sans-serif,system-ui,sans-serif; --font-text:var(--font-sans); --font-mono:ui-monospace,monospace; }
+/* Private identity defaults preserve inherited page typography and brand. */
+:where(:root) { --fleet-footer-default-font-sans:ui-sans-serif,system-ui,sans-serif; --fleet-footer-default-font-display:ui-sans-serif,system-ui,sans-serif; --fleet-footer-default-font-text:var(--font-sans); --fleet-footer-default-font-mono:ui-monospace,monospace; color-scheme:light; }
+${darkHost} :where(${footerRoot}), :where(${footerRoot})${darkHost} { ${darkTokens} color-scheme:dark; }
 studio-footer { display:block; }
 /* Unlayered host element rules must not hide the footer's layered utilities.
    revert-layer exposes the library layers, including hover/responsive classes. */
@@ -143,17 +144,10 @@ ${footerRoot}, ${footerRoot} :where(*, *::before, *::after) {
   line-height:revert-layer; list-style:revert-layer; text-decoration:revert-layer;
 }
 ${footerRoot} :where(img, svg) { display:revert-layer; width:revert-layer; max-width:revert-layer; height:revert-layer; }
-${footerRoot} { ${lightTokens} color-scheme:light; }
-${darkHost} ${footerRoot}, ${footerRoot}${darkHost} { ${darkTokens} color-scheme:dark; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-mode="light"]) ${footerRoot}:not(:where([data-theme], [data-mode], .dark) *):not([data-theme]):not([data-mode]):not(.dark) {
     ${darkTokens} color-scheme:dark;
   }
-}
-/* A themed host owns its palette. Fallback adapters above are for unthemed hosts. */
-:is([data-theme], [data-mode], [style*="--background"]) ${footerRoot}:not([data-theme]):not([data-mode]) {
-  ${[...new Set([...lightTokens.matchAll(/--([\w-]+):/g)].map(m => m[1]).concat(["brand", "brand-foreground", "brand-soft", "brand-ink"]))].map(role => `--${role}:inherit;`).join("\n")}
-  color-scheme:inherit;
 }
 @layer base {
 :where(${footerRoot}) { font-family:var(--font-sans); color:var(--foreground); line-height:1.5; }
@@ -182,7 +176,7 @@ try {
   await writeFile(
     "footer.css",
     (
-      await transform(compiler.build(candidates), {
+      await transform(scopeFooterCss(compiler.build(candidates)), {
         loader: "css",
         minify: true,
       })
