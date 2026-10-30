@@ -12,14 +12,15 @@ const cases = [
   ...["paper", "ink", "hearth", "signal", "gallery"].map(theme => ({ id: theme, theme })),
   { id: "paper-dark", theme: "paper", mode: "dark" },
   { id: "host-overrides", style: "--brand:red;--radius:0;--ui-case:none;--display-case:uppercase;--display-weight:500;--font-display:monospace;--font-sans:monospace" },
-  { id: "host-hsl", collision: "--background:0 0% 100%;--foreground:222 47% 11%;--card:0 0% 100%;--primary:222 47% 11%;--accent:210 40% 96%;--border:214 32% 91%" },
-  { id: "host-oklch", collision: "--background:white;--foreground:black;--card:white;--primary:black;--accent:oklch(.95 0 0);--border:oklch(.9 0 0)" },
-  { id: "host-oklch-ink", theme: "ink", collision: "--background:white;--foreground:black;--card:white;--primary:black;--accent:oklch(.95 0 0);--border:oklch(.9 0 0)" },
-  { id: "host-hsl-dark", mode: "dark", collision: "--background:0 0% 100%;--foreground:222 47% 11%;--card:0 0% 100%;--primary:222 47% 11%;--accent:210 40% 96%;--border:214 32% 91%" },
+  { id: "host-hsl", collision: "--background:0 0% 100%;--foreground:222 47% 11%;--card:0 0% 100%;--primary:222 47% 11%;--accent:210 40% 96%;--border:214 32% 91%;--input:214 32% 91%;--muted-foreground:215 16% 47%" },
+  { id: "host-oklch", collision: "--background:white;--foreground:black;--card:white;--primary:black;--accent:oklch(.95 0 0);--border:oklch(.9 0 0);--input:pink;--muted-foreground:black" },
+  { id: "host-oklch-ink", theme: "ink", collision: "--background:white;--foreground:black;--card:white;--primary:black;--accent:oklch(.95 0 0);--border:oklch(.9 0 0);--input:pink;--muted-foreground:black" },
+  { id: "host-hsl-dark", mode: "dark", collision: "--background:0 0% 100%;--foreground:222 47% 11%;--card:0 0% 100%;--primary:222 47% 11%;--accent:210 40% 96%;--border:214 32% 91%;--input:214 32% 91%;--muted-foreground:215 16% 47%" },
   { id: "host-terracotta", collision: "--accent:#c46a4a" },
 ];
-const paletteRoles = { background: "bg-background", card: "bg-card", primary: "bg-primary", surface: "bg-surface", accent: "hover:bg-accent" };
-const oraclePalette = Object.keys(paletteRoles).map(role => `<div id="palette-${role}" style="background-color:var(--${role})"></div>`).join("");
+const paletteRoles = { background: "bg-background", card: "bg-card", primary: "bg-primary", surface: "bg-surface", accent: "hover:bg-accent", border: "border border-border", input: "border border-input", "muted-foreground": "text-muted-foreground" };
+const paletteProperties = Object.fromEntries(Object.keys(paletteRoles).map(role => [role, ["border", "input"].includes(role) ? "borderColor" : role === "muted-foreground" ? "color" : "backgroundColor"]));
+const oraclePalette = Object.keys(paletteRoles).map(role => `<div id="palette-${role}" style="${paletteProperties[role].replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)}:var(--${role})"></div>`).join("");
 const server = createServer((req, res) => {
   const url = new URL(req.url, "http://localhost");
   if (["/footer.css", "/footer.js"].includes(url.pathname)) {
@@ -45,10 +46,11 @@ try {
     const s = getComputedStyle(document.querySelector("#probe"));
     return Object.fromEntries(["backgroundColor", "borderRadius", "color", "fontWeight", "textTransform"].map(key => [key, s[key]]));
   });
+  const readPalette = () => page.locator('[id^="palette-"]').evaluateAll((elements, properties) => Object.fromEntries(elements.map(el => [el.id.slice(8), getComputedStyle(el)[properties[el.id.slice(8)]]])), paletteProperties);
   for (const entry of cases) {
     await page.goto(`${origin}/oracle?case=${entry.id}`);
     const expected = await readProbe();
-    const expectedPalette = await page.locator('[id^="palette-"]').evaluateAll(elements => Object.fromEntries(elements.map(el => [el.id.slice(8), getComputedStyle(el).backgroundColor])));
+    const expectedPalette = await readPalette();
     await page.goto(`${origin}/?case=${entry.id}`);
     const before = await page.evaluate(() => ({ padding: getComputedStyle(document.querySelector("#host")).paddingInline, brand: getComputedStyle(document.documentElement).getPropertyValue("--brand"), radius: getComputedStyle(document.documentElement).getPropertyValue("--radius") }));
     await page.evaluate(async paletteRoles => {
@@ -68,7 +70,7 @@ try {
     const actual = await readProbe();
     assert.deepEqual(actual, expected, `${entry.id}: canonical theme roles must survive standalone delivery`);
     await page.locator("#palette-accent").hover();
-    const actualPalette = await page.locator('[id^="palette-"]').evaluateAll(elements => Object.fromEntries(elements.map(el => [el.id.slice(8), getComputedStyle(el).backgroundColor])));
+    const actualPalette = await readPalette();
     assert.deepEqual(actualPalette, expectedPalette, `${entry.id}: unrelated host color tokens must not replace the footer palette`);
     const after = await page.evaluate(() => ({ padding: getComputedStyle(document.querySelector("#host")).paddingInline, brand: getComputedStyle(document.documentElement).getPropertyValue("--brand"), radius: getComputedStyle(document.documentElement).getPropertyValue("--radius") }));
     assert.deepEqual(after, before, `${entry.id}: loading footer CSS must not change its host`);
