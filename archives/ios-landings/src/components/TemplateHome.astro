@@ -18,9 +18,16 @@ const GalleryPage = !workbench
 const WorkbenchPage = workbench
   ? (await import("@saas-maker/templates/workbench-page")).WorkbenchPage : undefined;
 const { theme, mode, tokens, motion, fonts, surface, fromApp } = baseProps(content);
+// The PerformanceDaddy lede is the mobile LCP; start its existing body face
+// with the display face instead of waiting for CSS font discovery.
+const bodyFont = import.meta.env.PRODUCT === "performancedaddy"
+  ? (await import("@saas-maker/ui/fonts/geist-latin-normal.woff2?url")).default : undefined;
 ---
 <Base title={defaultTitle()} theme={theme} mode={mode} fonts={fonts} surface={surface} fromApp={fromApp} tokens={tokens} motion={motion}>
-  <SiteHead slot="head" studioFooter />
+  <Fragment slot="head">
+    <SiteHead studioFooter />
+    {bodyFont && <link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin />}
+  </Fragment>
   {content.template === "gallery" && GalleryPage && <GalleryPage content={content} />}
   {content.template === "workbench" && WorkbenchPage && <WorkbenchPage content={content} />}
 </Base>
