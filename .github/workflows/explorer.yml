@@ -34,6 +34,11 @@ jobs:
       - run: pnpm exec shadcn build --output explorer/storybook-static/r
       - run: pnpm check:explorer --built
       - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Standalone footer CSS isolation and theme contract
+        run: |
+          pnpm footer:build
+          git diff --exit-code -- packages/ui/footer.css packages/ui/footer.js packages/ui/footer-html.js
+          pnpm test:footer-isolation
       - name: Browser interactions and approved visual baselines
         if: ${{ !inputs.updateVisuals }}
         run: pnpm test:browser

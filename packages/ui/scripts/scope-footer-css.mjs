@@ -13,7 +13,9 @@ function parseSelector(selector) {
 const rootSelector = parseSelector(`:where(${root})`);
 const withinFooter = parseSelector(`:where(${root},${root} *)`)[0];
 const descendant = { type: "combinator", value: "descendant" };
-const isSemanticRole = (name) => /^--(?:font-(?:sans|display|text|mono|features)|display-[\w-]+|ui-case|eyebrow-[\w-]+|radius|brand(?:-[\w-]+)?|background|foreground|surface|card(?:-foreground)?|primary(?:-foreground)?|muted(?:-foreground)?|accent(?:-foreground)?|border|input|ring|shadow-color)$/.test(name);
+// Typography and identity are the standalone footer's inherited public roles.
+// Palette roles stay local: unrelated hosts may use incompatible HSL tokens.
+const isInheritedRole = (name) => /^--(?:font-(?:sans|display|text|mono|features)|display-[\w-]+|ui-case|eyebrow-[\w-]+|radius|brand(?:-[\w-]+)?)$/.test(name);
 const isRoot = (selector) => selector.every(part => part.type === "pseudo-class" &&
   (["root", "host"].includes(part.kind) || part.kind === "where" && part.selectors.every(isRoot)));
 const isTheme = (selector) => selector.every(part =>
@@ -51,7 +53,7 @@ export function scopeFooterCss(css) {
         const name = declaration.value.name;
         // Tailwind's imported font defaults must not mask inherited page fonts.
         if (/^--font-(sans|display|text|mono)$/.test(name)) return [];
-        if (isSemanticRole(name)) declarationName = name;
+        if (isInheritedRole(name)) declarationName = name;
       },
       DashedIdent(name) {
         // The first identifier is the declaration name; references in its value
@@ -69,5 +71,5 @@ export function scopeFooterCss(css) {
     },
   }).code.toString();
   return output.replace(/var\((--[\w-]+)\)/g, (value, name) =>
-    isSemanticRole(name) ? `var(${name},var(--fleet-footer-default-${name.slice(2)}))` : value);
+    isInheritedRole(name) ? `var(${name},var(--fleet-footer-default-${name.slice(2)}))` : value);
 }

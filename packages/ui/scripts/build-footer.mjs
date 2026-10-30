@@ -132,7 +132,7 @@ ${editorialDark}
 :where(h1,h2,h3,h4).font-display { text-transform:var(--display-case); }
 .ui-case { text-transform:var(--ui-case); }
 }
-/* Private defaults leave all public semantic roles inherited from the page. */
+/* Private identity defaults preserve inherited page typography and brand. */
 :where(:root) { --fleet-footer-default-font-sans:ui-sans-serif,system-ui,sans-serif; --fleet-footer-default-font-display:ui-sans-serif,system-ui,sans-serif; --fleet-footer-default-font-text:var(--font-sans); --fleet-footer-default-font-mono:ui-monospace,monospace; color-scheme:light; }
 ${darkHost} :where(${footerRoot}), :where(${footerRoot})${darkHost} { ${darkTokens} color-scheme:dark; }
 studio-footer { display:block; }

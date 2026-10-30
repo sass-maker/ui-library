@@ -149,9 +149,9 @@ it("ships the reset and theme adapter outside Tailwind layers", () => {
     }
   }
   expect(rules.some((rule) => rule.startsWith("footer[data-fleet-footer]") && rule.includes("font:revert-layer") && rule.includes("margin:revert-layer"))).toBe(true);
-  expect(css).toContain("--fleet-footer-default-background:");
+  expect(css).toContain("--background:");
   expect(rules.some((rule) => rule.includes('[data-theme=dark]') && rule.includes(".dark") && rule.includes("color-scheme:dark") && !rule.startsWith("@layer"))).toBe(true);
-  expect(rules.some((rule) => rule.startsWith("@media(prefers-color-scheme:dark)") && rule.includes(':not([data-theme=light])') && rule.includes("--fleet-footer-default-muted-foreground:"))).toBe(true);
+  expect(rules.some((rule) => rule.startsWith("@media(prefers-color-scheme:dark)") && rule.includes(':not([data-theme=light])') && rule.includes("--muted-foreground:"))).toBe(true);
 });
 it("escapes interpolated text and attributes", () => {
   const html = renderStudioFooterHtml({
