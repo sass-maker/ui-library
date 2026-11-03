@@ -791,6 +791,47 @@ Geist, Geist Mono, Instrument Serif, Fraunces; SIL OFL, licenses in
 `swift/Sources/SaaSMakerUI/Fonts/Licenses`) and follows the theme's lowercase
 voice for headings and buttons.
 
+### Native interaction craft
+
+[Native Cook](https://github.com/Native-Cook/native-cook) is the craft reference
+for new shared Swift interactions. The first additions are original,
+palette-aware selection components, with native buttons, selected-state
+semantics, an interruptible selection indicator and a reduced-motion path.
+
+```swift
+@State private var timing = "today"
+
+// Inside a view with the app's existing .smTheme(...):
+SMSegmentedControl("Follow-up timing", selection: $timing, segments: [
+    SMSegment("today", title: "Today", systemImage: "sun.max"),
+    SMSegment("week", title: "This week", systemImage: "calendar"),
+])
+
+SMChoiceCard("Today", value: "today", selection: $timing,
+             description: "Keep the next conversation in mind.",
+             systemImage: "text.bubble",
+             detail: "Add a detail you want to remember before reaching out.")
+```
+
+Use unique, stable segment IDs. Selection stays owned by the app; missing values
+are not silently replaced. Long segment labels fall back to a vertical layout,
+as do accessibility text sizes. Choice detail appears only for the selected
+card. Disable a segment with `isEnabled: false`, or a whole control with
+`.disabled(true)`. Neither component saves data or schedules reminders.
+
+`SelectionPreviews.swift` includes interactive Xcode previews. Run the focused
+native checks with `node --test scripts/native-selection.test.mjs`.
+The runner enables the native mouse test in its own process, keeping window
+focus changes separate from the full suite's bitmap comparisons. CI runs both.
+`SM_INTERACTION_SNAPSHOT_DIR=/tmp/sm-selection swift test --filter SelectionTests`
+also exports real SwiftUI renders at 390, 820 and 1440 points in both appearances,
+plus larger-text, RTL and disabled examples. macOS host checks do not establish
+iPhone/iPad device, VoiceOver navigation or physical keyboard qualification.
+
+Future Fleet Swift work should reuse these components and follow
+[the native contribution guidance](swift/AGENTS.md). Existing app version pins
+need a deliberate update and app verification to adopt new library APIs.
+
 `SMButtonStyle(.outline, size: .compact)` opts into small operational controls:
 14pt display type, 12pt horizontal inset and 32pt minimum height (links retain
 4pt inset). These match the shared web small-control rhythm. The default
