@@ -40,9 +40,13 @@ jobs:
         run: |
           set -o pipefail
           SM_INTERACTION_SNAPSHOT_DIR="$PWD/evidence/selection" node --test scripts/native-selection.test.mjs 2>&1 | tee evidence/selection.log
-          test -s evidence/selection/selection-390-light.png
-          test -s evidence/selection/selection-820-dark.png
-          test -s evidence/selection/selection-1440-light.png
+          for width in 390 820 1440; do
+            test -s "evidence/selection/selection-$width-light.png"
+            test -s "evidence/selection/selection-$width-dark.png"
+          done
+          for variant in large-text rtl disabled; do
+            test -s "evidence/selection/selection-$variant.png"
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:

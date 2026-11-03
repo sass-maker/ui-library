@@ -3,7 +3,7 @@ import SwiftUI
 import Testing
 @testable import SaaSMakerUI
 
-@MainActor @Suite struct SelectionTests {
+@MainActor @Suite(.serialized) struct SelectionTests {
     private final class SelectionModel: ObservableObject {
         @Published var value = "today"
     }
@@ -11,17 +11,19 @@ import Testing
     private struct InteractiveSample: View {
         @ObservedObject var model: SelectionModel
         var disabled = false
+        var laterEnabled = false
+        var disabledChoiceEnabled = false
         var body: some View {
             VStack(spacing: 16) {
                 SMSegmentedControl("When to follow up", selection: $model.value, segments: [
                     SMSegment("today", title: "Today", systemImage: "sun.max"),
                     SMSegment("week", title: "This week", systemImage: "calendar"),
-                    SMSegment("later", title: "Later", isEnabled: false),
+                    SMSegment("later", title: "Later", isEnabled: laterEnabled),
                 ])
                 SMChoiceCard("A quiet reminder", value: "reminder", selection: $model.value,
                              description: "Choose when to reconnect.", systemImage: "bell",
                              detail: "The reminder stays in your list until you decide to reach out.")
-                SMChoiceCard("Disabled choice", value: "disabled", selection: $model.value).disabled(true)
+                SMChoiceCard("Disabled choice", value: "disabled", selection: $model.value).disabled(!disabledChoiceEnabled)
             }
             .padding(24).frame(width: 390).frame(maxHeight: .infinity, alignment: .top).disabled(disabled).smTheme(.gallery)
         }
@@ -60,6 +62,21 @@ import Testing
         #expect(model.value == "week")
         try click(325, top: 51)
         #expect(model.value == "week")
+        host.rootView = InteractiveSample(model: model, laterEnabled: true)
+        settle()
+        try click(325, top: 51)
+        #expect(model.value == "later")
+        host.rootView = InteractiveSample(model: model)
+        model.value = "week"
+        settle()
+        try click(180, top: 230)
+        #expect(model.value == "week")
+        host.rootView = InteractiveSample(model: model, disabledChoiceEnabled: true)
+        settle()
+        try click(180, top: 230)
+        #expect(model.value == "disabled")
+        host.rootView = InteractiveSample(model: model)
+        settle()
         try click(180, top: 134)
         #expect(model.value == "reminder")
         let selectedCard = try rendered()
