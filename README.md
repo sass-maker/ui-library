@@ -254,6 +254,8 @@ export default defineConfig({ integrations: [react()] });
 
 Fonts: the theme ships Latin-only, weight-clamped woff2 subsets (about 50 KB on a Gallery page, about 105 KB on a Workbench paper page; `@font-face` is lazy and `Base.astro` preloads only the display font). Characters outside Latin fall back to the system font; add your own `@font-face` for other scripts. Regenerate with `pnpm --filter @saas-maker/ui fonts:build`.
 
+For future typeface choices, see the [Fontzz family catalog and selection prompt](docs/fontzz.md): 36 external variable families, saved as a reference without changing the bundled fonts or defaults.
+
 Products can keep their own personality. The explorer’s **Foundations → Tokens →
 Product personality** example changes presets and density on the same working
 form, with copyable setup and a product action wrapper.
