@@ -13,7 +13,8 @@ One design system for every Fleet product, web and Apple.
   `tokens.json` and `swift/Sources/SaaSMakerUI/Tokens.generated.swift`. Run it
   after any theme change and commit both outputs.
 - `swift/` + root `Package.swift`: `SaaSMakerUI` for Mac and iOS (palette,
-  type roles, components, motion). Apps add it by git URL.
+  type roles, components, motion). Apps add it by git URL. Follow
+  `swift/AGENTS.md` for native interaction craft and reuse.
 - `site/`: the library site and demos (Kith, CodeVetter, Live, Reader, App
   Health). Keep every demo.
 

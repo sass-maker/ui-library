@@ -1,10 +1,11 @@
-name: Native compact button
+name: Native Swift UI
 on:
   pull_request:
     paths:
       - 'swift/**'
       - 'Package.swift'
       - '.github/workflows/native-button.yml'
+      - 'scripts/native-selection.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -35,6 +36,17 @@ jobs:
           SM_SNAPSHOT_DIR="$PWD/evidence/renders" swift test 2>&1 | tee evidence/test.log
           test -s evidence/renders/buttons-390.png
           test -s evidence/renders/buttons-768.png
+      - name: Native selection interaction and renders in an isolated process
+        run: |
+          set -o pipefail
+          SM_INTERACTION_SNAPSHOT_DIR="$PWD/evidence/selection" node --test scripts/native-selection.test.mjs 2>&1 | tee evidence/selection.log
+          for width in 390 820 1440; do
+            test -s "evidence/selection/selection-$width-light.png"
+            test -s "evidence/selection/selection-$width-dark.png"
+          done
+          for variant in large-text rtl disabled; do
+            test -s "evidence/selection/selection-$variant.png"
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
