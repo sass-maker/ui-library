@@ -74,7 +74,7 @@ export const site: SiteConfig = {
       { title: "Children", body: "Anchor is not directed at children under 13. The app has no advertising or analytics collection; the optional Hub connection is the only Anchor feature that uses account data." },
       { title: "Changes", body: "If this policy changes, the revised version will be posted here with a new date. Distraction-note privacy and the absence of app analytics or advertising are product constraints, not temporary settings." },
       { title: "Contact", body: "Questions: hello@significanthobbies.com." },
-      { title: "Effective date", body: "Last updated 11 September 2026." }
+      { title: "Effective date", body: "Last updated 8 November 2026." }
     ]},
     support: { title: "Support, without a maze.", lede: "Email hello@significanthobbies.com and you’ll get a reply from the person who built it.", sections: [
       { title: "Does Anchor block apps or websites?", body: "No. Apple’s Screen Time blocking APIs exist only on iPhone and iPad — there is no macOS equivalent — so a blocker would work on half your devices and quietly fail on the rest. Anchor takes the other approach: capture the distraction in one keystroke and hand you back your goal. It also records honestly when a distraction won, which is what makes the analytics worth reading." },
