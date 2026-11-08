@@ -1,6 +1,17 @@
 # iOS landings — PROJECT STATUS
 
-Last updated: 2026-10-29
+Last updated: 2026-11-08
+
+## Anchor Mac build 30 download
+
+The existing Anchor download now packages the Developer ID signed, notarized
+and stapled Mac beta built from Anchor PR90 (`1ec986d`). Gatekeeper accepts it.
+SHA-256: `4b1078eac682f0aa2868dcb9e13b8bb7c0ef76d52dd5de255bc1f7caafcba9fc`.
+Production CloudKit has the four required additive fields. Installed Focus,
+Today and Settings open with the existing local library. Native source passed
+301 Swift tests; real-account MCP read/write and device receipts remain unqualified.
+The remote Anchor connector stays disabled pending that qualification.
+Landing content, design and all other product downloads are unchanged.
 
 ## DaddyRad website consolidation
 
