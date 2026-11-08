@@ -2,16 +2,17 @@
 
 Last updated: 2026-11-08
 
-## Anchor Mac build 30 download
+## Anchor Mac build 31 download
 
-The existing Anchor download now packages the Developer ID signed, notarized
-and stapled Mac beta built from Anchor PR90 (`1ec986d`). Gatekeeper accepts it.
-SHA-256: `4b1078eac682f0aa2868dcb9e13b8bb7c0ef76d52dd5de255bc1f7caafcba9fc`.
-Production CloudKit has the four required additive fields. Installed Focus,
-Today and Settings open with the existing local library. Native source passed
-301 Swift tests; real-account MCP read/write and device receipts remain unqualified.
-The remote Anchor connector stays disabled pending that qualification.
-Landing content, design and all other product downloads are unchanged.
+The existing Anchor download packages the Developer ID signed, notarized and
+stapled Mac beta from Anchor PR91. Gatekeeper accepts it. Rates, currencies,
+timer earnings and tracked-value analytics are removed; project and tag labels
+remain. Legacy storage and sync envelopes retain mixed-version compatibility.
+SHA-256: `4b0dac598f27f5da7387dd577bb6655362a7ca2c00f2823fdc56fb20a9e87476`.
+Native source passed 265 Swift tests plus an isolated MCP transport check.
+Installed Settings and project-label management were inspected with the existing
+local library. Real-account MCP read/write and device receipts remain unqualified;
+the remote Anchor connector stays disabled pending that qualification.
 
 ## DaddyRad website consolidation
 
