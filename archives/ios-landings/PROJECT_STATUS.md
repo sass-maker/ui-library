@@ -2,17 +2,22 @@
 
 Last updated: 2026-11-08
 
-## Anchor Mac build 31 download
+## Anchor Mac build 32 download
 
-The existing Anchor download packages the Developer ID signed, notarized and
-stapled Mac beta from Anchor PR91. Gatekeeper accepts it. Rates, currencies,
-timer earnings and tracked-value analytics are removed; project and tag labels
-remain. Legacy storage and sync envelopes retain mixed-version compatibility.
-SHA-256: `4b0dac598f27f5da7387dd577bb6655362a7ca2c00f2823fdc56fb20a9e87476`.
-Native source passed 265 Swift tests plus an isolated MCP transport check.
-Installed Settings and project-label management were inspected with the existing
-local library. Real-account MCP read/write and device receipts remain unqualified;
-the remote Anchor connector stays disabled pending that qualification.
+This revision packages the Developer ID signed, notarized and stapled Mac beta
+from Anchor PR94. Gatekeeper accepts it. Build32 repairs full planner resync
+when an old finished session retains its end-time timer marker. Its recorded
+focus duration stays unchanged. Rates and currency remain removed; project
+and tag labels remain. Legacy storage keeps mixed-version compatibility.
+SHA-256: `d0d4cc6e11b6ce553e70fea662452d111cb7a8a8e1458846d408034f232fc8fd`.
+
+Native source passed 268 Swift tests and Codex source review. Installed build32
+completed real-account planner sharing with zero pending changes. The public
+privacy copy now describes separate account/planner approval and connected
+assistants, including calendar details and device-action limits. Private
+interruption notes and integration credentials remain device-only. Remote MCP
+client authorization and actual device-command receipts remain unqualified.
+Publication is verified separately through the existing-only Anchor publisher.
 
 ## DaddyRad website consolidation
 
