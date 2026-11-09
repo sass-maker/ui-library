@@ -161,7 +161,7 @@ if (!hasInstallCta) {
 
 if (product === "anchor") {
   await access(`${dist}/downloads/Anchor-1.0.dmg`);
-  if (!home.includes('href="https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"')) {
+  if (!/href="https:\/\/anchor\.significanthobbies\.com\/downloads\/Anchor-1\.0\.dmg(?:\?build=\d+)?"/.test(home)) {
     throw new Error("anchor: landing is missing the verified notarized Mac download.");
   }
 }
