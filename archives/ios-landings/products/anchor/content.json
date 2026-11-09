@@ -54,7 +54,7 @@
   ],
   "headerAction": {
     "label": "Download for Mac",
-    "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"
+    "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg?build=34"
   },
   "hero": {
     "eyebrow": "Plan. Focus. Adapt.",
@@ -62,7 +62,7 @@
     "lede": "A private day planner and focus timer for people moving between Mac, iPhone and Apple Watch who want to learn why the day they lived differed from the plan.",
     "primary": {
       "label": "Download notarized Mac beta",
-      "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"
+      "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg?build=34"
     },
     "secondary": {
       "label": "See iPhone and Watch beta status ›",
@@ -147,7 +147,7 @@
     "title": "Protect the present.\n*Adapt tomorrow.*",
     "primary": {
       "label": "Download notarized Mac beta",
-      "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg"
+      "href": "https://anchor.significanthobbies.com/downloads/Anchor-1.0.dmg?build=34"
     },
     "note": "Invite-only TestFlight and notarized Mac beta. Not listed on the App Store yet.",
     "image": "images/story/anchor-closing-v3.webp",
