@@ -484,7 +484,7 @@ function renderLanguageMatrix(report: FullReport, context: AtlasContext) {
     const meta = EMOTION_META[bucket];
     const rowButton = element("button");
     rowButton.type = "button";
-    rowButton.classList.add("matrix-row-label");
+    rowButton.classList.add("matrix-row-label", "text-[0.67rem]");
     rowButton.style.setProperty("--signal-color", meta.color);
     rowButton.append(element("i"), element("span", meta.label));
     rowButton.addEventListener("click", () =>

@@ -65,3 +65,7 @@ Established Button/Input/Textarea/Table style literals remain in their original
 component modules for consumers with existing narrow Tailwind sources. New native
 controls additionally need `src/lib/native-control-styles.ts`; the shared Console
 and Workbench CSS source entrypoints already include it.
+
+Native action adapters accept `selection: "primary"` (Astro: `selection="primary"`)
+to opt into a primary fill for `aria-pressed="true"` or `aria-selected="true"`.
+Selection has no default fill; existing Button variants retain their own appearance.
