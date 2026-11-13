@@ -1205,6 +1205,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       graph.append(path);
     }
 
+    const peakTopicCount = Math.max(1, ...displayTopics.map((topic) => topic.count));
     for (const topic of displayTopics) {
       const group = svgElement("g");
       group.setAttribute("class", "graph-node");
@@ -1219,7 +1220,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       );
       group.setAttribute("transform", `translate(${topic.x * 1_000} ${topic.y * 620})`);
 
-      const radius = Math.min(64, 28 + Math.sqrt(topic.count) * 2.2);
+      const radius = 30 + 34 * Math.sqrt(topic.count / peakTopicCount);
       const halo = svgElement("circle");
       halo.setAttribute("r", String(radius + 8));
       halo.setAttribute("class", "graph-node-halo");
@@ -1229,12 +1230,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       circle.style.stroke = topic.color;
 
       const label = svgElement("text");
-      label.setAttribute("y", "-2");
+      label.setAttribute("y", String(-radius - 16));
       label.textContent = truncate(topic.label.split(" · ")[0], 22);
 
       const count = svgElement("text");
       count.setAttribute("class", "graph-count");
-      count.setAttribute("y", "20");
+      count.setAttribute("y", "6");
       count.textContent = formatNumber(topic.count);
       group.append(halo, circle, label, count);
       const activate = () => selectTopic(topic);
@@ -1913,14 +1914,16 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       ]),
     );
     if (evolutionKind === "topics") {
-      return (report.semantic?.topics ?? []).map((topic) => ({
+      return (report.demo?.topics ?? report.semantic?.topics ?? []).map((topic) => ({
         id: topic.id,
         label: topic.label,
         trend: topic.trend,
         momentum: topic.momentum,
         periods: topic.activityByMonth,
         sources: topic.sources,
-        note: `${topic.count} sampled conversations assigned to this topic.`,
+        note: report.demo
+          ? `${topic.count} conversations match this question domain. Domains can overlap.`
+          : `${topic.count} sampled conversations assigned to this topic.`,
       }));
     }
     if (evolutionKind === "domains") {

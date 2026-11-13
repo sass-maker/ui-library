@@ -777,8 +777,7 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
     marginBottom: 52,
     marginLeft: 56,
     ariaLabel: `${report.demo ? "Question domains" : "Semantic topics"} by local momentum and selected-period conversation count`,
-    ariaDescription:
-      "Marks left of zero are fading locally, marks right of zero are emerging locally, and mark size reflects sampled conversation count in the selected period.",
+    ariaDescription: `Marks left of zero are fading locally, marks right of zero are emerging locally, and mark size reflects ${report.demo ? "matching" : "sampled"} conversation count in the selected period.`,
     style: {
       background: "transparent",
       color: "#627178",
@@ -843,7 +842,7 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
     topics.map(
       (topic) => () =>
         context.showEvidence(topic.label, topic.sources, [
-          `${formatNumber(topic.selectedCount)} sampled conversations in the selected period.`,
+          `${formatNumber(topic.selectedCount)} ${report.demo ? "matching" : "sampled"} conversations in the selected period.`,
           `${TREND_LABELS[topic.trend]} by the disclosed all-history local time-series rule.`,
           `Momentum score ${topic.momentum.toFixed(2)}.`,
         ]),
@@ -861,7 +860,7 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
         topic.sources,
         context,
         [
-          `${formatNumber(topic.selectedCount)} sampled conversations in the selected period.`,
+          `${formatNumber(topic.selectedCount)} ${report.demo ? "matching" : "sampled"} conversations in the selected period.`,
           `${TREND_LABELS[topic.trend]} by the disclosed local time-series rule.`,
         ],
       ),
