@@ -555,6 +555,9 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       context.stroke();
     }
 
+    const canvasStyle = getComputedStyle(graphFormationCanvas);
+    const canvasFont = canvasStyle.getPropertyValue("--font-sans").trim();
+    const canvasMono = canvasStyle.getPropertyValue("--font-mono").trim();
     context.textAlign = "center";
     context.textBaseline = "middle";
     for (const route of FORMATION_ROUTES) {
@@ -568,10 +571,10 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       context.lineWidth = count > 0 ? 3 : 1.5;
       context.stroke();
       context.fillStyle = "#101b24";
-      context.font = "700 11px Arial, sans-serif";
+      context.font = `700 11px ${canvasFont}`;
       context.fillText(route.label, route.x * cssWidth, route.y * cssHeight - radius - 10);
       context.fillStyle = "#5d6970";
-      context.font = '10px ui-monospace, "SFMono-Regular", Consolas, monospace';
+      context.font = `10px ${canvasMono}`;
       context.fillText(String(count), route.x * cssWidth, route.y * cssHeight);
     }
   }
