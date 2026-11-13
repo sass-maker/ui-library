@@ -73,42 +73,37 @@ struct Sidebar: View {
     @EnvironmentObject var study: Study
     var ledger = false
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Brand().padding(.bottom, 34)
+        SMWorkspaceSidebar(width: ledger ? 188 : 198) {
+            Brand()
+        } navigation: {
             nav("Overview", "square.grid.2x2", selected: false)
             nav("Storage", "internaldrive", selected: true)
             nav("Applications", "square.stack.3d.up", selected: false)
             nav("AI sessions", "bubble.left.and.bubble.right", selected: false)
             nav("History", "clock.arrow.circlepath", selected: false)
-            Spacer(minLength: 24)
-            VStack(alignment: .leading, spacing: 9) {
-                HStack { Image(systemName: "internaldrive"); Text("Macintosh HD"); Spacer() }.font(Tone.type(11, .medium))
-                GeometryReader { g in
-                    Capsule().fill(Tone.mint.opacity(0.10))
-                    Capsule().fill(Tone.mint.opacity(0.65)).frame(width: g.size.width * CGFloat(1 - Double(study.snapshot.available) / Double(study.snapshot.capacity)))
-                }.frame(height: 3)
-                Text("\(ByteCountFormatter.string(fromByteCount: study.snapshot.available, countStyle: .file)) available")
-                    .font(Tone.type(11)).foregroundStyle(Tone.secondary)
-            }.padding(.horizontal, 8).padding(.bottom, 26)
-            HStack {
-                Button { study.explain("Other tools remain accessible here. This study changes only the cleanup composition.") } label: {
-                    Label("Tools", systemImage: "ellipsis.circle")
+        } footer: {
+            VStack(alignment: .leading, spacing: 26) {
+                VStack(alignment: .leading, spacing: 9) {
+                    HStack { Image(systemName: "internaldrive"); Text("Macintosh HD"); Spacer() }.font(Tone.type(11, .medium))
+                    GeometryReader { g in
+                        Capsule().fill(Tone.mint.opacity(0.10))
+                        Capsule().fill(Tone.mint.opacity(0.65)).frame(width: g.size.width * CGFloat(1 - Double(study.snapshot.available) / Double(study.snapshot.capacity)))
+                    }.frame(height: 3)
+                    Text("\(ByteCountFormatter.string(fromByteCount: study.snapshot.available, countStyle: .file)) available")
+                        .font(Tone.type(11)).foregroundStyle(Tone.secondary)
                 }
-                Spacer()
-                Button { study.explain("Settings are not changed in this design preview.") } label: { Image(systemName: "gearshape") }
-                    .accessibilityLabel("Settings")
-            }.font(Tone.type(12)).foregroundStyle(Tone.secondary).buttonStyle(.plain).padding(.horizontal, 8)
-        }.padding(.horizontal, 18).padding(.top, 30).padding(.bottom, 24)
-            .frame(width: ledger ? 188 : 198).background(Color.black)
+                HStack {
+                    Button { study.explain("Other tools remain accessible here. This study changes only the cleanup composition.") } label: { Label("Tools", systemImage: "ellipsis.circle") }
+                    Spacer()
+                    Button { study.explain("Settings are not changed in this design preview.") } label: { Image(systemName: "gearshape") }.accessibilityLabel("Settings")
+                }.font(Tone.type(12)).foregroundStyle(Tone.secondary).buttonStyle(.plain)
+            }.padding(.horizontal, 8)
+        }
     }
     private func nav(_ name: String, _ symbol: String, selected: Bool) -> some View {
-        Button { if !selected { study.explain("This preview focuses on Storage → Cleanup. Other product destinations remain available in the app.") } } label: {
-            HStack(spacing: 11) { Image(systemName: symbol).frame(width: 18); Text(name); Spacer() }
-                .font(Tone.type(13, selected ? .medium : .regular))
-                .foregroundStyle(selected ? Tone.mint : Tone.secondary)
-                .padding(.horizontal, 10).frame(height: 39)
-                .background(selected ? Tone.mint.opacity(0.10) : .clear, in: RoundedRectangle(cornerRadius: 7))
-        }.buttonStyle(.plain).padding(.bottom, 4)
+        SMWorkspaceNavigationItem(name, systemImage: symbol, isSelected: selected) {
+            if !selected { study.explain("This preview focuses on Storage → Cleanup. Other product destinations remain available in the app.") }
+        }
     }
 }
 
@@ -116,17 +111,10 @@ struct ScopeBar: View {
     @EnvironmentObject var study: Study
     var ledger = false
     var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "internaldrive").foregroundStyle(Tone.secondary)
-            Text("Storage").foregroundStyle(Tone.secondary)
-            Image(systemName: "chevron.right").font(.system(size: 8, weight: .semibold)).foregroundStyle(Tone.secondary)
-            Text(ledger ? "Fleet workspaces" : "Cleanup").foregroundStyle(Tone.ink)
-            Spacer()
-            Text("Read-only folder metadata").font(Tone.type(11)).foregroundStyle(Tone.secondary)
+        SMWorkspaceScopeBar(ledger ? "Storage  ›  Fleet workspaces" : "Storage  ›  Cleanup", systemImage: "internaldrive", detail: "Read-only folder metadata") {
             Button { study.explain("This is a design preview. Rescanning is not started and no files are changed.") } label: { Image(systemName: "arrow.clockwise") }
                 .buttonStyle(SMMacButtonStyle(.quiet)).accessibilityLabel("Refresh")
-        }.font(Tone.type(12)).padding(.horizontal, 30).frame(height: 52)
-            .overlay(alignment: .bottom) { Divider().overlay(Tone.hairline) }
+        }
     }
 }
 
@@ -171,7 +159,6 @@ struct ReviewDesk: View {
     var body: some View {
         HStack(spacing: 0) {
             Sidebar()
-            Divider().overlay(Tone.hairline)
             VStack(spacing: 0) {
                 ScopeBar()
                 GeometryReader { g in
@@ -265,7 +252,6 @@ struct StorageLedger: View {
     var body: some View {
         HStack(spacing: 0) {
             Sidebar(ledger: true)
-            Divider().overlay(Tone.hairline)
             VStack(alignment: .leading, spacing: 0) {
                 ScopeBar(ledger: true)
                 HStack(alignment: .firstTextBaseline) {
@@ -415,7 +401,7 @@ struct Root: View {
             }.font(Tone.type(10)).foregroundStyle(Tone.secondary).padding(.horizontal, 25).frame(height: 30)
                 .overlay(alignment: .top) { Divider().overlay(Tone.hairline) }
         }.foregroundStyle(Tone.ink).font(Tone.type(13)).background(Color.black)
-            .smTheme(Tone.palette).environmentObject(study).preferredColorScheme(.dark)
+            .background(SMWorkspaceWindowChrome()).smTheme(Tone.palette).environmentObject(study).preferredColorScheme(.dark)
             .sheet(isPresented: $study.review) {
                 VStack(alignment: .leading, spacing: 18) {
                     Label("Review your selection", systemImage: "checklist").font(Tone.heading(24))
