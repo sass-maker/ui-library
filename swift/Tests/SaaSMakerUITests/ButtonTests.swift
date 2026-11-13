@@ -79,9 +79,18 @@ import Testing
         for disabled in [false, true] {
             let current = try bitmap(Button("Inspect") {}.buttonStyle(SMButtonStyle(kind)).disabled(disabled).smTheme(.baseDark))
             let legacy = try bitmap(Button("Inspect") {}.buttonStyle(LegacyButtonStyle(kind: kind)).disabled(disabled).smTheme(.baseDark))
-            #expect(current.pixelsWide == legacy.pixelsWide)
-            #expect(current.pixelsHigh == legacy.pixelsHigh)
-            #expect(current.representation(using: .png, properties: [:]) == legacy.representation(using: .png, properties: [:]))
+            try #require(current.pixelsWide == legacy.pixelsWide)
+            try #require(current.pixelsHigh == legacy.pixelsHigh)
+            // Compare pixels; PNG compression and metadata are not appearance.
+            try #require(current.bitsPerPixel == legacy.bitsPerPixel && current.bitsPerPixel.isMultiple(of: 8))
+            try #require(!current.isPlanar && !legacy.isPlanar && current.bitmapFormat == legacy.bitmapFormat)
+            let currentBytes = try #require(current.bitmapData)
+            let legacyBytes = try #require(legacy.bitmapData)
+            let rowBytes = current.pixelsWide * current.bitsPerPixel / 8
+            for row in 0..<current.pixelsHigh {
+                #expect(Data(bytes: currentBytes + row * current.bytesPerRow, count: rowBytes)
+                    == Data(bytes: legacyBytes + row * legacy.bytesPerRow, count: rowBytes))
+            }
         }
     }
 
