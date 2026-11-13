@@ -39,7 +39,7 @@ jobs:
         run: |
           set -o pipefail
           swift test --filter 'PaletteTests|FontTests|LoadingTests|FooterRequestTests|FooterClientTests|ButtonTests.*(preservesExistingAPIAndMetrics|compactMetricsAndPressCompatibility)' 2>&1 | tee evidence/core-tests.log
-          grep -Eq 'Test run with [1-9][0-9]* tests? passed' evidence/core-tests.log
+          grep -Eq 'Test run with [1-9][0-9]* tests?( in [0-9]+ suites?)? passed' evidence/core-tests.log
           grep -Eq 'preservesExistingAPIAndMetrics.*passed' evidence/core-tests.log
           grep -Eq 'compactMetricsAndPressCompatibility.*passed' evidence/core-tests.log
       - name: Tests and genuine SwiftUI renders
