@@ -182,9 +182,9 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 <small>{indexCopy[21].text}</small>
               </div>
               <div class="confidence-presets" aria-label="Evidence confidence presets">
-                <Control as="button" variant="outline" type="button" data-confidence="45">Exploratory</Control>
-                <Control as="button" variant="outline" type="button" data-confidence="65" aria-pressed="true">Balanced</Control>
-                <Control as="button" variant="outline" type="button" data-confidence="82">Conservative</Control>
+                <Control as="button" variant="outline" selection="primary" type="button" data-confidence="45">Exploratory</Control>
+                <Control as="button" variant="outline" selection="primary" type="button" data-confidence="65" aria-pressed="true">Balanced</Control>
+                <Control as="button" variant="outline" selection="primary" type="button" data-confidence="82">Conservative</Control>
               </div>
               <label for="confidence-input">
                 <span>Threshold</span>
@@ -237,7 +237,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <p id="demo-progress-status" role="status" aria-live="polite">Connecting to the demo…</p>
             <Control as="progress" id="demo-progress-bar" aria-label="Demo download progress"></Control>
             <div class="demo-progress-detail"><span id="demo-progress-bytes">Waiting for the download</span><span>Private conversations stay private</span></div>
-            <Control as="button" variant="outline" id="cancel-demo" class="" type="button">Cancel</Control>
+            <Control as="button" variant="outline" selection="primary" id="cancel-demo" class="" type="button">Cancel</Control>
           </section>
 
         <section id="progress-view" class="progress-view" hidden aria-labelledby="progress-heading">
@@ -246,7 +246,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               <p id="progress-phase" class="map-key">Reading archive</p>
               <h2 id="progress-heading" class="font-display">Building your memory map</h2>
             </div>
-            <Control as="button" variant="outline" id="cancel-analysis" class="" type="button">Cancel</Control>
+            <Control as="button" variant="outline" selection="primary" id="cancel-analysis" class="" type="button">Cancel</Control>
           </div>
           <div class="progress-route" aria-hidden="true">
             <span class="progress-stop is-active"></span>
@@ -341,7 +341,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
           <p class="map-key">Route interrupted</p>
           <h2 id="error-heading" class="font-display">This archive could not be mapped.</h2>
           <p id="error-message"></p>
-          <Control as="button" variant="outline" id="retry-demo" class="" type="button" hidden>Retry demo</Control>
+          <Control as="button" variant="outline" selection="primary" id="retry-demo" class="" type="button" hidden>Retry demo</Control>
           <Control as="button" variant="brand" id="error-reset" class="" type="button">Choose another ZIP</Control>
         </section>
 
@@ -353,16 +353,16 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               <p id="report-meta" class="report-meta"></p>
             </div>
             <div class="report-actions">
-              <Control as="button" variant="outline" id="open-story" class="" type="button">
+              <Control as="button" variant="outline" selection="primary" id="open-story" class="" type="button">
                 Play your story
               </Control>
-              <Control as="button" variant="outline" id="save-memory" class="" type="button">
+              <Control as="button" variant="outline" selection="primary" id="save-memory" class="" type="button">
                 Keep on this device
               </Control>
-              <Control as="button" variant="outline" id="forget-memory" class=" danger" type="button" hidden>
+              <Control as="button" variant="outline" selection="primary" id="forget-memory" class=" danger" type="button" hidden>
                 Forget
               </Control>
-              <Control as="button" variant="outline" id="reset-report" class="" type="button">New archive</Control>
+              <Control as="button" variant="outline" selection="primary" id="reset-report" class="" type="button">New archive</Control>
             </div>
           </header>
 
@@ -454,7 +454,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                     Archive contents and derived text stay out of this trace.
                   </p>
                 </div>
-                <Control as="button" variant="outline" id="export-local-trace" class="" type="button">
+                <Control as="button" variant="outline" selection="primary" id="export-local-trace" class="" type="button">
                   Export local trace
                 </Control>
               </section>
@@ -467,9 +467,9 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 </div>
                 <div class="report-confidence">
                   <div id="report-confidence-presets" class="confidence-presets" aria-label="Report confidence presets">
-                    <Control as="button" variant="outline" type="button" data-confidence="45">Exploratory</Control>
-                    <Control as="button" variant="outline" type="button" data-confidence="65" aria-pressed="true">Balanced</Control>
-                    <Control as="button" variant="outline" type="button" data-confidence="82">Conservative</Control>
+                    <Control as="button" variant="outline" selection="primary" type="button" data-confidence="45">Exploratory</Control>
+                    <Control as="button" variant="outline" selection="primary" type="button" data-confidence="65" aria-pressed="true">Balanced</Control>
+                    <Control as="button" variant="outline" selection="primary" type="button" data-confidence="82">Conservative</Control>
                   </div>
                   <label for="report-confidence-input">
                     <span>Visible evidence threshold</span>
@@ -525,7 +525,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               <span><i class="atlas-key-action"></i>Open a mark to inspect sources</span>
             </div>
 
-            <Control as="button" variant="outline" id="atlas-highlight" class="atlas-highlight grid h-auto w-full grid-cols-1 gap-4 whitespace-normal p-5 text-left sm:grid-cols-2 xl:grid-cols-[0.35fr_1fr_0.75fr_auto]" type="button" hidden>
+            <Control as="button" variant="outline" selection="primary" id="atlas-highlight" class="atlas-highlight grid h-auto w-full grid-cols-1 gap-4 whitespace-normal p-5 text-left sm:grid-cols-2 xl:grid-cols-[0.35fr_1fr_0.75fr_auto]" type="button" hidden>
               <span>Start here · strongest signal in this period</span>
               <strong id="atlas-highlight-title"></strong>
               <small id="atlas-highlight-detail"></small>
@@ -719,7 +719,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                     <p class="map-key">Ask the graph</p>
                     <h2 id="memory-chat-heading" class="font-display">Memory Chat</h2>
                   </div>
-                  <Control as="button" variant="outline" id="unload-memory-chat" type="button" hidden>Unload model</Control>
+                  <Control as="button" variant="outline" selection="primary" id="unload-memory-chat" type="button" hidden>Unload model</Control>
                 </header>
                 <p class="memory-chat-promise">
                   Your question traverses the map first. A small local model sees only the six
@@ -812,16 +812,16 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                   </div>
                 </div>
                 <div id="ledger-tabs" class="ledger-tabs" role="tablist" aria-label="Fact states">
-                  <Control as="button" variant="outline" type="button" role="tab" data-status="current" aria-selected="true">
+                  <Control as="button" variant="outline" selection="primary" type="button" role="tab" data-status="current" aria-selected="true">
                     Current <span>0</span>
                   </Control>
-                  <Control as="button" variant="outline" type="button" role="tab" data-status="updated" aria-selected="false">
+                  <Control as="button" variant="outline" selection="primary" type="button" role="tab" data-status="updated" aria-selected="false">
                     Updated <span>0</span>
                   </Control>
-                  <Control as="button" variant="outline" type="button" role="tab" data-status="refuted" aria-selected="false">
+                  <Control as="button" variant="outline" selection="primary" type="button" role="tab" data-status="refuted" aria-selected="false">
                     Refuted <span>0</span>
                   </Control>
-                  <Control as="button" variant="outline" type="button" role="tab" data-status="contradicted" aria-selected="false">
+                  <Control as="button" variant="outline" selection="primary" type="button" role="tab" data-status="contradicted" aria-selected="false">
                     Possible contradictions <span>0</span>
                   </Control>
                 </div>
@@ -845,9 +845,9 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               <p>Emerging, fading, and resurfacing are local trend labels—not explanations for why your interests changed.</p>
             </div>
             <div class="evolution-switcher" role="tablist" aria-label="Evolution evidence">
-              <Control as="button" variant="outline" type="button" role="tab" data-evolution="topics" aria-selected="true">Topics</Control>
-              <Control as="button" variant="outline" type="button" role="tab" data-evolution="domains" aria-selected="false">Question domains</Control>
-              <Control as="button" variant="outline" type="button" role="tab" data-evolution="language" aria-selected="false">Language signals</Control>
+              <Control as="button" variant="outline" selection="primary" type="button" role="tab" data-evolution="topics" aria-selected="true">Topics</Control>
+              <Control as="button" variant="outline" selection="primary" type="button" role="tab" data-evolution="domains" aria-selected="false">Question domains</Control>
+              <Control as="button" variant="outline" selection="primary" type="button" role="tab" data-evolution="language" aria-selected="false">Language signals</Control>
             </div>
             <div class="evolution-grid">
               <div>
@@ -1016,10 +1016,10 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="rhythm-toolbar">
               <div class="rhythm-measure" role="group" aria-labelledby="rhythm-measure-label">
                 <span id="rhythm-measure-label">Measure</span>
-                <Control as="button" variant="outline" type="button" data-rhythm-measure="conversations" aria-pressed="true">
+                <Control as="button" variant="outline" selection="primary" type="button" data-rhythm-measure="conversations" aria-pressed="true">
                   Conversations
                 </Control>
-                <Control as="button" variant="outline" type="button" data-rhythm-measure="words" aria-pressed="false">
+                <Control as="button" variant="outline" selection="primary" type="button" data-rhythm-measure="words" aria-pressed="false">
                   Approx. words
                 </Control>
               </div>
@@ -1094,7 +1094,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
         <header class="story-header">
           <span class="story-brand">Memory Map</span>
           <p id="story-position" aria-live="polite">Slide 1 of 7</p>
-          <Control as="button" variant="outline" id="close-story" type="button" aria-label="Close story">×</Control>
+          <Control as="button" variant="outline" selection="primary" id="close-story" type="button" aria-label="Close story">×</Control>
         </header>
         <nav id="story-progress" class="story-progress" aria-label="Story slides"></nav>
         <main id="story-slide" class="story-slide" tabindex="-1">
@@ -1102,9 +1102,9 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
           <h2 id="story-heading" class="font-display">Your ChatGPT history, mapped.</h2>
         </main>
         <footer class="story-controls">
-          <Control as="button" variant="outline" id="story-previous" type="button">← Previous</Control>
+          <Control as="button" variant="outline" selection="primary" id="story-previous" type="button">← Previous</Control>
           <span>Use arrow keys or swipe</span>
-          <Control as="button" variant="outline" id="story-next" type="button">Next →</Control>
+          <Control as="button" variant="outline" selection="primary" id="story-next" type="button">Next →</Control>
         </footer>
       </div>
     </Control>
@@ -1117,7 +1117,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
       aria-labelledby="evidence-heading"
       hidden
     >
-      <Control as="button" variant="outline" id="close-evidence" class="evidence-close" type="button" aria-label="Close evidence">
+      <Control as="button" variant="outline" selection="primary" id="close-evidence" class="evidence-close" type="button" aria-label="Close evidence">
         ×
       </Control>
       <p class="map-key">Why this appeared</p>

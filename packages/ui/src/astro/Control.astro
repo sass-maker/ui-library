@@ -5,10 +5,11 @@ interface Props extends Record<string, unknown> {
   class?: string;
   variant?: NativeControlStyleOptions["variant"];
   size?: NativeControlStyleOptions["size"];
+  selection?: NativeControlStyleOptions["selection"];
   type?: string;
 }
-const { as: Tag, class: className, variant, size, ...attributes } = Astro.props;
-const styles = nativeControlStyles(Tag, { className, variant, size, type: attributes.type });
+const { as: Tag, class: className, variant, size, selection, ...attributes } = Astro.props;
+const styles = nativeControlStyles(Tag, { className, variant, size, selection, type: attributes.type });
 const slot = Tag === "details" ? "native-disclosure" : `native-${Tag}`;
 ---
 <Tag {...attributes} data-slot={slot} data-variant={variant} data-size={size} class={styles}><slot /></Tag>

@@ -1,9 +1,11 @@
 import { cva } from "class-variance-authority"
 import { cn } from "./utils"
 
+export const nativeSelectionStyles = { primary: "aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-selected:bg-primary aria-selected:text-primary-foreground dark:aria-pressed:bg-primary dark:aria-selected:bg-primary aria-pressed:hover:bg-primary/88 aria-selected:hover:bg-primary/88 aria-pressed:hover:text-primary-foreground aria-selected:hover:text-primary-foreground" } as const
+
 /** Canonical control geometry shared by React, Astro and native DOM adapters. */
 export const buttonVariants = cva(
-  "ui-case touch-manipulation select-none [-webkit-tap-highlight-color:transparent] [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11 inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out outline-none aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-selected:bg-primary aria-selected:text-primary-foreground dark:aria-pressed:bg-primary dark:aria-selected:bg-primary aria-pressed:hover:bg-primary/88 aria-selected:hover:bg-primary/88 aria-pressed:hover:text-primary-foreground aria-selected:hover:text-primary-foreground motion-safe:enabled:active:scale-[0.97] motion-safe:aria-disabled:active:scale-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "ui-case touch-manipulation select-none [-webkit-tap-highlight-color:transparent] [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11 inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out outline-none motion-safe:enabled:active:scale-[0.97] motion-safe:aria-disabled:active:scale-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
