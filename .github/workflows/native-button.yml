@@ -14,7 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15-intel, macos-15]
+        include:
+          - os: macos-15-intel
+            render: false
+          - os: macos-15
+            render: true
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     env:
@@ -30,7 +34,13 @@ jobs:
           swift build 2>&1 | tee evidence/build.log
       - name: Build the portable Mac workspace example
         run: swift build --package-path swift/Examples/MacWorkspaceDemo --configuration release
+      - name: Non-rendering tests on Intel
+        if: ${{ !matrix.render }}
+        run: |
+          set -o pipefail
+          swift test --filter 'PaletteTests|FontTests|LoadingTests|FooterRequestTests|FooterClientTests' 2>&1 | tee evidence/core-tests.log
       - name: Tests and genuine SwiftUI renders
+        if: matrix.render
         run: |
           set -o pipefail
           mkdir -p evidence/renders
@@ -38,6 +48,7 @@ jobs:
           test -s evidence/renders/buttons-390.png
           test -s evidence/renders/buttons-768.png
       - name: Native selection interaction and renders in an isolated process
+        if: matrix.render
         run: |
           set -o pipefail
           SM_INTERACTION_SNAPSHOT_DIR="$PWD/evidence/selection" node --test scripts/native-selection.test.mjs 2>&1 | tee evidence/selection.log

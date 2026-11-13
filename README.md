@@ -841,7 +841,9 @@ touch devices, give compact labels a minimum 44pt target. Colors, fonts,
 capsules and press behavior still come from the same shared palette and motion.
 
 The native PR workflow builds/tests on macOS 15 with Intel and Apple silicon
-runners, compiling for the supported macOS 14 deployment minimum. GitHub retired
+runners, compiling for the supported macOS 14 deployment minimum. Intel runs the
+non-rendering core tests; genuine SwiftUI renders and native mouse interaction
+run on Apple silicon, where the hosted Metal device is available. GitHub retired
 its macOS 14 runner images; macOS 14 runtime qualification remains separate. `SM_SNAPSHOT_DIR` emits genuine SwiftUI PNG examples at
 390 and 768 points, including disabled and larger-text controls. Its artifacts
 carry build/test logs and renders; native owner/device review is separate.
