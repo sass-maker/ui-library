@@ -1,3 +1,5 @@
+import { chartAppearance } from "@saas-maker/ui/lib/chart-styles";
+import { atlasElement } from "./ui-elements";
 import type {
   EmotionBucket,
   FullReport,
@@ -78,12 +80,9 @@ function $(selector: string): HTMLElement {
 function element<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   value?: string,
-  className?: string,
+  className?: string
 ): HTMLElementTagNameMap[K] {
-  const node = document.createElement(tag);
-  if (value !== undefined) node.textContent = value;
-  if (className) node.className = className;
-  return node;
+  return atlasElement(tag, value, className);
 }
 
 function formatMonth(label: string): string {
@@ -105,7 +104,7 @@ function evidenceButton(
   meta: string,
   sources: SourceRef[],
   context: AtlasContext,
-  notes: string[],
+  notes: string[]
 ): HTMLButtonElement {
   const button = element("button", undefined, "chart-data-row");
   button.type = "button";
@@ -193,7 +192,7 @@ function attachPlotActions(
   chart: HTMLElement,
   selector: string,
   actions: Array<() => void>,
-  labels: string[],
+  labels: string[]
 ) {
   const marks = [...chart.querySelectorAll<SVGElement>(selector)];
   if (marks.length !== actions.length) return;
@@ -218,15 +217,13 @@ function renderActivityCalendar(report: FullReport, context: AtlasContext) {
   const activity = report.deterministic.activityByDay;
   if (!activity) {
     chart.replaceChildren(
-      emptyState(
-        "Daily detail was not stored in this older snapshot. Re-import the ZIP to add it.",
-      ),
+      emptyState("Daily detail was not stored in this older snapshot. Re-import the ZIP to add it.")
     );
     data.replaceChildren(
       element(
         "p",
-        "Monthly activity is still available below in Rhythms. Re-import the original ZIP for daily values.",
-      ),
+        "Monthly activity is still available below in Rhythms. Re-import the original ZIP for daily values."
+      )
     );
     return;
   }
@@ -250,7 +247,7 @@ function renderActivityCalendar(report: FullReport, context: AtlasContext) {
   start.setUTCDate(start.getUTCDate() - start.getUTCDay());
   const visibleWeeks = Math.max(
     1,
-    Math.ceil((end.getTime() - start.getTime() + 86_400_000) / (7 * 86_400_000)),
+    Math.ceil((end.getTime() - start.getTime() + 86_400_000) / (7 * 86_400_000))
   );
   const periodLabel =
     context.periodMonths === null
@@ -315,7 +312,7 @@ function renderActivityCalendar(report: FullReport, context: AtlasContext) {
       mark.style.setProperty("--level", String(level));
       return mark;
     }),
-    element("span", "Busy"),
+    element("span", "Busy")
   );
   const calendarWindow = element("div", undefined, "calendar-window");
   calendarWindow.style.setProperty("--week-count", String(visibleWeeks));
@@ -324,7 +321,7 @@ function renderActivityCalendar(report: FullReport, context: AtlasContext) {
   calendarScroll.tabIndex = 0;
   calendarScroll.setAttribute(
     "aria-label",
-    `Daily conversation activity for ${periodLabel}. Scroll horizontally for earlier dates.`,
+    `Daily conversation activity for ${periodLabel}. Scroll horizontally for earlier dates.`
   );
   calendarScroll.append(calendarWindow);
   chart.replaceChildren(calendarScroll, scale);
@@ -341,10 +338,10 @@ function renderActivityCalendar(report: FullReport, context: AtlasContext) {
             `${formatNumber(datum?.value ?? 0)} conversation${datum?.value === 1 ? "" : "s"}`,
             datum?.sources ?? [],
             context,
-            [`Daily activity in the selected ${periodLabel} window.`],
-          ),
+            [`Daily activity in the selected ${periodLabel} window.`]
+          )
         )
-      : [element("p", `No active days in the selected ${periodLabel} window.`)]),
+      : [element("p", `No active days in the selected ${periodLabel} window.`)])
   );
 }
 
@@ -401,12 +398,7 @@ function renderQuestionMix(report: FullReport, context: AtlasContext) {
     ariaLabel: "Stacked monthly activity for the five most frequent overlapping question routes",
     ariaDescription:
       "Each prompt may belong to more than one route, so the stacked height is not a share of a whole.",
-    style: {
-      background: "transparent",
-      color: "#627178",
-      fontFamily: 'ui-monospace, "SFMono-Regular", Consolas, monospace',
-      fontSize: "11px",
-    },
+    style: chartAppearance(),
     x: {
       domain: months,
       label: null,
@@ -445,10 +437,10 @@ function renderQuestionMix(report: FullReport, context: AtlasContext) {
         context.showEvidence(lens.label, lens.sources, [
           lens.description,
           `${formatNumber(selectedCount)} matching queries in the selected period. Question routes overlap.`,
-        ]),
+        ])
       );
       return button;
-    }),
+    })
   );
   data.replaceChildren(
     ...lenses.map((lens) =>
@@ -457,16 +449,16 @@ function renderQuestionMix(report: FullReport, context: AtlasContext) {
         months
           .map(
             (month) =>
-              `${formatMonth(month)} ${formatNumber(lens.byMonth.find((datum) => datum.label === month)?.value ?? 0)}`,
+              `${formatMonth(month)} ${formatNumber(lens.byMonth.find((datum) => datum.label === month)?.value ?? 0)}`
           )
           .join(" · "),
         lens.sources.filter((source) =>
-          months.includes(new Date(source.date * 1_000).toISOString().slice(0, 7)),
+          months.includes(new Date(source.date * 1_000).toISOString().slice(0, 7))
         ),
         context,
-        [lens.description, "A query can count in more than one route."],
-      ),
-    ),
+        [lens.description, "A query can count in more than one route."]
+      )
+    )
   );
 }
 
@@ -499,21 +491,21 @@ function renderLanguageMatrix(report: FullReport, context: AtlasContext) {
       context.showEvidence(
         `${meta.label} wording`,
         emotions.sources[bucket].filter((source) =>
-          months.includes(new Date(source.date * 1_000).toISOString().slice(0, 7)),
+          months.includes(new Date(source.date * 1_000).toISOString().slice(0, 7))
         ),
         [
           `${formatNumber(
             emotions.byMonth
               .filter((datum) => months.includes(datum.month))
-              .reduce((sum, datum) => sum + datum.counts[bucket], 0),
+              .reduce((sum, datum) => sum + datum.counts[bucket], 0)
           )} queries matched this dominant vocabulary signal in the selected period.`,
           "This describes query wording, not how you felt.",
-        ],
-      ),
+        ]
+      )
     );
     grid.append(rowButton);
     const monthlyValues = months.map(
-      (month) => emotions.byMonth.find((datum) => datum.month === month)?.counts[bucket] ?? 0,
+      (month) => emotions.byMonth.find((datum) => datum.month === month)?.counts[bucket] ?? 0
     );
     const max = Math.max(1, ...monthlyValues);
     monthlyValues.forEach((value, monthIndex) => {
@@ -523,7 +515,7 @@ function renderLanguageMatrix(report: FullReport, context: AtlasContext) {
       cell.title = `${meta.label} · ${months[monthIndex]} · ${formatNumber(value)} queries`;
       cell.setAttribute(
         "aria-label",
-        `${meta.label}, ${formatMonth(months[monthIndex])}: ${formatNumber(value)} queries`,
+        `${meta.label}, ${formatMonth(months[monthIndex])}: ${formatNumber(value)} queries`
       );
       grid.append(cell);
     });
@@ -542,15 +534,15 @@ function renderLanguageMatrix(report: FullReport, context: AtlasContext) {
           })
           .join(" · "),
         emotions.sources[bucket].filter((source) =>
-          months.includes(new Date(source.date * 1_000).toISOString().slice(0, 7)),
+          months.includes(new Date(source.date * 1_000).toISOString().slice(0, 7))
         ),
         context,
         [
           `${formatNumber(emotions.counts[bucket])} total queries matched this dominant vocabulary signal.`,
           "This describes query wording, not how you felt.",
-        ],
+        ]
       );
-    }),
+    })
   );
 }
 
@@ -588,7 +580,7 @@ function repeatPoints(report: FullReport, context: AtlasContext): RepeatPoint[] 
     .filter(
       (point) =>
         context.periodMonths === null ||
-        visibleMonths.has(new Date(point.latestDate * 1_000).toISOString().slice(0, 7)),
+        visibleMonths.has(new Date(point.latestDate * 1_000).toISOString().slice(0, 7))
     )
     .sort((left, right) => right.count - left.count || right.spanDays - left.spanDays)
     .slice(0, 22);
@@ -613,12 +605,7 @@ function repeatLandscapePlot(plotPoints: RepeatPlotPoint[]) {
     ariaLabel: "Repeated questions by frequency and elapsed time",
     ariaDescription:
       "Circles are exact wording groups. Diamonds are meaning-match groups that clear the active confidence threshold.",
-    style: {
-      background: "transparent",
-      color: "#627178",
-      fontFamily: 'ui-monospace, "SFMono-Regular", Consolas, monospace',
-      fontSize: "11px",
-    },
+    style: chartAppearance(),
     x: {
       type: "log",
       label: "days between first and latest ask",
@@ -653,7 +640,7 @@ function repeatLandscapePlot(plotPoints: RepeatPlotPoint[]) {
           textAnchor: "start",
           fontSize: 10,
           fill: "#26353c",
-        },
+        }
       ),
     ],
   });
@@ -667,8 +654,8 @@ function renderRepeatLandscape(report: FullReport, context: AtlasContext) {
   if (points.length === 0) {
     chart.append(
       emptyState(
-        report.semantic ? "No repeat groups cleared this lens." : "No exact repeat groups yet.",
-      ),
+        report.semantic ? "No repeat groups cleared this lens." : "No exact repeat groups yet."
+      )
     );
     data.replaceChildren(element("p", "No repeat groups available for this view."));
     return;
@@ -691,12 +678,12 @@ function renderRepeatLandscape(report: FullReport, context: AtlasContext) {
           point.kind === "Meaning match" && point.confidence !== null
             ? `${Math.round(point.confidence * 100)}% semantic evidence confidence.`
             : point.kind,
-        ]),
+        ])
     ),
     points.map(
       (point) =>
-        `${truncate(point.label, 90)}. ${point.count} asks across ${point.spanDays} days. ${point.kind}. Open sources.`,
-    ),
+        `${truncate(point.label, 90)}. ${point.count} asks across ${point.spanDays} days. ${point.kind}. Open sources.`
+    )
   );
   data.replaceChildren(
     ...points.map((point) =>
@@ -708,9 +695,9 @@ function renderRepeatLandscape(report: FullReport, context: AtlasContext) {
         [
           `${formatNumber(point.count)} asks across ${formatNumber(point.spanDays)} days.`,
           point.kind,
-        ],
-      ),
-    ),
+        ]
+      )
+    )
   );
 }
 
@@ -741,7 +728,7 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
     state.hidden = false;
     state.replaceChildren(
       element("strong", "No sampled topics were available."),
-      element("small", "The deterministic atlas remains usable."),
+      element("small", "The deterministic atlas remains usable.")
     );
     chart.classList.add("is-hidden");
     data.replaceChildren(element("p", "No sampled topics."));
@@ -766,12 +753,7 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
     marginLeft: 56,
     ariaLabel: `${report.demo ? "Question domains" : "Semantic topics"} by local momentum and selected-period conversation count`,
     ariaDescription: `Marks left of zero are fading locally, marks right of zero are emerging locally, and mark size reflects ${report.demo ? "matching" : "sampled"} conversation count in the selected period.`,
-    style: {
-      background: "transparent",
-      color: "#627178",
-      fontFamily: 'ui-monospace, "SFMono-Regular", Consolas, monospace',
-      fontSize: "11px",
-    },
+    style: chartAppearance(),
     x: {
       domain: [-1, 1],
       label: "fading ← local movement → emerging",
@@ -810,7 +792,7 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
       [
         `${formatNumber(topic.selectedCount)} selected-period conversations.`,
         `Momentum score ${topic.momentum.toFixed(2)} by the disclosed all-history rule.`,
-      ],
+      ]
     );
     const marker = element("i");
     marker.style.background = TREND_COLORS[topic.trend];
@@ -829,12 +811,12 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
           `${formatNumber(topic.selectedCount)} ${report.demo ? "matching" : "sampled"} conversations in the selected period.`,
           `${TREND_LABELS[topic.trend]} by the disclosed all-history local time-series rule.`,
           `Momentum score ${topic.momentum.toFixed(2)}.`,
-        ]),
+        ])
     ),
     topics.map(
       (topic) =>
-        `${topic.label}. ${topic.selectedCount} selected-period conversations. ${TREND_LABELS[topic.trend]}. ${report.demo ? "Open aggregate details." : "Open sources."}`,
-    ),
+        `${topic.label}. ${topic.selectedCount} selected-period conversations. ${TREND_LABELS[topic.trend]}. ${report.demo ? "Open aggregate details." : "Open sources."}`
+    )
   );
   data.replaceChildren(
     ...topics.map((topic) =>
@@ -846,16 +828,16 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
         [
           `${formatNumber(topic.selectedCount)} ${report.demo ? "matching" : "sampled"} conversations in the selected period.`,
           `${TREND_LABELS[topic.trend]} by the disclosed local time-series rule.`,
-        ],
-      ),
-    ),
+        ]
+      )
+    )
   );
 }
 
 function shapeGroup(
   title: string,
   subtitle: string,
-  values: Array<{ label: string; value: number }>,
+  values: Array<{ label: string; value: number }>
 ): HTMLElement {
   const group = element("section", undefined, "shape-group");
   const heading = element("header");
@@ -895,7 +877,7 @@ function renderConversationShape(report: FullReport) {
     shapeGroup(
       "Depth",
       `Median ${formatNumber(deterministic.depth.medianMessages)} messages`,
-      depth,
+      depth
     ),
     shapeGroup("Weekday rhythm", "Conversation starts", weekday),
   ];
@@ -904,19 +886,19 @@ function renderConversationShape(report: FullReport) {
   const rows = [
     element(
       "p",
-      `Depth — ${depth.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ")}`,
+      `Depth — ${depth.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ")}`
     ),
     element(
       "p",
-      `Weekdays — ${weekday.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ")}`,
+      `Weekdays — ${weekday.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ")}`
     ),
   ];
   if (!report.demo)
     rows.push(
       element(
         "p",
-        `Models — ${models.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ") || "No model labels"}`,
-      ),
+        `Models — ${models.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ") || "No model labels"}`
+      )
     );
   data.replaceChildren(...rows);
 }
@@ -934,7 +916,7 @@ function renderActivityRhythms(report: FullReport, context: AtlasContext) {
   const routeId = hasDetailedRhythms ? context.rhythmRouteId : "all";
   const months = activityMonthWindow(report.deterministic, context.periodMonths);
   const storedSeries = report.deterministic.activityRhythms?.find(
-    (series) => series.id === routeId,
+    (series) => series.id === routeId
   );
   const fallback = new Map(
     report.deterministic.activityByMonth.map((datum) => [
@@ -946,10 +928,10 @@ function renderActivityRhythms(report: FullReport, context: AtlasContext) {
         userPrompts: 0,
         words: 0,
       },
-    ]),
+    ])
   );
   const byMonth = new Map(
-    (storedSeries?.byMonth ?? [...fallback.values()]).map((datum) => [datum.label, datum]),
+    (storedSeries?.byMonth ?? [...fallback.values()]).map((datum) => [datum.label, datum])
   );
   const values = months.map((month) => ({
     month,
@@ -997,12 +979,7 @@ function renderActivityRhythms(report: FullReport, context: AtlasContext) {
       routeId === "all"
         ? `Monthly ${metricLabel} across the selected period.`
         : `Monthly ${metricLabel} for complete conversations with a matching ${routeLabel} query. Routes overlap.`,
-    style: {
-      background: "transparent",
-      color: "#58666d",
-      fontFamily: 'ui-monospace, "SFMono-Regular", Consolas, monospace',
-      fontSize: "11px",
-    },
+    style: chartAppearance(),
     x: {
       type: "band",
       label: null,
@@ -1049,9 +1026,9 @@ function renderActivityRhythms(report: FullReport, context: AtlasContext) {
       element(
         "p",
         `${datum.month} · ${formatNumber(datum.value)} ${metricLabel}`,
-        "rhythm-data-row",
-      ),
-    ),
+        "rhythm-data-row"
+      )
+    )
   );
 }
 
@@ -1100,8 +1077,8 @@ function renderHistoricalShifts(report: FullReport) {
         "p",
         shifts && shifts.months < 3
           ? `Only ${shifts.months} month(s) of history; three are needed to compare.`
-          : "No measurable shift in cadence, question lenses, or emotions.",
-      ),
+          : "No measurable shift in cadence, question lenses, or emotions."
+      )
     );
     return;
   }
@@ -1117,11 +1094,11 @@ function renderHistoricalShifts(report: FullReport) {
     color: TREND_COLORS[finding.trend],
     changeLabel: `${shiftValueLabel(finding, finding.earlyShare)} → ${shiftValueLabel(
       finding,
-      finding.recentShare,
+      finding.recentShare
     )}`,
     tip: `${finding.label} — ${TREND_LABELS[finding.trend]}, ${shiftValueLabel(
       finding,
-      finding.earlyShare,
+      finding.earlyShare
     )} → ${shiftValueLabel(finding, finding.recentShare)}`,
   }));
   const domain = rows.map((row) => row.rowLabel);
@@ -1175,16 +1152,16 @@ function renderHistoricalShifts(report: FullReport) {
   data.replaceChildren(
     element(
       "p",
-      `${shiftWindowLabel(findings).replace(" · no model needed", "")}. Lens and wording rows are monthly shares; cadence is conversations per month.`,
+      `${shiftWindowLabel(findings).replace(" · no model needed", "")}. Lens and wording rows are monthly shares; cadence is conversations per month.`
     ),
     ...rows.map((row) =>
       element(
         "p",
         `${SHIFT_FAMILY_LABELS[row.family]} · ${row.label}: ${TREND_LABELS[row.trend]}, ` +
           `${shiftValueLabel(row, row.earlyShare)} → ${shiftValueLabel(row, row.recentShare)} ` +
-          `(momentum ${row.momentum >= 0 ? "+" : ""}${row.momentum.toFixed(2)})`,
-      ),
-    ),
+          `(momentum ${row.momentum >= 0 ? "+" : ""}${row.momentum.toFixed(2)})`
+      )
+    )
   );
 }
 

@@ -104,6 +104,10 @@ importers:
       tailwindcss:
         specifier: '>=4.3'
         version: 4.3.3
+    devDependencies:
+      '@saas-maker/ui':
+        specifier: workspace:*
+        version: link:../ui
 
   packages/motion:
     dependencies:

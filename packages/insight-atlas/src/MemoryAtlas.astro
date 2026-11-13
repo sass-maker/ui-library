@@ -1,4 +1,8 @@
 ---
+import Control from "@saas-maker/ui/astro/Control.astro";
+import ChartPanel from "@saas-maker/ui/astro/ChartPanel.astro";
+import Surface from "@saas-maker/ui/astro/Surface.astro";
+import { chartHeaderStyles, chartTitleStyles, chartDescriptionStyles } from "@saas-maker/ui/lib/chart-styles";
 interface Props {
   indexCopy: { text: string }[];
   chatgptExportSteps: { text: string; strong?: boolean }[][];
@@ -57,7 +61,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
         <section id="import-view" class="import-view" aria-labelledby="import-heading">
           <div class="import-copy">
             <p class="map-key">{indexCopy[0].text}</p>
-            <h1 id="import-heading">{indexCopy[1].text}</h1>
+            <h1 id="import-heading" class="font-display">{indexCopy[1].text}</h1>
             <p class="lede">{indexCopy[2].text}</p>
             <a class="product-tour-link" href="/about/" data-app-health-event="capabilities_opened"
               >See all 51 things Memory Map can find →</a
@@ -65,18 +69,18 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
           </div>
 
           {demoEnabled && (
-            <div class="demo-entry">
+            <Surface class="demo-entry grid gap-5 p-6 sm:grid-cols-[1fr_auto]">
               <div><span class="map-key">Take the atlas for a spin</span><strong>A real history. Only the patterns.</strong><p>Explore activity and topic connections from a real archive, with every conversation kept private.</p></div>
-              <button id="load-demo" class="button-secondary" type="button">Explore the demo <span aria-hidden="true">↗</span></button>
+              <Control as="button" variant="brand" id="load-demo" class="" type="button">Explore the demo <span aria-hidden="true">↗</span></Control>
               <small>Downloads only when you ask. No chat text, titles, names or links.</small>
-            </div>
+            </Surface>
           )}
 
-          <details class="export-guide">
-            <summary>
+          <Control as="details" class="export-guide">
+            <Control as="summary">
               <span>Need the ZIP?</span>
               <strong>{indexCopy[3].text}</strong>
-            </summary>
+            </Control>
             <div class="export-guide-body">
               <ol>
                 {chatgptExportSteps.map((parts) => (
@@ -100,13 +104,13 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 >
               </nav>
             </div>
-          </details>
+          </Control>
 
-          <details class="export-guide">
-            <summary>
+          <Control as="details" class="export-guide">
+            <Control as="summary">
               <span>Use Claude Code or Codex?</span>
               <strong>{indexCopy[11].text}</strong>
-            </summary>
+            </Control>
             <div class="export-guide-body">
               <ol>
                 <li>
@@ -154,21 +158,21 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 >
               </nav>
             </div>
-          </details>
+          </Control>
 
           <fieldset class="analysis-setup">
             <legend>Choose the analysis lens</legend>
             <div class="model-profile-options">
               <label>
-                <input type="radio" name="model-profile" value="auto" checked />
+                <Control as="input" type="radio" name="model-profile" value="auto" checked />
                 <span><strong>{indexCopy[14].text}</strong><small>{indexCopy[15].text}</small></span>
               </label>
               <label>
-                <input type="radio" name="model-profile" value="compact" />
+                <Control as="input" type="radio" name="model-profile" value="compact" />
                 <span><strong>{indexCopy[16].text}</strong><small>{indexCopy[17].text}</small></span>
               </label>
               <label>
-                <input type="radio" name="model-profile" value="multilingual" />
+                <Control as="input" type="radio" name="model-profile" value="multilingual" />
                 <span><strong>{indexCopy[18].text}</strong><small>{indexCopy[19].text}</small></span>
               </label>
             </div>
@@ -178,13 +182,13 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 <small>{indexCopy[21].text}</small>
               </div>
               <div class="confidence-presets" aria-label="Evidence confidence presets">
-                <button type="button" data-confidence="45">Exploratory</button>
-                <button type="button" data-confidence="65" aria-pressed="true">Balanced</button>
-                <button type="button" data-confidence="82">Conservative</button>
+                <Control as="button" variant="outline" type="button" data-confidence="45">Exploratory</Control>
+                <Control as="button" variant="outline" type="button" data-confidence="65" aria-pressed="true">Balanced</Control>
+                <Control as="button" variant="outline" type="button" data-confidence="82">Conservative</Control>
               </div>
               <label for="confidence-input">
                 <span>Threshold</span>
-                <input id="confidence-input" type="range" min="35" max="90" value="65" />
+                <Control as="input" id="confidence-input" type="range" min="35" max="90" value="65" />
                 <output id="confidence-output" for="confidence-input">65%</output>
               </label>
             </div>
@@ -192,12 +196,11 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
 
           <div class="import-grid">
             <label id="drop-zone" class="drop-zone" for="archive-input">
-              <input
+              <Control as="input"
                 id="archive-input"
                 type="file"
                 accept=".zip,application/zip"
-                data-app-health-event="archive_import_started"
-              />
+                data-app-health-event="archive_import_started" />
               <span class="file-mark" aria-hidden="true">.ZIP</span>
               <strong>{indexCopy[22].text}</strong>
               <span>or drop a ChatGPT export or memory-pack ZIP here</span>
@@ -229,20 +232,20 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
         <section id="demo-progress" class="demo-progress" aria-labelledby="demo-progress-heading" hidden>
             <div class="demo-loader-map" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
             <p class="map-key">Opening the public atlas</p>
-            <h2 id="demo-progress-heading">Bringing the patterns into view.</h2>
+            <h2 id="demo-progress-heading" class="font-display">Bringing the patterns into view.</h2>
             <p id="demo-progress-status" role="status" aria-live="polite">Connecting to the demo…</p>
-            <progress id="demo-progress-bar" aria-label="Demo download progress"></progress>
+            <Control as="progress" id="demo-progress-bar" aria-label="Demo download progress"></Control>
             <div class="demo-progress-detail"><span id="demo-progress-bytes">Waiting for the download</span><span>Private conversations stay private</span></div>
-            <button id="cancel-demo" class="button-secondary" type="button">Cancel</button>
+            <Control as="button" variant="outline" id="cancel-demo" class="" type="button">Cancel</Control>
           </section>
 
         <section id="progress-view" class="progress-view" hidden aria-labelledby="progress-heading">
           <div class="progress-heading-row">
             <div>
               <p id="progress-phase" class="map-key">Reading archive</p>
-              <h2 id="progress-heading">Building your memory map</h2>
+              <h2 id="progress-heading" class="font-display">Building your memory map</h2>
             </div>
-            <button id="cancel-analysis" class="button-secondary" type="button">Cancel</button>
+            <Control as="button" variant="outline" id="cancel-analysis" class="" type="button">Cancel</Control>
           </div>
           <div class="progress-route" aria-hidden="true">
             <span class="progress-stop is-active"></span>
@@ -281,7 +284,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               <header>
                 <div>
                   <p class="map-key">Ingestion sketch · deterministic routes</p>
-                  <h2 id="graph-formation-heading">Every conversation becomes a stop.</h2>
+                  <h2 id="graph-formation-heading" class="font-display">Every conversation becomes a stop.</h2>
                 </div>
                 <output id="graph-formation-count">Waiting for the first conversation…</output>
               </header>
@@ -335,30 +338,30 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
 
         <section id="error-view" class="error-view" hidden aria-labelledby="error-heading">
           <p class="map-key">Route interrupted</p>
-          <h2 id="error-heading">This archive could not be mapped.</h2>
+          <h2 id="error-heading" class="font-display">This archive could not be mapped.</h2>
           <p id="error-message"></p>
-          <button id="retry-demo" class="button-secondary" type="button" hidden>Retry demo</button>
-          <button id="error-reset" class="button-primary" type="button">Choose another ZIP</button>
+          <Control as="button" variant="outline" id="retry-demo" class="" type="button" hidden>Retry demo</Control>
+          <Control as="button" variant="brand" id="error-reset" class="" type="button">Choose another ZIP</Control>
         </section>
 
         <section id="report-view" class="report-view" hidden>
           <header class="report-header">
             <div>
               <p class="map-key">Mapped memory</p>
-              <h2>Your conversation history, connected.</h2>
+              <h2 class="font-display">Your conversation history, connected.</h2>
               <p id="report-meta" class="report-meta"></p>
             </div>
             <div class="report-actions">
-              <button id="open-story" class="button-story" type="button">
+              <Control as="button" variant="outline" id="open-story" class="" type="button">
                 Play your story
-              </button>
-              <button id="save-memory" class="button-secondary" type="button">
+              </Control>
+              <Control as="button" variant="outline" id="save-memory" class="" type="button">
                 Keep on this device
-              </button>
-              <button id="forget-memory" class="button-secondary danger" type="button" hidden>
+              </Control>
+              <Control as="button" variant="outline" id="forget-memory" class=" danger" type="button" hidden>
                 Forget
-              </button>
-              <button id="reset-report" class="button-secondary" type="button">New archive</button>
+              </Control>
+              <Control as="button" variant="outline" id="reset-report" class="" type="button">New archive</Control>
             </div>
           </header>
 
@@ -368,8 +371,8 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <small>Routes connect where question domains appear in the same conversations. This is co-occurrence, not semantic similarity.</small>
           </aside>
 
-          <details id="analysis-details" class="analysis-details" open>
-            <summary>
+          <Control as="details" id="analysis-details" class="analysis-details" open>
+            <Control as="summary">
               <span>
                 <strong>Analysis details</strong>
                 <small id="analysis-details-summary">
@@ -377,7 +380,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 </small>
               </span>
               <b>Timing, model, and confidence</b>
-            </summary>
+            </Control>
             <div class="analysis-details-body">
               <section
                 id="analysis-timing-board"
@@ -388,7 +391,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 <div class="analysis-timing-heading">
                   <div>
                     <p class="map-key">Live execution route</p>
-                    <h2 id="analysis-timing-heading">How long your map took</h2>
+                    <h2 id="analysis-timing-heading" class="font-display">How long your map took</h2>
                   </div>
                   <p id="report-timing-status" role="status" aria-live="polite">
                     Initial insights are ready. Semantic analysis is continuing.
@@ -450,39 +453,39 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                     Archive contents and derived text stay out of this trace.
                   </p>
                 </div>
-                <button id="export-local-trace" class="button-secondary" type="button">
+                <Control as="button" variant="outline" id="export-local-trace" class="" type="button">
                   Export local trace
-                </button>
+                </Control>
               </section>
 
               <section class="analysis-lens" aria-labelledby="analysis-lens-heading">
                 <div>
                   <p class="map-key">Filter inferred evidence</p>
-                  <h2 id="analysis-lens-heading">Analysis lens</h2>
+                  <h2 id="analysis-lens-heading" class="font-display">Analysis lens</h2>
                   <p id="model-profile-note"></p>
                 </div>
                 <div class="report-confidence">
                   <div id="report-confidence-presets" class="confidence-presets" aria-label="Report confidence presets">
-                    <button type="button" data-confidence="45">Exploratory</button>
-                    <button type="button" data-confidence="65" aria-pressed="true">Balanced</button>
-                    <button type="button" data-confidence="82">Conservative</button>
+                    <Control as="button" variant="outline" type="button" data-confidence="45">Exploratory</Control>
+                    <Control as="button" variant="outline" type="button" data-confidence="65" aria-pressed="true">Balanced</Control>
+                    <Control as="button" variant="outline" type="button" data-confidence="82">Conservative</Control>
                   </div>
                   <label for="report-confidence-input">
                     <span>Visible evidence threshold</span>
-                    <input id="report-confidence-input" type="range" min="35" max="90" value="65" />
+                    <Control as="input" id="report-confidence-input" type="range" min="35" max="90" value="65" />
                     <output id="report-confidence-output" for="report-confidence-input">65%</output>
                   </label>
                   <small id="confidence-impact">Semantic candidates will be filtered without re-reading your ZIP.</small>
                 </div>
               </section>
             </div>
-          </details>
+          </Control>
 
           <section id="overview" class="platform-section overview-section" aria-labelledby="overview-heading">
             <div class="section-heading">
               <div>
                 <p class="map-key">Network scale</p>
-                <h2 id="overview-heading">Overview</h2>
+                <h2 id="overview-heading" class="font-display">Overview</h2>
               </div>
               <p id="sampling-note" class="method-note"></p>
             </div>
@@ -497,17 +500,17 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading atlas-heading">
               <div>
                 <p class="map-key">Seven ways to see the archive</p>
-                <h2 id="visual-atlas-heading">Visual atlas</h2>
+                <h2 id="visual-atlas-heading" class="font-display">Visual atlas</h2>
               </div>
               <div class="atlas-period-control">
                 <label for="atlas-period">View period</label>
-                <select id="atlas-period">
+                <Control as="select" id="atlas-period">
                   <option value="3">Recent 3 months</option>
                   <option value="6">Recent 6 months</option>
                   <option value="12" selected>Recent 12 months</option>
                   <option value="24">Recent 24 months</option>
                   <option value="all">All history</option>
-                </select>
+                </Control>
                 <small id="atlas-period-note">
                   Applied to chronological charts, query tone, and language signals. What changed
                   remains an all-history comparison.
@@ -521,17 +524,17 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               <span><i class="atlas-key-action"></i>Open a mark to inspect sources</span>
             </div>
 
-            <button id="atlas-highlight" class="atlas-highlight" type="button" hidden>
+            <Control as="button" variant="outline" id="atlas-highlight" class="atlas-highlight grid h-auto w-full grid-cols-1 gap-4 whitespace-normal p-5 text-left sm:grid-cols-2 xl:grid-cols-[0.35fr_1fr_0.75fr_auto]" type="button" hidden>
               <span>Start here · strongest signal in this period</span>
               <strong id="atlas-highlight-title"></strong>
               <small id="atlas-highlight-detail"></small>
               <b>Open source conversations →</b>
-            </button>
+            </Control>
 
             <div class="visual-atlas-grid">
-              <figure class="atlas-figure activity-calendar-figure">
-                <figcaption>
-                  <span><b>01</b><strong>Activity calendar</strong></span>
+              <ChartPanel class="atlas-figure activity-calendar-figure">
+                <figcaption class={chartHeaderStyles}>
+                  <span><b>01</b><strong class={chartTitleStyles}>Activity calendar</strong></span>
                   <small id="activity-window-label">Conversation starts · selected period</small>
                 </figcaption>
                 <div
@@ -539,15 +542,15 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                   class="activity-calendar"
                   aria-label="Recent daily conversation activity"
                 ></div>
-                <details class="chart-data">
-                  <summary>Read activity data</summary>
+                <Control as="details" class="chart-data">
+                  <Control as="summary">Read activity data</Control>
                   <div id="activity-calendar-data" class="chart-data-list"></div>
-                </details>
-              </figure>
+                </Control>
+              </ChartPanel>
 
-              <figure class="atlas-figure question-mix-figure">
-                <figcaption>
-                  <span><b>02</b><strong>Question mix over time</strong></span>
+              <ChartPanel class="atlas-figure question-mix-figure">
+                <figcaption class={chartHeaderStyles}>
+                  <span><b>02</b><strong class={chartTitleStyles}>Question mix over time</strong></span>
                   <small id="question-window-label">Top five overlapping query routes</small>
                 </figcaption>
                 <div id="question-mix-legend" class="chart-legend"></div>
@@ -556,15 +559,15 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                   class="atlas-plot question-mix-chart"
                   aria-label="Question lens activity over the recent twelve months"
                 ></div>
-                <details class="chart-data">
-                  <summary>Read question-mix data</summary>
+                <Control as="details" class="chart-data">
+                  <Control as="summary">Read question-mix data</Control>
                   <div id="question-mix-data" class="chart-data-list"></div>
-                </details>
-              </figure>
+                </Control>
+              </ChartPanel>
 
-              <figure class="atlas-figure language-matrix-figure">
-                <figcaption>
-                  <span><b>03</b><strong>Language signal matrix</strong></span>
+              <ChartPanel class="atlas-figure language-matrix-figure">
+                <figcaption class={chartHeaderStyles}>
+                  <span><b>03</b><strong class={chartTitleStyles}>Language signal matrix</strong></span>
                   <small id="language-window-label">Dominant vocabulary cue per query</small>
                 </figcaption>
                 <div
@@ -575,32 +578,32 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 <p class="atlas-caveat">
                   Wording signals, not feelings, personality, or diagnosis.
                 </p>
-                <details class="chart-data">
-                  <summary>Read language-signal data</summary>
+                <Control as="details" class="chart-data">
+                  <Control as="summary">Read language-signal data</Control>
                   <div id="language-matrix-data" class="chart-data-list"></div>
-                </details>
-              </figure>
+                </Control>
+              </ChartPanel>
 
-              <figure class="atlas-figure repeat-landscape-figure">
-                <figcaption>
-                  <span><b>04</b><strong>Repeat landscape</strong></span>
-                  <small>Frequency × time span · exact and semantic groups</small>
+              <ChartPanel class="atlas-figure repeat-landscape-figure">
+                <figcaption class={chartHeaderStyles}>
+                  <span><b>04</b><strong class={chartTitleStyles}>Repeat landscape</strong></span>
+                  <small class={chartDescriptionStyles}>Frequency × time span · exact and semantic groups</small>
                 </figcaption>
                 <div
                   id="repeat-landscape"
                   class="atlas-plot repeat-landscape"
                   aria-label="Repeated question groups by frequency and time span"
                 ></div>
-                <details class="chart-data">
-                  <summary>Read repeat data</summary>
+                <Control as="details" class="chart-data">
+                  <Control as="summary">Read repeat data</Control>
                   <div id="repeat-landscape-data" class="chart-data-list"></div>
-                </details>
-              </figure>
+                </Control>
+              </ChartPanel>
 
-              <figure class="atlas-figure topic-momentum-figure">
-                <figcaption>
-                  <span><b>05</b><strong>Topic momentum</strong></span>
-                  <small>Fading ← local movement → emerging</small>
+              <ChartPanel class="atlas-figure topic-momentum-figure">
+                <figcaption class={chartHeaderStyles}>
+                  <span><b>05</b><strong class={chartTitleStyles}>Topic momentum</strong></span>
+                  <small class={chartDescriptionStyles}>Fading ← local movement → emerging</small>
                 </figcaption>
                 <div id="topic-momentum-state" class="atlas-forming">
                   <span></span>
@@ -612,31 +615,31 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                   class="atlas-plot topic-momentum is-hidden"
                   aria-label="Semantic topics by momentum and conversation count"
                 ></div>
-                <details class="chart-data">
-                  <summary>Read topic-momentum data</summary>
+                <Control as="details" class="chart-data">
+                  <Control as="summary">Read topic-momentum data</Control>
                   <div id="topic-momentum-data" class="chart-data-list"></div>
-                </details>
-              </figure>
+                </Control>
+              </ChartPanel>
 
-              <figure class="atlas-figure conversation-shape-figure">
-                <figcaption>
-                  <span><b>06</b><strong>Conversation shape</strong></span>
-                  <small>Depth, weekday rhythm, and model mix · all history</small>
+              <ChartPanel class="atlas-figure conversation-shape-figure">
+                <figcaption class={chartHeaderStyles}>
+                  <span><b>06</b><strong class={chartTitleStyles}>Conversation shape</strong></span>
+                  <small class={chartDescriptionStyles}>Depth, weekday rhythm, and model mix · all history</small>
                 </figcaption>
                 <div
                   id="conversation-shape"
                   class="conversation-shape"
                   aria-label="Conversation depth, weekday rhythm, and model usage"
                 ></div>
-                <details class="chart-data">
-                  <summary>Read conversation-shape data</summary>
+                <Control as="details" class="chart-data">
+                  <Control as="summary">Read conversation-shape data</Control>
                   <div id="conversation-shape-data" class="chart-data-list"></div>
-                </details>
-              </figure>
+                </Control>
+              </ChartPanel>
 
-              <figure class="atlas-figure historical-shifts-figure">
-                <figcaption>
-                  <span><b>07</b><strong>What changed</strong></span>
+              <ChartPanel class="atlas-figure historical-shifts-figure">
+                <figcaption class={chartHeaderStyles}>
+                  <span><b>07</b><strong class={chartTitleStyles}>What changed</strong></span>
                   <small id="historical-shifts-period">
                     All history · earlier third vs recent third · no model needed
                   </small>
@@ -654,11 +657,11 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 <p class="historical-shifts-scroll-hint" aria-hidden="true">
                   Scroll to see the change and before-to-after values &#8594;
                 </p>
-                <details class="chart-data">
-                  <summary>Read what-changed data</summary>
+                <Control as="details" class="chart-data">
+                  <Control as="summary">Read what-changed data</Control>
                   <div id="historical-shifts-data" class="chart-data-list"></div>
-                </details>
-              </figure>
+                </Control>
+              </ChartPanel>
             </div>
           </section>
 
@@ -667,7 +670,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               <div class="section-heading">
                 <div>
                   <p class="map-key">Things connected by meaning</p>
-                  <h2 id="topic-heading">Topic map</h2>
+                  <h2 id="topic-heading" class="font-display">Topic map</h2>
                 </div>
                 <p>Node size is conversation count. Lines are semantic proximity.</p>
               </div>
@@ -678,14 +681,13 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                     <circle cx="10.5" cy="10.5" r="6.5"></circle>
                     <path d="m15.5 15.5 5 5"></path>
                   </svg>
-                  <input
+                  <Control as="input"
                     id="search-query"
                     name="query"
                     type="search"
                     autocomplete="off"
-                    placeholder="Search what you asked, changed, or returned to"
-                  />
-                  <button type="submit">Search</button>
+                    placeholder="Search what you asked, changed, or returned to" />
+                  <Control as="button" variant="brand" type="submit">Search</Control>
                 </div>
                 <div id="search-results" class="search-results" hidden></div>
               </form>
@@ -714,9 +716,9 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                 <header>
                   <div>
                     <p class="map-key">Ask the graph</p>
-                    <h2 id="memory-chat-heading">Memory Chat</h2>
+                    <h2 id="memory-chat-heading" class="font-display">Memory Chat</h2>
                   </div>
-                  <button id="unload-memory-chat" type="button" hidden>Unload model</button>
+                  <Control as="button" variant="outline" id="unload-memory-chat" type="button" hidden>Unload model</Control>
                 </header>
                 <p class="memory-chat-promise">
                   Your question traverses the map first. A small local model sees only the six
@@ -729,13 +731,13 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                     <div><dt>Download</dt><dd>≈105 MB · cached by your browser</dd></div>
                     <div><dt>Boundary</dt><dd>Local q8 synthesis · English-focused</dd></div>
                   </dl>
-                  <button id="enable-memory-chat" class="button-primary" type="button" disabled>
+                  <Control as="button" variant="brand" id="enable-memory-chat" class="" type="button" disabled>
                     Available when the map is complete
-                  </button>
+                  </Control>
                   <p id="memory-chat-model-status" role="status" aria-live="polite">
                     The chat model has not been loaded.
                   </p>
-                  <progress id="memory-chat-model-progress" max="100" value="0" hidden></progress>
+                  <Control as="progress" id="memory-chat-model-progress" max="100" value="0" hidden></Control>
                 </div>
 
                 <div id="memory-chat-session" class="memory-chat-session" hidden>
@@ -769,20 +771,20 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
 
                   <form id="memory-chat-form">
                     <label for="memory-chat-query">Ask your mapped memory</label>
-                    <textarea
+                    <Control as="textarea"
                       id="memory-chat-query"
                       name="memory-question"
                       rows="3"
                       maxlength="600"
                       placeholder="What have I changed my mind about?"
                       required
-                    ></textarea>
-                    <button class="button-primary" type="submit">Traverse and answer</button>
+                    ></Control>
+                    <Control as="button" variant="brand" class="" type="submit">Traverse and answer</Control>
                   </form>
                 </div>
 
-                <details class="memory-architecture-note">
-                  <summary>Why this memory architecture is different</summary>
+                <Control as="details" class="memory-architecture-note">
+                  <Control as="summary">Why this memory architecture is different</Control>
                   <p>
                     The retrieval route, sources, changed and refuted statements, confidence
                     controls, and local model boundary stay visible. Generated prose never becomes
@@ -798,29 +800,29 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                     target="_blank"
                     rel="noreferrer"
                   >Read OpenAI’s Memory FAQ ↗</a>
-                </details>
+                </Control>
               </section>
 
               <aside id="memory-ledger" class="ledger-panel" aria-labelledby="ledger-heading">
                 <div class="section-heading compact">
                   <div>
                     <p class="map-key">Statement history</p>
-                    <h2 id="ledger-heading">Memory ledger</h2>
+                    <h2 id="ledger-heading" class="font-display">Memory ledger</h2>
                   </div>
                 </div>
                 <div id="ledger-tabs" class="ledger-tabs" role="tablist" aria-label="Fact states">
-                  <button type="button" role="tab" data-status="current" aria-selected="true">
+                  <Control as="button" variant="outline" type="button" role="tab" data-status="current" aria-selected="true">
                     Current <span>0</span>
-                  </button>
-                  <button type="button" role="tab" data-status="updated" aria-selected="false">
+                  </Control>
+                  <Control as="button" variant="outline" type="button" role="tab" data-status="updated" aria-selected="false">
                     Updated <span>0</span>
-                  </button>
-                  <button type="button" role="tab" data-status="refuted" aria-selected="false">
+                  </Control>
+                  <Control as="button" variant="outline" type="button" role="tab" data-status="refuted" aria-selected="false">
                     Refuted <span>0</span>
-                  </button>
-                  <button type="button" role="tab" data-status="contradicted" aria-selected="false">
+                  </Control>
+                  <Control as="button" variant="outline" type="button" role="tab" data-status="contradicted" aria-selected="false">
                     Possible contradictions <span>0</span>
-                  </button>
+                  </Control>
                 </div>
                 <div id="ledger-list" class="ledger-list">
                   <p class="empty-note">Fact candidates appear after semantic grouping.</p>
@@ -837,14 +839,14 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading">
               <div>
                 <p class="map-key">Routes through time</p>
-                <h2 id="evolution-heading">How your map changed</h2>
+                <h2 id="evolution-heading" class="font-display">How your map changed</h2>
               </div>
               <p>Emerging, fading, and resurfacing are local trend labels—not explanations for why your interests changed.</p>
             </div>
             <div class="evolution-switcher" role="tablist" aria-label="Evolution evidence">
-              <button type="button" role="tab" data-evolution="topics" aria-selected="true">Topics</button>
-              <button type="button" role="tab" data-evolution="domains" aria-selected="false">Question domains</button>
-              <button type="button" role="tab" data-evolution="language" aria-selected="false">Language signals</button>
+              <Control as="button" variant="outline" type="button" role="tab" data-evolution="topics" aria-selected="true">Topics</Control>
+              <Control as="button" variant="outline" type="button" role="tab" data-evolution="domains" aria-selected="false">Question domains</Control>
+              <Control as="button" variant="outline" type="button" role="tab" data-evolution="language" aria-selected="false">Language signals</Control>
             </div>
             <div class="evolution-grid">
               <div>
@@ -873,7 +875,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading">
               <div>
                 <p class="map-key">Different ways to read the archive</p>
-                <h2 id="lenses-heading">Question lenses</h2>
+                <h2 id="lenses-heading" class="font-display">Question lenses</h2>
               </div>
               <p>
                 Queries may appear in more than one domain. Open any result to inspect its
@@ -915,7 +917,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading">
               <div>
                 <p class="map-key">Interchange patterns</p>
-                <h2 id="repeats-heading">Questions you return to</h2>
+                <h2 id="repeats-heading" class="font-display">Questions you return to</h2>
               </div>
               <p>Exact wording and semantic repeats are kept distinct.</p>
             </div>
@@ -931,7 +933,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading">
               <div>
                 <p class="map-key">Prompts from your own evidence</p>
-                <h2 id="reflection-heading">Questions your history asks you</h2>
+                <h2 id="reflection-heading" class="font-display">Questions your history asks you</h2>
               </div>
               <p>
                 Invitations to review a repeat, correction, old memory, quiet theme, or wording
@@ -945,7 +947,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading">
               <div>
                 <p class="map-key">Wording, not personality</p>
-                <h2 id="tone-heading">Query tone</h2>
+                <h2 id="tone-heading" class="font-display">Query tone</h2>
               </div>
               <p id="tone-method"></p>
             </div>
@@ -967,7 +969,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading">
               <div>
                 <p class="map-key">What your sessions cost</p>
-                <h2 id="efficiency-heading">Say less, do more</h2>
+                <h2 id="efficiency-heading" class="font-display">Say less, do more</h2>
               </div>
               <p id="efficiency-method" class="method-note"></p>
             </div>
@@ -1006,23 +1008,23 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <div class="section-heading">
               <div>
                 <p class="map-key">Cadence over time</p>
-                <h2 id="rhythms-heading">Rhythms</h2>
+                <h2 id="rhythms-heading" class="font-display">Rhythms</h2>
               </div>
               <p id="date-range"></p>
             </div>
             <div class="rhythm-toolbar">
               <div class="rhythm-measure" role="group" aria-labelledby="rhythm-measure-label">
                 <span id="rhythm-measure-label">Measure</span>
-                <button type="button" data-rhythm-measure="conversations" aria-pressed="true">
+                <Control as="button" variant="outline" type="button" data-rhythm-measure="conversations" aria-pressed="true">
                   Conversations
-                </button>
-                <button type="button" data-rhythm-measure="words" aria-pressed="false">
+                </Control>
+                <Control as="button" variant="outline" type="button" data-rhythm-measure="words" aria-pressed="false">
                   Approx. words
-                </button>
+                </Control>
               </div>
               <label for="rhythm-route">
                 <span>Question route</span>
-                <select id="rhythm-route">
+                <Control as="select" id="rhythm-route">
                   <option value="all">All conversations</option>
                   <option value="math">Math</option>
                   <option value="health">Health</option>
@@ -1034,7 +1036,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
                   <option value="relationships">Relationships</option>
                   <option value="travel">Travel</option>
                   <option value="planning">Planning</option>
-                </select>
+                </Control>
               </label>
             </div>
             <div class="rhythm-summary" aria-live="polite">
@@ -1055,15 +1057,15 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
               class="activity-chart atlas-plot"
               aria-label="Monthly conversation activity"
             ></div>
-            <details class="chart-data rhythm-data">
-              <summary>Read rhythm data</summary>
+            <Control as="details" class="chart-data rhythm-data">
+              <Control as="summary">Read rhythm data</Control>
               <div id="rhythm-data-list" class="chart-data-list"></div>
-            </details>
+            </Control>
           </section>
 
           <section class="methodology" aria-labelledby="method-heading">
             <p class="map-key">How the map was made</p>
-            <h2 id="method-heading">Transparent by default.</h2>
+            <h2 id="method-heading" class="font-display">Transparent by default.</h2>
             <p id="demo-methodology" hidden>This public demo uses counts and fixed question-domain rules from a real archive. Routes show domains that occur in the same conversations. Chat text, titles, names, personal facts, source links, model labels and text-based findings were removed before publication. Import your own ZIP to build a private semantic map on this device.</p>
             <div id="local-methodology">
               <p>
@@ -1086,25 +1088,25 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
 
     <slot name="footer" />
 
-    <dialog id="story-dialog" class="story-dialog" aria-labelledby="story-heading">
+    <Control as="dialog" id="story-dialog" class="story-dialog max-w-none w-[min(1200px,calc(100%-2rem))] p-0" aria-labelledby="story-heading">
       <div class="story-shell">
         <header class="story-header">
           <span class="story-brand">Memory Map</span>
           <p id="story-position" aria-live="polite">Slide 1 of 7</p>
-          <button id="close-story" type="button" aria-label="Close story">×</button>
+          <Control as="button" variant="outline" id="close-story" type="button" aria-label="Close story">×</Control>
         </header>
         <nav id="story-progress" class="story-progress" aria-label="Story slides"></nav>
         <main id="story-slide" class="story-slide" tabindex="-1">
           <p class="story-eyebrow">Your history, in motion</p>
-          <h2 id="story-heading">Your ChatGPT history, mapped.</h2>
+          <h2 id="story-heading" class="font-display">Your ChatGPT history, mapped.</h2>
         </main>
         <footer class="story-controls">
-          <button id="story-previous" type="button">← Previous</button>
+          <Control as="button" variant="outline" id="story-previous" type="button">← Previous</Control>
           <span>Use arrow keys or swipe</span>
-          <button id="story-next" type="button">Next →</button>
+          <Control as="button" variant="outline" id="story-next" type="button">Next →</Control>
         </footer>
       </div>
-    </dialog>
+    </Control>
 
     <aside
       id="evidence-panel"
@@ -1114,11 +1116,11 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
       aria-labelledby="evidence-heading"
       hidden
     >
-      <button id="close-evidence" class="evidence-close" type="button" aria-label="Close evidence">
+      <Control as="button" variant="outline" id="close-evidence" class="evidence-close" type="button" aria-label="Close evidence">
         ×
-      </button>
+      </Control>
       <p class="map-key">Why this appeared</p>
-      <h2 id="evidence-heading">Supporting conversations</h2>
+      <h2 id="evidence-heading" class="font-display">Supporting conversations</h2>
       <div id="evidence-content"></div>
     </aside>
 

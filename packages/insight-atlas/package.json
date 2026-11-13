@@ -28,7 +28,8 @@
   },
   "peerDependencies": {
     "astro": ">=5",
-    "tailwindcss": ">=4.3"
+    "tailwindcss": ">=4.3",
+    "@saas-maker/ui": "0.x"
   },
   "peerDependenciesMeta": {
     "astro": {
@@ -36,7 +37,10 @@
     }
   },
   "scripts": {
-    "check": "tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2023,DOM,DOM.Iterable src/app.ts",
+    "check": "tsc --noEmit --jsx react-jsx --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2023,DOM,DOM.Iterable src/app.ts",
     "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "@saas-maker/ui": "workspace:*"
   }
 }

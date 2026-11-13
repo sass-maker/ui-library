@@ -14,7 +14,7 @@ for (const [specifier, target] of Object.entries(manifest.exports)) {
 function levelOf(file) {
   if (layers.has(file)) return layers.get(file);
   // Native adapters consume the same exported atom style APIs as React controls.
-  if (["lib/native-control-styles.ts", "lib/dom-controls.ts"].includes(path.relative(sourceRoot, file).split(path.sep).join("/"))) return 1;
+  if (["lib/native-control-styles.ts", "lib/dom-controls.ts", "lib/chart-styles.ts", "lib/dom-surfaces.ts"].includes(path.relative(sourceRoot, file).split(path.sep).join("/"))) return 1;
   const directory = path.relative(sourceRoot, file).split(path.sep)[0];
   if (directory === "components") throw new Error(`Classify component in package exports: ${file}`);
   return { recipes: 2, effects: 2, molecules: 2, organisms: 3, blocks: 3 }[directory] ?? 0;

@@ -1,0 +1,9 @@
+---
+import { cardStyles } from "../components/card";
+interface Props extends Record<string, unknown> {
+  as?: "div" | "section" | "aside" | "article" | "label";
+  class?: string;
+}
+const { as: Tag = "div", class: className, ...attributes } = Astro.props;
+---
+<Tag {...attributes} data-slot="card" class={cardStyles(className)}><slot /></Tag>

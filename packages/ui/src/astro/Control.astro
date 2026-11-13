@@ -1,0 +1,14 @@
+---
+import { nativeControlStyles, type NativeControlTag, type NativeControlStyleOptions } from "../lib/native-control-styles";
+interface Props extends Record<string, unknown> {
+  as: NativeControlTag;
+  class?: string;
+  variant?: NativeControlStyleOptions["variant"];
+  size?: NativeControlStyleOptions["size"];
+  type?: string;
+}
+const { as: Tag, class: className, variant, size, ...attributes } = Astro.props;
+const styles = nativeControlStyles(Tag, { className, variant, size, type: attributes.type });
+const slot = Tag === "details" ? "native-disclosure" : `native-${Tag}`;
+---
+<Tag {...attributes} data-slot={slot} data-variant={variant} data-size={size} class={styles}><slot /></Tag>

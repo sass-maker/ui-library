@@ -1,3 +1,5 @@
+import { createUiSurface } from "@saas-maker/ui/lib/dom-surfaces";
+import { atlasElement } from "./ui-elements";
 import type { MemoryAtlasServices, DemoProgress } from "./services";
 import type {
   MemoryChatEvidence,
@@ -223,11 +225,11 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         .filter((entry) => entry.isIntersecting)
         .sort(
           (left, right) =>
-            Math.abs(left.boundingClientRect.top) - Math.abs(right.boundingClientRect.top),
+            Math.abs(left.boundingClientRect.top) - Math.abs(right.boundingClientRect.top)
         )[0];
       if (visible?.target instanceof HTMLElement) setCurrentReportRoute(visible.target.id);
     },
-    { rootMargin: "-18% 0px -68% 0px", threshold: 0 },
+    { rootMargin: "-18% 0px -68% 0px", threshold: 0 }
   );
   for (const { link, target } of reportRouteSections) {
     reportRouteObserver.observe(target);
@@ -272,7 +274,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
   function stageDuration(
     stages: AnalysisProgressTiming["completedStages"],
-    phase: AnalysisPhase,
+    phase: AnalysisPhase
   ): number {
     return stages
       .filter((stage) => stage.phase === phase)
@@ -282,7 +284,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   function renderStageTimings(
     completedStages: AnalysisProgressTiming["completedStages"],
     currentPhase: AnalysisPhase | null,
-    currentElapsedMs: number,
+    currentElapsedMs: number
   ) {
     for (const list of [
       $<HTMLOListElement>("#progress-stage-list"),
@@ -311,7 +313,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     label: string,
     current: number,
     total: number,
-    timing: AnalysisProgressTiming,
+    timing: AnalysisProgressTiming
   ) {
     const percent = total > 0 ? Math.min(100, Math.round((current / total) * 100)) : 0;
     progressElapsed.textContent = formatDuration(timing.totalElapsedMs);
@@ -327,13 +329,13 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       analysisDetailsAutoSettled = false;
       analysisTimingBoard.hidden = false;
       $("#report-timing-initial").textContent = formatDuration(
-        currentReport.performance?.initialInsightsMs ?? timing.totalElapsedMs,
+        currentReport.performance?.initialInsightsMs ?? timing.totalElapsedMs
       );
       $("#report-timing-total").textContent =
         timing.estimatedRemainingMs === null
           ? `${formatDuration(timing.totalElapsedMs)} elapsed`
           : `${formatDuration(timing.totalElapsedMs)} elapsed · about ${formatDuration(
-              timing.estimatedRemainingMs,
+              timing.estimatedRemainingMs
             )} left`;
       const modelMs =
         stageDuration(timing.completedStages, "model") +
@@ -361,7 +363,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
   function renderPerformanceSummary(
     performance: AnalysisPerformance | undefined,
-    restored = false,
+    restored = false
   ) {
     if (!performance) {
       analysisTimingBoard.hidden = true;
@@ -423,7 +425,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
             latestTiming.timing.estimatedRemainingMs === null
               ? null
               : Math.max(0, latestTiming.timing.estimatedRemainingMs - delta),
-        },
+        }
       );
     }, 1_000);
   }
@@ -436,10 +438,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   }
 
   function text(tag: keyof HTMLElementTagNameMap, value: string, className?: string) {
-    const element = document.createElement(tag);
-    element.textContent = value;
-    if (className) element.className = className;
-    return element;
+    return atlasElement(tag, value, className);
   }
 
   function readAnalysisSettings(): AnalysisSettings {
@@ -464,7 +463,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     for (const button of document.querySelectorAll<HTMLButtonElement>("[data-confidence]")) {
       button.setAttribute(
         "aria-pressed",
-        String(Number(button.dataset.confidence) === activeConfidence),
+        String(Number(button.dataset.confidence) === activeConfidence)
       );
     }
     const performance = currentReport?.performance;
@@ -495,7 +494,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     const cssWidth = Math.max(300, graphFormationCanvas.clientWidth || 900);
     const cssHeight = Math.max(
       280,
-      graphFormationCanvas.clientHeight || Math.min(420, cssWidth * 0.45),
+      graphFormationCanvas.clientHeight || Math.min(420, cssWidth * 0.45)
     );
     const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
     const width = Math.round(cssWidth * pixelRatio);
@@ -588,7 +587,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     graphFormationLatest.textContent =
       graphFormationRendered.at(-1)?.title || "Opening the archive";
     const activeRoutes = new Set(
-      graphFormationRendered.flatMap((conversation) => formationRouteIds(conversation)),
+      graphFormationRendered.flatMap((conversation) => formationRouteIds(conversation))
     ).size;
     graphFormationRoutes.textContent = `${activeRoutes} of ${FORMATION_ROUTES.length}`;
   }
@@ -725,7 +724,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     if (!(await analysisLease.acquire())) {
       archiveInput.value = "";
       showError(
-        "Memory Map is already analyzing or retaining a searchable model in another tab. Close or reset that tab, then try again.",
+        "Memory Map is already analyzing or retaining a searchable model in another tab. Close or reset that tab, then try again."
       );
       return;
     }
@@ -813,7 +812,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     } catch (error) {
       if (session !== sessionVersion || controller.signal.aborted) return;
       showError(
-        error instanceof Error ? error.message : "The demo could not load. Please try again.",
+        error instanceof Error ? error.message : "The demo could not load. Please try again."
       );
       $("#retry-demo").hidden = false;
     } finally {
@@ -836,7 +835,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     localTraceSection.hidden = !measurementTrace.hasEvents();
     const failure = [...trace.events].reverse().find((event) => event.milestone === "failure");
     const recovered = trace.events.some(
-      (event) => event.milestone === "recovery" && event.attempt > (failure?.attempt ?? Infinity),
+      (event) => event.milestone === "recovery" && event.attempt > (failure?.attempt ?? Infinity)
     );
     const stageDurations = Object.entries(trace.maxObservedStageDurationsMs)
       .map(([stage, duration]) => `${stage}: ${duration} ms`)
@@ -889,7 +888,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           message.label,
           message.current,
           message.total,
-          message.timing,
+          message.timing
         );
       }
       if (
@@ -926,7 +925,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           latestTiming.label,
           latestTiming.current,
           latestTiming.total,
-          latestTiming.timing,
+          latestTiming.timing
         );
       }
       appStatus.textContent = "Initial statistics are ready. Semantic analysis is still running.";
@@ -937,7 +936,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       measurementTrace.observeStages(message.report.performance?.stages ?? []);
       measurementTrace.firstEvidenceBackedInsight(
         performance.now(),
-        sourceBackedInsightCount(message.report),
+        sourceBackedInsightCount(message.report)
       );
       renderLocalMeasurementTrace();
       finishGraphFormation();
@@ -1003,7 +1002,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       : "Station size shows conversation count. Routes show semantic proximity.";
     graph.setAttribute(
       "aria-label",
-      demo ? "Interactive question-domain co-occurrence map" : "Interactive semantic topic map",
+      demo ? "Interactive question-domain co-occurrence map" : "Interactive semantic topic map"
     );
     $("#demo-notice").hidden = !demo;
     analysisDetails.hidden = demo;
@@ -1038,7 +1037,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       : "Seven ways to see the archive";
     let viewNumber = 0;
     for (const figure of document.querySelectorAll<HTMLElement>(
-      ".visual-atlas-grid > .atlas-figure",
+      ".visual-atlas-grid > .atlas-figure"
     )) {
       if (figure.hidden) continue;
       viewNumber += 1;
@@ -1062,7 +1061,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       : `${report.analysis.modelProfile === "auto" ? `Automatic → ${report.analysis.resolvedModelProfile}.` : `${report.analysis.modelProfile} profile selected.`} ${report.analysis.profileReason}`;
     $("#report-meta").textContent =
       `${report.fileName} · ${formatDate(deterministic.dateRange.start)} to ${formatDate(
-        deterministic.dateRange.end,
+        deterministic.dateRange.end
       )} · analyzed ${new Date(report.generatedAt).toLocaleString()}`;
     renderPerformanceSummary(report.performance);
 
@@ -1077,20 +1076,20 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     const statsList = $("#overview-stats");
     statsList.replaceChildren(
       ...stats.map(([label, value]) => {
-        const wrapper = document.createElement("div");
+        const wrapper = createUiSurface("div", "gap-2 p-4");
         wrapper.append(text("dt", label), text("dd", formatNumber(value)));
         return wrapper;
-      }),
+      })
     );
 
     const visibleMonths = activityMonthWindow(deterministic, activePeriodMonths);
     $("#date-range").textContent =
       activePeriodMonths === null
         ? `All history · ${formatDate(deterministic.dateRange.start)} — ${formatDate(
-            deterministic.dateRange.end,
+            deterministic.dateRange.end
           )}`
         : `${formatNumber(activePeriodMonths)} months · ${formatMonth(
-            visibleMonths[0],
+            visibleMonths[0]
           )} — ${formatMonth(visibleMonths.at(-1) ?? visibleMonths[0])}`;
     const periodLabel =
       activePeriodMonths === null
@@ -1125,13 +1124,13 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       const model = report.semantic.model;
       $("#sampling-note").textContent =
         `Embedded ${formatNumber(model.embeddedConversations)} of ${formatNumber(
-          model.totalConversations,
+          model.totalConversations
         )} conversations, ${formatNumber(model.embeddedQuestions)} of ${formatNumber(
-          model.totalQuestions,
+          model.totalQuestions
         )} prompts, and ${formatNumber(model.embeddedFacts)} of ${formatNumber(
-          model.totalFacts,
+          model.totalFacts
         )} fact candidates, and ${formatNumber(model.embeddedThreadPrompts)} of ${formatNumber(
-          model.totalThreadPrompts,
+          model.totalThreadPrompts
         )} candidate thread prompts.`;
       renderGraph(report.semantic.topics, report.semantic.edges);
       renderLedger(report);
@@ -1157,7 +1156,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
   function renderGraph(
     topics: NonNullable<FullReport["semantic"]>["topics"],
-    edges: NonNullable<FullReport["semantic"]>["edges"],
+    edges: NonNullable<FullReport["semantic"]>["edges"]
   ) {
     graphLoading.hidden = true;
     graph.classList.remove("is-hidden");
@@ -1207,7 +1206,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     const visibleEdges = new Set(strongestEdges.slice(0, Math.max(topics.length * 2, 12)));
     for (const topic of topics) {
       const strongest = strongestEdges.find(
-        (edge) => edge.source === topic.id || edge.target === topic.id,
+        (edge) => edge.source === topic.id || edge.target === topic.id
       );
       if (strongest) visibleEdges.add(strongest);
     }
@@ -1248,7 +1247,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       group.setAttribute("role", "button");
       group.setAttribute(
         "aria-label",
-        `${topic.label}, ${topic.count} conversations. ${currentReport?.demo ? "Show aggregate details." : "Show supporting conversations."}`,
+        `${topic.label}, ${topic.count} conversations. ${currentReport?.demo ? "Show aggregate details." : "Show supporting conversations."}`
       );
       group.setAttribute("transform", `translate(${topic.x * 1_000} ${topic.y * 620})`);
 
@@ -1287,18 +1286,22 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         .slice()
         .sort((left, right) => right.count - left.count)
         .map((topic) => {
-          const button = document.createElement("button");
+          const button = atlasElement(
+            "button",
+            undefined,
+            "flex min-h-12 items-center justify-between gap-4"
+          );
           button.type = "button";
           const marker = document.createElement("i");
           marker.style.color = topic.color;
           button.append(
             marker,
             text("span", topic.label),
-            text("small", formatNumber(topic.count)),
+            text("small", formatNumber(topic.count))
           );
           button.addEventListener("click", () => selectTopic(topic));
           return button;
-        }),
+        })
     );
   }
 
@@ -1327,7 +1330,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       active === null ? MEMORY_CHAT_STAGES.length : MEMORY_CHAT_STAGES.indexOf(active);
     for (const item of document.querySelectorAll<HTMLElement>("[data-chat-stage]")) {
       const index = MEMORY_CHAT_STAGES.indexOf(
-        item.dataset.chatStage as (typeof MEMORY_CHAT_STAGES)[number],
+        item.dataset.chatStage as (typeof MEMORY_CHAT_STAGES)[number]
       );
       item.classList.toggle("is-complete", index < activeIndex);
       item.classList.toggle("is-active", index === activeIndex);
@@ -1357,7 +1360,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     route.setAttribute("aria-hidden", "true");
     for (const [index, topicId] of topicIds.entries()) {
       const node = graph.querySelector<SVGGElement>(
-        `.graph-node[data-id="${CSS.escape(topicId)}"]`,
+        `.graph-node[data-id="${CSS.escape(topicId)}"]`
       );
       if (!node) continue;
       node.classList.add("is-traversed");
@@ -1399,7 +1402,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     role: "user" | "assistant",
     content: string,
     detail?: string,
-    assistantLabel = "Local model draft · unverified",
+    assistantLabel = "Local model draft · unverified"
   ) {
     const message = document.createElement("article");
     message.className = `memory-chat-message ${role}`;
@@ -1412,28 +1415,28 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   function renderMemoryChatEvidence(evidence: MemoryChatEvidence[]) {
     if (evidence.length === 0) {
       memoryChatEvidence.replaceChildren(
-        text("p", "No mapped evidence cleared the search floor.", "empty-note"),
+        text("p", "No mapped evidence cleared the search floor.", "empty-note")
       );
       return;
     }
     memoryChatEvidence.replaceChildren(
       ...evidence.map((item) => {
-        const button = document.createElement("button");
+        const button = atlasElement("button");
         button.type = "button";
         button.append(
           text("b", item.reference),
           text("span", item.title),
-          text("small", `${Math.round(item.similarity * 100)}%`),
+          text("small", `${Math.round(item.similarity * 100)}%`)
         );
         button.addEventListener("click", () =>
           showEvidence(item.title, item.source ? [item.source] : [], [
             item.excerpt,
             `${item.type} match · ${Math.round(item.similarity * 100)}% combined similarity`,
             item.topicId ? `Traversed through ${item.topicId}.` : "Evidence-only stop.",
-          ]),
+          ])
         );
         return button;
-      }),
+      })
     );
   }
 
@@ -1444,7 +1447,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           pendingMemoryQuestion,
           results,
           currentReport,
-          currentSnapshot?.searchIndex,
+          currentSnapshot?.searchIndex
         )
       : results;
     pendingMemoryEvidence = buildMemoryChatEvidence(plannedResults);
@@ -1471,7 +1474,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       messages: buildMemoryChatMessages(
         pendingMemoryQuestion,
         pendingMemoryEvidence,
-        historyBeforeQuestion,
+        historyBeforeQuestion
       ),
     });
   }
@@ -1513,7 +1516,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         validation.valid
           ? `${memoryChatRuntimeLabel(message.runtime)} · ${formatDuration(message.elapsedMs)} · ${validation.citations.join(", ")} linked · answer accuracy has not been checked`
           : `${memoryChatRuntimeLabel(message.runtime)} · ${formatDuration(message.elapsedMs)} · ${validation.reason}`,
-        validation.valid ? "Local model draft · unverified" : "Retrieved evidence",
+        validation.valid ? "Local model draft · unverified" : "Retrieved evidence"
       );
       memoryChatHistory.push({ role: "assistant", content: displayedAnswer });
       pendingMemoryQuestion = null;
@@ -1534,7 +1537,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         "assistant",
         "I could not synthesize an answer locally. Review the retrieved evidence stops below.",
         undefined,
-        "Local model status",
+        "Local model status"
       );
     }
     pendingMemoryQuestion = null;
@@ -1603,12 +1606,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   function renderLedger(report: FullReport) {
     const facts = report.semantic?.facts ?? [];
     const visibleFacts = facts.filter(
-      (fact) => fact.status === "current" || clearsConfidence(fact.confidence),
+      (fact) => fact.status === "current" || clearsConfidence(fact.confidence)
     );
     for (const tab of document.querySelectorAll<HTMLButtonElement>("#ledger-tabs button")) {
       const status = tab.dataset.status as FactGroup["status"];
       tab.querySelector("span")!.textContent = formatNumber(
-        visibleFacts.filter((fact) => fact.status === status).length,
+        visibleFacts.filter((fact) => fact.status === status).length
       );
       tab.setAttribute("aria-selected", String(status === ledgerStatus));
     }
@@ -1620,34 +1623,34 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         text(
           "p",
           `No ${ledgerStatus} fact candidates were detected in the semantic sample.`,
-          "empty-note",
-        ),
+          "empty-note"
+        )
       );
       return;
     }
     list.replaceChildren(
       ...visible.map((fact) => {
-        const button = document.createElement("button");
+        const button = atlasElement("button");
         button.type = "button";
-        button.className = "ledger-item";
+        button.classList.add(..."ledger-item".split(/\s+/).filter(Boolean));
         const label = text("span", fact.status, `status-label ${fact.status}`);
         const meta = document.createElement("span");
         meta.className = "ledger-meta";
         meta.append(
           label,
           text("span", formatDate(fact.lastSeen)),
-          text("span", `${fact.history.length} source${fact.history.length === 1 ? "" : "s"}`),
+          text("span", `${fact.history.length} source${fact.history.length === 1 ? "" : "s"}`)
         );
         button.append(
           text("strong", truncate(fact.statement, 320)),
           meta,
           fact.status === "current"
             ? document.createDocumentFragment()
-            : text("small", `${formatPercent(fact.confidence)} evidence confidence`),
+            : text("small", `${formatPercent(fact.confidence)} evidence confidence`)
         );
         button.addEventListener("click", () => showFactEvidence(fact));
         return button;
-      }),
+      })
     );
   }
 
@@ -1660,17 +1663,17 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       text(
         "p",
         `${formatPercent(fact.confidence)} evidence confidence · ${formatPercent(
-          fact.similarity,
+          fact.similarity
         )} semantic similarity · ${formatPercent(fact.lexicalSimilarity)} lexical overlap`,
-        "evidence-note",
-      ),
+        "evidence-note"
+      )
     );
     for (const item of fact.history) {
       const paragraph = document.createElement("p");
       paragraph.append(
         text("strong", `${formatDate(item.date)} · ${item.cue}`),
         document.createElement("br"),
-        document.createTextNode(item.text),
+        document.createTextNode(item.text)
       );
       history.append(paragraph);
     }
@@ -1690,12 +1693,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   function renderRepeats(report: FullReport) {
     const exact = report.deterministic.exactRepeats;
     const semantic = (report.semantic?.repeats ?? []).filter((repeat) =>
-      clearsConfidence(repeat.confidence),
+      clearsConfidence(repeat.confidence)
     );
     const summary = $("#repeat-summary");
     summary.replaceChildren(
       text("span", `${formatNumber(exact.length)} exact groups`),
-      text("span", `${formatNumber(semantic.length)} semantic groups`),
+      text("span", `${formatNumber(semantic.length)} semantic groups`)
     );
 
     const rows = [
@@ -1731,30 +1734,30 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     }
     list.replaceChildren(
       ...rows.map((row) => {
-        const button = document.createElement("button");
+        const button = atlasElement("button");
         button.type = "button";
-        button.className = "repeat-item";
+        button.classList.add(..."repeat-item".split(/\s+/).filter(Boolean));
         button.append(
           text("span", String(row.count), "interchange"),
           text("strong", truncate(row.question, 320), "repeat-question"),
           text("span", row.kind, "repeat-kind"),
-          text("span", formatDate(row.date), "repeat-date"),
+          text("span", formatDate(row.date), "repeat-date")
         );
         button.addEventListener("click", () => showEvidence(row.question, row.sources, row.notes));
         return button;
-      }),
+      })
     );
   }
 
   function showThreadEvidence(
     segmentation: ThreadSegmentation,
-    strands: ReturnType<typeof buildThreadStrands>,
+    strands: ReturnType<typeof buildThreadStrands>
   ) {
     $("#evidence-heading").textContent = segmentation.title;
     const summary = text(
       "p",
       `${segmentation.analyzedPrompts} of ${segmentation.promptCount} prompts analyzed · ${strands.length} visible strands at ${activeConfidence}% confidence.`,
-      "evidence-note",
+      "evidence-note"
     );
     const timeline = document.createElement("ol");
     timeline.className = "strand-timeline";
@@ -1763,7 +1766,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       item.append(
         text("strong", strand.label),
         text("small", `${strand.promptCount} prompt${strand.promptCount === 1 ? "" : "s"}`),
-        ...strand.snippets.map((snippet) => text("p", truncate(snippet, 220))),
+        ...strand.snippets.map((snippet) => text("p", truncate(snippet, 220)))
       );
       timeline.append(item);
     }
@@ -1772,13 +1775,13 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       .map(
         (boundary) =>
           `${formatPercent(boundary.confidence)} boundary confidence · ${formatPercent(
-            boundary.semanticSimilarity,
-          )} semantic continuity`,
+            boundary.semanticSimilarity
+          )} semantic continuity`
       );
     evidenceContent.replaceChildren(
       summary,
       timeline,
-      ...boundaryNotes.map((note) => text("p", note, "evidence-note")),
+      ...boundaryNotes.map((note) => text("p", note, "evidence-note"))
     );
     openEvidencePanel();
   }
@@ -1787,7 +1790,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     const lenses = report.deterministic.lenses;
     $("#domain-lenses").replaceChildren(
       ...lenses.categories.map((lens) => {
-        const button = document.createElement("button");
+        const button = atlasElement("button");
         button.type = "button";
         const header = document.createElement("span");
         header.append(text("strong", lens.label), text("output", formatNumber(lens.queryCount)));
@@ -1797,18 +1800,18 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           text(
             "span",
             `${formatNumber(lens.conversationCount)} conversation${lens.conversationCount === 1 ? "" : "s"}`,
-            "lens-conversation-count",
-          ),
+            "lens-conversation-count"
+          )
         );
         button.addEventListener("click", () =>
           showEvidence(lens.label, lens.sources, [
             lens.description,
             `${formatNumber(lens.queryCount)} matching queries across ${formatNumber(lens.conversationCount)} conversations.`,
             "A query can match more than one lens.",
-          ]),
+          ])
         );
         return button;
-      }),
+      })
     );
 
     const typo = lenses.typos;
@@ -1817,27 +1820,27 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     const typoList = $("#typo-list");
     if (typo.signals.length === 0) {
       typoList.replaceChildren(
-        text("p", "No high-confidence typo signals matched the small local list.", "empty-note"),
+        text("p", "No high-confidence typo signals matched the small local list.", "empty-note")
       );
     } else {
       typoList.replaceChildren(
         ...typo.signals.map((signal) => {
-          const button = document.createElement("button");
+          const button = atlasElement("button");
           button.type = "button";
           button.append(
             text("strong", signal.token),
             text("span", `→ ${signal.suggestion}`),
-            text("output", formatNumber(signal.count)),
+            text("output", formatNumber(signal.count))
           );
           button.addEventListener("click", () =>
             showEvidence(`Likely typo: ${signal.token}`, signal.sources, [
               `Possible correction: ${signal.suggestion}`,
               `${formatNumber(signal.count)} matching quer${signal.count === 1 ? "y" : "ies"}.`,
               "This is a conservative spelling signal, not a writing-quality score.",
-            ]),
+            ])
           );
           return button;
-        }),
+        })
       );
     }
 
@@ -1848,7 +1851,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         strands: buildThreadStrands(
           segmentation.prompts,
           segmentation.boundaries,
-          confidenceThreshold(activeConfidence),
+          confidenceThreshold(activeConfidence)
         ),
       }))
       .filter(({ strands }) => strands.length > 1);
@@ -1862,52 +1865,52 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     if (report.semantic && semanticThreads.length > 0) {
       threadList.replaceChildren(
         ...semanticThreads.slice(0, 16).map(({ segmentation, strands }) => {
-          const button = document.createElement("button");
+          const button = atlasElement("button");
           button.type = "button";
           button.append(
             text("strong", truncate(segmentation.title, 90)),
             text(
               "span",
-              `${segmentation.promptCount} prompts · ${strands.length} visible strands · ${formatPercent(segmentation.confidence)} strongest boundary`,
-            ),
+              `${segmentation.promptCount} prompts · ${strands.length} visible strands · ${formatPercent(segmentation.confidence)} strongest boundary`
+            )
           );
           button.addEventListener("click", () => showThreadEvidence(segmentation, strands));
           return button;
-        }),
+        })
       );
     } else if (report.semantic) {
       threadList.replaceChildren(
         text(
           "p",
           "No semantic strand boundaries clear the active confidence threshold.",
-          "empty-note",
-        ),
+          "empty-note"
+        )
       );
     } else if (threads.candidates.length === 0) {
       threadList.replaceChildren(
-        text("p", "No conversations crossed the likely multi-thread threshold.", "empty-note"),
+        text("p", "No conversations crossed the likely multi-thread threshold.", "empty-note")
       );
     } else {
       threadList.replaceChildren(
         ...threads.candidates.slice(0, 16).map((candidate) => {
-          const button = document.createElement("button");
+          const button = atlasElement("button");
           button.type = "button";
           button.append(
             text("strong", truncate(candidate.title, 90)),
             text(
               "span",
-              `${candidate.promptCount} prompts · ${candidate.shiftCount} likely changes · ≈${candidate.estimatedThreads} threads`,
-            ),
+              `${candidate.promptCount} prompts · ${candidate.shiftCount} likely changes · ≈${candidate.estimatedThreads} threads`
+            )
           );
           button.addEventListener("click", () =>
             showEvidence(candidate.title, candidate.sources, [
               `${candidate.promptCount} prompts contained ${candidate.shiftCount} low-overlap adjacent changes.`,
               `Roughly ${candidate.estimatedThreads} threads by this heuristic.`,
               "Short follow-ups were ignored. A subject change is not necessarily a derailment.",
-            ]),
+            ])
           );
           return button;
-        }),
+        })
       );
     }
   }
@@ -1945,7 +1948,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       report.deterministic.emotions.byMonth.map(({ month, counts }) => [
         month,
         Object.values(counts).reduce((sum, value) => sum + value, 0),
-      ]),
+      ])
     );
     if (evolutionKind === "topics") {
       return (report.demo?.topics ?? report.semantic?.topics ?? []).map((topic) => ({
@@ -2023,19 +2026,19 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           evolutionKind === "topics"
             ? "Topic evolution appears after semantic analysis."
             : "Not enough chronological evidence was found.",
-          "empty-note",
-        ),
+          "empty-note"
+        )
       );
     } else {
       list.replaceChildren(
         ...ordered.map((row) => {
-          const button = document.createElement("button");
+          const button = atlasElement("button");
           button.type = "button";
-          button.className = `evolution-item ${row.trend}`;
+          button.classList.add(...`evolution-item ${row.trend}`.split(/\s+/).filter(Boolean));
           const heading = document.createElement("span");
           heading.append(
             text("strong", row.label),
-            text("span", TREND_LABELS[row.trend], "trend-label"),
+            text("span", TREND_LABELS[row.trend], "trend-label")
           );
           const route = document.createElement("span");
           route.className = "evolution-route";
@@ -2051,8 +2054,8 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
             route,
             text(
               "small",
-              `${row.periods[0]?.label ?? "Unknown"} → ${row.periods.at(-1)?.label ?? "Unknown"} · ${row.note}`,
-            ),
+              `${row.periods[0]?.label ?? "Unknown"} → ${row.periods.at(-1)?.label ?? "Unknown"} · ${row.note}`
+            )
           );
           button.addEventListener("click", () =>
             showEvidence(row.label, row.sources, [
@@ -2062,10 +2065,10 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
                 .filter((period) => period.value > 0)
                 .slice(-8)
                 .map((period) => `${period.label}: ${period.value}`),
-            ]),
+            ])
           );
           return button;
-        }),
+        })
       );
     }
 
@@ -2076,25 +2079,25 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     const changeList = $("#memory-change-list");
     if (changes.length === 0) {
       changeList.replaceChildren(
-        text("p", "No memory changes clear the active confidence threshold.", "empty-note"),
+        text("p", "No memory changes clear the active confidence threshold.", "empty-note")
       );
     } else {
       changeList.replaceChildren(
         ...changes.slice(0, 12).map((fact) => {
-          const button = document.createElement("button");
+          const button = atlasElement("button");
           button.type = "button";
-          button.className = `memory-change-item ${fact.status}`;
+          button.classList.add(...`memory-change-item ${fact.status}`.split(/\s+/).filter(Boolean));
           button.append(
             text("span", fact.status === "contradicted" ? "possible contradiction" : fact.status),
             text("strong", truncate(fact.statement, 150)),
             text(
               "small",
-              `${formatDate(fact.firstSeen)} → ${formatDate(fact.lastSeen)} · ${formatPercent(fact.confidence)} confidence`,
-            ),
+              `${formatDate(fact.firstSeen)} → ${formatDate(fact.lastSeen)} · ${formatPercent(fact.confidence)} confidence`
+            )
           );
           button.addEventListener("click", () => showFactEvidence(fact));
           return button;
-        }),
+        })
       );
     }
   }
@@ -2108,12 +2111,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     }
     const repeats = semantic.repeats.filter((repeat) => clearsConfidence(repeat.confidence)).length;
     const changes = semantic.facts.filter(
-      (fact) => fact.status !== "current" && clearsConfidence(fact.confidence),
+      (fact) => fact.status !== "current" && clearsConfidence(fact.confidence)
     ).length;
     const boundaries = semantic.threads.reduce(
       (sum, thread) =>
         sum + thread.boundaries.filter((boundary) => clearsConfidence(boundary.confidence)).length,
-      0,
+      0
     );
     $("#confidence-impact").textContent =
       `${activeConfidence}% shows ${repeats} semantic repeat groups, ${changes} memory changes, and ${boundaries} strand boundaries. Deterministic totals do not change.`;
@@ -2147,7 +2150,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       head,
       text("p", found.cause, "finding-cause"),
       text("p", found.action, "finding-action"),
-      text("small", found.evidence, "finding-evidence"),
+      text("small", found.evidence, "finding-evidence")
     );
     return item;
   }
@@ -2165,7 +2168,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       text("strong", bucket.label),
       track,
       text("span", `${formatTokens(bucket.tokensPerTurn)} / turn`, "efficiency-value"),
-      text("small", `${formatNumber(bucket.sessions)} sessions`),
+      text("small", `${formatNumber(bucket.sessions)} sessions`)
     );
     return row;
   }
@@ -2188,16 +2191,16 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
     $("#efficiency-stats").replaceChildren(
       ...efficiencyStats(totals).map(([label, value]) => {
-        const wrapper = document.createElement("div");
+        const wrapper = createUiSurface("div", "gap-2 p-4");
         wrapper.append(text("dt", label), text("dd", value));
         return wrapper;
-      }),
+      })
     );
 
     const findings = $("#efficiency-findings");
     if (efficiency.findings.length === 0) {
       findings.replaceChildren(
-        text("p", "Nothing in this archive crossed a reporting threshold.", "empty-note"),
+        text("p", "Nothing in this archive crossed a reporting threshold.", "empty-note")
       );
     } else {
       findings.replaceChildren(...efficiency.findings.map(findingItem));
@@ -2205,7 +2208,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
     const peak = Math.max(...efficiency.scaling.map((bucket) => bucket.tokensPerTurn), 0);
     $("#efficiency-scaling").replaceChildren(
-      ...efficiency.scaling.map((bucket) => scalingBar(bucket, peak)),
+      ...efficiency.scaling.map((bucket) => scalingBar(bucket, peak))
     );
 
     $("#efficiency-costliest").replaceChildren(
@@ -2214,10 +2217,10 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         item.append(
           text("strong", `${formatNumber(session.turns)} turns`),
           text("span", `${formatTokens(session.contextRead)} re-read`, "efficiency-value"),
-          text("small", session.source),
+          text("small", session.source)
         );
         return item;
-      }),
+      })
     );
   }
 
@@ -2234,7 +2237,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
                 neutral: totals.neutral + datum.neutral,
                 negative: totals.negative + datum.negative,
               }),
-              { positive: 0, neutral: 0, negative: 0 },
+              { positive: 0, neutral: 0, negative: 0 }
             );
     const total = counts.positive + counts.neutral + counts.negative;
     const labels = [
@@ -2256,7 +2259,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         output.textContent = `${formatNumber(counts[bucket])} · ${formatPercent(proportion)}`;
         row.append(text("strong", label), track, output);
         return row;
-      }),
+      })
     );
 
     const emotionCounts =
@@ -2279,7 +2282,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
                 excitement: 0,
                 appreciation: 0,
                 neutral: 0,
-              },
+              }
             );
     const emotionTotal = Object.values(emotionCounts).reduce((sum, value) => sum + value, 0);
     const emotionLabels = [
@@ -2297,9 +2300,9 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     ] as const;
     $("#emotion-bars").replaceChildren(
       ...emotionLabels.map(([bucket, label, description]) => {
-        const button = document.createElement("button");
+        const button = atlasElement("button");
         button.type = "button";
-        button.className = `emotion-row ${bucket}`;
+        button.classList.add(...`emotion-row ${bucket}`.split(/\s+/).filter(Boolean));
         const marker = document.createElement("i");
         marker.setAttribute("aria-hidden", "true");
         const copy = document.createElement("span");
@@ -2308,13 +2311,13 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         button.append(
           marker,
           copy,
-          text("output", `${formatNumber(emotionCounts[bucket])} · ${formatPercent(proportion)}`),
+          text("output", `${formatNumber(emotionCounts[bucket])} · ${formatPercent(proportion)}`)
         );
         button.addEventListener("click", () => {
           const sources = report.deterministic.emotions.sources[bucket].filter(
             (source) =>
               activePeriodMonths === null ||
-              visibleMonths.has(new Date(source.date * 1_000).toISOString().slice(0, 7)),
+              visibleMonths.has(new Date(source.date * 1_000).toISOString().slice(0, 7))
           );
           showEvidence(`${label} wording`, sources, [
             description,
@@ -2323,14 +2326,14 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           ]);
         });
         return button;
-      }),
+      })
     );
   }
 
   function renderReflections(report: FullReport) {
     const list = $("#reflection-list");
     const visibleReflections = report.reflections.filter((reflection) =>
-      clearsConfidence(reflection.confidence),
+      clearsConfidence(reflection.confidence)
     );
     if (visibleReflections.length === 0) {
       list.replaceChildren(
@@ -2339,33 +2342,33 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           report.semantic
             ? "No evidence-backed reflection prompts crossed the current thresholds."
             : "Reflection prompts will appear as repeat and memory patterns become available.",
-          "empty-note",
-        ),
+          "empty-note"
+        )
       );
       return;
     }
     list.replaceChildren(
       ...visibleReflections.map((reflection, index) => {
-        const button = document.createElement("button");
+        const button = atlasElement("button");
         button.type = "button";
-        button.className = `reflection-card ${reflection.kind}`;
+        button.classList.add(...`reflection-card ${reflection.kind}`.split(/\s+/).filter(Boolean));
         button.append(
           text("span", String(index + 1).padStart(2, "0"), "reflection-index"),
           text("span", reflection.eyebrow, "reflection-eyebrow"),
           text("strong", reflection.question),
           text(
             "small",
-            `${formatPercent(reflection.confidence)} confidence · ${reflection.reason} · Open ${reflection.sources.length} source${reflection.sources.length === 1 ? "" : "s"}`,
-          ),
+            `${formatPercent(reflection.confidence)} confidence · ${reflection.reason} · Open ${reflection.sources.length} source${reflection.sources.length === 1 ? "" : "s"}`
+          )
         );
         button.addEventListener("click", () =>
           showEvidence(reflection.eyebrow, reflection.sources, [
             reflection.question,
             reflection.reason,
-          ]),
+          ])
         );
         return button;
-      }),
+      })
     );
   }
 
@@ -2373,15 +2376,15 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     searchResults.hidden = false;
     if (results.length === 0) {
       searchResults.replaceChildren(
-        text("p", "No semantic results yet. Wait for the topic map to finish.", "empty-note"),
+        text("p", "No semantic results yet. Wait for the topic map to finish.", "empty-note")
       );
       return;
     }
     searchResults.replaceChildren(
       ...results.map((result) => {
-        const button = document.createElement("button");
+        const button = atlasElement("button");
         button.type = "button";
-        button.className = "search-result";
+        button.classList.add(..."search-result".split(/\s+/).filter(Boolean));
         const body = document.createElement("span");
         body.append(
           text("strong", truncate(result.title, 240)),
@@ -2391,14 +2394,14 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
               (result.repetitionCount ?? 1) > 1
                 ? `${result.repetitionCount} matching entries · ${result.detail}`
                 : result.detail,
-              140,
-            ),
-          ),
+              140
+            )
+          )
         );
         button.append(
           text("span", result.type, "search-result-type"),
           body,
-          text("span", formatPercent(result.similarity), "search-result-score"),
+          text("span", formatPercent(result.similarity), "search-result-score")
         );
         button.addEventListener("click", () => {
           searchResults.hidden = true;
@@ -2409,7 +2412,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
             ]);
           } else if (result.topicId && currentReport?.semantic) {
             const topic = currentReport.semantic.topics.find(
-              (candidate) => candidate.id === result.topicId,
+              (candidate) => candidate.id === result.topicId
             );
             if (topic) selectTopic(topic);
           } else if (result.source) {
@@ -2417,7 +2420,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           }
         });
         return button;
-      }),
+      })
     );
   }
 
@@ -2429,7 +2432,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
   confidenceInput.addEventListener("input", () => setConfidence(Number(confidenceInput.value)));
   reportConfidenceInput.addEventListener("input", () =>
-    setConfidence(Number(reportConfidenceInput.value)),
+    setConfidence(Number(reportConfidenceInput.value))
   );
   atlasPeriod.addEventListener("change", () => {
     activePeriodMonths = atlasPeriod.value === "all" ? null : Number(atlasPeriod.value);
@@ -2623,7 +2626,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       if ((snapshot as { version: number }).version !== 3) {
         await forgetSnapshot();
         showError(
-          "An older saved memory was removed. Import the ZIP again to build evolution, confidence, and strand evidence.",
+          "An older saved memory was removed. Import the ZIP again to build evolution, confidence, and strand evidence."
         );
         return;
       }
@@ -2644,12 +2647,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
           await analyzeFile(
             new File([blob], "development-sample.zip", {
               type: "application/zip",
-            }),
+            })
           );
         })
         .catch((error) => {
           showError(
-            error instanceof Error ? error.message : "The development sample could not load.",
+            error instanceof Error ? error.message : "The development sample could not load."
           );
         });
     }

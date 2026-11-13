@@ -1,21 +1,24 @@
-@import "tailwindcss";
+@import "@saas-maker/ui/styles.css";
+@source "./";
+
+@layer components {
 
 :root {
-  --paper: #f3f5f2;
-  --paper-raised: #ffffff;
-  --ink: #101b24;
-  --ink-muted: #58666d;
-  --rule: #cbd2d0;
-  --rule-strong: #9aa7a4;
-  --cobalt: #2157d5;
-  --signal: #b83a28;
-  --teal: #168579;
-  --amber: #9a6500;
-  --violet: #7554c8;
-  --focus: #101b24;
-  font-family: Arial, "Helvetica Neue", system-ui, sans-serif;
-  color: var(--ink);
-  background: var(--paper);
+  --paper: var(--background);
+  --paper-raised: var(--card);
+  --ink: var(--foreground);
+  --ink-muted: var(--muted-foreground);
+  --rule: var(--border);
+  --rule-strong: var(--input);
+  --cobalt: var(--brand);
+  --signal: var(--destructive);
+  --teal: var(--success);
+  --amber: var(--warning);
+  --violet: var(--chart-4);
+  --focus: var(--ring);
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
   font-synthesis: none;
 }
 
@@ -155,7 +158,7 @@ button {
 .map-key {
   margin: 0 0 0.65rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -361,7 +364,7 @@ h2 {
 .export-guide summary::after {
   color: var(--cobalt);
   content: "+";
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 1.35rem;
 }
 
@@ -371,7 +374,7 @@ h2 {
 
 .export-guide summary > span {
   color: var(--cobalt);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -406,7 +409,7 @@ h2 {
   border: 1px solid var(--rule);
   background: rgb(255 255 255 / 70%);
   color: var(--ink);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.82em;
   overflow-wrap: anywhere;
 }
@@ -501,7 +504,7 @@ h2 {
   border: 2px solid var(--ink);
   background: var(--paper);
   color: var(--cobalt);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-weight: 800;
 }
 
@@ -556,7 +559,7 @@ h2 {
   border-radius: 50%;
   background: var(--paper);
   color: var(--cobalt);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
 }
 
@@ -656,52 +659,6 @@ h2 {
   font-size: clamp(2.7rem, 5vw, 5rem);
 }
 
-.button-primary,
-.button-secondary,
-.button-story,
-.search-field button {
-  min-height: 2.75rem;
-  padding: 0.65rem 1rem;
-  cursor: pointer;
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  font-weight: 700;
-}
-
-.button-primary,
-.search-field button {
-  color: white;
-  background: var(--cobalt);
-  border-color: var(--cobalt);
-}
-
-.button-story {
-  border-color: var(--ink);
-  color: white;
-  background:
-    radial-gradient(circle at 1px 1px, rgb(255 255 255 / 28%) 1px, transparent 1.2px) 0 0 / 5px 5px,
-    var(--ink);
-}
-
-.button-story:hover {
-  border-color: var(--signal);
-  background-color: var(--signal);
-}
-
-.button-secondary {
-  background: var(--paper-raised);
-}
-
-.button-secondary:hover {
-  color: var(--cobalt);
-  border-color: var(--cobalt);
-}
-
-.button-secondary.danger:hover {
-  color: var(--signal);
-  border-color: var(--signal);
-}
-
 .progress-route {
   display: flex;
   align-items: center;
@@ -741,7 +698,7 @@ h2 {
 
 .progress-status {
   margin-top: 1.5rem;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: clamp(1rem, 2vw, 1.4rem);
 }
 
@@ -766,7 +723,7 @@ h2 {
 .timing-overview span,
 .analysis-timing-metrics dt {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.65rem;
 }
 
@@ -834,7 +791,7 @@ h2 {
 .timing-stages time {
   grid-column: 2;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
 }
 
@@ -902,7 +859,7 @@ h2 {
   width: 1.7rem;
   color: var(--cobalt);
   content: "+";
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 1.4rem;
   text-align: right;
 }
@@ -923,7 +880,7 @@ h2 {
 .analysis-details > summary small,
 .analysis-details > summary > b {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 500;
 }
@@ -1061,7 +1018,7 @@ h2 {
 .report-meta {
   margin: 1rem 0 0;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.8rem;
 }
 
@@ -1155,7 +1112,7 @@ h2 {
 .search-result-type,
 .search-result-score {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
 }
 
@@ -1225,7 +1182,7 @@ h2 {
 
 .baseline-stats dd {
   margin: 0.55rem 0 0;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: clamp(1.25rem, 1.9vw, 2rem);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
@@ -1279,7 +1236,7 @@ h2 {
 
 .atlas-period-control label {
   align-self: center;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.07em;
@@ -1311,7 +1268,7 @@ h2 {
   margin-bottom: 1.25rem;
   padding: 0.8rem 0;
   border-block: 1px solid var(--ink);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
 }
 
@@ -1377,7 +1334,7 @@ h2 {
 
 .atlas-highlight > span,
 .atlas-highlight > b {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
 }
 
@@ -1409,9 +1366,7 @@ h2 {
   min-width: 0;
   margin: 0;
   padding: 1.35rem;
-  border-right: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-  background: rgb(255 255 255 / 88%);
+  background: var(--card);
 }
 
 .atlas-figure figcaption {
@@ -1433,12 +1388,12 @@ h2 {
 
 .atlas-figure figcaption b {
   color: var(--signal);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
 }
 
 .atlas-figure figcaption strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(1.15rem, 2vw, 1.55rem);
   font-weight: 500;
 }
@@ -1446,7 +1401,7 @@ h2 {
 .atlas-figure figcaption small {
   max-width: 25ch;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.64rem;
   line-height: 1.45;
   text-align: right;
@@ -1477,7 +1432,7 @@ h2 {
   gap: 2px;
   margin: 0 0 0.35rem 1.65rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.58rem;
 }
 
@@ -1514,7 +1469,7 @@ h2 {
   grid-template-rows: repeat(7, 1fr);
   gap: 2px;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.56rem;
   text-align: center;
 }
@@ -1556,7 +1511,7 @@ h2 {
   justify-content: flex-end;
   margin-top: 0.65rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.58rem;
 }
 
@@ -1604,7 +1559,7 @@ h2 {
 }
 
 .chart-legend b {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .atlas-plot {
@@ -1661,7 +1616,7 @@ h2 {
   display: none;
   margin: -0.35rem 0 0.75rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.65rem;
 }
 
@@ -1682,7 +1637,7 @@ h2 {
   align-self: end;
   padding-bottom: 0.25rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.56rem;
 }
 
@@ -1776,7 +1731,7 @@ h2 {
 }
 
 .shape-group header strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
 }
 
@@ -1817,7 +1772,7 @@ h2 {
 }
 
 .shape-row b {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .chart-data {
@@ -1829,7 +1784,7 @@ h2 {
   padding: 0.75rem 0 0;
   cursor: pointer;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 700;
 }
@@ -1869,7 +1824,7 @@ h2 {
 
 .chart-data-row span {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.59rem;
   line-height: 1.45;
 }
@@ -1878,7 +1833,7 @@ h2 {
   max-width: 34ch;
   margin: auto;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   line-height: 1.5;
   text-align: center;
@@ -1988,7 +1943,7 @@ h2 {
 
 .memory-chat-gate dt {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.65rem;
 }
 
@@ -2048,7 +2003,7 @@ h2 {
 
 .memory-chat-message span {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
 }
 
@@ -2149,7 +2104,7 @@ h2 {
 
 .memory-chat-evidence b,
 .memory-chat-evidence small {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
 }
 
@@ -2245,7 +2200,7 @@ h2 {
 
 .graph-query-route text {
   fill: var(--paper-raised);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
   text-anchor: middle;
@@ -2307,7 +2262,7 @@ h2 {
 
 .graph-node .graph-count {
   fill: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 17px;
   font-weight: 400;
 }
@@ -2365,7 +2320,7 @@ h2 {
 
 .graph-formation output {
   color: var(--cobalt);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
   text-align: right;
@@ -2397,7 +2352,7 @@ h2 {
 .graph-formation footer span {
   display: block;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
 }
 
@@ -2478,7 +2433,7 @@ h2 {
 
 .topic-list small {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .ledger-panel {
@@ -2518,7 +2473,7 @@ h2 {
 .ledger-tabs span {
   display: block;
   margin-top: 0.15rem;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .ledger-list {
@@ -2551,7 +2506,7 @@ h2 {
   gap: 0.6rem;
   margin-top: 0.55rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.66rem;
 }
 
@@ -2587,7 +2542,7 @@ h2 {
   display: flex;
   gap: 2rem;
   margin-bottom: 1.5rem;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.82rem;
 }
 
@@ -2633,7 +2588,7 @@ h2 {
 
 .domain-lenses output {
   color: var(--cobalt);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 1.1rem;
 }
 
@@ -2645,7 +2600,7 @@ h2 {
 
 .lens-conversation-count {
   align-self: end;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
 }
 
@@ -2683,7 +2638,7 @@ h2 {
 
 .lens-detail-heading > strong {
   color: var(--signal);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 1.35rem;
 }
 
@@ -2729,7 +2684,7 @@ h2 {
 }
 
 .typo-list output {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .repeat-item {
@@ -2758,7 +2713,7 @@ h2 {
   border: 2px solid var(--signal);
   border-radius: 50%;
   color: var(--signal);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
 }
@@ -2770,7 +2725,7 @@ h2 {
 .repeat-kind,
 .repeat-date {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
 }
 
@@ -2807,7 +2762,7 @@ h2 {
 
 .tone-row output {
   text-align: right;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
 }
 
@@ -2904,7 +2859,7 @@ h2 {
 }
 
 .emotion-row output {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   white-space: nowrap;
 }
@@ -2938,12 +2893,12 @@ h2 {
 .reflection-index {
   grid-row: 1 / span 3;
   color: var(--signal);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .reflection-eyebrow {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2951,7 +2906,7 @@ h2 {
 
 .reflection-card strong {
   max-width: 34rem;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(1.15rem, 2vw, 1.55rem);
   font-weight: 500;
   line-height: 1.28;
@@ -2982,7 +2937,7 @@ h2 {
   display: block;
   margin-bottom: 0.45rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -3055,7 +3010,7 @@ h2 {
   display: block;
   margin-bottom: 0.35rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.64rem;
 }
 
@@ -3087,7 +3042,7 @@ h2 {
   margin: 0;
   padding: 0.65rem 0;
   border-bottom: 1px solid var(--rule);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
 }
 
@@ -3197,7 +3152,7 @@ h2 {
 .story-header p {
   margin: 0;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
 }
 
@@ -3274,7 +3229,7 @@ h2 {
 .story-eyebrow {
   margin: 0 0 1rem;
   color: var(--signal);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -3284,7 +3239,7 @@ h2 {
 .story-slide h2 {
   max-width: 14ch;
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(3.1rem, 7vw, 7.3rem);
   font-weight: 500;
   letter-spacing: -0.06em;
@@ -3317,14 +3272,14 @@ h2 {
 
 .story-stat-grid dt {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   line-height: 1.4;
 }
 
 .story-stat-grid dd {
   margin: 0.5rem 0 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(1.3rem, 3vw, 2.4rem);
   line-height: 1.05;
 }
@@ -3346,7 +3301,7 @@ h2 {
 
 .story-ranked-row > span,
 .story-ranked-row > b {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.66rem;
 }
 
@@ -3405,7 +3360,7 @@ h2 {
 
 .story-controls span {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   text-align: center;
 }
@@ -3509,7 +3464,7 @@ body.has-evidence::before {
   grid-row: 1 / span 2;
   color: var(--cobalt);
   content: counter(evidence-source, decimal-leading-zero);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
 }
 
@@ -3524,7 +3479,7 @@ body.has-evidence::before {
   grid-column: 2;
   margin-top: 0;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .fact-history {
@@ -3646,7 +3601,7 @@ body.has-evidence::before {
   grid-template-columns: auto minmax(8rem, 1fr) auto;
   gap: 0.7rem;
   align-items: center;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
 }
 
@@ -3694,7 +3649,7 @@ body.has-evidence::before {
   display: block;
   margin-top: 0.55rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.66rem;
 }
 
@@ -3767,7 +3722,7 @@ body.has-evidence::before {
 
 .trend-label {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.66rem;
 }
 
@@ -3813,7 +3768,7 @@ body.has-evidence::before {
 .evolution-item > small {
   grid-column: 1 / -1;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.66rem;
 }
 
@@ -3836,7 +3791,7 @@ body.has-evidence::before {
 
 .memory-change-item > span {
   color: var(--amber);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.66rem;
   text-transform: capitalize;
 }
@@ -4449,7 +4404,7 @@ body.has-evidence::before {
     display: block;
     margin: -0.5rem 0 1rem;
     color: var(--ink-muted);
-    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 0.68rem;
   }
 
@@ -4620,7 +4575,7 @@ body.has-evidence::before {
 
 .finding-severity {
   color: var(--cobalt);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -4651,7 +4606,7 @@ body.has-evidence::before {
 
 .finding-evidence {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
 }
 
@@ -4707,7 +4662,7 @@ body.has-evidence::before {
 }
 
 .efficiency-value {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   text-align: right;
 }
@@ -4779,7 +4734,7 @@ body.has-evidence::before {
 .demo-entry > small {
   grid-column: 1 / -1;
   margin: 0;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
 }
 
@@ -4842,7 +4797,7 @@ body.has-evidence::before {
   gap: 0.75rem;
   margin-top: 0.9rem;
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   line-height: 1.6;
 }
@@ -5015,7 +4970,7 @@ body.has-evidence::before {
 
 .momentum-readout .chart-data-row span {
   color: var(--ink-muted);
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   text-align: right;
 }
@@ -5058,4 +5013,16 @@ body.has-evidence::before {
   .atlas-highlight > b {
     grid-column: 1 / -1;
   }
+}
+
+.chart-legend, .topic-list { background: transparent; gap: 0.5rem; }
+.visual-atlas-grid { gap: 1rem; border: 0; background: transparent; box-shadow: none; }
+
+.atlas-figure figcaption strong { font-family: var(--font-display); }
+.baseline-stats { gap: 0.75rem; border: 0; }
+
+.route-rail { background: var(--sidebar); border-color: var(--sidebar-border); }
+.report-header { background: var(--background); }
+.ledger-item, .repeat-item, .evolution-item, .memory-change-item, .reflection-card, .search-result { width: 100%; }
+[data-slot="native-button"][aria-pressed="true"], [data-slot="native-button"][aria-selected="true"] { background: var(--primary); color: var(--primary-foreground); }
 }

@@ -1,3 +1,4 @@
+import { atlasElement } from "./ui-elements";
 import type { EmotionBucket, FullReport, SourceRef } from "./types";
 import { activityMonthWindow } from "./period";
 import { formatNumber, truncate } from "./dom-utils";
@@ -45,12 +46,9 @@ function $(selector: string): HTMLElement {
 function element<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   value?: string,
-  className?: string,
+  className?: string
 ): HTMLElementTagNameMap[K] {
-  const node = document.createElement(tag);
-  if (value !== undefined) node.textContent = value;
-  if (className) node.className = className;
-  return node;
+  return atlasElement(tag, value, className);
 }
 
 function formatMonth(label: string): string {
@@ -92,7 +90,7 @@ function rankedBars(values: Array<{ label: string; value: number; color?: string
 function buildSlides(
   report: FullReport,
   periodMonths: number | null,
-  clearsConfidence: (score: number) => boolean,
+  clearsConfidence: (score: number) => boolean
 ): StorySlide[] {
   const deterministic = report.deterministic;
   const months = activityMonthWindow(report.deterministic, periodMonths);
@@ -118,7 +116,7 @@ function buildSlides(
     .filter(
       (repeat) =>
         periodMonths === null ||
-        monthSet.has(new Date(repeat.lastAsked * 1_000).toISOString().slice(0, 7)),
+        monthSet.has(new Date(repeat.lastAsked * 1_000).toISOString().slice(0, 7))
     )
     .map((repeat) => ({
       label: repeat.representative,
@@ -135,8 +133,8 @@ function buildSlides(
       (repeat) =>
         periodMonths === null ||
         repeat.sources.some((source) =>
-          monthSet.has(new Date(source.date * 1_000).toISOString().slice(0, 7)),
-        ),
+          monthSet.has(new Date(source.date * 1_000).toISOString().slice(0, 7))
+        )
     )
     .map((repeat) => {
       const dates = repeat.sources.map((source) => source.date).filter(Boolean);
@@ -151,7 +149,7 @@ function buildSlides(
       };
     });
   const topRepeat = [...exactRepeats, ...semanticRepeats].sort(
-    (left, right) => right.count - left.count,
+    (left, right) => right.count - left.count
   )[0];
   const emotionCounts = deterministic.emotions.byMonth
     .filter((datum) => monthSet.has(datum.month))
@@ -170,7 +168,7 @@ function buildSlides(
         excitement: 0,
         appreciation: 0,
         neutral: 0,
-      },
+      }
     );
   const emotionMeta: Record<EmotionBucket, { label: string; color: string }> = {
     curiosity: { label: "Curiosity", color: "#2157d5" },
@@ -198,7 +196,7 @@ function buildSlides(
         neutral: totals.neutral + datum.neutral,
         negative: totals.negative + datum.negative,
       }),
-      { positive: 0, neutral: 0, negative: 0 },
+      { positive: 0, neutral: 0, negative: 0 }
     );
   const toneTotal = tone.positive + tone.neutral + tone.negative;
   const topics = (report.semantic?.topics ?? [])
@@ -281,14 +279,14 @@ function buildSlides(
             label: lens.label,
             value,
             color: ["#2157d5", "#168579", "#ef4b3e", "#7554c8", "#dc8700"][index],
-          })),
+          }))
         ),
       evidence: topLens
         ? {
             label: "Open leading-route sources",
             title: topLens.lens.label,
             sources: topLens.lens.sources.filter((source) =>
-              monthSet.has(new Date(source.date * 1_000).toISOString().slice(0, 7)),
+              monthSet.has(new Date(source.date * 1_000).toISOString().slice(0, 7))
             ),
             notes: [
               `${formatNumber(topLens.value)} matching queries in the selected period.`,
@@ -325,7 +323,7 @@ function buildSlides(
           : element(
               "p",
               "This can mean your recurring questions were phrased differently—or simply did not recur.",
-              "story-note",
+              "story-note"
             ),
       evidence: topRepeat
         ? {
@@ -348,14 +346,14 @@ function buildSlides(
             label,
             value,
             color,
-          })),
+          }))
         ),
       evidence: topEmotion
         ? {
             label: `Open ${topEmotion.label.toLowerCase()} wording sources`,
             title: `${topEmotion.label} wording`,
             sources: deterministic.emotions.sources[topEmotion.bucket].filter((source) =>
-              monthSet.has(new Date(source.date * 1_000).toISOString().slice(0, 7)),
+              monthSet.has(new Date(source.date * 1_000).toISOString().slice(0, 7))
             ),
             notes: [
               `${formatNumber(topEmotion.value)} queries matched this dominant wording signal in the selected period.`,
@@ -387,7 +385,7 @@ function buildSlides(
           : element(
               "p",
               "Return to the report for question routes, activity, repeats, and language signals.",
-              "story-note",
+              "story-note"
             ),
       evidence: topTopic
         ? {
@@ -534,7 +532,7 @@ export function createStoryController(context: StoryContext) {
             render();
           });
           return button;
-        }),
+        })
       );
       dialog.showModal();
       render();
