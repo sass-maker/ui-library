@@ -860,9 +860,11 @@ Search accepts an optional accessibility label independently of its placeholder.
 
 The runnable [Mac workspace example](swift/Examples/MacWorkspaceDemo/README.md)
 composes them into StorageDaddy’s cleanup screen with the existing product art.
-Its folder data is illustrative and its actions never change files. It supports
-native keyboard search and selection, narrow/wide windows, long names, empty and
-disabled states, plus appearance and RTL checks.
+Its folder data is illustrative and its actions never change files. The example
+has been manually checked with native keyboard search and selection, narrow/wide
+windows, long names, empty and disabled states, and both appearances and RTL.
+CI compiles the example; automated render tests currently cover the earlier
+button and selection controls, not all new workspace controls.
 
 Beyond the theme, the package assembles whole screens: `SMHero`, `SMShowcase`,
 `SMCover`, `SMStatementRows` and `SMDevice` (Gallery), and `SMAppShell`,
