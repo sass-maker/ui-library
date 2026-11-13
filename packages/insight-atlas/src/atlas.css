@@ -4983,6 +4983,8 @@ body.has-evidence::before {
 
 .momentum-readout {
   min-width: 0;
+  width: 100%;
+  justify-self: stretch;
   margin-top: 1.25rem;
   border-top: 1px solid var(--rule);
 }
@@ -4993,6 +4995,8 @@ body.has-evidence::before {
   gap: 0.7rem;
   align-items: center;
   min-height: 2.6rem;
+  min-width: 0;
+  width: 100%;
   padding: 0.65rem 0;
   font-size: 0.74rem;
 }
@@ -5004,7 +5008,9 @@ body.has-evidence::before {
 }
 
 .momentum-readout .chart-data-row strong {
+  min-width: 0;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 .momentum-readout .chart-data-row span {
@@ -5030,5 +5036,26 @@ body.has-evidence::before {
 @media (max-width: 700px) {
   .shape-without-models {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .momentum-readout .chart-data-row {
+    grid-template-columns: 0.45rem minmax(0, 1fr);
+    row-gap: 0.35rem;
+  }
+
+  .momentum-readout .chart-data-row span {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1200px) {
+  .atlas-highlight {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .atlas-highlight > span,
+  .atlas-highlight > b {
+    grid-column: 1 / -1;
   }
 }
