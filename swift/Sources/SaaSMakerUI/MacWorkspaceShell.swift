@@ -11,6 +11,7 @@ public struct SMWorkspaceWindowChrome: NSViewRepresentable {
         guard let view = view as? WorkspaceWindowView else { return }
         view.canvas = p.background
         view.apply()
+        view.applyAfterWindowConfiguration()
     }
 }
 
@@ -18,12 +19,29 @@ private final class WorkspaceWindowView: NSView {
     var canvas = Color(nsColor: .windowBackgroundColor)
     private var appliedCanvas: Color?
     private weak var appliedWindow: NSWindow?
-    override func viewDidMoveToWindow() { super.viewDidMoveToWindow(); apply() }
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        let center = NotificationCenter.default
+        center.removeObserver(self, name: NSWindow.didBecomeKeyNotification, object: nil)
+        center.removeObserver(self, name: NSWindow.didBecomeMainNotification, object: nil)
+        if let window {
+            center.addObserver(self, selector: #selector(windowBecameActive), name: NSWindow.didBecomeKeyNotification, object: window)
+            center.addObserver(self, selector: #selector(windowBecameActive), name: NSWindow.didBecomeMainNotification, object: window)
+        }
+        apply()
+        applyAfterWindowConfiguration()
+    }
+    @objc private func windowBecameActive(_ notification: Notification) { apply() }
+    func applyAfterWindowConfiguration() {
+        // SwiftUI finishes configuring a scene's native title bar after attaching its content.
+        DispatchQueue.main.async { [weak self] in self?.apply() }
+    }
     func apply() {
         guard let window else { return }
         if !window.titlebarAppearsTransparent { window.titlebarAppearsTransparent = true }
-        if appliedWindow !== window || appliedCanvas != canvas {
-            window.backgroundColor = NSColor(canvas)
+        let color = NSColor(canvas)
+        if appliedWindow !== window || appliedCanvas != canvas || window.backgroundColor != color {
+            window.backgroundColor = color
             appliedWindow = window
             appliedCanvas = canvas
         }
