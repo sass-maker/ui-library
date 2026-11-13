@@ -5024,5 +5024,4 @@ body.has-evidence::before {
 .route-rail { background: var(--sidebar); border-color: var(--sidebar-border); }
 .report-header { background: var(--background); }
 .ledger-item, .repeat-item, .evolution-item, .memory-change-item, .reflection-card, .search-result { width: 100%; }
-[data-slot="native-button"][aria-pressed="true"], [data-slot="native-button"][aria-selected="true"] { background: var(--primary); color: var(--primary-foreground); }
 }

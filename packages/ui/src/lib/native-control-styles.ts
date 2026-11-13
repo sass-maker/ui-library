@@ -1,11 +1,8 @@
 import { cn } from "./utils"
-import { buttonVariants } from "../components/button"
-import { inputStyles } from "../components/input"
-import { textareaStyles } from "../components/textarea"
-import { nativeTableStyles, tableStyles } from "../components/table"
+import { buttonVariants, inputStyles, textareaStyles, nativeTableStyles, tableStyles } from "./native-primitives"
 import type { VariantProps } from "class-variance-authority"
 
-export { nativeTableStyles } from "../components/table"
+export { nativeTableStyles } from "./native-primitives"
 
 export type NativeControlTag = "button" | "a" | "input" | "textarea" | "select" | "details" | "summary" | "dialog" | "progress" | "table" | "thead" | "tbody" | "tfoot" | "tr" | "th" | "td" | "caption"
 export type NativeControlStyleOptions = VariantProps<typeof buttonVariants> & { className?: string; type?: string }

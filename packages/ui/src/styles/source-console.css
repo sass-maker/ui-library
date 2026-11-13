@@ -19,3 +19,5 @@
 
 @source not "../molecules";
 @source not "../organisms";
+
+@source "../lib/native-primitives.ts";

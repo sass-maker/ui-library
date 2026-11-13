@@ -1,9 +1,8 @@
 import * as React from "react"
+import { cardStyles } from "../lib/native-primitives"
+export { cardStyles } from "../lib/native-primitives"
 import { cn } from "../lib/utils"
 
-export function cardStyles(className?: string) {
-  return cn("flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground shadow-sm", className)
-}
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (

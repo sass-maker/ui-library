@@ -1,4 +1,4 @@
-import { cardStyles } from "../components/card"
+import { cardStyles } from "./native-primitives"
 import { cn } from "./utils"
 
 export function chartPanelStyles(className?: string) {

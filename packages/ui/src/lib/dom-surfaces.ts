@@ -1,4 +1,4 @@
-import { cardStyles } from "../components/card"
+import { cardStyles } from "./native-primitives"
 
 export function createUiSurface<Tag extends "div" | "section" | "article" | "aside">(tag: Tag, className?: string, document: Document = globalThis.document): HTMLElementTagNameMap[Tag] {
   const element = document.createElement(tag)

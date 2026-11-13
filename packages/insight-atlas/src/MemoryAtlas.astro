@@ -198,6 +198,7 @@ const { indexCopy, chatgptExportSteps, privacyContract, demoEnabled = false } = 
             <label id="drop-zone" class="drop-zone" for="archive-input">
               <Control as="input"
                 id="archive-input"
+                class="sr-only h-px w-px min-w-0 p-0 [@media(pointer:coarse)]:min-h-0"
                 type="file"
                 accept=".zip,application/zip"
                 data-app-health-event="archive_import_started" />

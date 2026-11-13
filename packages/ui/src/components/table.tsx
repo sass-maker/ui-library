@@ -1,23 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "../lib/utils"
+import { nativeTableStyles, tableStyles } from "../lib/native-primitives"
+export { nativeTableStyles, tableStyles } from "../lib/native-primitives"
 
-export const nativeTableStyles = {
-  table: "w-full caption-bottom text-sm",
-  thead: "[&_tr]:border-b",
-  tbody: "[&_tr:last-child]:border-0",
-  tfoot: "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-  tr: "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
-  th: "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-  td: "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-  caption: "mt-4 text-sm text-muted-foreground",
-} as const
-
-
-export function tableStyles(tag: keyof typeof nativeTableStyles, className?: string) {
-  return cn(nativeTableStyles[tag], className)
-}
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (

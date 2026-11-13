@@ -27,9 +27,10 @@ export function atlasElement<K extends keyof HTMLElementTagNameMap>(
   const node = nativeTags.has(tag)
     ? createUiControl(tag as NativeControlTag, {}, [], {
         variant: tag === "button" ? "ghost" : undefined,
+        size: tag === "button" ? "content" : undefined,
         className: [
           tag === "button"
-            ? "grid h-auto min-h-11 w-full justify-stretch whitespace-normal text-left"
+            ? "grid justify-stretch"
             : "",
           className,
         ]
