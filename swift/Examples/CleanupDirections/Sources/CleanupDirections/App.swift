@@ -401,7 +401,7 @@ struct Root: View {
             }.font(Tone.type(10)).foregroundStyle(Tone.secondary).padding(.horizontal, 25).frame(height: 30)
                 .overlay(alignment: .top) { Divider().overlay(Tone.hairline) }
         }.foregroundStyle(Tone.ink).font(Tone.type(13)).background(Color.black)
-            .background(SMWorkspaceWindowChrome()).smTheme(Tone.palette).environmentObject(study).preferredColorScheme(.dark)
+            .smWorkspaceWindowChrome().smTheme(Tone.palette).environmentObject(study).preferredColorScheme(.dark)
             .sheet(isPresented: $study.review) {
                 VStack(alignment: .leading, spacing: 18) {
                     Label("Review your selection", systemImage: "checklist").font(Tone.heading(24))

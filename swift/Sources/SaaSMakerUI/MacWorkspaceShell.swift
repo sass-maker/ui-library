@@ -2,7 +2,24 @@
 import SwiftUI
 import AppKit
 
-/// Gives the standard title bar the workspace canvas while retaining native window controls.
+extension View {
+    /// Match a SwiftUI scene's native title bar and window canvas to its workspace palette.
+    public func smWorkspaceWindowChrome() -> some View {
+        modifier(WorkspaceWindowChromeModifier())
+    }
+}
+
+private struct WorkspaceWindowChromeModifier: ViewModifier {
+    @Environment(\.smPalette) private var p
+    func body(content: Content) -> some View {
+        content.background(SMWorkspaceWindowChrome())
+            .toolbarBackground(p.background, for: .windowToolbar)
+            .toolbarBackground(.visible, for: .windowToolbar)
+    }
+}
+
+/// An AppKit canvas bridge. SwiftUI scenes should use `smWorkspaceWindowChrome()`
+/// so the scene also receives its native toolbar background preferences.
 public struct SMWorkspaceWindowChrome: NSViewRepresentable {
     @Environment(\.smPalette) private var p
     public init() {}
@@ -11,7 +28,6 @@ public struct SMWorkspaceWindowChrome: NSViewRepresentable {
         guard let view = view as? WorkspaceWindowView else { return }
         view.canvas = p.background
         view.apply()
-        view.applyAfterWindowConfiguration()
     }
 }
 
@@ -19,29 +35,12 @@ private final class WorkspaceWindowView: NSView {
     var canvas = Color(nsColor: .windowBackgroundColor)
     private var appliedCanvas: Color?
     private weak var appliedWindow: NSWindow?
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        let center = NotificationCenter.default
-        center.removeObserver(self, name: NSWindow.didBecomeKeyNotification, object: nil)
-        center.removeObserver(self, name: NSWindow.didBecomeMainNotification, object: nil)
-        if let window {
-            center.addObserver(self, selector: #selector(windowBecameActive), name: NSWindow.didBecomeKeyNotification, object: window)
-            center.addObserver(self, selector: #selector(windowBecameActive), name: NSWindow.didBecomeMainNotification, object: window)
-        }
-        apply()
-        applyAfterWindowConfiguration()
-    }
-    @objc private func windowBecameActive(_ notification: Notification) { apply() }
-    func applyAfterWindowConfiguration() {
-        // SwiftUI finishes configuring a scene's native title bar after attaching its content.
-        DispatchQueue.main.async { [weak self] in self?.apply() }
-    }
+    override func viewDidMoveToWindow() { super.viewDidMoveToWindow(); apply() }
     func apply() {
         guard let window else { return }
         if !window.titlebarAppearsTransparent { window.titlebarAppearsTransparent = true }
-        let color = NSColor(canvas)
-        if appliedWindow !== window || appliedCanvas != canvas || window.backgroundColor != color {
-            window.backgroundColor = color
+        if appliedWindow !== window || appliedCanvas != canvas {
+            window.backgroundColor = NSColor(canvas)
             appliedWindow = window
             appliedCanvas = canvas
         }
