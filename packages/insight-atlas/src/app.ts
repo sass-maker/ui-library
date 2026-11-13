@@ -244,6 +244,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       day: "numeric",
       month: "short",
       year: "numeric",
+      timeZone: currentReport?.demo ? "UTC" : undefined,
     }).format(new Date(timestamp * 1_000));
   }
 
