@@ -140,7 +140,10 @@ function renderAtlasHighlight(report: FullReport, context: AtlasContext) {
   $("#atlas-highlight-title").textContent =
     `${strongest.lens.label} was your busiest question route.`;
   $("#atlas-highlight-detail").textContent =
-    `${formatNumber(strongest.count)} matched queries ${periodLabel}. Categories overlap, so this is a route into the evidence—not a personality label.`;
+    `${formatNumber(strongest.count)} matched queries ${periodLabel}. Categories overlap${report.demo ? ". These are aggregate patterns from the public demo." : ", so this is a route into the evidence—not a personality label."}`;
+  button.querySelector("b")!.textContent = report.demo
+    ? "Open aggregate details →"
+    : "Open source conversations →";
   const periodSources = strongest.lens.sources.filter((source) => {
     const date = new Date(source.date);
     if (Number.isNaN(date.getTime())) return false;
@@ -747,26 +750,11 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
   state.hidden = true;
   chart.classList.remove("is-hidden");
   const maxMomentum = Math.max(0.2, ...topics.map((topic) => Math.abs(topic.momentum)));
-  const plotTopics = topics.map((topic, index) => ({
+  const plotTopics = topics.map((topic) => ({
     ...topic,
     normalizedMomentum: topic.momentum / maxMomentum,
-    shortLabel: index < 6 ? truncate(topic.label.split(" · ")[0], 18) : "",
     fill: `url(#atlas-dither-${Object.keys(TREND_COLORS).indexOf(topic.trend)})`,
   }));
-  const labelGap = Math.max(
-    4,
-    Math.ceil(Math.max(...topics.map((topic) => topic.selectedCount)) * 0.08),
-  );
-  let previousLabelY = -Infinity;
-  const labeledTopics = plotTopics
-    .filter((topic) => topic.shortLabel)
-    .slice()
-    .sort((left, right) => left.selectedCount - right.selectedCount)
-    .map((topic) => {
-      const labelY = Math.max(topic.selectedCount, previousLabelY + labelGap);
-      previousLabelY = labelY;
-      return { ...topic, labelY };
-    });
   const trendColors = Object.keys(TREND_COLORS).map((trend) => TREND_COLORS[trend as TrendState]);
   const plotElement = plot({
     className: "atlas-observable-plot",
@@ -809,33 +797,29 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
         title: (topic) =>
           `${topic.label}\n${topic.selectedCount} selected-period conversations · ${TREND_LABELS[topic.trend as TrendState]}`,
       }),
-      ...labeledTopics.flatMap((topic) => [
-        lineY(
-          [
-            { x: topic.normalizedMomentum, y: topic.selectedCount },
-            { x: topic.normalizedMomentum, y: topic.labelY },
-          ],
-          {
-            x: "x",
-            y: "y",
-            stroke: "#9ba6aa",
-            strokeWidth: 0.8,
-          },
-        ),
-        plotText([topic], {
-          x: "normalizedMomentum",
-          y: "labelY",
-          text: "shortLabel",
-          dx: topic.normalizedMomentum > 0.45 ? -9 : 9,
-          dy: -7,
-          textAnchor: topic.normalizedMomentum > 0.45 ? "end" : "start",
-          fontSize: 10,
-          fill: "#26353c",
-        }),
-      ]),
     ],
   });
-  chart.append(plotElement);
+  const readout = element("div", undefined, "momentum-readout");
+  readout.setAttribute("aria-label", "Topic counts and movement");
+  for (const topic of topics) {
+    const button = evidenceButton(
+      topic.label,
+      `${formatNumber(topic.selectedCount)} · ${TREND_LABELS[topic.trend]}`,
+      topic.sources,
+      context,
+      [
+        `${formatNumber(topic.selectedCount)} selected-period conversations.`,
+        `Momentum score ${topic.momentum.toFixed(2)} by the disclosed all-history rule.`,
+      ],
+    );
+    const marker = element("i");
+    marker.style.background = TREND_COLORS[topic.trend];
+    marker.setAttribute("aria-hidden", "true");
+    button.prepend(marker);
+    readout.append(button);
+  }
+  chart.classList.add("momentum-with-readout");
+  chart.append(plotElement, readout);
   attachPlotActions(
     chart,
     'g[aria-label="dot"] > circle, g[aria-label="dot"] > path',
@@ -849,7 +833,7 @@ function renderTopicMomentum(report: FullReport, context: AtlasContext) {
     ),
     topics.map(
       (topic) =>
-        `${topic.label}. ${topic.selectedCount} selected-period conversations. ${TREND_LABELS[topic.trend]}. Open sources.`,
+        `${topic.label}. ${topic.selectedCount} selected-period conversations. ${TREND_LABELS[topic.trend]}. ${report.demo ? "Open aggregate details." : "Open sources."}`,
     ),
   );
   data.replaceChildren(
@@ -901,16 +885,23 @@ function renderConversationShape(report: FullReport) {
   ];
   const weekday = deterministic.activityByWeekday;
   const models = deterministic.modelUsage.slice(0, 5);
-  chart.replaceChildren(
+  chart.classList.toggle("shape-without-models", Boolean(report.demo));
+  const caption = document.querySelector(".conversation-shape-figure figcaption small");
+  if (caption)
+    caption.textContent = report.demo
+      ? "Depth and weekday rhythm · all history"
+      : "Depth, weekday rhythm, and model mix · all history";
+  const groups = [
     shapeGroup(
       "Depth",
       `Median ${formatNumber(deterministic.depth.medianMessages)} messages`,
       depth,
     ),
     shapeGroup("Weekday rhythm", "Conversation starts", weekday),
-    shapeGroup("Model mix", "Top five exported model labels", models),
-  );
-  data.replaceChildren(
+  ];
+  if (!report.demo) groups.push(shapeGroup("Model mix", "Top five exported model labels", models));
+  chart.replaceChildren(...groups);
+  const rows = [
     element(
       "p",
       `Depth — ${depth.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ")}`,
@@ -919,11 +910,15 @@ function renderConversationShape(report: FullReport) {
       "p",
       `Weekdays — ${weekday.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ")}`,
     ),
-    element(
-      "p",
-      `Models — ${models.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ") || "No model labels"}`,
-    ),
-  );
+  ];
+  if (!report.demo)
+    rows.push(
+      element(
+        "p",
+        `Models — ${models.map((datum) => `${datum.label}: ${formatNumber(datum.value)}`).join(" · ") || "No model labels"}`,
+      ),
+    );
+  data.replaceChildren(...rows);
 }
 
 function renderActivityRhythms(report: FullReport, context: AtlasContext) {

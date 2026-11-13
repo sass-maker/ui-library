@@ -135,6 +135,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   let currentReport: FullReport | null = null;
   let semanticFailure: string | null = null;
   let currentSnapshot: MemorySnapshot | null = null;
+  let currentSnapshotSaved = false;
   let ledgerStatus: FactGroup["status"] = "current";
   let activeConfidence = 65;
   let evolutionKind: "topics" | "domains" | "language" = "topics";
@@ -674,6 +675,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     currentReport = null;
     semanticFailure = null;
     currentSnapshot = null;
+    currentSnapshotSaved = false;
     saveButton.textContent = "Keep on this device";
     archiveInput.value = "";
     searchResults.hidden = true;
@@ -709,6 +711,8 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   }
 
   async function analyzeFile(file: File) {
+    evolutionKind = "topics";
+    $("#retry-demo").hidden = true;
     sessionVersion += 1;
     const session = sessionVersion;
     demoLoad?.abort();
@@ -730,6 +734,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     currentReport = null;
     semanticFailure = null;
     currentSnapshot = null;
+    currentSnapshotSaved = false;
     analysisDetails.open = true;
     analysisDetailsAutoSettled = false;
     latestTiming = null;
@@ -798,6 +803,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       }
       currentReport = report;
       currentSnapshot = null;
+      currentSnapshotSaved = false;
       evolutionKind = "domains";
       renderReport(report);
       showOnly(reportView);
@@ -936,6 +942,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       finishGraphFormation();
       currentReport = message.report;
       currentSnapshot = message.snapshot;
+      currentSnapshotSaved = false;
       setConfidence(message.report.analysis.confidence, false);
       renderReport(message.report);
       stopTimingTicker();
@@ -944,6 +951,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       return;
     }
     if (message.type === "restored") {
+      currentSnapshotSaved = true;
       resetGraphFormation();
       currentReport = message.report;
       setConfidence(message.report.analysis.confidence, false);
@@ -999,7 +1007,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     $("#demo-notice").hidden = !demo;
     analysisDetails.hidden = demo;
     saveButton.hidden = demo;
-    forgetButton.hidden = demo || !currentSnapshot;
+    forgetButton.hidden = demo || !currentSnapshotSaved;
     storyButton.hidden = demo;
     for (const id of [
       "memory-chat",
@@ -1019,6 +1027,25 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       const mark = document.querySelector<HTMLElement>(selector);
       if (mark) (mark.closest("figure") ?? mark.parentElement ?? mark).hidden = demo;
     }
+    $("#question-lenses .lens-detail-grid").hidden = demo;
+    $(".memory-change-board").hidden = demo;
+    $("#question-lenses .section-heading > p").textContent = demo
+      ? "Queries may appear in more than one domain. Open a result for aggregate counts and the matching method."
+      : "Queries may appear in more than one domain. Open any result to inspect its supporting conversations.";
+    $("#visual-atlas .atlas-heading .map-key").textContent = demo
+      ? "Six views of the public atlas"
+      : "Seven ways to see the archive";
+    let viewNumber = 0;
+    for (const figure of document.querySelectorAll<HTMLElement>(
+      ".visual-atlas-grid > .atlas-figure",
+    )) {
+      if (figure.hidden) continue;
+      viewNumber += 1;
+      const number = figure.querySelector("figcaption b");
+      if (number) number.textContent = String(viewNumber).padStart(2, "0");
+    }
+    $("#local-methodology").hidden = demo;
+    $("#demo-methodology").hidden = !demo;
     searchInput.disabled = !report.semantic;
     $("#memory-search").querySelector<HTMLButtonElement>('button[type="submit"]')!.disabled =
       !report.semantic;
@@ -1090,7 +1117,10 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     renderConfidenceImpact(report);
 
     if (report.semantic) {
-      saveButton.disabled = saveButton.textContent === "Saved on this device";
+      saveButton.disabled = currentSnapshotSaved;
+      saveButton.textContent = currentSnapshotSaved
+        ? "Saved on this device"
+        : "Keep on this device";
       const model = report.semantic.model;
       $("#sampling-note").textContent =
         `Embedded ${formatNumber(model.embeddedConversations)} of ${formatNumber(
@@ -1196,7 +1226,8 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       path.setAttribute("data-source", edge.source);
       path.setAttribute("data-target", edge.target);
       path.style.stroke = source.color;
-      path.style.strokeWidth = String(1.5 + edge.similarity * 3);
+      path.dataset.baseWidth = String(1.5 + edge.similarity * 3);
+      path.style.strokeWidth = path.dataset.baseWidth;
       path.dataset.opacity = String(Math.max(0.2, Math.min(0.7, edge.similarity)));
       path.style.opacity = path.dataset.opacity;
       const edgeTitle = svgElement("title");
@@ -1279,7 +1310,8 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         edge.getAttribute("data-source") === topic.id ||
         edge.getAttribute("data-target") === topic.id;
       edge.style.opacity = connected ? "1" : "0.16";
-      edge.style.strokeWidth = connected ? "4" : "2";
+      const baseWidth = Number(edge.dataset.baseWidth ?? "2");
+      edge.style.strokeWidth = String(connected ? baseWidth + 2 : baseWidth);
     }
     showEvidence(topic.label, topic.sources, [
       `${formatNumber(topic.count)} conversations`,
@@ -1308,7 +1340,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     }
     for (const edge of graph.querySelectorAll<SVGPathElement>(".graph-edge")) {
       edge.style.opacity = edge.dataset.opacity ?? "";
-      edge.style.strokeWidth = "2";
+      edge.style.strokeWidth = edge.dataset.baseWidth ?? "2";
     }
   }
 
@@ -1357,7 +1389,8 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       const connected =
         traversed.has(edge.dataset.source ?? "") || traversed.has(edge.dataset.target ?? "");
       edge.style.opacity = connected ? "0.9" : "0.1";
-      edge.style.strokeWidth = connected ? "4" : "2";
+      const baseWidth = Number(edge.dataset.baseWidth ?? "2");
+      edge.style.strokeWidth = String(connected ? baseWidth + 2 : baseWidth);
     }
   }
 
@@ -2521,7 +2554,10 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       appStatus.textContent = "Wait for semantic analysis to finish before saving.";
       return;
     }
+    const session = sessionVersion;
     await saveSnapshot(currentSnapshot);
+    if (session !== sessionVersion) return;
+    currentSnapshotSaved = true;
     saveButton.textContent = "Saved on this device";
     saveButton.disabled = true;
     forgetButton.hidden = false;
@@ -2529,8 +2565,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   });
 
   forgetButton.addEventListener("click", async () => {
+    if (!currentSnapshotSaved) return;
     if (!window.confirm("Forget the saved memory map on this device?")) return;
+    const session = sessionVersion;
     await forgetSnapshot();
+    if (session !== sessionVersion) return;
+    currentSnapshotSaved = false;
     forgetButton.hidden = true;
     saveButton.hidden = false;
     saveButton.disabled = false;
