@@ -2,7 +2,24 @@
 import SwiftUI
 import AppKit
 
-/// Gives the standard title bar the workspace canvas while retaining native window controls.
+extension View {
+    /// Match a SwiftUI scene's native title bar and window canvas to its workspace palette.
+    public func smWorkspaceWindowChrome() -> some View {
+        modifier(WorkspaceWindowChromeModifier())
+    }
+}
+
+private struct WorkspaceWindowChromeModifier: ViewModifier {
+    @Environment(\.smPalette) private var p
+    func body(content: Content) -> some View {
+        content.background(SMWorkspaceWindowChrome())
+            .toolbarBackground(p.background, for: .windowToolbar)
+            .toolbarBackground(.visible, for: .windowToolbar)
+    }
+}
+
+/// An AppKit canvas bridge. SwiftUI scenes should use `smWorkspaceWindowChrome()`
+/// so the scene also receives its native toolbar background preferences.
 public struct SMWorkspaceWindowChrome: NSViewRepresentable {
     @Environment(\.smPalette) private var p
     public init() {}
