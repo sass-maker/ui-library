@@ -91,12 +91,14 @@ public struct SMSearchField: View {
     @FocusState private var localFocus: Bool
     @Binding private var text: String
     private let prompt: String
+    private let accessibilityLabel: String
     private let focus: FocusState<Bool>.Binding?
     private let submit: () -> Void
 
     public init(_ prompt: String, text: Binding<String>, focus: FocusState<Bool>.Binding? = nil,
-                onSubmit: @escaping () -> Void = {}) {
+                accessibilityLabel: String? = nil, onSubmit: @escaping () -> Void = {}) {
         self.prompt = prompt; self._text = text; self.focus = focus; self.submit = onSubmit
+        self.accessibilityLabel = accessibilityLabel ?? prompt
     }
 
     public var body: some View {
@@ -109,7 +111,7 @@ public struct SMSearchField: View {
                 }
                 TextField("", text: $text)
                     .textFieldStyle(.plain).focused(focus ?? $localFocus)
-                    .accessibilityLabel(prompt).onSubmit(submit)
+                    .accessibilityLabel(accessibilityLabel).onSubmit(submit)
                     .onExitCommand {
                         if text.isEmpty { (focus ?? $localFocus).wrappedValue = false }
                         else { text = "" }
