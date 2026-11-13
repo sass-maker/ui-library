@@ -482,9 +482,8 @@ function renderLanguageMatrix(report: FullReport, context: AtlasContext) {
   for (const month of months) grid.append(element("span", formatMonth(month), "matrix-month"));
   for (const bucket of buckets) {
     const meta = EMOTION_META[bucket];
-    const rowButton = element("button");
+    const rowButton = element("button", undefined, "matrix-row-label text-[0.67rem]");
     rowButton.type = "button";
-    rowButton.classList.add("matrix-row-label", "text-[0.67rem]");
     rowButton.style.setProperty("--signal-color", meta.color);
     rowButton.append(element("i"), element("span", meta.label));
     rowButton.addEventListener("click", () =>
