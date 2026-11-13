@@ -218,7 +218,7 @@ Install from the GitHub repo (public), not npm. Write the specs into `package.js
 and run `pnpm install`; templates needs ui and motion beside it.
 
 ```sh
-G="github:sass-maker/ui-library#v0.1.33"
+G="github:sass-maker/ui-library#v0.1.34"
 pnpm pkg set "dependencies.@saas-maker/ui=$G&path:/packages/ui" \
   "dependencies.@saas-maker/motion=$G&path:/packages/motion" \
   "dependencies.@saas-maker/templates=$G&path:/packages/templates"
@@ -228,9 +228,9 @@ pnpm install
 `package.json` should then read:
 
 ```json
-"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.33&path:/packages/motion",
-"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.33&path:/packages/templates",
-"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.33&path:/packages/ui"
+"@saas-maker/motion": "github:sass-maker/ui-library#v0.1.34&path:/packages/motion",
+"@saas-maker/templates": "github:sass-maker/ui-library#v0.1.34&path:/packages/templates",
+"@saas-maker/ui": "github:sass-maker/ui-library#v0.1.34&path:/packages/ui"
 ```
 
 Do not use `pnpm add` for these: pnpm 10.33 saves the spec as
@@ -840,12 +840,31 @@ retain their original metrics and behavior. Keep primary actions regular; on
 touch devices, give compact labels a minimum 44pt target. Colors, fonts,
 capsules and press behavior still come from the same shared palette and motion.
 
-The `Native compact button` PR workflow builds/tests on macOS 14 (the supported
-minimum) and macOS 15. `SM_SNAPSHOT_DIR` emits genuine SwiftUI PNG examples at
+The native PR workflow builds/tests on macOS 15 with Intel and Apple silicon
+runners, compiling for the supported macOS 14 deployment minimum. Intel runs the
+non-rendering core tests; genuine SwiftUI renders and native mouse interaction
+run on Apple silicon, where the hosted Metal device is available. GitHub retired
+its macOS 14 runner images; macOS 14 runtime qualification remains separate. `SM_SNAPSHOT_DIR` emits genuine SwiftUI PNG examples at
 390 and 768 points, including disabled and larger-text controls. Its artifacts
 carry build/test logs and renders; native owner/device review is separate.
 No library tag is published by this workflow. Consumers can temporarily pin a
 reviewed exact branch commit until the owner approves a release tag.
+
+### Mac workspace controls · v0.1.34
+
+The native package now includes compact `SMMacButtonStyle` actions,
+`SMWorkspaceHeader`, `SMSearchField`, `SMSettingsGroup`, `SMSettingsRow`,
+`SMResourceRow` and `SMSelectionBar`. These use the existing palette and bundled
+fonts while leaving selection, filtering, persistence and actions in the app.
+Search accepts an optional accessibility label independently of its placeholder.
+
+The runnable [Mac workspace example](swift/Examples/MacWorkspaceDemo/README.md)
+composes them into StorageDaddy’s cleanup screen with the existing product art.
+Its folder data is illustrative and its actions never change files. The example
+has been manually checked with native keyboard search and selection, narrow/wide
+windows, long names, empty and disabled states, and both appearances and RTL.
+CI compiles the example; automated render tests currently cover the earlier
+button and selection controls, not all new workspace controls.
 
 Beyond the theme, the package assembles whole screens: `SMHero`, `SMShowcase`,
 `SMCover`, `SMStatementRows` and `SMDevice` (Gallery), and `SMAppShell`,
@@ -874,7 +893,7 @@ swift build && swift test
 Install the pinned UI package with the same GitHub spec style:
 
 ```sh
-pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.33&path:/packages/ui'
+pnpm pkg set 'dependencies.@saas-maker/ui=github:sass-maker/ui-library#v0.1.34&path:/packages/ui'
 pnpm install
 cp node_modules/@saas-maker/ui/footer.* public/
 ```

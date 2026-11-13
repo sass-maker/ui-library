@@ -14,14 +14,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15]
+        include:
+          - os: macos-15-intel
+            render: false
+          - os: macos-15
+            render: true
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '14.0'
     steps:
       - uses: actions/checkout@v4
-      - name: Select Swift 6 toolchain on minimum macOS
-        if: matrix.os == 'macos-14'
-        run: sudo xcode-select --switch /Applications/Xcode_16.2.app/Contents/Developer
       - name: Build at supported deployment minimum
         run: |
           set -o pipefail
@@ -29,7 +32,18 @@ jobs:
           sw_vers | tee evidence/platform.txt
           swift --version | tee -a evidence/platform.txt
           swift build 2>&1 | tee evidence/build.log
+      - name: Build the portable Mac workspace example
+        run: swift build --package-path swift/Examples/MacWorkspaceDemo --configuration release
+      - name: Non-rendering tests on Intel
+        if: ${{ !matrix.render }}
+        run: |
+          set -o pipefail
+          swift test --filter 'PaletteTests|FontTests|LoadingTests|FooterRequestTests|FooterClientTests|ButtonTests.*(preservesExistingAPIAndMetrics|compactMetricsAndPressCompatibility)' 2>&1 | tee evidence/core-tests.log
+          grep -Eq 'Test run with [1-9][0-9]* tests?( in [0-9]+ suites?)? passed' evidence/core-tests.log
+          grep -Eq 'preservesExistingAPIAndMetrics.*passed' evidence/core-tests.log
+          grep -Eq 'compactMetricsAndPressCompatibility.*passed' evidence/core-tests.log
       - name: Tests and genuine SwiftUI renders
+        if: matrix.render
         run: |
           set -o pipefail
           mkdir -p evidence/renders
@@ -37,6 +51,7 @@ jobs:
           test -s evidence/renders/buttons-390.png
           test -s evidence/renders/buttons-768.png
       - name: Native selection interaction and renders in an isolated process
+        if: matrix.render
         run: |
           set -o pipefail
           SM_INTERACTION_SNAPSHOT_DIR="$PWD/evidence/selection" node --test scripts/native-selection.test.mjs 2>&1 | tee evidence/selection.log
