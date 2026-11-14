@@ -1277,7 +1277,6 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         "aria-label",
         `${visibleLabel} ${formattedCount} conversations. ${topic.label !== visibleLabel ? `${topic.label}. ` : ""}${currentReport?.demo ? "Show aggregate details." : "Show supporting conversations."}`
       );
-      group.setAttribute("aria-description", topic.label);
       group.setAttribute("transform", `translate(${topic.x * 1_000} ${topic.y * 620})`);
 
       const radius = 30 + 34 * Math.sqrt(topic.count / peakTopicCount);
@@ -2565,6 +2564,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
+      if (!evidencePanel.hidden) event.preventDefault();
       closeEvidencePanel();
       searchResults.hidden = true;
     }

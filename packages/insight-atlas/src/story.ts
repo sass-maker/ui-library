@@ -489,7 +489,9 @@ export function createStoryController(context: StoryContext) {
   next.addEventListener("click", () => move(1));
   close.addEventListener("click", () => dialog.close());
   dialog.addEventListener("close", () => {
-    if (restoreLauncherOnClose) launcher?.focus();
+    const active = document.activeElement;
+    const shouldRestore = !active || active === document.body || dialog.contains(active) || active.closest("[inert]");
+    if (restoreLauncherOnClose && shouldRestore) launcher?.focus();
     restoreLauncherOnClose = true;
   });
   dialog.addEventListener("click", (event) => {
