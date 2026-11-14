@@ -1275,7 +1275,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       group.setAttribute("role", "button");
       group.setAttribute(
         "aria-label",
-        `${visibleLabel} ${formattedCount} conversations. ${currentReport?.demo ? "Show aggregate details." : "Show supporting conversations."}`
+        `${visibleLabel} ${formattedCount} conversations. ${topic.label !== visibleLabel ? `${topic.label}. ` : ""}${currentReport?.demo ? "Show aggregate details." : "Show supporting conversations."}`
       );
       group.setAttribute("aria-description", topic.label);
       group.setAttribute("transform", `translate(${topic.x * 1_000} ${topic.y * 620})`);
