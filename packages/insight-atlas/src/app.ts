@@ -2700,9 +2700,13 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   motion.enter(document.querySelector(".import-copy"));
   motion.enter(document.querySelector(".demo-entry"), { delay: 50 });
 
-  window.addEventListener("pagehide", () => {
-    motion.destroy();
-    for (const unbind of unbindTabs) unbind();
+  window.addEventListener("pagehide", (event) => {
+    if (event.persisted) {
+      motion.cancelAll();
+    } else {
+      motion.destroy();
+      for (const unbind of unbindTabs) unbind();
+    }
     demoLoad?.abort();
     stopTimingTicker();
     if (graphFormationFrame !== null) window.cancelAnimationFrame(graphFormationFrame);
