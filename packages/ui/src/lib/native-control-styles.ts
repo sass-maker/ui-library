@@ -1,22 +1,19 @@
 import { cn } from "./utils"
-import { buttonVariants } from "../components/button"
-import { inputStyles } from "../components/input"
-import { textareaStyles } from "../components/textarea"
-import { nativeTableStyles, tableStyles } from "../components/table"
+import { buttonVariants, inputStyles, textareaStyles, nativeTableStyles, tableStyles, nativeSelectionStyles } from "./native-primitives"
 import type { VariantProps } from "class-variance-authority"
 
-export { nativeTableStyles } from "../components/table"
+export { nativeTableStyles } from "./native-primitives"
 
 export type NativeControlTag = "button" | "a" | "input" | "textarea" | "select" | "details" | "summary" | "dialog" | "progress" | "table" | "thead" | "tbody" | "tfoot" | "tr" | "th" | "td" | "caption"
-export type NativeControlStyleOptions = VariantProps<typeof buttonVariants> & { className?: string; type?: string }
+export type NativeControlStyleOptions = VariantProps<typeof buttonVariants> & { className?: string; type?: string; selection?: keyof typeof nativeSelectionStyles }
 
 const focusStyles = "outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
 const disabledStyles = "disabled:cursor-not-allowed disabled:opacity-50"
 
 /** Library-owned native geometry; variant/size match Button for actions. */
-export function nativeControlStyles(tag: NativeControlTag, { className, type, variant, size }: NativeControlStyleOptions = {}) {
+export function nativeControlStyles(tag: NativeControlTag, { className, type, variant, size, selection }: NativeControlStyleOptions = {}) {
   let base: string
-  if (tag === "button" || tag === "a") return cn(buttonVariants({ variant: variant ?? (tag === "a" ? "link" : "default"), size }), className)
+  if (tag === "button" || tag === "a") return cn(buttonVariants({ variant: variant ?? (tag === "a" ? "link" : "default"), size }), selection && nativeSelectionStyles[selection], className)
   if (tag in nativeTableStyles) return tableStyles(tag as keyof typeof nativeTableStyles, className)
   switch (tag) {
     case "input": return inputStyles(type, className)

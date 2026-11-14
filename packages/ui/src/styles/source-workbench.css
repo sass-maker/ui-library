@@ -5,3 +5,5 @@
 @source "../components/{button,badge,input,textarea,table,data-table,checkbox,dropdown-menu,pagination,skeleton,popover,slider,command,dialog,sheet,kbd}.tsx";
 @source "../lib/native-control-styles.ts";
 @source "../lib/surface-motion.ts";
+
+@source "../lib/native-primitives.ts";

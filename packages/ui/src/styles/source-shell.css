@@ -2,3 +2,5 @@
 
 /* Header + StudioFooter only, for pages that style their own content. Sources are relative to this UI package, including under isolated pnpm installs. */
 @source "../blocks/{site-header,mobile-nav,footer,assistant-logos}.tsx";
+
+@source "../lib/native-primitives.ts";

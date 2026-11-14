@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "pnpm --filter @saas-maker/ui-site dev",
     "build": "pnpm --filter @saas-maker/ui-site build && pnpm registry:build",
-    "check": "pnpm test && pnpm typecheck && pnpm storybook:check && pnpm check:explorer && pnpm check:architecture && pnpm registry:check && pnpm --filter @saas-maker/ui-site check",
+    "check": "pnpm check:atlas && pnpm test && pnpm typecheck && pnpm storybook:check && pnpm check:explorer && pnpm check:architecture && pnpm registry:check && pnpm --filter @saas-maker/ui-site check",
     "check:browser": "node site/scripts/browser-check.mjs",
     "registry:build": "shadcn build --output site/dist/r",
     "typecheck": "tsc -p tsconfig.json",
@@ -30,7 +30,8 @@
     "check:architecture": "node scripts/check-architecture.mjs",
     "test:browser": "playwright test",
     "test:footer-isolation": "node scripts/check-footer-isolation.mjs",
-    "test:visual": "playwright test --project=visual"
+    "test:visual": "playwright test --project=visual",
+    "check:atlas": "pnpm --filter @saas-maker/insight-atlas test && pnpm --filter @saas-maker/insight-atlas check"
   },
   "devDependencies": {
     "@types/react": "19.3.0",

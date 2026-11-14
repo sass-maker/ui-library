@@ -1,0 +1,46 @@
+{
+  "name": "@saas-maker/insight-atlas",
+  "version": "0.1.34",
+  "private": true,
+  "type": "module",
+  "description": "Framework-light evidence atlas, report graphs, loading states and Astro surfaces for local-first analysis.",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/app.ts",
+    "./MemoryAtlas.astro": "./src/MemoryAtlas.astro",
+    "./styles.css": "./src/atlas.css",
+    "./about.css": "./src/about.css",
+    "./types": "./src/types.ts",
+    "./services": "./src/services.ts",
+    "./visual-atlas": "./src/visual-atlas.ts",
+    "./story": "./src/story.ts",
+    "./dom-utils": "./src/dom-utils.ts",
+    "./period": "./src/period.ts",
+    "./graph-formation": "./src/graph-formation.ts",
+    "./chat-types": "./src/chat-types.ts",
+    "./styles/global.css": "./src/atlas.css",
+    "./styles/about.css": "./src/about.css"
+  },
+  "dependencies": {
+    "@observablehq/plot": "0.6.17"
+  },
+  "peerDependencies": {
+    "astro": ">=5",
+    "tailwindcss": ">=4.3",
+    "@saas-maker/ui": "0.x"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "check": "tsc --noEmit --jsx react-jsx --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2023,DOM,DOM.Iterable src/app.ts",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "@saas-maker/ui": "workspace:*"
+  }
+}

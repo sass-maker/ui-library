@@ -29,12 +29,12 @@ describe("Console isolated-install CSS sources", () => {
     const candidates = after.scan();
     const declared = new Scanner({ sources: sources.filter(source => !source.negated) });
     declared.scan();
-    expect(declared.files).toHaveLength(37);
+    expect(declared.files).toHaveLength(38);
     expect(after.files.filter(file => file.startsWith(installedUi) || file.startsWith(installedTemplates)).sort()).toEqual(declared.files.sort());
     expect(candidates).not.toContain("blur-[90px]");
     expect(after.files.some(file => file.endsWith("/frames.tsx"))).toBe(false);
     expect(after.files.some(file => file.endsWith("/gallery-page.tsx"))).toBe(false);
-    for (const name of ["data-table.tsx", "checkbox.tsx", "filter-bar.tsx", "search-palette.tsx", "record-detail.tsx", "console-page.tsx", "Base.astro", "select.tsx", "toggle-group.tsx", "toggle.tsx"]) {
+    for (const name of ["data-table.tsx", "checkbox.tsx", "filter-bar.tsx", "search-palette.tsx", "record-detail.tsx", "console-page.tsx", "Base.astro", "select.tsx", "toggle-group.tsx", "toggle.tsx", "native-primitives.ts"]) {
       expect(after.files.some(file => file.endsWith(`/${name}`))).toBe(true);
     }
     const css = compiled.build(candidates);
@@ -45,9 +45,9 @@ describe("Console isolated-install CSS sources", () => {
     expect(css).toContain("focus-visible");
     expect(candidates).toContain("motion-safe:enabled:active:scale-[0.97]");
     expect(candidates).toContain("[&::-webkit-progress-value]:bg-primary");
-    const legacy = new Scanner({ sources: [{ base: installedUi, pattern: "components/{button,input,textarea,table}.tsx", negated: false }] }).scan();
+    const controls = new Scanner({ sources: [{ base: installedUi, pattern: "lib/native-primitives.ts", negated: false }] }).scan();
     for (const candidate of ["motion-safe:enabled:active:scale-[0.97]", "selection:bg-primary", "field-sizing-content", "caption-bottom"]) {
-      expect(legacy).toContain(candidate);
+      expect(controls).toContain(candidate);
     }
     expect(css).toContain('data-mode="dark"');
   });
