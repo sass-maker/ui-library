@@ -3660,9 +3660,12 @@ body.has-evidence::before {
 
 .evolution-switcher {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   width: fit-content;
+  max-width: 100%;
   margin-bottom: 1.5rem;
-  border: 1px solid var(--ink);
+  border: 0;
 }
 
 .evolution-switcher button {
