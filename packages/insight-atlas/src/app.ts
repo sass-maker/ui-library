@@ -1,5 +1,7 @@
 import { createUiSurface } from "@saas-maker/ui/lib/dom-surfaces";
 import { atlasElement } from "./ui-elements";
+import { createAtlasMotion } from "./motion";
+import { bindAtlasTabs } from "./tabs";
 import type { MemoryAtlasServices, DemoProgress } from "./services";
 import type {
   MemoryChatEvidence,
@@ -78,6 +80,9 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   const errorView = $("#error-view");
   const reportView = $("#report-view");
   const reportNav = $("#report-nav");
+  const motion = createAtlasMotion(document);
+  const unbindTabs = [...document.querySelectorAll<HTMLElement>('[role="tablist"]')]
+    .map(bindAtlasTabs);
   const archiveInput = $<HTMLInputElement>("#archive-input");
   const dropZone = $("#drop-zone");
   const progressStatus = $("#progress-status");
@@ -194,11 +199,20 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   }
 
   function showOnly(view: HTMLElement) {
+    const changed = view.hidden;
     for (const candidate of [importView, demoProgressView, progressView, errorView, reportView]) {
       candidate.hidden = candidate !== view;
     }
     reportNav.hidden = view !== reportView;
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!changed) return;
+    motion.cancelAll();
+    window.scrollTo({ top: 0, behavior: "instant" });
+    motion.enter(view, { offset: 0 });
+    if (view === reportView) {
+      document.querySelectorAll("#overview-stats > div").forEach((card, index) =>
+        motion.enter(card, { delay: index * 30 })
+      );
+    }
   }
 
   const reportRouteLinks = [...reportNav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')];
@@ -682,7 +696,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     saveButton.textContent = "Keep on this device";
     archiveInput.value = "";
     searchResults.hidden = true;
-    evidencePanel.hidden = true;
+    setEvidenceVisible(false);
     document.body.classList.remove("has-evidence");
     appShell.inert = false;
     evidenceReturnFocus = null;
@@ -694,7 +708,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       document.activeElement instanceof HTMLElement || document.activeElement instanceof SVGElement
         ? document.activeElement
         : null;
-    evidencePanel.hidden = false;
+    setEvidenceVisible(true);
     document.body.classList.add("has-evidence");
     appShell.inert = true;
     $<HTMLButtonElement>("#close-evidence").focus();
@@ -702,7 +716,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
   function closeEvidencePanel(restoreFocus = true) {
     if (evidencePanel.hidden) return;
-    evidencePanel.hidden = true;
+    setEvidenceVisible(false);
     document.body.classList.remove("has-evidence");
     appShell.inert = false;
     if (restoreFocus && storyController.resumeFromEvidence()) {
@@ -711,6 +725,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     }
     if (restoreFocus && evidenceReturnFocus?.isConnected) evidenceReturnFocus.focus();
     evidenceReturnFocus = null;
+  }
+
+  function setEvidenceVisible(visible: boolean) {
+    evidencePanel.hidden = !visible;
+    evidencePanel.inert = !visible;
+    evidencePanel.setAttribute("aria-hidden", String(!visible));
   }
 
   async function analyzeFile(file: File) {
@@ -1155,6 +1175,9 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       mountGraphFormationInReport();
       graph.classList.add("is-hidden");
     }
+    for (const surface of document.querySelectorAll(".atlas-figure, #rhythm-chart")) {
+      motion.enter(surface, { offset: 0, feedback: true });
+    }
   }
 
   function renderGraph(
@@ -1241,6 +1264,8 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
 
     const peakTopicCount = Math.max(1, ...displayTopics.map((topic) => topic.count));
     for (const topic of displayTopics) {
+      const visibleLabel = truncate(topic.label.split(" · ")[0], 22);
+      const formattedCount = formatNumber(topic.count);
       const group = svgElement("g");
       group.setAttribute("class", "graph-node");
       group.setAttribute("data-id", topic.id);
@@ -1250,8 +1275,9 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       group.setAttribute("role", "button");
       group.setAttribute(
         "aria-label",
-        `${topic.label}, ${topic.count} conversations. ${currentReport?.demo ? "Show aggregate details." : "Show supporting conversations."}`
+        `${visibleLabel} ${formattedCount} conversations. ${currentReport?.demo ? "Show aggregate details." : "Show supporting conversations."}`
       );
+      group.setAttribute("aria-description", topic.label);
       group.setAttribute("transform", `translate(${topic.x * 1_000} ${topic.y * 620})`);
 
       const radius = 30 + 34 * Math.sqrt(topic.count / peakTopicCount);
@@ -1264,14 +1290,18 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
       circle.style.stroke = topic.color;
 
       const label = svgElement("text");
-      label.setAttribute("y", String(-radius - 16));
-      label.textContent = truncate(topic.label.split(" · ")[0], 22);
+      const name = svgElement("tspan");
+      name.setAttribute("x", "0");
+      name.setAttribute("y", String(-radius - 16));
+      name.textContent = visibleLabel;
 
-      const count = svgElement("text");
+      const count = svgElement("tspan");
       count.setAttribute("class", "graph-count");
+      count.setAttribute("x", "0");
       count.setAttribute("y", "6");
-      count.textContent = formatNumber(topic.count);
-      group.append(halo, circle, label, count);
+      count.textContent = formattedCount;
+      label.append(name, document.createTextNode(" "), count);
+      group.append(halo, circle, label);
       const activate = () => selectTopic(topic);
       group.addEventListener("click", activate);
       group.addEventListener("keydown", (event) => {
@@ -1617,6 +1647,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
         visibleFacts.filter((fact) => fact.status === status).length
       );
       tab.setAttribute("aria-selected", String(status === ledgerStatus));
+      tab.tabIndex = status === ledgerStatus ? 0 : -1;
     }
 
     const visible = visibleFacts.filter((fact) => fact.status === ledgerStatus);
@@ -2002,6 +2033,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
   function renderEvolution(report: FullReport) {
     for (const tab of document.querySelectorAll<HTMLButtonElement>("[data-evolution]")) {
       tab.setAttribute("aria-selected", String(tab.dataset.evolution === evolutionKind));
+      tab.tabIndex = tab.dataset.evolution === evolutionKind ? 0 : -1;
     }
     const ordered = evolutionRows(report)
       .filter((row) => row.periods.some((period) => period.value > 0))
@@ -2471,6 +2503,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     tab.addEventListener("click", () => {
       evolutionKind = tab.dataset.evolution as typeof evolutionKind;
       if (currentReport) renderEvolution(currentReport);
+      motion.enter($("#evolution-list"), { offset: 0, feedback: true });
     });
   }
 
@@ -2542,7 +2575,9 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     if (
       (event.metaKey || event.ctrlKey) &&
       event.key.toLocaleLowerCase() === "k" &&
-      !reportView.hidden
+      !reportView.hidden &&
+      !searchInput.disabled &&
+      searchInput.getClientRects().length > 0
     ) {
       event.preventDefault();
       searchInput.focus();
@@ -2553,6 +2588,7 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     tab.addEventListener("click", () => {
       ledgerStatus = tab.dataset.status as FactGroup["status"];
       if (currentReport) renderLedger(currentReport);
+      motion.enter($("#ledger-list"), { offset: 0, feedback: true });
     });
   }
 
@@ -2661,7 +2697,12 @@ export function mountMemoryAtlas(services: MemoryAtlasServices) {
     }
   }
 
+  motion.enter(document.querySelector(".import-copy"));
+  motion.enter(document.querySelector(".demo-entry"), { delay: 50 });
+
   window.addEventListener("pagehide", () => {
+    motion.destroy();
+    for (const unbind of unbindTabs) unbind();
     demoLoad?.abort();
     stopTimingTicker();
     if (graphFormationFrame !== null) window.cancelAnimationFrame(graphFormationFrame);

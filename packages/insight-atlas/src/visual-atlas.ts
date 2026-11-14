@@ -512,6 +512,7 @@ function renderLanguageMatrix(report: FullReport, context: AtlasContext) {
       cell.style.setProperty("--signal-color", meta.color);
       cell.style.setProperty("--level", String(value / max));
       cell.title = `${meta.label} · ${months[monthIndex]} · ${formatNumber(value)} queries`;
+      cell.setAttribute("role", "img");
       cell.setAttribute(
         "aria-label",
         `${meta.label}, ${formatMonth(months[monthIndex])}: ${formatNumber(value)} queries`
@@ -1178,4 +1179,12 @@ export function renderVisualAtlas(report: FullReport, context: AtlasContext) {
   renderConversationShape(report);
   renderActivityRhythms(report, context);
   renderHistoricalShifts(report);
+  for (const group of document.querySelectorAll('.atlas-observable-plot g[aria-label]:not([role])')) {
+    if (group.getAttribute("aria-label") === "rule") {
+      group.removeAttribute("aria-label");
+      group.setAttribute("aria-hidden", "true");
+    } else {
+      group.setAttribute("role", "group");
+    }
+  }
 }
