@@ -3,17 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DaddyRad — native Mac utilities that watch over your machine</title>
-<meta name="description" content="The daddy series: native macOS utilities for performance evidence, storage cleanup, browsing attention and agent context. Local-first, no accounts.">
+<title>DaddyRad — local-first Mac utilities for developers</title>
+<meta name="description" content="Choose a Mac utility for a slow process, a full disk, browsing attention or coding-agent context. Compare what each DaddyRad app measures before taking action.">
 <link rel="canonical" href="https://daddyrad.com/">
-<meta property="og:title" content="DaddyRad — the daddy series">
-<meta property="og:description" content="Native Mac utilities that watch over your machine: performance evidence, storage cleanup, browsing attention and agent context.">
+<meta property="og:title" content="DaddyRad — local-first Mac utilities for developers">
+<meta property="og:description" content="Choose a Mac utility for a slow process, a full disk, browsing attention or coding-agent context. Compare what each DaddyRad app measures before taking action.">
 <meta property="og:url" content="https://daddyrad.com/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://daddyrad.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DaddyRad — local-first Mac utilities for developers">
+<meta name="twitter:description" content="Choose a Mac utility for a slow process, a full disk, browsing attention or coding-agent context. Compare what each DaddyRad app measures before taking action.">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"DaddyRad","url":"https://daddyrad.com/","description":"Native Mac utilities that watch over your machine: performance evidence, storage cleanup, browsing attention and agent context. Local-first, no accounts."}
+{"@context":"https://schema.org","@type":"WebSite","name":"DaddyRad","url":"https://daddyrad.com/","description":"Choose a Mac utility for a slow process, a full disk, browsing attention or coding-agent context. Compare what each DaddyRad app measures before taking action."}
 </script>
 <meta name="theme-color" content="#000000">
 <style>
@@ -52,11 +54,19 @@ a.app-card:hover{border-color:rgba(107,210,156,.45)}
 .principles dl{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin:0}
 .principles dt{font-weight:650;font-size:18px;margin-bottom:9px}
 .principles dd{margin:0;color:var(--muted);font-size:15px}
+.chooser{border-top:1px solid var(--line);padding-block:64px}
+.chooser h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.04em;line-height:1.15;margin:0 0 16px;font-weight:650}
+.chooser>p{max-width:680px;color:var(--muted);margin:0 0 32px}
+.chooser dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:32px 48px}
+.chooser dt{font-size:19px;font-weight:650;margin-bottom:10px}
+.chooser dd{margin:0;color:var(--muted);max-width:52ch}
+.chooser a{color:var(--mint-soft);text-decoration:underline;text-underline-offset:4px}
+.chooser .reading-note{margin:32px 0 0;font-size:15px}
 .site-footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-block:30px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
 .site-footer a{color:var(--mint-soft);text-decoration:underline;text-underline-offset:3px}
 .footer-capture{flex:1 1 300px;min-width:260px;color:var(--ink)}
 .site-footer p{margin:0}
-@media(max-width:800px){.apps{grid-template-columns:1fr}.principles dl{grid-template-columns:1fr;gap:25px}.site-header nav a{display:none}.hero{padding-block:64px 56px}h1{font-size:clamp(2.9rem,13vw,4rem)}.site-footer{align-items:flex-start;flex-direction:column}.footer-capture{width:100%}}
+@media(max-width:800px){.apps{grid-template-columns:1fr}.principles dl,.chooser dl{grid-template-columns:1fr;gap:25px}.site-header nav a{display:none}.hero{padding-block:64px 56px}h1{font-size:clamp(2.9rem,13vw,4rem)}.site-footer{align-items:flex-start;flex-direction:column}.footer-capture{width:100%}}
 
 fleet-footer-extension{--fleet-footer-canvas:var(--black);--fleet-footer-lower:var(--panel);--fleet-footer-border:var(--line);--fleet-footer-focus:var(--mint-soft)}
 .precise-series-footer{min-width:0;color:var(--ink);font-size:15px}
@@ -76,6 +86,7 @@ fleet-footer-extension:not(:defined){display:block;padding:32px max(24px,calc((1
   <span class="brand"><span class="brand-mark">D</span>DaddyRad</span>
   <nav>
     <a href="#apps">Apps</a>
+    <a href="#choose">Choose an app</a>
     <a href="#principles">Principles</a>
   </nav>
 </header>
@@ -110,6 +121,29 @@ fleet-footer-extension:not(:defined){display:block;padding:32px max(24px,calc((1
       <p>Understand what each coding agent can see, invoke and consume — skills, project context and provenance-aware run telemetry.</p>
       <span class="app-meta"><span class="status live">Download available</span><span class="app-domain">Explore context →</span></span>
     </a>
+  </section>
+  <section class="chooser" id="choose" aria-labelledby="choose-heading">
+    <h2 id="choose-heading">Start with what changed.</h2>
+    <p>A slow Mac and a full disk need different evidence. Pick the question you want to answer, inspect the result, then decide whether any action is needed.</p>
+    <dl>
+      <div>
+        <dt>My Mac is slow, or a port is busy.</dt>
+        <dd><a href="/performance/">Inspect the load with PerformanceDaddy</a>: processes, memory, thermals and port ownership. Capture a slowdown while it happens. A busy process is a clue; it does not establish the cause by itself.</dd>
+      </div>
+      <div>
+        <dt>My disk is filling up.</dt>
+        <dd><a href="/storage/">Follow the space with StorageDaddy</a>: projects, dependencies, caches and other large paths. A scan deletes nothing. Review a cleanup candidate and what it contains before choosing to remove it.</dd>
+      </div>
+      <div>
+        <dt>I want to understand my browsing time.</dt>
+        <dd><a href="/browser/">Compare history and attention with BrowserDaddy</a>. A history entry shows a page opened; measured foreground attention answers a different question. Read the <a href="/browser/privacy/">local archive and optional tagging boundaries</a> before enabling services.</dd>
+      </div>
+      <div>
+        <dt>I want to inspect my coding agents.</dt>
+        <dd><a href="/context/">Audit skills, context and usage with ContextDaddy</a>. See what an agent can access and where a reading came from. Available context is different from evidence that the agent used it; missing telemetry stays a visible limit.</dd>
+      </div>
+    </dl>
+    <p class="reading-note">A window closed, but the process is still running? Read <a href="/performance/blog/background-apps/">what can keep running in the background on macOS</a> before stopping anything.</p>
   </section>
   <section class="principles" id="principles">
     <dl>
