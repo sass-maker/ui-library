@@ -18,6 +18,7 @@ public struct SMSegment<Value: Hashable>: Identifiable {
 /// A shared selection surface with a continuous, interruptible active indicator.
 /// Values must be unique. An absent selection remains absent until the caller chooses one.
 public struct SMSegmentedControl<Value: Hashable>: View {
+    public enum Size: Sendable { case regular, compact }
     @Environment(\.smPalette) private var p
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -27,7 +28,15 @@ public struct SMSegmentedControl<Value: Hashable>: View {
     private let title: String
     private let segments: [SMSegment<Value>]
 
+    private let size: Size
+
     public init(_ title: String, selection: Binding<Value>, segments: [SMSegment<Value>]) {
+        self.init(title, selection: selection, segments: segments, size: .regular)
+    }
+
+    /// Compact segments fit their labels, leaving room for adjacent toolbar actions.
+    public init(_ title: String, selection: Binding<Value>, segments: [SMSegment<Value>], size: Size) {
+        self.size = size
         self.title = title
         self._selection = selection
         self.segments = segments
@@ -44,7 +53,7 @@ public struct SMSegmentedControl<Value: Hashable>: View {
                 }
             }
         }
-        .padding(5)
+        .padding(size == .compact ? 3 : 5)
         .background(p.surface, in: .rect(cornerRadius: p.radius + 7))
         .overlay(RoundedRectangle(cornerRadius: p.radius + 7).strokeBorder(p.hairline))
         .accessibilityElement(children: .contain)
@@ -84,17 +93,21 @@ public struct SMSegmentedControl<Value: Hashable>: View {
                     Image(systemName: "checkmark").accessibilityHidden(true)
                 }
             }
-            .font(.custom(p.sansFont, size: 14, relativeTo: .subheadline).weight(selected ? .semibold : .medium))
+            .font(.custom(p.sansFont, size: size == .compact ? 13 : 14, relativeTo: .subheadline).weight(selected ? .semibold : .medium))
             .foregroundStyle(selected ? p.foreground : p.mutedForeground)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 9)
-            .frame(maxWidth: .infinity, minHeight: 44)
+            .padding(.horizontal, size == .compact ? 10 : 14)
+            .padding(.vertical, size == .compact ? 4 : 9)
+            #if os(macOS)
+            .frame(maxWidth: size == .compact && horizontal ? nil : .infinity, minHeight: size == .compact ? 24 : 44)
+            #else
+            .frame(maxWidth: size == .compact && horizontal ? nil : .infinity, minHeight: 44)
+            #endif
             .background {
                 if selected {
                     RoundedRectangle(cornerRadius: p.radius + 2)
                         .fill(p.card)
                         .overlay(alignment: .bottom) {
-                            Capsule().fill(p.brand).frame(width: 18, height: 2).padding(.bottom, 4)
+                            Capsule().fill(p.brand).frame(width: 18, height: 2).padding(.bottom, size == .compact ? 1 : 4)
                         }
                         .overlay(RoundedRectangle(cornerRadius: p.radius + 2).strokeBorder(p.border.opacity(0.65)))
                         .shadow(color: .black.opacity(p.isDark ? 0.18 : 0.06), radius: 3, y: 2)

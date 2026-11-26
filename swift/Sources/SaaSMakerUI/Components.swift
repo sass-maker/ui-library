@@ -9,14 +9,26 @@ public struct SMButtonStyle: ButtonStyle {
     /// Compact uses the shared small-control rhythm (14pt type, 12pt inset,
     /// 32pt minimum). Keep regular for primary actions and add a 44pt label
     /// hit area for compact controls used on touch devices.
-    public enum Size: Sendable { case regular, compact }
+    /// Planner is label-sized by default, with a 28pt Mac face or a 34pt touch
+    /// face inside a 44pt target. Its text follows the subheadline type scale.
+    public enum Size: Sendable { case regular, compact, planner }
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.smPalette) private var p
     let kind: Kind
     let size: Size
+    private let expands: Bool
+    private let isDestructive: Bool
 
     public init(_ kind: Kind = .brand, size: Size = .regular) {
+        self.init(kind, size: size, expands: false)
+    }
+
+    public init(_ kind: Kind = .brand, size: Size = .regular, expands: Bool, isDestructive: Bool = false) {
         self.kind = kind
         self.size = size
+        self.expands = expands
+        self.isDestructive = isDestructive
     }
 
     var metrics: Metrics { Metrics(kind: kind, size: size) }
@@ -25,6 +37,16 @@ public struct SMButtonStyle: ButtonStyle {
         let horizontalPadding: CGFloat
         let minimumHeight: CGFloat
         init(kind: Kind, size: Size) {
+            if size == .planner {
+                fontSize = 13
+                horizontalPadding = 12
+                #if os(macOS)
+                minimumHeight = 28
+                #else
+                minimumHeight = 34
+                #endif
+                return
+            }
             fontSize = size == .compact ? 14 : 16
             horizontalPadding = kind == .link ? 4 : size == .compact ? 12 : 22
             minimumHeight = kind == .link || size == .compact ? 32 : 46
@@ -35,25 +57,38 @@ public struct SMButtonStyle: ButtonStyle {
     static func pressOpacity(_ pressed: Bool) -> Double { pressed ? 0.9 : 1 }
 
     public func makeBody(configuration: Configuration) -> some View {
+        let planner = size == .planner
+        let destructive = isDestructive || (planner && configuration.role == .destructive)
+        let font: Font = planner
+            ? .custom(p.displayFont, size: metrics.fontSize, relativeTo: .subheadline)
+            : .custom(p.displayFont, size: metrics.fontSize)
+        let shape = Capsule(style: .circular)
         let label = configuration.label
-            .font(.custom(p.displayFont, size: metrics.fontSize).weight(.semibold))
+            .font(font.weight(.semibold))
             .textCase(p.uiLowercase ? .lowercase : nil)
             .padding(.horizontal, metrics.horizontalPadding)
-            .frame(minHeight: metrics.minimumHeight)
+            .padding(.vertical, planner ? 4 : 0)
+            .frame(maxWidth: expands ? .infinity : nil, minHeight: metrics.minimumHeight)
         return Group {
             switch kind {
-            case .brand: label.foregroundStyle(p.brandForeground).background(p.brand, in: .capsule)
-            case .solid: label.foregroundStyle(p.primaryForeground).background(p.primary, in: .capsule)
+            case .brand: label.foregroundStyle(p.brandForeground).background(destructive ? p.destructive : p.brand, in: .capsule)
+            case .solid: label.foregroundStyle(p.primaryForeground).background(destructive ? p.destructive : p.primary, in: .capsule)
             // Circular, not the default continuous capsule: a continuous capsule's
             // stroke draws stray vertical hairlines at its ends.
-            case .outline: label.foregroundStyle(p.foreground).overlay(Capsule(style: .circular).strokeBorder(p.border))
-            case .link: label.foregroundStyle(p.brand)
+            case .outline:
+                label.foregroundStyle(destructive ? p.destructive : p.foreground)
+                    .background(planner ? p.surface : Color.clear, in: shape)
+                    .overlay(shape.strokeBorder(p.border))
+            case .link: label.foregroundStyle(destructive ? p.destructive : p.brand)
             }
         }
-        .contentShape(.capsule)
-        .scaleEffect(Self.pressScale(configuration.isPressed))
-        .opacity(Self.pressOpacity(configuration.isPressed))
-        .animation(SMMotion.press, value: configuration.isPressed)
+        #if !os(macOS)
+        .frame(minHeight: planner ? 44 : nil)
+        #endif
+        .contentShape(planner ? AnyShape(Rectangle()) : AnyShape(Capsule()))
+        .scaleEffect(planner && reduceMotion ? 1 : Self.pressScale(configuration.isPressed))
+        .opacity(planner && !isEnabled ? 0.4 : Self.pressOpacity(configuration.isPressed))
+        .animation(planner && reduceMotion ? nil : SMMotion.press, value: configuration.isPressed)
     }
 }
 

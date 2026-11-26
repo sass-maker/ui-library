@@ -48,6 +48,26 @@ import Testing
     }
 
 
+    @Test func plannerControlsSizeToLabelsAndWrapInReadingOrder() throws {
+        let style = SMButtonStyle(.outline, size: .planner)
+        #expect(style.metrics.fontSize == 13)
+        #expect(style.metrics.horizontalPadding == 12)
+        let action = Button("Add block") {}.buttonStyle(style)
+        let actionImage = try bitmap(action)
+        #expect(actionImage.pixelsHigh == 56)
+        let selector = SMSegmentedControl("Period", selection: .constant(0),
+                                          segments: [SMSegment(0, title: "Day"), SMSegment(1, title: "Week")],
+                                          size: .compact)
+        let selectorImage = try bitmap(selector)
+        #expect(selectorImage.pixelsWide < 320)
+        #expect(selectorImage.pixelsHigh < 88)
+        let bar = SMAdaptiveActionBar { selector; action }
+        let wide = try bitmap(bar.frame(width: 390))
+        let narrow = try bitmap(bar.frame(width: CGFloat(max(actionImage.pixelsWide, selectorImage.pixelsWide)) / 2 + 2))
+        #expect(wide.pixelsHigh == max(selectorImage.pixelsHigh, actionImage.pixelsHigh))
+        #expect(narrow.pixelsHigh >= selectorImage.pixelsHigh + actionImage.pixelsHigh)
+    }
+
     // Frozen pre-size-API layout: catches accidental default appearance changes,
     // including disabled rendering, independently of the new metrics helpers.
     private struct LegacyButtonStyle: ButtonStyle {
