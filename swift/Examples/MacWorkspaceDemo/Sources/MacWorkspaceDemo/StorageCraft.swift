@@ -82,18 +82,16 @@ private struct DemoFolder: Identifiable {
                                 }.buttonStyle(SMMacButtonStyle(.quiet)).disabled(visibleIDs.isEmpty)
                             }
                             SMSearchField("Filter folders or projects", text: $query, focus: $searching)
-                            SMSettingsGroup {
-                                if filteredRows.isEmpty {
-                                    VStack(spacing: 8) {
-                                        Image(systemName: "magnifyingglass").font(.system(size: 22)).foregroundStyle(Ink.secondary)
-                                        Text("No matching folders").font(.system(size: 14, weight: .medium))
-                                        Text("Try a project name or folder type.").font(.system(size: 12)).foregroundStyle(Ink.secondary)
-                                    }.frame(maxWidth: .infinity).padding(32)
+                            if CommandLine.arguments.contains("--resource-table"), !filteredRows.isEmpty {
+                                SMMacResourceTable(filteredRows, selection: $selected, name: \.folder,
+                                                   group: \.project, groupTitle: "Project",
+                                                   measurement: \.bytes, measurementTitle: "Allocated") {
+                                    ByteCountFormatter.string(fromByteCount: $0, countStyle: .file)
                                 }
-                                ForEach(Array(filteredRows.enumerated()), id: \.element.id) { index, row in
-                                    candidate(row)
-                                    if index < filteredRows.count - 1 { Rectangle().fill(Ink.line).frame(height: 1).padding(.leading, 56) }
-                                }
+                                .accessibilityLabel("Rebuildable folders")
+                                .frame(height: 160)
+                            } else {
+                                folderList
                             }
                             Label("Review local changes before cleaning up. Downloads or rebuilds may be needed.", systemImage: "info.circle")
                                 .font(.custom("Geist", size: 12)).foregroundStyle(Ink.secondary).fixedSize(horizontal: false, vertical: true)
@@ -123,6 +121,22 @@ private struct DemoFolder: Identifiable {
         .alert("Preview only", isPresented: Binding(get: { !notice.isEmpty }, set: { if !$0 { notice = "" } })) {
             Button("OK") { notice = "" }
         } message: { Text(notice) }
+    }
+
+    private var folderList: some View {
+        SMSettingsGroup {
+            if filteredRows.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass").font(.system(size: 22)).foregroundStyle(Ink.secondary)
+                    Text("No matching folders").font(.system(size: 14, weight: .medium))
+                    Text("Try a project name or folder type.").font(.system(size: 12)).foregroundStyle(Ink.secondary)
+                }.frame(maxWidth: .infinity).padding(32)
+            }
+            ForEach(Array(filteredRows.enumerated()), id: \.element.id) { index, row in
+                candidate(row)
+                if index < filteredRows.count - 1 { Rectangle().fill(Ink.line).frame(height: 1).padding(.leading, 56) }
+            }
+        }
     }
 
     private var artwork: some View {
