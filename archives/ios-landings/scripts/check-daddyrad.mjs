@@ -89,7 +89,7 @@ for (const product of PRODUCTS) {
   const question = home.match(/<textarea\b[^>]*id="ask-ai"[^>]*>([\s\S]*?)<\/textarea>/)?.[1];
   assert.ok(question?.includes(`${ORIGIN}${product.mount}`), `${product.name} Ask AI lost its canonical section URL`);
   assert.ok(!question.includes(product.nativeReleaseOrigin), `${product.name} Ask AI still uses its release origin`);
-  assert.ok(home.includes('aria-label="DaddyRad apps"'));
+  assert.ok(home.includes('aria-label="Earlier product pages"'));
   for (const sibling of PRODUCTS) assert.ok(home.includes(`href="${sibling.mount}/"`));
   for (const path of ["index.md", "privacy/index.md", "support/index.md", "terms/index.md", "accessibility/index.md", "release/index.md", "testflight/index.md", "blog/index.md", "blog/rss.xml", "llms.txt", "llms-full.txt", "ai.txt", "robots.txt", "sitemap.xml", "api/ai", "openapi.json"]) {
     assert.equal((await request(`${product.mount}/${path}`)).status, 200, `${product.name}/${path}`);
