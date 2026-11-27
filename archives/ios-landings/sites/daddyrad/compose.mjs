@@ -156,7 +156,7 @@ export async function compose({ output = outputDir, inputs = join(factoryDir, "d
   }
   const updatedAt = new Date().toISOString().slice(0, 10);
   const rootRoutes = [
-    { path: "/", title: "DaddyRad", description: "Four native Mac utilities for storage, performance, browsing and coding-agent context.", assetPath: "/index.md", aliases: ["/index.md"], lastModified: updatedAt },
+    { path: "/", title: "DaddyRad", description: "One native Mac workspace for storage, performance, agents, browsing and network insight.", assetPath: "/index.md", aliases: ["/index.md"], lastModified: updatedAt },
     { path: "/privacy", title: "DaddyRad website privacy", description: "Website analytics, newsletter and app-specific privacy policies.", assetPath: "/privacy.md", aliases: ["/privacy.md"], lastModified: updatedAt },
   ].map((route) => ({ ...route, url: ORIGIN + route.path, md: ORIGIN + route.assetPath }));
   routes.unshift(...rootRoutes);
