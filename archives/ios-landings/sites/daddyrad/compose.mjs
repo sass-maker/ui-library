@@ -96,7 +96,7 @@ export function rebaseDocument(text, product, files, format) {
 }
 
 export function suiteNavigation(current) {
-  return `<nav class="daddy-suite" aria-label="DaddyRad apps"><a class="daddy-suite-home" href="/">DaddyRad</a><div>${PRODUCTS.map((product) => `<a href="${product.mount}/"${product.productId === current ? ' aria-current="page"' : ""}>${product.name.replace("Daddy", "")}</a>`).join("")}</div></nav>`;
+  return `<nav class="daddy-suite" aria-label="Earlier product pages"><a class="daddy-suite-home" href="/">DaddyRad</a><span>Earlier standalone product pages</span><div>${PRODUCTS.map((product) => `<a href="${product.mount}/"${product.productId === current ? ' aria-current="page"' : ""}>${product.name.replace("Daddy", "")}</a>`).join("")}</div></nav>`;
 }
 
 const navigationStyle = `.daddy-suite{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px max(20px,calc((100% - 1160px)/2));border-bottom:1px solid #263a2d;background:#07100a;color:#c4e6d2;font:500 13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.daddy-suite a{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;color:inherit;text-decoration:none;border-radius:5px}.daddy-suite-home{font-weight:750;letter-spacing:-.02em}.daddy-suite>div{display:flex;gap:4px;flex-wrap:wrap}.daddy-suite a:hover,.daddy-suite a[aria-current]{background:#14291c;color:#8ce0b8}.daddy-suite a:focus-visible{outline:2px solid #8ce0b8;outline-offset:2px}@media(max-width:480px){.daddy-suite{padding:8px 10px;gap:0}.daddy-suite>div{gap:0}.daddy-suite a{padding:0 8px;font-size:12px}}`;
@@ -156,7 +156,7 @@ export async function compose({ output = outputDir, inputs = join(factoryDir, "d
   }
   const updatedAt = new Date().toISOString().slice(0, 10);
   const rootRoutes = [
-    { path: "/", title: "DaddyRad", description: "Four native Mac utilities for storage, performance, browsing and coding-agent context.", assetPath: "/index.md", aliases: ["/index.md"], lastModified: updatedAt },
+    { path: "/", title: "DaddyRad", description: "One native Mac workspace for storage, performance, agents, browsing and network insight.", assetPath: "/index.md", aliases: ["/index.md"], lastModified: updatedAt },
     { path: "/privacy", title: "DaddyRad website privacy", description: "Website analytics, newsletter and app-specific privacy policies.", assetPath: "/privacy.md", aliases: ["/privacy.md"], lastModified: updatedAt },
   ].map((route) => ({ ...route, url: ORIGIN + route.path, md: ORIGIN + route.assetPath }));
   routes.unshift(...rootRoutes);
@@ -170,17 +170,17 @@ export async function compose({ output = outputDir, inputs = join(factoryDir, "d
     html = html.replace(/<\/head>/i, `<meta name="ai-summary" content="${name === "index.html" ? rootRoutes[0].description : rootRoutes[1].description}"><link rel="alternate" type="text/markdown" href="${ORIGIN}${path}"></head>`);
     await put(output, name, html);
   }
-  const identity = { name: "DaddyRad", url: ORIGIN, summary: rootRoutes[0].description, contact: `${ORIGIN}/privacy`, openapi: `${ORIGIN}/openapi.json`, updatedAt, trainingAllowed: true, notes: ["## Product sections", "", ...PRODUCTS.map(({ name, mount }) => `- [${name}](${ORIGIN}${mount}/)`), "", "## Product boundaries", "", "- Public marketing and documentation only. No app-data access or native control API.", "- Native downloads and update feeds remain on each product's release service.", "- Product privacy, support and release details belong to their dedicated sections." ] };
+  const identity = { name: "DaddyRad", url: ORIGIN, summary: rootRoutes[0].description, contact: `${ORIGIN}/privacy`, openapi: `${ORIGIN}/openapi.json`, updatedAt, trainingAllowed: true, notes: ["## Earlier standalone product pages", "", ...PRODUCTS.map(({ name, mount }) => `- [${name}](${ORIGIN}${mount}/)`), "", "## Product boundaries", "", "- Public marketing and documentation only. No app-data access or native control API.", "- The unified app does not yet have a public download. Earlier standalone downloads and update feeds remain on their original services.", "- Product privacy, support and release details belong to their dedicated sections." ] };
   const manifest = createAgentSurfaceManifest({ ...identity, pages: {} });
   const handler = createAgentSurfaceHandler({ manifest, listMarkdownRoutes: () => routes, loadMarkdown: async (_path, _request, route) => route ? readFile(join(output, route.assetPath), "utf8") : null });
   await put(output, "api/md/_identity", JSON.stringify(identity, null, 2));
   await put(output, "api/md/_catalog", JSON.stringify(routes, null, 2));
-  const catalog = { name: "DaddyRad", version: "1", url: ORIGIN, llms: `${ORIGIN}/llms.txt`, llmsFull: `${ORIGIN}/llms-full.txt`, sitemap: `${ORIGIN}/sitemap.xml`, openapi: `${ORIGIN}/openapi.json`, markdown: { suffix: ".md", negotiation: true }, auth: { public: true }, surfaces: routes.map((route) => ({ id: route.path === "/" ? "home" : route.path.replace(/^\/|\/$/g, "").replaceAll("/", "-"), url: route.path, md: route.assetPath, kind: route.path.includes("/blog/") ? "article" : "static" })), products: PRODUCTS.map(({ productId, name, mount, nativeReleaseOrigin }) => ({ id: productId, name, url: ORIGIN + mount + "/", download: nativeReleaseOrigin + "/download" })) };
+  const catalog = { name: "DaddyRad", version: "1", url: ORIGIN, llms: `${ORIGIN}/llms.txt`, llmsFull: `${ORIGIN}/llms-full.txt`, sitemap: `${ORIGIN}/sitemap.xml`, openapi: `${ORIGIN}/openapi.json`, markdown: { suffix: ".md", negotiation: true }, auth: { public: true }, surfaces: routes.map((route) => ({ id: route.path === "/" ? "home" : route.path.replace(/^\/|\/$/g, "").replaceAll("/", "-"), url: route.path, md: route.assetPath, kind: route.path.includes("/blog/") ? "article" : "static" })), products: PRODUCTS.map(({ productId, name, mount, nativeReleaseOrigin }) => ({ id: productId, name, status: "earlier standalone product", url: ORIGIN + mount + "/", download: nativeReleaseOrigin + "/download" })) };
   await put(output, "api/ai", JSON.stringify(catalog, null, 2));
   for (const name of ["llms.txt", "llms-full.txt", "ai.txt"]) await put(output, name, await (await handler(new Request(`${ORIGIN}/${name}`))).text());
   await put(output, "sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map((route) => `<url><loc>${ORIGIN}${route.path}</loc><lastmod>${route.lastModified}</lastmod></url>`).join("")}</urlset>\n`);
   await put(output, "robots.txt", `User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`);
-  await put(output, "openapi.json", JSON.stringify({ openapi: "3.1.0", info: { title: "DaddyRad public documents", version: "1.0.0", description: "Read-only public site discovery. Native app actions, downloads and update feeds are independent services." }, servers: [{ url: ORIGIN }], paths: Object.fromEntries(["/api/ai", "/llms.txt", "/sitemap.xml", "/openapi.json"].map((path) => [path, { get: { responses: { "200": { description: "Public document" } } } }])) }, null, 2));
+  await put(output, "openapi.json", JSON.stringify({ openapi: "3.1.0", info: { title: "DaddyRad public documents", version: "1.0.0", description: "Read-only public site discovery. Earlier standalone downloads and update feeds are independent services." }, servers: [{ url: ORIGIN }], paths: Object.fromEntries(["/api/ai", "/llms.txt", "/sitemap.xml", "/openapi.json"].map((path) => [path, { get: { responses: { "200": { description: "Public document" } } } }])) }, null, 2));
   const security = {};
   for (const file of (await filesIn(output)).filter((file) => file.endsWith(".html"))) {
     const html = await readFile(file, "utf8");
