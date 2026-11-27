@@ -1,16 +1,6 @@
 # DaddyRad
 
-> Native macOS utilities that watch over your machine — local-first, no accounts. DaddyRad is the umbrella site for the daddy series.
+> One native Mac workspace for storage, performance, coding agents, browsing and network insight. A public unified download is not yet available.
 
-Site: https://daddyrad.com
-
-## The series
-
-- PerformanceDaddy: https://performance.daddyrad.com — performance evidence
-- BrowserDaddy: https://browser.daddyrad.com — browsing attention
-- StorageDaddy: https://storage.daddyrad.com — storage cleanup
-- ContextDaddy: https://context.daddyrad.com — agent context
-
-## Contact
-
-Maintained by Sarthak Agrawal: https://sarthakagrawal.dev
+- [Home](https://daddyrad.com/)
+- [Privacy](https://daddyrad.com/privacy)
